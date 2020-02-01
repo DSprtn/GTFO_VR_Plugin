@@ -1,6 +1,8 @@
 # GTFO_VR_Plugin
 A BepInEx GTFO plugin to make GTFO in Virtual Reality work almost as well as Subnautica VR!
 
+Active trello board - https://trello.com/b/zSk7bBMS/gtfovr
+
 Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases 
 
 Installation: 
@@ -19,3 +21,8 @@ Known issues:
 	Main menu doesn't work
 	In-game GUI is crappy looking 
 	Elevator sequence doesn't work correctly in VR 
+
+
+Want to contribute?
+
+Give me a holler on Discord and I'll bring you up to speed - Spartan#8541 
