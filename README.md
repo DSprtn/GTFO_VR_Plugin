@@ -10,6 +10,7 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 	Download and install BepInEx in your GTFO game folder
 	Follow the instruction on BepInEx's github, launch the game once
 	Download and extract the newest GTFO_VR release in the game folder (...common/GTFO/)
+	Make sure 'use desktop game theatre' is off in the properties in the steam library
 	Go in-game, when you're off the elevator press F1 to start-up SteamVR and play!
 	
 ### Features:
