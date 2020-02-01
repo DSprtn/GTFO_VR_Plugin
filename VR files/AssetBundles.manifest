@@ -1,0 +1,10 @@
+ManifestFileVersion: 0
+CRC: 627442398
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: player
+      Dependencies: {}
+    Info_1:
+      Name: vrshaders
+      Dependencies: {}

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29728.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTFO_VR", "GTFO_VR\GTFO_VR.csproj", "{A11A2774-4115-4E28-A803-8F3FC4868F01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GTFO_VR_BepInEx", "GTFO_VR_BepInEx\GTFO_VR_BepInEx.csproj", "{29C764F7-7415-412C-920B-6CF9CB8FCA6A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A11A2774-4115-4E28-A803-8F3FC4868F01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A11A2774-4115-4E28-A803-8F3FC4868F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A11A2774-4115-4E28-A803-8F3FC4868F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A11A2774-4115-4E28-A803-8F3FC4868F01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29C764F7-7415-412C-920B-6CF9CB8FCA6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29C764F7-7415-412C-920B-6CF9CB8FCA6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29C764F7-7415-412C-920B-6CF9CB8FCA6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29C764F7-7415-412C-920B-6CF9CB8FCA6A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8C99519C-6642-44AE-B0A4-3ECA5239D312}
+	EndGlobalSection
+EndGlobal
