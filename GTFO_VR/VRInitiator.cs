@@ -15,11 +15,9 @@ namespace GTFO_VR
 
         public static TrackingType VR_TRACKING_TYPE;
 
-        private GameObject Player;
-
         private SteamVR_Camera camera;
 
-        private PlayerAgent playerAgent;
+        public static PlayerAgent playerAgent;
 
         public static FPSCamera fpscamera;
 
@@ -27,6 +25,11 @@ namespace GTFO_VR
 
         // Seems to be a pretty ok multiplier for not making your eyes hurt from looking at FP weapons
         static float itemHolderFOVMult = 1.10f;
+
+
+        public static GameObject leftController;
+        public static GameObject rightController;
+        GameObject origin;
 
         void Awake()
         {
@@ -44,9 +47,19 @@ namespace GTFO_VR
             {
                 return;
             }
+           
             HandleHMD();
-
+            UpdateOrigin();
             DoDebugOnKeyDown();
+        }
+
+        private void UpdateOrigin()
+        {
+            if(!origin)
+            {
+                return;
+            }
+            origin.transform.position = playerAgent.PlayerCharacterController.SmoothPosition;
         }
 
         private void DoDebugOnKeyDown()
@@ -60,9 +73,8 @@ namespace GTFO_VR
             if (Input.GetKeyDown(KeyCode.F3))
             {
                 DebugHelper.LogPosRotData(fpscamera.transform);
-                DebugHelper.LogPosRotData(fpscamera.transform.root);
-                DebugHelper.LogPosRotData(playerAgent.transform);
-                DebugHelper.LogPosRotData(playerAgent.FPItemHolder.transform);
+                DebugHelper.LogPosRotData(leftController.transform);
+                DebugHelper.LogPosRotData(rightController.transform);
             }
 
         }
@@ -74,6 +86,7 @@ namespace GTFO_VR
                 DoUglyFOVHack();
             }
         }
+
 
         public static Vector3 GetVRCameraEulerRotation()
         {
@@ -98,6 +111,7 @@ namespace GTFO_VR
         private void Setup()
         {
             Debug.Log("Enabling VR");
+            origin = new GameObject("Origin");
             SetupGTFOCamera();
             SetupControllers();
             SetupHMDObject();
@@ -111,7 +125,6 @@ namespace GTFO_VR
             VR_TRACKING_TYPE = TrackingType.PositionAndRotation;
             fpscamera = UnityEngine.Object.FindObjectOfType<FPSCamera>();
             playerAgent = UnityEngine.Object.FindObjectOfType<PlayerAgent>();
-            Player = playerAgent.gameObject;
             // Handle head transform manually to better fit into the game's systems and allow things like syncing lookDir online
             // This is handled in harmony injections to FPSCamera
             SteamVR_Camera.useHeadTracking = false;
@@ -119,32 +132,32 @@ namespace GTFO_VR
             CellSettingsApply.ApplyWorldFOV((int)SteamVR.instance.fieldOfView);
         }
 
-        // Controllers do not work correctly at all yet, wrong transforms/parents
         private void SetupControllers()
         {
-            PlayerAgent playerAgent = UnityEngine.Object.FindObjectOfType<PlayerAgent>();
-            GameObject gameObject = new GameObject("LeftHand");
-            GameObject gameObject2 = new GameObject("RightHand");
-            gameObject.transform.SetParent(fpscamera.m_holder.transform);
-            gameObject2.transform.SetParent(fpscamera.m_holder.transform);
-            SteamVR_Behaviour_Pose steamVR_Behaviour_Pose = gameObject.AddComponent<SteamVR_Behaviour_Pose>();
-            steamVR_Behaviour_Pose.inputSource = SteamVR_Input_Sources.LeftHand;
+            leftController = SetupController(SteamVR_Input_Sources.LeftHand);
+            rightController = SetupController(SteamVR_Input_Sources.RightHand);
+            leftController.name = "LeftController";
+            rightController.name = "RightController";
+        }
+            
+        GameObject SetupController(SteamVR_Input_Sources source)
+        {
+            GameObject controller = new GameObject("Controller");
+            SteamVR_Behaviour_Pose steamVR_Behaviour_Pose = controller.AddComponent<SteamVR_Behaviour_Pose>();
+            steamVR_Behaviour_Pose.inputSource = source;
             steamVR_Behaviour_Pose.broadcastDeviceChanges = true;
-            SteamVR_Behaviour_Pose steamVR_Behaviour_Pose2 = gameObject2.AddComponent<SteamVR_Behaviour_Pose>();
-            steamVR_Behaviour_Pose2.inputSource = SteamVR_Input_Sources.RightHand;
-            steamVR_Behaviour_Pose2.broadcastDeviceChanges = true;
-            GameObject gameObject3 = new GameObject("LeftModel");
-            SteamVR_RenderModel steamVR_RenderModel = gameObject3.AddComponent<SteamVR_RenderModel>();
-            steamVR_RenderModel.updateDynamically = true;
-            steamVR_RenderModel.createComponents = true;
-            gameObject3.transform.SetParent(gameObject.transform);
-            GameObject gameObject4 = new GameObject("RightModel");
-            SteamVR_RenderModel steamVR_RenderModel2 = gameObject4.AddComponent<SteamVR_RenderModel>();
-            steamVR_RenderModel2.updateDynamically = true;
-            steamVR_RenderModel2.createComponents = true;
-            gameObject4.transform.SetParent(gameObject2.transform);
-            gameObject3.transform.localPosition = Vector3.zero;
-            gameObject4.transform.localPosition = Vector3.zero;
+
+
+            // Controller rendering - Unneeded at this version
+            //GameObject model = new GameObject("Model");
+            //SteamVR_RenderModel steamVR_RenderModel = model.AddComponent<SteamVR_RenderModel>();
+            //steamVR_RenderModel.updateDynamically = true;
+            //steamVR_RenderModel.createComponents = true;
+            //model.transform.SetParent(controller.transform);
+            //model.transform.localPosition = Vector3.zero;
+
+            controller.transform.SetParent(origin.transform);
+            return controller;
         }
 
         private void SetupHMDObject()
