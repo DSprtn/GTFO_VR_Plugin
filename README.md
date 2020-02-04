@@ -17,13 +17,14 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 	
 ### Features:
 	More or less correctly working VR in-game gameplay 
-	Full SteamVR_Input binding support, you can play with the knuckles!
+	Full SteamVR_Input binding support, you can play with all VR controllers, provided they have 
+	enough buttons for all the actions in GTFO!
 	
 
 
 ### Known issues: 
 	Main menu doesn't work
-	In-game GUI is crappy looking 
+	In-game HUD is crappy looking 
 	Elevator sequence doesn't work correctly in VR 
 
 
