@@ -16,7 +16,7 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 	from the workshop if anyone made one, or create one yourself
 	
 ### Features:
-	More or less correctly working VR in-game gameplay 
+	More or less correctly working VR in-game gameplay (also works in multiplayer!)
 	Full SteamVR_Input binding support, you can play with all VR controllers, provided they have 
 	enough buttons for all the actions in GTFO!
 	
