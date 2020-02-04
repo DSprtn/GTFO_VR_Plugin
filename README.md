@@ -12,15 +12,19 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 	Download and extract the newest GTFO_VR release in the game folder (...common/GTFO/)
 	Make sure 'use desktop game theatre' is off in the properties in the steam library
 	Go in-game, when you're off the elevator press F1 to start-up SteamVR and play!
+	If your controllers don't do anything in-game you might have to download an input scheme 
+	from the workshop if anyone made one, or create one yourself
 	
 ### Features:
 	More or less correctly working VR in-game gameplay 
-	Full SteamVR_Input binding support, you can play with the knuckles!
+	Full SteamVR_Input binding support, you can play with all VR controllers, provided they have 
+	enough buttons for all the actions in GTFO!
+	
+
 
 ### Known issues: 
-	Trying to enter the SteamVR main menu will crash the game 
 	Main menu doesn't work
-	In-game GUI is crappy looking 
+	In-game HUD is crappy looking 
 	Elevator sequence doesn't work correctly in VR 
 
 
