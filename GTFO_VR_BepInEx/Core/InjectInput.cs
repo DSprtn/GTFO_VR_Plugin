@@ -21,10 +21,7 @@ namespace GTFO_VR_BepInEx.Core
 
         static void Postfix(InputAction action, ref float __result)
         {
-            if (VRInitiator.VR_ENABLED)
-            {
                 __result += VRInput.GetAxis(action);
-            }
         }
     }
 
@@ -33,10 +30,7 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Postfix(InputAction action, ref bool __result)
         {
-            if (!__result)
-            {
-                __result = VRInput.GetActionUp(action);
-            }
+                __result = __result || VRInput.GetActionUp(action);
         }
     }
 
@@ -45,10 +39,7 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Postfix(InputAction action, ref bool __result)
         {
-            if (!__result)
-            {
-                __result = VRInput.GetActionDown(action);
-            }
+                __result = __result || VRInput.GetActionDown(action);
         }
     }
 
@@ -57,10 +48,7 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Postfix(InputAction action, ref bool __result)
         {
-            if (!__result)
-            {
-                __result = VRInput.GetAction(action);
-            }
+                __result = __result || VRInput.GetAction(action);
         }
     }
 }
