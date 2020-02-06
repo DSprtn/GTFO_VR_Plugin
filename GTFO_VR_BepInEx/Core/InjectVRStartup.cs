@@ -13,12 +13,12 @@ namespace GTFO_VR_BepInEx.Core
     /// Entry point for loading and initiating all things VR
     /// </summary>
 
-    [HarmonyPatch(typeof(PlayerAgent),"Update")]
+    [HarmonyPatch(typeof(FPSCamera),"Update")]
     class InjectVRStartup
     {
         static void Prefix(PlayerAgent __instance)
         {
-            if (Input.GetKeyDown(KeyCode.F1))
+            if (Input.GetKeyDown(KeyCode.F1) && !VRInitiator.VR_ENABLED)
             {
                 Debug.Log("Creating VR instance...");
                 GameObject vr = new GameObject();
