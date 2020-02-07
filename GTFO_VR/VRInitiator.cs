@@ -2,6 +2,7 @@
 using System;
 using UnityEngine;
 using Valve.VR;
+using Valve.VR.Extras;
 
 namespace GTFO_VR
 {
@@ -17,7 +18,7 @@ namespace GTFO_VR
 
         private SteamVR_Camera camera;
 
-        public static PlayerAgent playerAgent;
+        public static PlayerCharacterController playerController;
 
         public static FPSCamera fpscamera;
 
@@ -30,6 +31,9 @@ namespace GTFO_VR
         public static GameObject leftController;
         public static GameObject rightController;
         GameObject origin;
+        public static bool VR_CONTROLLER_PRESENT = true;
+
+        GameObject laserPointer; 
 
         void Awake()
         {
@@ -47,19 +51,26 @@ namespace GTFO_VR
             {
                 return;
             }
-           
+
             HandleHMD();
             UpdateOrigin();
             DoDebugOnKeyDown();
+
+            if (laserPointer)
+            {
+                laserPointer.transform.position = GetMainControllerPosition();
+                laserPointer.transform.rotation = GetMainControllerRotation();
+            }
+            
         }
 
         private void UpdateOrigin()
         {
-            if(!origin)
+            if(origin == null || playerController == null)
             {
                 return;
             }
-            origin.transform.position = playerAgent.PlayerCharacterController.SmoothPosition;
+            origin.transform.position = playerController.SmoothPosition;          
         }
 
         private void DoDebugOnKeyDown()
@@ -67,7 +78,7 @@ namespace GTFO_VR
             if (Input.GetKeyDown(KeyCode.F2))
             {
                 DebugHelper.LogTransformHierarchy(fpscamera.transform.root);
-                DebugHelper.LogTransformHierarchy(playerAgent.transform.root);
+                DebugHelper.LogTransformHierarchy(playerController.transform.root);
             }
 
             if (Input.GetKeyDown(KeyCode.F3))
@@ -98,6 +109,33 @@ namespace GTFO_VR
             return localRotation.eulerAngles;
         }
 
+        public static Vector3 GetMainControllerForward()
+        {
+            if(!rightController)
+            {
+                return Vector3.zero;
+            }
+            return (rightController.transform.rotation * Quaternion.Euler(-90f, 0f, 0f)) * Vector3.forward;
+        }
+
+        public static Vector3 GetMainControllerPosition()
+        {
+            if (!rightController)
+            {
+                return Vector3.zero;
+            }
+            return rightController.transform.position;
+        }
+
+        public static Quaternion GetMainControllerRotation()
+        {
+            if(!rightController)
+            {
+                return Quaternion.identity;
+            }
+            return rightController.transform.rotation * Quaternion.Euler(-90f, 0f, 0f);
+        }
+
         private void DoUglyFOVHack()
         {
             fpscamera.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
@@ -112,6 +150,11 @@ namespace GTFO_VR
         {
             Debug.Log("Enabling VR");
             origin = new GameObject("Origin");
+            laserPointer = new GameObject("LaserPointer");
+            LaserPointer pointer = laserPointer.AddComponent<LaserPointer>();
+            pointer.color = Color.red;
+
+            UnityEngine.Object.DontDestroyOnLoad(origin);
             SetupGTFOCamera();
             SetupControllers();
             SetupHMDObject();
@@ -124,7 +167,7 @@ namespace GTFO_VR
         {
             VR_TRACKING_TYPE = TrackingType.PositionAndRotation;
             fpscamera = UnityEngine.Object.FindObjectOfType<FPSCamera>();
-            playerAgent = UnityEngine.Object.FindObjectOfType<PlayerAgent>();
+            playerController = UnityEngine.Object.FindObjectOfType<PlayerCharacterController>();
             // Handle head transform manually to better fit into the game's systems and allow things like syncing lookDir online
             // This is handled in harmony injections to FPSCamera
             SteamVR_Camera.useHeadTracking = false;
