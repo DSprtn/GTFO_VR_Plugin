@@ -191,12 +191,22 @@ namespace GTFO_VR
 
         private void DoUglyFOVHack()
         {
-            fpscamera.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
-            fpscamera.m_camera.aspect = SteamVR.instance.aspect;
-            fpscamera.m_itemCamera.fieldOfView = SteamVR.instance.fieldOfView;
-            fpscamera.m_itemCamera.aspect = SteamVR.instance.aspect;
-            ClusteredRendering.Current.m_lightBufferCamera.fieldOfView = SteamVR.instance.fieldOfView;
-            ClusteredRendering.Current.m_lightBufferCamera.aspect = SteamVR.instance.aspect;
+            if(fpscamera != null && fpscamera.m_camera != null)
+            {
+                fpscamera.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
+                fpscamera.m_camera.aspect = SteamVR.instance.aspect;
+                if(fpscamera.m_itemCamera != null)
+                {
+                    fpscamera.m_itemCamera.fieldOfView = SteamVR.instance.fieldOfView;
+                    fpscamera.m_itemCamera.aspect = SteamVR.instance.aspect;
+                }
+               
+            }
+            if(ClusteredRendering.Current != null && ClusteredRendering.Current.m_lightBufferCamera != null)
+            {
+                ClusteredRendering.Current.m_lightBufferCamera.fieldOfView = SteamVR.instance.fieldOfView;
+                ClusteredRendering.Current.m_lightBufferCamera.aspect = SteamVR.instance.aspect;
+            }
         }
 
         private void Setup()
