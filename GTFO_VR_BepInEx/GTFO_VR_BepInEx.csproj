@@ -39,6 +39,9 @@
     <Reference Include="UnityEngine.PhysicsModule">
       <HintPath>..\lib\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\lib\UnityEngine.UI.dll</HintPath>
+    </Reference>
     <Reference Include="Utils-ASM">
       <HintPath>..\lib\GameLibs\Utils-ASM.dll</HintPath>
     </Reference>

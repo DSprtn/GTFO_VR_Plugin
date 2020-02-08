@@ -19,6 +19,7 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Postfix(PlayerGuiLayer __instance, PUI_Inventory ___Inventory, PUI_LocalPlayerStatus ___m_playerStatus, PUI_WardenIntel ___m_wardenIntel, PUI_GameEventLog ___m_gameEventLog, PUI_Compass ___m_compass, PUI_GameObjectives ___m_wardenObjective)
         {
+            
             ___Inventory.SetPosition(new Vector2(-475f, -225f));
             ___Inventory.transform.localScale *= .80f;
             ___m_compass.SetPosition(new Vector2(0.0f, -150f));
@@ -30,6 +31,9 @@ namespace GTFO_VR_BepInEx.Core
             ___m_wardenObjective.SetPosition(new Vector2(450f, -300f));
             ___m_wardenObjective.transform.localScale *= .65f;
             ___m_playerStatus.SetPosition(new Vector2(0.0f, 80f));
+            
+
+            VRInitiator.SetPlayerGUIInstance(__instance);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Player;
+﻿using GTFO_VR.Events;
+using Player;
 using System;
 using UnityEngine;
 using Valve.VR;
@@ -8,13 +9,29 @@ namespace GTFO_VR
 {
     public class VRInitiator : MonoBehaviour
     {
-        public static GameObject hmd;
-
-        public static bool crouchOnIRLCrouch = true;
 
         public static bool VR_ENABLED;
 
         public static TrackingType VR_TRACKING_TYPE;
+
+        public static bool VR_CONTROLLER_PRESENT = true;
+
+        static bool UIVIsible = true;
+
+        public static bool crouchOnIRLCrouch = true;
+
+        private bool useUglyFOVHack;
+
+        static Quaternion snapTurnRot = Quaternion.identity;
+
+
+        public static GameObject hmd;
+
+        public static GameObject leftController;
+
+        public static GameObject rightController;
+
+        GameObject origin;
 
         private SteamVR_Camera camera;
 
@@ -22,18 +39,9 @@ namespace GTFO_VR
 
         public static FPSCamera fpscamera;
 
-        private bool useUglyFOVHack;
-
-        // Seems to be a pretty ok multiplier for not making your eyes hurt from looking at FP weapons
-        static float itemHolderFOVMult = 1.10f;
+        public static PlayerGuiLayer PlayerGui;
 
 
-        public static GameObject leftController;
-        public static GameObject rightController;
-        GameObject origin;
-        public static bool VR_CONTROLLER_PRESENT = true;
-
-        GameObject laserPointer; 
 
         void Awake()
         {
@@ -42,6 +50,7 @@ namespace GTFO_VR
                 Debug.LogWarning("Trying to create duplicate VRInit class...");
                 return;
             }
+            
             Setup();
         }
 
@@ -53,14 +62,29 @@ namespace GTFO_VR
             }
 
             HandleHMD();
-            UpdateOrigin();
+           
             DoDebugOnKeyDown();
 
-            if (laserPointer)
+            if(PlayerGui != null && VRInput.GetActionDown(InputAction.Jump))
             {
-                laserPointer.transform.position = GetMainControllerPosition();
-                laserPointer.transform.rotation = GetMainControllerRotation();
+                UIVIsible = !UIVIsible;
+                PlayerGui.SetVisible(UIVIsible);
+                PlayerGui.Inventory.SetVisible(UIVIsible);
+                PlayerGui.m_playerStatus.SetVisible(UIVIsible);
+                PlayerGui.m_compass.SetVisible(UIVIsible);
             }
+
+            
+        }
+
+        void LateUpdate()
+        {
+            UpdateOrigin();
+        }
+
+        public static void SetPlayerGUIInstance(PlayerGuiLayer gui)
+        {
+            PlayerGui = gui;
             
         }
 
@@ -102,15 +126,18 @@ namespace GTFO_VR
         public static Vector3 GetVRCameraEulerRotation()
         {
             Quaternion localRotation = hmd.transform.rotation;
+            //localRotation *= snapTurnRot;
             localRotation = Quaternion.Inverse(fpscamera.m_holder.transform.rotation) * localRotation;
-            float x = localRotation.eulerAngles.x;
-            float y = localRotation.eulerAngles.y;
-            float z = localRotation.eulerAngles.z;
+
             return localRotation.eulerAngles;
         }
 
-        public static Vector3 GetMainControllerForward()
+        public static Vector3 GetAimForward()
         {
+            if(ItemEquippableEvents.IsCurrentItemShootableWeapon())
+            {
+                return ItemEquippableEvents.currentItem.MuzzleAlign.forward;
+            }
             if(!rightController)
             {
                 return Vector3.zero;
@@ -118,7 +145,42 @@ namespace GTFO_VR
             return (rightController.transform.rotation * Quaternion.Euler(-90f, 0f, 0f)) * Vector3.forward;
         }
 
-        public static Vector3 GetMainControllerPosition()
+        public static Vector3 GetAimFromPos()
+        {
+            if (ItemEquippableEvents.IsCurrentItemShootableWeapon())
+            {
+                return ItemEquippableEvents.currentItem.MuzzleAlign.position;
+            }
+            if (!rightController)
+            {
+                return Vector3.zero;
+            }
+            return rightController.transform.position;
+        }
+
+        public static Quaternion GetAimFromRot()
+        {
+            if (ItemEquippableEvents.IsCurrentItemShootableWeapon())
+            {
+                return ItemEquippableEvents.currentItem.MuzzleAlign.rotation;
+            }
+            if (!rightController)
+            {
+                return Quaternion.identity;
+            }
+            return rightController.transform.rotation * Quaternion.Euler(-90f, 0f, 0f);
+        }
+
+        public static Quaternion GetControllerRotation()
+        {
+            if (!rightController)
+            {
+                return Quaternion.identity;
+            }
+            return rightController.transform.rotation * Quaternion.Euler(-90f, 0f, 0f);
+        }
+
+        public static Vector3 GetControllerPosition()
         {
             if (!rightController)
             {
@@ -127,20 +189,11 @@ namespace GTFO_VR
             return rightController.transform.position;
         }
 
-        public static Quaternion GetMainControllerRotation()
-        {
-            if(!rightController)
-            {
-                return Quaternion.identity;
-            }
-            return rightController.transform.rotation * Quaternion.Euler(-90f, 0f, 0f);
-        }
-
         private void DoUglyFOVHack()
         {
             fpscamera.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
             fpscamera.m_camera.aspect = SteamVR.instance.aspect;
-            fpscamera.m_itemCamera.fieldOfView = SteamVR.instance.fieldOfView * itemHolderFOVMult;
+            fpscamera.m_itemCamera.fieldOfView = SteamVR.instance.fieldOfView;
             fpscamera.m_itemCamera.aspect = SteamVR.instance.aspect;
             ClusteredRendering.Current.m_lightBufferCamera.fieldOfView = SteamVR.instance.fieldOfView;
             ClusteredRendering.Current.m_lightBufferCamera.aspect = SteamVR.instance.aspect;
@@ -148,19 +201,30 @@ namespace GTFO_VR
 
         private void Setup()
         {
-            Debug.Log("Enabling VR");
-            origin = new GameObject("Origin");
-            laserPointer = new GameObject("LaserPointer");
-            LaserPointer pointer = laserPointer.AddComponent<LaserPointer>();
-            pointer.color = Color.red;
-
-            UnityEngine.Object.DontDestroyOnLoad(origin);
+            SetupOrigin();
+            SetupLaserPointer();
             SetupGTFOCamera();
             SetupControllers();
             SetupHMDObject();
             gameObject.AddComponent<VRInput>();
+            
             useUglyFOVHack = true;
             VR_ENABLED = true;
+        }
+
+        private void SetupOrigin()
+        {
+            Debug.Log("Enabling VR");
+            origin = new GameObject("Origin");
+            DontDestroyOnLoad(origin);
+        }
+
+        private static void SetupLaserPointer()
+        {
+            GameObject laserPointer = new GameObject("LaserPointer");
+            LaserPointer pointer = laserPointer.AddComponent<LaserPointer>();
+            pointer.color = Color.red;
+            pointer.layerMask = LayerManager.MASK_CAMERA_RAY;
         }
 
         private void SetupGTFOCamera()
@@ -189,15 +253,6 @@ namespace GTFO_VR
             SteamVR_Behaviour_Pose steamVR_Behaviour_Pose = controller.AddComponent<SteamVR_Behaviour_Pose>();
             steamVR_Behaviour_Pose.inputSource = source;
             steamVR_Behaviour_Pose.broadcastDeviceChanges = true;
-
-
-            // Controller rendering - Unneeded at this version
-            //GameObject model = new GameObject("Model");
-            //SteamVR_RenderModel steamVR_RenderModel = model.AddComponent<SteamVR_RenderModel>();
-            //steamVR_RenderModel.updateDynamically = true;
-            //steamVR_RenderModel.createComponents = true;
-            //model.transform.SetParent(controller.transform);
-            //model.transform.localPosition = Vector3.zero;
 
             controller.transform.SetParent(origin.transform);
             return controller;

@@ -140,18 +140,20 @@ namespace GTFO_VR
             jumpAction = SteamVR_Input.GetBooleanAction("Jump", false);
 
 
-            VRInput.boolActions = new Dictionary<InputAction, SteamVR_Action_Boolean>();
-            VRInput.boolActions.Add(InputAction.Jump, jumpAction);
-            VRInput.boolActions.Add(InputAction.Use, interactAction);
-            VRInput.boolActions.Add(InputAction.Aim, aimAction);
-            VRInput.boolActions.Add(InputAction.Fire, shootAction);
-            VRInput.boolActions.Add(InputAction.Run, sprintAction);
-            VRInput.boolActions.Add(InputAction.Crouch, crouchAction);
-            VRInput.boolActions.Add(InputAction.Reload, reloadAction);
-            VRInput.boolActions.Add(InputAction.Melee, aimAction);
-            VRInput.boolActions.Add(InputAction.TerminalExit, reloadAction);
-            VRInput.boolActions.Add(InputAction.ScrollItems, weaponSwitchLeftAction);
-            VRInput.boolActions.Add(InputAction.Flashlight, flashlightAction);
+            VRInput.boolActions = new Dictionary<InputAction, SteamVR_Action_Boolean>
+            {
+                { InputAction.Jump, jumpAction },
+                { InputAction.Use, interactAction },
+                { InputAction.Aim, aimAction },
+                { InputAction.Fire, shootAction },
+                { InputAction.Run, sprintAction },
+                { InputAction.Crouch, crouchAction },
+                { InputAction.Reload, reloadAction },
+                { InputAction.Melee, aimAction },
+                { InputAction.TerminalExit, reloadAction },
+                { InputAction.ScrollItems, weaponSwitchLeftAction },
+                { InputAction.Flashlight, flashlightAction }
+            };
         }
 
         private SteamVR_Action_Boolean GetBoolActionMapping(InputAction action)
