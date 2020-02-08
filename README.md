@@ -19,6 +19,7 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 	More or less correctly working VR in-game gameplay (also works in multiplayer!)
 	Full SteamVR_Input binding support, you can play with all VR controllers, provided they have 
 	enough buttons for all the actions in GTFO!
+	Full VR controller based aiming (including fancy laserpointer)
 	
 
 
@@ -26,6 +27,9 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 	Main menu doesn't work
 	In-game HUD is crappy looking 
 	Elevator sequence doesn't work correctly in VR 
+	Hacking tool minigame isn't rendered correctly for VR
+	Flashlight aggro works off of head direction, not weapon flashlight direction
+	
 
 
 ## Want to contribute?
