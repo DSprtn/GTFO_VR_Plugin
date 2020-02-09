@@ -14,6 +14,7 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 	Go in-game, when you're off the elevator press F1 to start-up SteamVR and play!
 	If your controllers don't do anything in-game you might have to download an input scheme 
 	from the workshop if anyone made one, or create one yourself
+	For now the UI is a bit janky so you can toggle it by aiming
 	
 ### Features:
 	More or less correctly working VR in-game gameplay (also works in multiplayer!)
