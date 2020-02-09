@@ -14,7 +14,12 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 	Start SteamVR
 	Go in-game, when you're off the elevator press F1 to play in VR!
 	If your controllers don't do anything in-game you might have to download an input scheme 
+<<<<<<< HEAD
 	from the workshop if anyone made one, or create one yourself
+=======
+	from the workshop if anyone made one, or create one yourself (use the 'old binding UI' menu 
+	and set action pose to 'tip'!)
+>>>>>>> 241b7d77c0d920e4106ff46ba7291877b19e3496
 	For now the UI is a bit janky so you can toggle it by aiming
 	
 ### Features:
@@ -26,15 +31,22 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 
 
 ### Known issues: 
+<<<<<<< HEAD
 	Oculus (Quest) integration isn't done yet!
+=======
+	Oculus integration isn't working yet!
+>>>>>>> 241b7d77c0d920e4106ff46ba7291877b19e3496
 	Main menu doesn't work
 	In-game HUD is crappy looking 
 	Elevator sequence doesn't work correctly in VR 
 	Hacking tool minigame isn't rendered correctly for VR
 	Flashlight aggro works off of head direction, not weapon flashlight direction
 	
+<<<<<<< HEAD
 	If your controllers are flipped download version 0.201 and try other poses in the SteamVR controller config!
 	
+=======
+>>>>>>> 241b7d77c0d920e4106ff46ba7291877b19e3496
 
 
 ## Want to contribute?
