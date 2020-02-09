@@ -142,7 +142,7 @@ namespace GTFO_VR
             {
                 return Vector3.zero;
             }
-            return (rightController.transform.rotation * Quaternion.Euler(-90f, 0f, 0f)) * Vector3.forward;
+            return (rightController.transform.rotation * Vector3.forward);
         }
 
         public static Vector3 GetAimFromPos()
@@ -168,7 +168,7 @@ namespace GTFO_VR
             {
                 return Quaternion.identity;
             }
-            return rightController.transform.rotation * Quaternion.Euler(-90f, 0f, 0f);
+            return rightController.transform.rotation;
         }
 
         public static Quaternion GetControllerRotation()
@@ -177,7 +177,7 @@ namespace GTFO_VR
             {
                 return Quaternion.identity;
             }
-            return rightController.transform.rotation * Quaternion.Euler(-90f, 0f, 0f);
+            return rightController.transform.rotation;
         }
 
         public static Vector3 GetControllerPosition()
