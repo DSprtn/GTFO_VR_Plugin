@@ -33,6 +33,8 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 	Hacking tool minigame isn't rendered correctly for VR
 	Flashlight aggro works off of head direction, not weapon flashlight direction
 	
+	If your controllers are flipped download version 0.201 and try other poses in the SteamVR controller config!
+	
 
 
 ## Want to contribute?
