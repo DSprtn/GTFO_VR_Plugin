@@ -16,6 +16,7 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 	If your controllers don't do anything in-game you might have to download an input scheme 
 	from the workshop if anyone made one, or create one yourself (use the 'old binding UI' menu 
 	and set action pose to 'tip'!)
+
 	For now the UI is a bit janky so you can toggle it by aiming
 	
 ### Features:
@@ -27,14 +28,13 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 
 
 ### Known issues: 
+
 	Oculus integration isn't working yet!
 	Main menu doesn't work
 	In-game HUD is crappy looking 
 	Elevator sequence doesn't work correctly in VR 
 	Hacking tool minigame isn't rendered correctly for VR
 	Flashlight aggro works off of head direction, not weapon flashlight direction
-	
-
 
 ## Want to contribute?
 
