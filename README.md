@@ -26,6 +26,7 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 
 
 ### Known issues: 
+	Oculus (Quest) integration isn't done yet!
 	Main menu doesn't work
 	In-game HUD is crappy looking 
 	Elevator sequence doesn't work correctly in VR 
