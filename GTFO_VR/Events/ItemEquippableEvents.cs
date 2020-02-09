@@ -18,6 +18,7 @@ namespace GTFO_VR.Events
         {
             if(OnPlayerWieldItem != null && item.Owner.IsLocallyOwned)
             {
+                currentItem = item;
                 OnPlayerWieldItem.Invoke(item);
             }
         }
