@@ -65,7 +65,7 @@ namespace GTFO_VR
            
             DoDebugOnKeyDown();
 
-            if(PlayerGui != null && VRInput.GetActionDown(InputAction.Jump))
+            if(PlayerGui != null && VRInput.GetActionDown(InputAction.Aim))
             {
                 UIVIsible = !UIVIsible;
                 PlayerGui.SetVisible(UIVIsible);
@@ -234,7 +234,6 @@ namespace GTFO_VR
             GameObject laserPointer = new GameObject("LaserPointer");
             LaserPointer pointer = laserPointer.AddComponent<LaserPointer>();
             pointer.color = Color.red;
-            pointer.layerMask = LayerManager.MASK_CAMERA_RAY;
         }
 
         private void SetupGTFOCamera()
