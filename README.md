@@ -26,14 +26,12 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 
 
 ### Known issues: 
-	Oculus (Quest) integration isn't done yet!
+	Oculus integration isn't working yet!
 	Main menu doesn't work
 	In-game HUD is crappy looking 
 	Elevator sequence doesn't work correctly in VR 
 	Hacking tool minigame isn't rendered correctly for VR
 	Flashlight aggro works off of head direction, not weapon flashlight direction
-	
-	If your controllers are flipped download version 0.201 and try other poses in the SteamVR controller config!
 	
 
 
