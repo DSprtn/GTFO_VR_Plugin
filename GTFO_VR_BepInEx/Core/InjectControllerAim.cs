@@ -32,6 +32,27 @@ namespace GTFO_VR_BepInEx.Core
         }
     }
 
+    /// Inject this twice because otherwise data like weapon muzzle position is not updated correctly (makes tracers spawn in wrong location, for instance)
+    /// </summary>
+
+    [HarmonyPatch(typeof(FirstPersonItemHolder), "Update")]
+    class InjectControllerAimAlign
+    {
+        static void Postfix(FirstPersonItemHolder __instance, ItemEquippable ___WieldedItem)
+        {
+            // VR is enabled and controller is on (not at a zero vector)
+            if (VRInitiator.VR_ENABLED && VRInitiator.VR_CONTROLLER_PRESENT)
+            {
+                if (___WieldedItem == null)
+                {
+                    return;
+                }
+                ___WieldedItem.transform.position = VRInitiator.GetControllerPosition();
+                ___WieldedItem.transform.rotation = VRInitiator.GetControllerRotation();
+            }
+        }
+    }
+
     /// <summary>
     /// Changes all interactions (placing, firing, throwing) to follow the controller forward instead of camera forward
     /// </summary>

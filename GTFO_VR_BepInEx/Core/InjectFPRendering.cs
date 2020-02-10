@@ -22,6 +22,7 @@ namespace GTFO_VR_BepInEx.Core
     /// <summary>
     /// Makes the hacking tool render normally instead of in the 2D UI camera
     /// </summary>
+    /// // TODO Doesn't work correctly yet
     [HarmonyPatch(typeof(HackingTool), "Setup")]
     class InjectRenderFirstPersonHackingToolForVR
     {

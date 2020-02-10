@@ -54,7 +54,7 @@ namespace GTFO_VR
 				GetTypeStrIfExists(c)
 				});
 			}
-			return text;
+			return text + GetTransformPositionAndRotationString(t);
 		}
 
 		static string GetTransformData(Transform t, int depth)
@@ -73,7 +73,7 @@ namespace GTFO_VR
 		{
 			if (c != null && c.GetType() != null)
 			{
-				return c.GetType().ToString();
+				return "T:" + c.GetType().ToString();
 			}
 			return "";
 		}

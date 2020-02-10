@@ -22,7 +22,10 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Prefix(BulletWeapon __instance)
         {
-            __instance.FPItemHolder.ItemAimTrigger = true;
+            if (VRInitiator.VR_ENABLED && VRInitiator.VR_CONTROLLER_PRESENT)
+            {
+                __instance.FPItemHolder.ItemAimTrigger = true;
+            }
         }
     }
 }
