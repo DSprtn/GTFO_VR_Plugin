@@ -5,6 +5,8 @@ Active trello board - https://trello.com/b/zSk7bBMS/gtfovr
 
 Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases 
 
+Grab the newest version from here! https://github.com/DSprtn/GTFO_VR_Plugin/releases
+
 ## Installation: 
 
 	Download and install BepInEx into your GTFO game folder (SteamLibrary\steamapps\common\GTFO\)
