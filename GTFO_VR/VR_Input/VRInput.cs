@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using GTFO_VR.Core;
+using GTFO_VR.Input;
+using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 
@@ -39,9 +41,13 @@ namespace GTFO_VR
 
         private SteamVR_Action_Boolean crouchAction;
 
+        private SteamVR_Action_Boolean openMenuAction;
+
+        private SteamVR_Action_Boolean openMapAction;
+
         private static Dictionary<InputAction, SteamVR_Action_Boolean> boolActions;
 
-        public static bool crouchOnIRLCrouch = true;
+        
 
         public static float IRLCrouchBorder = 1f;
 
@@ -67,9 +73,9 @@ namespace GTFO_VR
             }
             
             SteamVR_Action_Boolean boolActionMapping = VRInput.instance.GetBoolActionMapping(action);
-            if (VRInput.crouchOnIRLCrouch && action.Equals(InputAction.Crouch))
+            if (IsIRLCrouchValid(action))
             {
-                return (boolActionMapping != null && boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any)) || VRInitiator.hmd.transform.localPosition.y < VRInput.IRLCrouchBorder;
+                return (boolActionMapping != null && boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any)) || HMD.hmd.transform.localPosition.y < VRInput.IRLCrouchBorder;
             }
             return boolActionMapping != null && boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any);
         }
@@ -82,9 +88,9 @@ namespace GTFO_VR
             }
            
             SteamVR_Action_Boolean boolActionMapping = VRInput.instance.GetBoolActionMapping(action);
-            if (VRInitiator.crouchOnIRLCrouch && action.Equals(InputAction.Crouch))
+            if (IsIRLCrouchValid(action))
             {
-                return (boolActionMapping != null && boolActionMapping.GetState(SteamVR_Input_Sources.Any)) || VRInitiator.hmd.transform.localPosition.y < VRInput.IRLCrouchBorder;
+                return (boolActionMapping != null && boolActionMapping.GetState(SteamVR_Input_Sources.Any)) || HMD.hmd.transform.localPosition.y < VRInput.IRLCrouchBorder;
             }
             return boolActionMapping != null && boolActionMapping.GetState(SteamVR_Input_Sources.Any);
         }
@@ -97,11 +103,16 @@ namespace GTFO_VR
             }
             
             SteamVR_Action_Boolean boolActionMapping = VRInput.instance.GetBoolActionMapping(action);
-            if (VRInput.crouchOnIRLCrouch && action.Equals(InputAction.Crouch))
+            if (IsIRLCrouchValid(action))
             {
-                return boolActionMapping != null && !boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any) || !boolActionMapping.GetState(SteamVR_Input_Sources.Any) && (boolActionMapping.GetStateUp(SteamVR_Input_Sources.Any) || (VRInitiator.hmd.transform.localPosition.y > VRInput.IRLCrouchBorder));
+              return boolActionMapping != null && !boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any) || !boolActionMapping.GetState(SteamVR_Input_Sources.Any) && (boolActionMapping.GetStateUp(SteamVR_Input_Sources.Any) || (HMD.hmd.transform.localPosition.y > VRInput.IRLCrouchBorder));
             }
             return boolActionMapping != null && boolActionMapping.GetStateUp(SteamVR_Input_Sources.Any);
+        }
+
+        static bool IsIRLCrouchValid(InputAction action)
+        {
+            return action.Equals(InputAction.Crouch) && PlayerVR.LoadedAndInGame && VRSettings.crouchOnIRLCrouch;
         }
 
         public static float GetAxis(InputAction action)
@@ -115,12 +126,12 @@ namespace GTFO_VR
 
         public static bool GetSnapTurningLeft()
         {
-            return VRInput.Initialized && VRInput.instance.snapLeftAction.GetState(SteamVR_Input_Sources.Any);
+            return VRInput.Initialized && VRInput.instance.snapLeftAction.GetStateDown(SteamVR_Input_Sources.Any);
         }
 
         public static bool GetSnapTurningRight()
         {
-            return VRInput.Initialized && VRInput.instance.snapRightAction.GetState(SteamVR_Input_Sources.Any);
+            return VRInput.Initialized && VRInput.instance.snapRightAction.GetStateDown(SteamVR_Input_Sources.Any);
         }
 
         private void InitializeActionMapping()
@@ -138,6 +149,8 @@ namespace GTFO_VR
             crouchAction = SteamVR_Input.GetBooleanAction("Crouch", false);
             sprintAction = SteamVR_Input.GetBooleanAction("Sprint", false);
             jumpAction = SteamVR_Input.GetBooleanAction("Jump", false);
+            openMapAction = SteamVR_Input.GetBooleanAction("OpenMap", false);
+            openMenuAction = SteamVR_Input.GetBooleanAction("OpenMenu", false);
 
 
             VRInput.boolActions = new Dictionary<InputAction, SteamVR_Action_Boolean>
@@ -151,7 +164,11 @@ namespace GTFO_VR
                 { InputAction.Reload, reloadAction },
                 { InputAction.Melee, aimAction },
                 { InputAction.TerminalExit, reloadAction },
-                { InputAction.ScrollItems, weaponSwitchLeftAction },
+                { InputAction.MenuClick, shootAction },
+                { InputAction.MenuClickAlternate, interactAction },
+                { InputAction.MenuExit, reloadAction },
+                { InputAction.MenuToggle, openMenuAction },
+                { InputAction.ToggleMap, openMapAction },
                 { InputAction.Flashlight, flashlightAction }
             };
         }
@@ -181,12 +198,21 @@ namespace GTFO_VR
             }
             else
             {
-                if (InputAction.MoveHorizontal.Equals(action))
+                if (InputAction.MoveHorizontal.Equals(action) || InputAction.GamepadLookHorizontal.Equals(action))
                 {
+                    if(FocusStateManager.CurrentState.Equals(eFocusState.MainMenu) || FocusStateManager.CurrentState.Equals(eFocusState.Map))
+                    {
+                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x / 8f;
+                    }
                     return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x;
+                    
                 }
-                if (InputAction.MoveVertical.Equals(action))
+                if (InputAction.MoveVertical.Equals(action) || InputAction.GamepadLookVertical.Equals(action))
                 {
+                    if (FocusStateManager.CurrentState.Equals(eFocusState.MainMenu) || FocusStateManager.CurrentState.Equals(eFocusState.Map))
+                    {
+                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y / 8f;
+                    }
                     return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y;
                 }
                 return 0f;

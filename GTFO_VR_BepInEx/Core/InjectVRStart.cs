@@ -15,16 +15,16 @@ namespace GTFO_VR_BepInEx.Core
     /// Entry point for loading and initiating all things VR
     /// </summary>
 
-    [HarmonyPatch(typeof(CM_PageBase),"Update")]
-    class InjectDebug
+    [HarmonyPatch(typeof(UI_Pass),"Awake")]
+    class InjectVRStart
     {
-        static void Prefix(CM_PageBase __instance)
+        static void Prefix(UI_Pass __instance)
         {
-            if(Input.GetKeyDown(KeyCode.F11))
+            if(!VRGlobal.VR_ENABLED)
             {
-                DebugHelper.LogScene();
+                new GameObject("VR_Globals").AddComponent<VRGlobal>();
+                VR_UI_Overlay.UI_ref = __instance;
             }
-           
         }
     }
 }

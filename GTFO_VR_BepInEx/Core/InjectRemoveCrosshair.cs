@@ -37,6 +37,7 @@ namespace GTFO_VR_BepInEx.Core
     {
         static bool Prefix()
         {
+
             return false;
         }
     }

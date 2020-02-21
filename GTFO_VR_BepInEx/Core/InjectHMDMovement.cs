@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using GTFO_VR;
+using GTFO_VR.Core;
+using GTFO_VR.Input;
 using HarmonyLib;
 using Player;
 using UnityEngine;
@@ -13,25 +15,27 @@ using UnityEngine;
 
 namespace GTFO_VR_BepInEx.Core
 {
+
+    // Patch position as raw HMD pos + player body position offset, everything is kept in world coords where possible
     [HarmonyPatch(typeof(FPSCamera),"RotationUpdate")] // Trust me on this one
     class InjectHMDPosition
     {
 
         static void Postfix(FPSCamera __instance, PlayerAgent ___m_owner)
         {
-            if (!VRInitiator.VR_ENABLED)
+            if (!PlayerVR.VRSetup)
             {
                 return;
             }
-            if (VRInitiator.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation))
+            if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation))
             {
-                __instance.Position = ___m_owner.PlayerCharacterController.SmoothPosition + VRInitiator.hmd.transform.position;
+                __instance.Position = ___m_owner.PlayerCharacterController.SmoothPosition + HMD.hmd.transform.position;
             }
         }
     }
 
     
-    // We inject pitch and yaw data separately from the roll 
+    // We inject pitch and yaw rotation data into the same method where mouse and gamepad input is being handled
     // This way lookDirection gets synced correctly to other players in multiplayer 
 
     [HarmonyPatch(typeof(FPSCamera), "UpdatePosOffset")] // Really, it makes sense in the code
@@ -40,14 +44,14 @@ namespace GTFO_VR_BepInEx.Core
 
         static void Postfix(FPSCamera __instance)
         {
-            if (!VRInitiator.VR_ENABLED)
+            if (!PlayerVR.VRSetup)
             {
                 return;
             }
 
-            if ((VRInitiator.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) || VRInitiator.VR_TRACKING_TYPE.Equals(TrackingType.Rotation)))
+            if ((VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) || VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.Rotation)))
             {
-                Vector3 euler = VRInitiator.GetVRCameraEulerRotation();
+                Vector3 euler = HMD.GetVRCameraEulerRotation();
                 AccessTools.FieldRefAccess<LookCameraController, float>((LookCameraController)__instance, "m_pitch") = euler.x;
                 AccessTools.FieldRefAccess<LookCameraController, float>((LookCameraController)__instance, "m_yaw") = euler.y;
             }
@@ -63,13 +67,13 @@ namespace GTFO_VR_BepInEx.Core
 
         static void Postfix(FPSCamera __instance)
         {
-            if(!VRInitiator.VR_ENABLED)
+            if(!PlayerVR.VRSetup)
             {
                 return;
             }
-            Vector3 Euler = __instance.m_camera.transform.parent.localEulerAngles;
-            Euler.z = VRInitiator.GetVRCameraEulerRotation().z;
-            __instance.m_camera.transform.parent.localEulerAngles = Euler;
+            Vector3 euler = __instance.m_camera.transform.parent.localEulerAngles;
+            euler.z = HMD.GetVRCameraEulerRotation().z;
+            __instance.m_camera.transform.parent.rotation = Quaternion.Euler(euler);
         }
     }
 }

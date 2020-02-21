@@ -13,6 +13,9 @@ namespace GTFO_VR
         public GameObject dot;
 
         public Vector3 dotScale = new Vector3(0.04f, 0.01f, 0.016f);
+        public float dotMultiplierByDistance = 2.5f;
+
+        bool setup = false;
 
         void Awake()
         {
@@ -30,18 +33,18 @@ namespace GTFO_VR
             {
                 return;
             }
-            float dist = 100f;
+            float dist = 50f;
 
             Ray raycast = new Ray(transform.parent.position, transform.parent.forward);
             RaycastHit hit;
-            bool bHit = Physics.Raycast(raycast, out hit, 101f, LayerManager.MASK_WEAPON_TARGETS, QueryTriggerInteraction.Ignore);
+            bool bHit = Physics.Raycast(raycast, out hit, 51f, LayerManager.MASK_WEAPON_TARGETS, QueryTriggerInteraction.Ignore);
 
             if (bHit && hit.distance < 100f)
             {
                 dist = hit.distance;
                 dot.transform.rotation = Quaternion.LookRotation(pointer.transform.up);
                 dot.transform.position = hit.point;
-
+                dot.transform.localScale = Vector3.Lerp(dotScale, dotScale * 3f, dist / 51f);
             }
             else
             {
@@ -56,7 +59,10 @@ namespace GTFO_VR
 
         public void PlayerChangedItem(ItemEquippable item)
         {
-
+            if(!setup)
+            {
+                return;
+            }
             if (item.HasFlashlight && item.AmmoType != Player.AmmoType.None)
             {
                 EnablePointer();
@@ -112,6 +118,7 @@ namespace GTFO_VR
             material.SetColor("_Color", this.color);
             pointer.GetComponent<MeshRenderer>().material = material;
             dot.GetComponent<MeshRenderer>().material = material;
+            setup = true;
         }
 
         void OnDestroy()

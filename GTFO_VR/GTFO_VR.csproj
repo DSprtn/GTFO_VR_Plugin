@@ -35,13 +35,20 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="DebugHelper.cs" />
+    <Compile Include="Core\VRSettings.cs" />
+    <Compile Include="Events\FocusStateEvents.cs" />
+    <Compile Include="Util\HandType.cs" />
+    <Compile Include="VR_Input\Controllers.cs" />
+    <Compile Include="VR_Input\HMD.cs" />
+    <Compile Include="Util\DebugHelper.cs" />
     <Compile Include="Events\ItemEquippableEvents.cs" />
-    <Compile Include="LaserPointer.cs" />
+    <Compile Include="Util\LaserPointer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TrackingType.cs" />
-    <Compile Include="VRInitiator.cs" />
-    <Compile Include="VRInput.cs" />
+    <Compile Include="Util\TrackingType.cs" />
+    <Compile Include="Core\VR_UI_Overlay.cs" />
+    <Compile Include="Core\VRGlobal.cs" />
+    <Compile Include="Core\PlayerVR.cs" />
+    <Compile Include="VR_Input\VRInput.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="GlobalFramework-ASM, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -76,5 +83,6 @@
       <HintPath>..\lib\GameLibs\Utils-ASM.dll</HintPath>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
