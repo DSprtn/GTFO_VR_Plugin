@@ -27,5 +27,10 @@ namespace GTFO_VR.Events
         {
             return currentItem != null && currentItem.IsWeapon && currentItem.AmmoType != Player.AmmoType.None;
         }
+
+        public static bool CurrentItemHasFlashlight()
+        {
+            return currentItem != null && currentItem.HasFlashlight;
+        }
     }
 }

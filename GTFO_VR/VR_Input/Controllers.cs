@@ -71,7 +71,7 @@ namespace GTFO_VR.Input
             }
             if (!mainController)
             {
-                return Vector3.zero;
+                return HMD.hmd.transform.forward;
             }
             return (mainController.transform.rotation * Vector3.forward);
         }
@@ -84,7 +84,7 @@ namespace GTFO_VR.Input
             }
             if (!mainController)
             {
-                return Vector3.zero;
+                return HMD.hmd.transform.position;
             }
             return mainController.transform.position;
         }

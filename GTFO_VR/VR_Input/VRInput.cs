@@ -48,8 +48,7 @@ namespace GTFO_VR
         private static Dictionary<InputAction, SteamVR_Action_Boolean> boolActions;
 
         
-
-        public static float IRLCrouchBorder = 1f;
+        public static float IRLCrouchBorder = 1.2f;
 
         public void Start()
         {
@@ -200,18 +199,28 @@ namespace GTFO_VR
             {
                 if (InputAction.MoveHorizontal.Equals(action) || InputAction.GamepadLookHorizontal.Equals(action))
                 {
-                    if(FocusStateManager.CurrentState.Equals(eFocusState.MainMenu) || FocusStateManager.CurrentState.Equals(eFocusState.Map))
+                    if(FocusStateManager.CurrentState.Equals(eFocusState.MainMenu))
                     {
-                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x / 8f;
+                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x / 10f;
+                    }
+
+                    if(FocusStateManager.CurrentState.Equals(eFocusState.Map))
+                    {
+                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x / 5f;
                     }
                     return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x;
                     
                 }
                 if (InputAction.MoveVertical.Equals(action) || InputAction.GamepadLookVertical.Equals(action))
                 {
-                    if (FocusStateManager.CurrentState.Equals(eFocusState.MainMenu) || FocusStateManager.CurrentState.Equals(eFocusState.Map))
+                    if (FocusStateManager.CurrentState.Equals(eFocusState.MainMenu))
                     {
-                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y / 8f;
+                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y / 10f;
+                    }
+
+                    if (FocusStateManager.CurrentState.Equals(eFocusState.Map))
+                    {
+                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y / 5f;
                     }
                     return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y;
                 }

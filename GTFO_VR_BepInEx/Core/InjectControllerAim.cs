@@ -53,7 +53,8 @@ namespace GTFO_VR_BepInEx.Core
     
 
     /// <summary>
-    /// Changes all interactions (placing, firing, throwing) to follow the controller forward instead of camera forward
+    /// Changes most actions (placing, firing, throwing) to follow the controller forward instead of camera forward 
+    /// NOTE: Does not affect flashlight aggro
     /// </summary>
     /// 
 
@@ -73,6 +74,7 @@ namespace GTFO_VR_BepInEx.Core
                     __instance.CameraRayNormal = hit.normal;
                     __instance.CameraRayObject = hit.collider.gameObject;
                     __instance.CameraRayDist = hit.distance;
+                    
                 }
                 else
                 {

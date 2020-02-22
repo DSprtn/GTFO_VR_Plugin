@@ -19,10 +19,9 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Postfix(PlayerGuiLayer __instance, PUI_Inventory ___Inventory, PUI_LocalPlayerStatus ___m_playerStatus, PUI_WardenIntel ___m_wardenIntel, PUI_GameEventLog ___m_gameEventLog, PUI_Compass ___m_compass, PUI_GameObjectives ___m_wardenObjective)
         {
-            
-            // Don't use inventory, we just look in the tab menu for that for now
-            ___Inventory.SetPosition(new Vector2(-9999f, -9999f));
-            ___Inventory.transform.localScale *= .80f;
+
+            ___Inventory.SetPosition(new Vector2(-500f, -250f));
+            ___Inventory.transform.localScale *= .75f;
 
             ___m_compass.SetPosition(new Vector2(0.0f, -150f));
             ___m_compass.transform.localScale *= .8f;

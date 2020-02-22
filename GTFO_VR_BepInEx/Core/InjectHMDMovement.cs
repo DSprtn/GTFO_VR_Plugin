@@ -29,7 +29,7 @@ namespace GTFO_VR_BepInEx.Core
             }
             if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
-                __instance.Position = ___m_owner.PlayerCharacterController.SmoothPosition + HMD.hmd.transform.position;
+                __instance.Position = ___m_owner.PlayerCharacterController.SmoothPosition + HMD.GetPosition();
             }
         }
     }
@@ -73,7 +73,7 @@ namespace GTFO_VR_BepInEx.Core
             }
             Vector3 euler = __instance.m_camera.transform.parent.localEulerAngles;
             euler.z = HMD.GetVRCameraEulerRotation().z;
-            __instance.m_camera.transform.parent.rotation = Quaternion.Euler(euler);
+            __instance.m_camera.transform.parent.localRotation = Quaternion.Euler(euler);
         }
     }
 }

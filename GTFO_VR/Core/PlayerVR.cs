@@ -31,6 +31,8 @@ namespace GTFO_VR
 
         LaserPointer pointer;
 
+        public static PlayerAgent playerAgent;
+
         void Awake()
         {
             if (VRSetup)
@@ -38,7 +40,6 @@ namespace GTFO_VR
                 Debug.LogWarning("Trying to create duplicate VRInit class...");
                 return;
             }
-
         }
 
         void Update()
@@ -47,7 +48,7 @@ namespace GTFO_VR
             {
                 VRSetup = false;
             }
-            // Ugly, but works for now
+            // Ugly, but works for now, assumes player is always created in elevator 
             if(!VRSetup && FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 if (!fpscamera)
@@ -85,11 +86,28 @@ namespace GTFO_VR
             {
                 UIVisible = !UIVisible;
                 PlayerGui.SetVisible(UIVisible);
-                PlayerGui.Inventory.SetVisible(false);
+                PlayerGui.Inventory.SetVisible(UIVisible);
                 PlayerGui.m_playerStatus.SetVisible(UIVisible);
                 PlayerGui.m_compass.SetVisible(UIVisible);
             }
-            //UpdateOrigin();
+        }
+
+        public static float VRDetectionMod(Vector3 dir, float distance, float m_flashLightRange, float m_flashlight_spotAngle)
+        {
+            if (distance > m_flashLightRange) {
+                return 0.0f;
+            }
+            Vector3 VRLookDir = fpscamera.Forward; 
+            if(ItemEquippableEvents.CurrentItemHasFlashlight())
+            {
+                VRLookDir = Controllers.GetAimForward();
+            }
+            float angleDiff = Vector3.Angle(dir, -VRLookDir);
+            float spotlightAngleSize = m_flashlight_spotAngle * 0.5f;
+            if (angleDiff > spotlightAngleSize)
+                return 0.0f;
+            float distanceMultiplier = 1.0f - distance / m_flashLightRange;
+            return Mathf.Min((1.0f - angleDiff / spotlightAngleSize) * distanceMultiplier, 0.2f);
         }
 
         public static void SetPlayerGUIInstance(PlayerGuiLayer gui)
