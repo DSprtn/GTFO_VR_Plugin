@@ -37,7 +37,7 @@ namespace GTFO_VR.Input
             //localRotation *= snapTurnRot;
 
             // Get local rotation for FPS Camera from world hmd rotation to keep using the game's systems and keep player rotation in multiplayer in sync
-            if (PlayerVR.LoadedAndInGame && PlayerVR.fpscamera)
+            if (PlayerVR.LoadedAndInGame && PlayerVR.fpscamera && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 localRotation = Quaternion.Inverse(PlayerVR.fpscamera.m_holder.transform.rotation) * localRotation;
             }

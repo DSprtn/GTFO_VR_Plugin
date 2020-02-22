@@ -27,7 +27,7 @@ namespace GTFO_VR_BepInEx.Core
             {
                 return;
             }
-            if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation))
+            if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 __instance.Position = ___m_owner.PlayerCharacterController.SmoothPosition + HMD.hmd.transform.position;
             }

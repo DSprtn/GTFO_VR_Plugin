@@ -119,6 +119,8 @@ namespace GTFO_VR
             pointer.GetComponent<MeshRenderer>().material = material;
             dot.GetComponent<MeshRenderer>().material = material;
             setup = true;
+
+            DisablePointer();
         }
 
         void OnDestroy()
