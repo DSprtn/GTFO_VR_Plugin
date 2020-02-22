@@ -38,6 +38,7 @@ namespace GTFO_VR
                 Debug.LogWarning("Trying to create duplicate VRInit class...");
                 return;
             }
+
         }
 
         void Update()
@@ -78,7 +79,7 @@ namespace GTFO_VR
                 return;
             }
 
-            DoUglyFOVHack();
+            DoUglyCameraHack();
            
             if(PlayerGui != null && VRInput.GetActionDown(InputAction.Aim))
             {
@@ -149,7 +150,7 @@ namespace GTFO_VR
             CellSettingsApply.ApplyWorldFOV((int)SteamVR.instance.fieldOfView);
         }
 
-        private void DoUglyFOVHack()
+        private void DoUglyCameraHack()
         {
             if (fpscamera != null && fpscamera.m_camera != null)
             {
@@ -166,6 +167,11 @@ namespace GTFO_VR
             {
                 ClusteredRendering.Current.m_lightBufferCamera.fieldOfView = SteamVR.instance.fieldOfView;
                 ClusteredRendering.Current.m_lightBufferCamera.aspect = SteamVR.instance.aspect;
+            }
+
+            foreach(SteamVR_Camera cam in SteamVR_Render.instance.cameras)
+            {
+                cam.camera.enabled = false;
             }
         }
 

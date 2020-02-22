@@ -54,6 +54,14 @@ namespace GTFO_VR
             {
                 DebugHelper.LogScene();
             }
+
+            if(UnityEngine.Input.GetKeyDown(KeyCode.F3))
+            {
+                foreach(Camera cam in FindObjectsOfType<Camera>())
+                {
+                    Debug.Log(cam.gameObject + " --- Enabled: " + cam.enabled);
+                }
+            }
         }
 
         private void Setup()
@@ -107,6 +115,7 @@ namespace GTFO_VR
                 Debug.Log("Creating VR Player...");
                 ingamePlayer = new GameObject();
                 ingamePlayer.AddComponent<PlayerVR>();
+                
             }
            
             ToggleOverlay(false);
@@ -131,17 +140,19 @@ namespace GTFO_VR
         {
             PlayerVR.LoadedAndInGame = toggle;
             SteamVR_Render.pauseRendering = !toggle;
-            return;
-            if (PlayerVR.VRCamera)
+            Invoke("DisableUnneccessaryCams",.2f);
+
+        }
+
+        void DisableUnneccessaryCams()
+        {
+            if(PlayerVR.VRCamera && PlayerVR.VRCamera.head)
             {
-                foreach (SteamVR_Camera cam in PlayerVR.VRCamera.transform.root.gameObject.GetComponentsInChildren<SteamVR_Camera>())
+                foreach (Camera cam in PlayerVR.VRCamera.head.GetComponentsInChildren<Camera>())
                 {
-                    Debug.LogWarning("Toggling VR cam...");
-                    cam.enabled = toggle;
+                    cam.enabled = false;
                 }
             }
-
-
         }
 
         void OnDestroy()
