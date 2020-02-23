@@ -49,7 +49,9 @@ Try to get used to the game in Non-VR mode first before using!
 	to get game sound
 
 	Terminals only work with VR controllers, so not with gamepads
-	Shortcuts exist under uppercase letters on the keyboard. If you'd like to have custom bindable shortcuts let me know! 
+	Shortcuts exist under uppercase letters on the keyboard. 
+	If you'd like to have custom bindable shortcuts let me know! 
+	
 	The shortcuts return the following:
 	
 		case ("L"):
@@ -71,8 +73,8 @@ Try to get used to the game in Non-VR mode first before using!
 				
 ### Features:
 	Mostly correctly working VR UI and gameplay (also works in multiplayer, with others not having the mod!)
-	Full SteamVR_Input binding support, you can play with all VR controllers, provided they have 
-	enough buttons for all the actions in GTFO!
+	Full SteamVR_Input binding support, you can play with all VR controllers, 
+	provided they have enough buttons for all the actions in GTFO!
 	Full VR controller based aiming (including fancy laserpointer)
 	Main menu, map UI and terminal working correctly in VR
 	
