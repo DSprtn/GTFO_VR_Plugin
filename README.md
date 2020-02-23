@@ -25,7 +25,9 @@ Try to get used to the game in Non-VR mode first before using!
 	Make sure 'use desktop game theatre' is off in the properties of GTFO in the steam library 
 	(or in general in settings) 
 	Start SteamVR
-	Launch the game from within the library or however you like, and you're in!
+	Launch the game from within the library or however you like, and you're in! 
+	(Ignore the GTFO does not support VR warning!)
+	
 	Menu and map UI is controlled by the 'movement', 'fire' and 'interact' actions
 	For now the in-game UI is a bit janky so you can toggle it by using the 'aim' action
 
