@@ -86,9 +86,8 @@ Try to get used to the game in Non-VR mode first before using!
 	
 ### Known issues: 
 	
-	Oculus integration seems to be working for the Rift S.
-	If it isn't working for you try to disable controllers in config to play with head aiming 
-	and let me know which HMD you have.
+	Oculus integration seems to be working for at least the Rift S, but if it isn't working for you, 
+	try to disable controllers in config to play with head aiming and let me know which HMD you have.
 	
 	--- in GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg
 	In-game HUD is crappy looking --- intel, objectives, ammo info (except in map) 
