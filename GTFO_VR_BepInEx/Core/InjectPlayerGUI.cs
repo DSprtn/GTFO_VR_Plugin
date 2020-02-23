@@ -23,15 +23,17 @@ namespace GTFO_VR_BepInEx.Core
             ___Inventory.SetPosition(new Vector2(-500f, -250f));
             ___Inventory.transform.localScale *= .75f;
 
-            ___m_compass.SetPosition(new Vector2(0.0f, -150f));
-            ___m_compass.transform.localScale *= .8f;
+            ___m_compass.SetPosition(new Vector2(0.0f, -175f));
+            ___m_compass.transform.localScale *= .75f;
             ___m_gameEventLog.SetPosition(new Vector2(150f, 50f));
 
-            ___m_wardenIntel.SetPosition(new Vector2(450f, -100f));
-            ___m_wardenIntel.transform.localScale *= .6f;
-            ___m_wardenObjective.SetPosition(new Vector2(450f, -300f));
-            ___m_wardenObjective.transform.localScale *= .65f;
-            ___m_playerStatus.SetPosition(new Vector2(0.0f, 80f));
+            ___m_wardenIntel.SetPosition(new Vector2(800f, -100f));
+            ___m_wardenIntel.transform.localScale *= .5f;
+
+            ___m_wardenObjective.SetPosition(new Vector2(550f, -350f));
+            ___m_wardenObjective.transform.localScale *= .7f;
+
+            ___m_playerStatus.SetPosition(new Vector2(0.0f, 180f));
             
 
             PlayerVR.SetPlayerGUIInstance(__instance);

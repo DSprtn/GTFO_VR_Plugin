@@ -3,6 +3,7 @@ using GTFO_VR.Events;
 using GTFO_VR.Input;
 using Player;
 using System;
+using System.Text;
 using UnityEngine;
 using Valve.VR;
 using Valve.VR.Extras;
@@ -22,6 +23,9 @@ namespace GTFO_VR
 
         VR_UI_Overlay overlay;
 
+        static string currentFrameInput = "";
+
+        public static bool keyboardClosedThisFrame;
 
         void Awake()
         {
@@ -35,14 +39,43 @@ namespace GTFO_VR
             }
             // Prevent SteamVR from adding a tracking script automatically. We handle this manually in HMD
             SteamVR_Camera.useHeadTracking = false;
-
+            SteamVR_Events.System(EVREventType.VREvent_KeyboardCharInput).Listen(OnKeyboardInput);
+            SteamVR_Events.System(EVREventType.VREvent_KeyboardDone).Listen(OnKeyboardDone);
+            SteamVR_Events.System(EVREventType.VREvent_KeyboardClosed).Listen(OnKeyboardDone);
             FocusStateEvents.OnFocusStateChange += FocusChanged;
-
             Setup();
+        }
+
+        public void OnKeyboardDone(VREvent_t arg0)
+        {
+            keyboardClosedThisFrame = true;
+        }
+
+        private void OnKeyboardInput(VREvent_t ev)
+        {
+            VREvent_Keyboard_t keyboard = ev.data.keyboard;
+            byte[] inputBytes = new byte[] { keyboard.cNewInput0, keyboard.cNewInput1, keyboard.cNewInput2, keyboard.cNewInput3, keyboard.cNewInput4, keyboard.cNewInput5, keyboard.cNewInput6, keyboard.cNewInput7 };
+            int len = 0;
+            for (; inputBytes[len] != 0 && len < 7; len++) ;
+            string input = System.Text.Encoding.UTF8.GetString(inputBytes, 0, len);
+            input = HandleSpecialConversionAndShortcuts(input);
+           
+            currentFrameInput = input;
         }
 
         
 
+        public static string GetKeyboardInput()
+        {
+            return currentFrameInput;
+        }
+
+        void LateUpdate()
+        {
+            currentFrameInput = "";
+            keyboardClosedThisFrame = false;
+        }
+        
         void Update()
         {
             DoDebugOnKeyDown();
@@ -67,7 +100,6 @@ namespace GTFO_VR
         private void Setup()
         {
             SteamVR.Initialize(false);
-            //menuPlayer = new GameObject("VrMenuPlayer").AddComponent<VRMenuPlayer>();
             gameObject.AddComponent<VRInput>();
             Invoke("SetupOverlay", .25f);
             gameObject.AddComponent<HMD>();
@@ -91,6 +123,30 @@ namespace GTFO_VR
             if(state.Equals(eFocusState.MainMenu) || state.Equals(eFocusState.Map)) {
                 HandleOutOfGameFocus();
             }
+
+            if(state.Equals(eFocusState.ComputerTerminal))
+            {
+                SteamVR_Render.unfocusedRenderResolution = 1f;
+                SteamVR.instance.overlay.ShowKeyboard(0, 0, "Terminal input", 256, "", true, 0);
+
+                OrientKeyboard();
+            }
+            else
+            {
+                SteamVR.instance.overlay.HideKeyboard();
+                SteamVR_Render.unfocusedRenderResolution = .5f;
+            }
+        }
+
+        private static void OrientKeyboard()
+        {
+            Quaternion Rot = Quaternion.Euler(Vector3.Project(HMD.hmd.transform.rotation.eulerAngles, Vector3.up));
+            Vector3 Pos = HMD.hmd.transform.localPosition + Rot * Vector3.forward * 1f;
+            Pos.y = HMD.hmd.transform.position.y + .5f;
+            Rot = Quaternion.LookRotation(HMD.hmd.transform.forward);
+            Rot = Quaternion.Euler(0f, Rot.eulerAngles.y, 0f);
+            var t = new SteamVR_Utils.RigidTransform(Pos, Rot).ToHmdMatrix34();
+            SteamVR.instance.overlay.SetKeyboardTransformAbsolute(ETrackingUniverseOrigin.TrackingUniverseStanding, ref t);
         }
 
         private void HandleOutOfGameFocus()
@@ -148,11 +204,59 @@ namespace GTFO_VR
         {
             if(PlayerVR.VRCamera && PlayerVR.VRCamera.head)
             {
-                foreach (Camera cam in PlayerVR.VRCamera.head.GetComponentsInChildren<Camera>())
+                foreach (Camera cam in PlayerVR.VRCamera.transform.root.GetComponentsInChildren<Camera>())
                 {
                     cam.enabled = false;
                 }
             }
+        }
+
+        private string HandleSpecialConversionAndShortcuts(string input)
+        {
+            switch (input)
+            {
+                case ("\n"):
+                    {
+                        return "\r";
+                    }
+                case ("-"):
+                    {
+                        return "_";
+                    }
+                case ("L"):
+                    {
+                        return "LIST ";
+                    }
+                case ("Q"):
+                    {
+                        return "QUERY ";
+                    }
+                case ("R"):
+                    {
+                        return "REACTOR";
+                    }
+                case ("V"):
+                    {
+                        return "REACTOR_VERIFY ";
+                    }
+                case ("P"):
+                    {
+                        return "PING ";
+                    }
+                case ("A"):
+                    {
+                        return "AMMOPACK";
+                    }
+                case ("T"):
+                    {
+                        return "TOOL_REFILL";
+                    }
+                case ("M"):
+                    {
+                        return "MEDIPACK";
+                    }
+            }
+            return input;
         }
 
         void OnDestroy()

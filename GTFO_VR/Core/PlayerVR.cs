@@ -40,6 +40,12 @@ namespace GTFO_VR
                 Debug.LogWarning("Trying to create duplicate VRInit class...");
                 return;
             }
+            FocusStateEvents.OnFocusStateChange += FocusStateChanged; 
+        }
+
+        public void FocusStateChanged(eFocusState newState)
+        {
+            // Do nothing yet
         }
 
         void Update()
@@ -84,6 +90,13 @@ namespace GTFO_VR
            
             if(PlayerGui != null && VRInput.GetActionDown(InputAction.Aim))
             {
+                foreach (Camera cam in FindObjectsOfType<Camera>())
+                {
+                    if(cam.enabled)
+                    {
+                        Debug.Log(cam.gameObject + " --- Enabled: " + cam.enabled);
+                    }                    
+                }
                 UIVisible = !UIVisible;
                 PlayerGui.SetVisible(UIVisible);
                 PlayerGui.Inventory.SetVisible(UIVisible);
@@ -165,7 +178,6 @@ namespace GTFO_VR
             // Handle head transform manually to better fit into the game's systems and allow things like syncing lookDir online
             // This is handled in harmony injections to FPSCamera
             VRCamera = fpscamera.gameObject.AddComponent<SteamVR_Camera>();
-            CellSettingsApply.ApplyWorldFOV((int)SteamVR.instance.fieldOfView);
         }
 
         private void DoUglyCameraHack()
@@ -195,6 +207,7 @@ namespace GTFO_VR
 
         void OnDestroy()
         {
+            FocusStateEvents.OnFocusStateChange -= FocusStateChanged;
             Destroy(pointer.gameObject);
         }
 
