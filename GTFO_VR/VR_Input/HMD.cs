@@ -1,5 +1,6 @@
 ﻿
 
+using GTFO_VR.Events;
 using UnityEngine;
 using Valve.VR;
 
@@ -23,6 +24,17 @@ namespace GTFO_VR.Input
             tracking.index = SteamVR_TrackedObject.EIndex.Hmd;
 
             UnityEngine.Object.DontDestroyOnLoad(hmd);
+        }
+
+        public static Vector3 GetVRLookDir()
+        {
+            if(ItemEquippableEvents.CurrentItemHasFlashlight())
+            {
+                return Controllers.GetAimForward();
+            } else
+            {
+                return hmd.transform.forward;
+            }
         }
 
         public static Vector3 GetPosition()
