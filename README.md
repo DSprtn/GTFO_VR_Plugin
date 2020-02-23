@@ -82,8 +82,8 @@ Try to get used to the game in Non-VR mode first before using!
 
 	Oculus integration isn't working well yet (disable controllers in config to play anyway)! 
 	--- in GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg
-	In-game HUD is crappy looking --- intel, objectives, ammo info (except in map) or not positioned correctly  
-	--- enemy markings, teammate name/stats (except in map)
+	In-game HUD is crappy looking --- intel, objectives, ammo info (except in map) 
+	or not positioned correctly  --- enemy markings, teammate name/stats (except in map)
 	Hacking tool minigame isn't rendered correctly for VR
 
 ## Want to contribute?
