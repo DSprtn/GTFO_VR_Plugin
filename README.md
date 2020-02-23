@@ -85,8 +85,11 @@ Try to get used to the game in Non-VR mode first before using!
 	Main menu, map UI and terminal working correctly in VR
 	
 ### Known issues: 
-
-	Oculus integration isn't working well yet (disable controllers in config to play anyway)! 
+	
+	Oculus integration seems to be working for the Rift S.
+	If it isn't working for you try to disable controllers in config to play with head aiming 
+	and let me know which HMD you have.
+	
 	--- in GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg
 	In-game HUD is crappy looking --- intel, objectives, ammo info (except in map) 
 	or not positioned correctly  --- enemy markings, teammate name/stats (except in map)
