@@ -7,7 +7,8 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 
 Grab the newest version from here! https://github.com/DSprtn/GTFO_VR_Plugin/releases
 
-If you can't get it to work, double check with this video - https://www.youtube.com/watch?v=lrx90XxlyfU 
+If you can't get the installation to work, double check with this video - https://www.youtube.com/watch?v=lrx90XxlyfU 
+It's not entirely correct on setting up the bindings and the like but the installation part is correct.
 (Thanks Whisper!)
 
 Try to get used to the game in Non-VR mode first before using! 
