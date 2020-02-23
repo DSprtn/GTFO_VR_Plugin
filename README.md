@@ -7,9 +7,9 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 
 Grab the newest version from here! https://github.com/DSprtn/GTFO_VR_Plugin/releases
 
-DISCLAIMER: This is still an early release - Things might not always be up to par. Try to get used to the game in Non-VR mode first before using! 
+Try to get used to the game in Non-VR mode first before using! 
 
-!!!Lower your render resolution and in-game settings, GTFO VR is a BIG resource hog!!!
+
 
 ## Installation: 
 
@@ -35,6 +35,7 @@ DISCLAIMER: This is still an early release - Things might not always be up to pa
 
 ### Usage notes:
 
+	Lower your render resolution and in-game settings, GTFO VR is a BIG resource hog!
 	Remember to bind openmenu and openmap too! They work in-game correctly as you'd expect.
 	You can reorient the menu and map UI with the crouch input action
 	Using the 'aim' action toggles UI, it doesn't do anything else! --- I'll change this after the in-game UI update!
