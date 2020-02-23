@@ -1,4 +1,5 @@
-﻿using GTFO_VR.Events;
+﻿using GTFO_VR.Core;
+using GTFO_VR.Events;
 using GTFO_VR.Input;
 using Player;
 using System;
@@ -111,7 +112,7 @@ namespace GTFO_VR
                 return 0.0f;
             }
             Vector3 VRLookDir = fpscamera.Forward; 
-            if(ItemEquippableEvents.CurrentItemHasFlashlight())
+            if(ItemEquippableEvents.CurrentItemHasFlashlight() && VRSettings.UseVRControllers)
             {
                 VRLookDir = Controllers.GetAimForward();
             }
