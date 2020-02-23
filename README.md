@@ -48,9 +48,7 @@ Try to get used to the game in Non-VR mode first before using!
 	If you 'tab out' with SteamVR desktop remember to tab back in (by clicking on the game icon in the taskbar) 
 	to get game sound
 
-	Terminals only work with VR controllers, so not with gamepads
 	Shortcuts exist under uppercase letters on the keyboard. 
-	If you'd like to have custom bindable shortcuts let me know! 
 	
 	The shortcuts return the following:
 	
@@ -70,6 +68,8 @@ Try to get used to the game in Non-VR mode first before using!
 				return "REACTOR";
 		case ("V"):
 				return "REACTOR_VERIFY ";
+				
+	If you'd like to have custom bindable shortcuts let me know! 
 				
 ### Features:
 	Mostly correctly working VR UI and gameplay (also works in multiplayer, with others not having the mod!)
