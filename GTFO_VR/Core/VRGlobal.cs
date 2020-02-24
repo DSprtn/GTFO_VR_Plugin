@@ -87,14 +87,6 @@ namespace GTFO_VR
             {
                 DebugHelper.LogScene();
             }
-
-            if(UnityEngine.Input.GetKeyDown(KeyCode.F3))
-            {
-                foreach(Camera cam in FindObjectsOfType<Camera>())
-                {
-                    Debug.Log(cam.gameObject + " --- Enabled: " + cam.enabled);
-                }
-            }
         }
 
         private void Setup()
@@ -111,6 +103,15 @@ namespace GTFO_VR
         void SetupOverlay()
         {
             overlay = new GameObject("Overlay").AddComponent<VR_UI_Overlay>();
+        }
+
+        public static void ClearUIRenderTex()
+        {
+
+            RenderTexture rt = RenderTexture.active;
+            RenderTexture.active = UI_Core.UIPassHUD.Camera.targetTexture;
+            GL.Clear(true, true, Color.clear);
+            RenderTexture.active = rt;
         }
 
         public void FocusChanged(eFocusState state)
@@ -136,6 +137,7 @@ namespace GTFO_VR
                 SteamVR.instance.overlay.HideKeyboard();
                 SteamVR_Render.unfocusedRenderResolution = .5f;
             }
+            ClearUIRenderTex();
         }
 
         private static void OrientKeyboard()

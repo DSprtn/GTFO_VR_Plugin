@@ -28,7 +28,7 @@ namespace GTFO_VR
 
         static Quaternion snapTurnRot = Quaternion.identity;
 
-        static bool UIVisible = true;
+        public static bool UIVisible = true;
 
         LaserPointer pointer;
 
@@ -41,7 +41,11 @@ namespace GTFO_VR
                 Debug.LogWarning("Trying to create duplicate VRInit class...");
                 return;
             }
-            FocusStateEvents.OnFocusStateChange += FocusStateChanged; 
+            FocusStateEvents.OnFocusStateChange += FocusStateChanged;
+            Resolution res = new Resolution();
+            res.width = 1024;
+            res.height = 768;
+            ClusteredRendering.Current.OnResolutionChange(res);
         }
 
         public void FocusStateChanged(eFocusState newState)
@@ -89,22 +93,20 @@ namespace GTFO_VR
 
             DoUglyCameraHack();
            
-            if(PlayerGui != null && VRInput.GetActionDown(InputAction.Aim))
+            if(VRInput.GetActionDown(InputAction.Aim))
             {
-                foreach (Camera cam in FindObjectsOfType<Camera>())
-                {
-                    if(cam.enabled)
-                    {
-                        Debug.Log(cam.gameObject + " --- Enabled: " + cam.enabled);
-                    }                    
-                }
                 UIVisible = !UIVisible;
-                PlayerGui.SetVisible(UIVisible);
-                PlayerGui.Inventory.SetVisible(UIVisible);
-                PlayerGui.m_playerStatus.SetVisible(UIVisible);
-                PlayerGui.m_compass.SetVisible(UIVisible);
+
+
+                VRGlobal.ClearUIRenderTex();
+                //PlayerGui.SetVisible(UIVisible);
+                //PlayerGui.Inventory.SetVisible(UIVisible);
+                // PlayerGui.m_playerStatus.SetVisible(UIVisible);
+                //PlayerGui.m_compass.SetVisible(UIVisible);
             }
         }
+
+        
 
         public static float VRDetectionMod(Vector3 dir, float distance, float m_flashLightRange, float m_flashlight_spotAngle)
         {
@@ -196,6 +198,7 @@ namespace GTFO_VR
 
             if (ClusteredRendering.Current != null && ClusteredRendering.Current.m_lightBufferCamera != null)
             {
+
                 ClusteredRendering.Current.m_lightBufferCamera.fieldOfView = SteamVR.instance.fieldOfView;
                 ClusteredRendering.Current.m_lightBufferCamera.aspect = SteamVR.instance.aspect;
             }
