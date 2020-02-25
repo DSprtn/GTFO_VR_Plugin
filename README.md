@@ -44,21 +44,31 @@ Try to get used to the game in Non-VR mode first before using!
 	and IRL crouching detection in a config file which is created after starting the game at least once with 
 	the VR mod installed. It can be found under "GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg"
 	
-### Usage notes:
+## Usage notes:
+
+#### PERFORMANCE
 
 	Lower your render resolution and in-game settings, GTFO VR is a BIG resource hog!
+	
+####	MISC ACTIONS
 	
 	Remember to bind openmenu and openmap too! They work in-game correctly as you'd expect.
 	
 	Menu and map UI is controlled by the 'movement', 'crouch' (for re-orienting), 'fire' and 'interact' actions.
 
 	Using the 'aim' action toggles UI (giving a performance boost and removing jankyness), it doesn't do anything else!
-
+	
+####	STEAM_VR DESKTOP 
+	
+	
 	If you'd like to use SteamVR desktop set the game to windowed mode (unless you have multiple monitors) 
 	If you 'tab out' with SteamVR desktop remember to tab back in (by clicking on the game icon in the taskbar) 
 	to get game sound
-
-	Shortcuts exist as uppercase letters on the keyboard. To use simply set the keyboard to uppercase and it will
+	
+	
+####	TERMINAL
+	
+	Shortcuts exist as uppercase letters on the virtual keyboard. To use simply set the keyboard to uppercase and it will
 	autofill the text based on the letters you type in.
 	
 	The shortcuts return the following:
