@@ -71,8 +71,8 @@ Try to get used to the game in Non-VR mode first before using!
 	
 ####	TERMINAL
 	
-	Shortcuts exist as uppercase letters on the virtual keyboard. To use simply set the keyboard to uppercase and it will
-	autofill the text based on the letters you type in.
+	Shortcuts exist as uppercase letters on the virtual keyboard. To use simply, set the keyboard to uppercase 
+	and it will autofill the text based on the uppercase letters you type in.
 	
 	The shortcuts return the following:
 	
