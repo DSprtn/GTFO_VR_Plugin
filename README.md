@@ -59,7 +59,7 @@ Try to get used to the game in Non-VR mode first before using!
 	
 	Menu and map UI is controlled by the 'movement', 'crouch' (for re-orienting), 'fire' and 'interact' actions.
 
-	Using the 'aim' action toggles UI (giving a performance boost and removing jankyness), it doesn't do anything else!
+	Using the 'aim' action toggles UI (gives FPS too!), it doesn't do anything else!
 	
 ####	STEAM_VR DESKTOP 
 	
