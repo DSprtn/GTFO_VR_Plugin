@@ -50,6 +50,9 @@ Try to get used to the game in Non-VR mode first before using!
 
 	Lower your render resolution and in-game settings, GTFO VR is a BIG resource hog!
 	
+	If you don't mind small artifacting on lights in exchange for a bit of extra performance
+	set light rendering mode to '2' in GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg
+	
 ####	MISC ACTIONS
 	
 	Remember to bind openmenu and openmap too! They work in-game correctly as you'd expect.
