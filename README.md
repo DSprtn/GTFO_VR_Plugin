@@ -40,11 +40,17 @@ Try to get used to the game in Non-VR mode first before using!
 	Note: When you save your binding SteamVR might not grab the latest action poses, in that cases just create 
 	another binding, switch to that one and switch back and it will update correctly.
 	
-	There are configurable options for experimental performance tweaks, left handed mode, no VR controller mode 
-	and IRL crouching detection in a config file which is created after starting the game at least once with 
-	the VR mod installed. It can be found under "GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg"
-	
 ## Usage notes:
+
+#### CONFIGURATION 
+	
+	There are configurable options for:
+	-	Experimental performance tweaks 
+	-	Left handed mode 
+	-	No VR controller mode 
+	- 	IRL Crouching detection 
+	They can be found in a config file which is created after starting the game at least once with 
+	the VR mod installed. It can be found under "GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg"
 
 #### PERFORMANCE
 
@@ -95,14 +101,17 @@ Try to get used to the game in Non-VR mode first before using!
 
 	If you'd like to have custom bindable shortcuts let me know! 
 				
-### Features:
+## Features:
 	Mostly correctly working VR UI and gameplay (also works in multiplayer, with others not having the mod!)
+	
 	Full SteamVR_Input binding support, you can play with all VR controllers, 
 	provided they have enough buttons for all the actions in GTFO!
+	
 	Full VR controller based aiming (including fancy laserpointer)
+	
 	Main menu, map UI and terminal working correctly in VR
 	
-### Known issues: 
+## Known issues: 
 	
 	Oculus integration seems to be working for at least the Rift S, but if it isn't working for you 
 	try to disable controllers in config to play with head aiming and let me know which HMD you have.
@@ -110,6 +119,7 @@ Try to get used to the game in Non-VR mode first before using!
 	
 	In-game HUD is crappy looking --- intel, objectives, ammo info (except in map) 
 	or not positioned correctly  --- enemy markings, teammate name/stats (except in map)
+	
 	Hacking tool minigame isn't rendered correctly for VR
 
 ## Want to contribute?
