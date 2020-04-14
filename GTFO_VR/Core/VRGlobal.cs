@@ -1,6 +1,7 @@
 ﻿using GTFO_VR.Core;
 using GTFO_VR.Events;
 using GTFO_VR.Input;
+using GTFO_VR.Util;
 using Player;
 using System;
 using System.Text;
@@ -91,11 +92,15 @@ namespace GTFO_VR
 
         private void Setup()
         {
+            WeaponArchetypeVRData.Setup();
+
+
             SteamVR.Initialize(false);
             gameObject.AddComponent<VRInput>();
             Invoke("SetupOverlay", .25f);
             gameObject.AddComponent<HMD>();
             gameObject.AddComponent<Controllers>();
+
            
             DontDestroyOnLoad(gameObject);
         }

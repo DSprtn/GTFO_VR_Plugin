@@ -18,7 +18,7 @@ namespace GTFO_VR_BepInEx.Core
             enable = false;
         }
     }
-
+    /*
     /// <summary>
     /// Makes the hacking tool render normally instead of in the 2D UI camera
     /// </summary>
@@ -34,6 +34,7 @@ namespace GTFO_VR_BepInEx.Core
             }
         }
     }
+    */
 
     /// <summary>
     /// Disables FPS arms rendering, it's really wonky in VR so it's better to not see it at all
@@ -50,4 +51,5 @@ namespace GTFO_VR_BepInEx.Core
             }
         }
     }
+
 }

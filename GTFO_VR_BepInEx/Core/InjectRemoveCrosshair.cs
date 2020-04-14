@@ -32,6 +32,7 @@ namespace GTFO_VR_BepInEx.Core
     }
 
     // TODO, not working correctly yet --- Game is still showing hit indicators in game view (not in HMD though, so this only affects video recordings)
+    // Update - Might be fixed?
     [HarmonyPatch(typeof(CrosshairGuiLayer), "ShowHitIndicator")]
     class InjectRemoveCrosshairHit
     {

@@ -21,6 +21,7 @@ namespace GTFO_VR_BepInEx.Core
         private ConfigEntry<bool> configIRLCrouch;
         private ConfigEntry<bool> configUseLeftHand;
         private ConfigEntry<int>  configLightResMode;
+        private ConfigEntry<bool> configUseTwoHanded;
 
 
         void Awake()
@@ -37,6 +38,7 @@ namespace GTFO_VR_BepInEx.Core
             configIRLCrouch = Config.Bind("Input", "Crouch in-game when you crouch IRL?", true, "If true, when crouching down below a certain threshold IRL, the in-game character will also crouch");
             configUseLeftHand = Config.Bind("Input", "Use left hand as main hand?", false, "If true all items will appear in the left hand");
             configLightResMode = Config.Bind("Experimental performance tweaks", "Light render resolution tweak - the lower resolution the greater the performance gain!", 1, "0 = 1920x1080, 1 = 1024x768 (Seems to be no difference, big performance increase), 2=640x480 (some small artifacting on lights, great performance increase)");
+            configUseTwoHanded = Config.Bind("Input", "Use both hands to aim?", true, "If true, two-handed weapons will have to be aimed with both hands");
 
             Debug.Log("Use VR Controllers? : " + configUseControllers.Value);
             Debug.Log("Crouch on IRL crouch? : " + configIRLCrouch.Value);
@@ -46,6 +48,8 @@ namespace GTFO_VR_BepInEx.Core
             VRSettings.UseVRControllers = configUseControllers.Value;
             VRSettings.crouchOnIRLCrouch = configIRLCrouch.Value;
             VRSettings.lightRenderMode = configLightResMode.Value;
+            VRSettings.useTwoHandedAiming = configUseTwoHanded.Value;
+
             if(configUseLeftHand.Value)
             {
                 VRSettings.mainHand = GTFO_VR.HandType.Left;

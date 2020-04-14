@@ -1,5 +1,6 @@
 ﻿using GTFO_VR.Core;
 using GTFO_VR.Events;
+using GTFO_VR.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace GTFO_VR.Input
 
         static GameObject mainController;
 
+        static GameObject offhandController;
+
         void Awake()
         {
             SetupControllers();
@@ -30,10 +33,12 @@ namespace GTFO_VR.Input
             if (VRSettings.mainHand.Equals(HandType.Right))
             {
                 mainController = rightController;
+                offhandController = leftController;
             }
             else
             {
                 mainController = leftController;
+                offhandController = rightController;
             }
         }
 
@@ -85,6 +90,29 @@ namespace GTFO_VR.Input
             return (mainController.transform.rotation * Vector3.forward);
         }
 
+        public static Vector3 GetTwoHandedAimForward()
+        {
+            float currentItemYOffset = 0f;
+            Vector3 offhandPos = offhandController.transform.position;
+            offhandPos.y += currentItemYOffset;
+            return (offhandPos - mainController.transform.position).normalized;
+        }
+
+        public static Vector3 GetTwoHandedTransformUp()
+        {
+            return (mainController.transform.up + offhandController.transform.up) / 2;
+        }
+
+        public static Quaternion GetTwoHandedRotation()
+        {
+            return Quaternion.LookRotation(GetTwoHandedAimForward());
+        }
+
+        public static Vector3 GetTwoHandedPos()
+        {
+            return (mainController.transform.position + offhandController.transform.position) / 2;
+        }
+
         public static Vector3 GetAimFromPos()
         {
             if (ItemEquippableEvents.IsCurrentItemShootableWeapon())
@@ -111,7 +139,7 @@ namespace GTFO_VR.Input
             return mainController.transform.rotation;
         }
 
-        public static Quaternion GetMainControllerRotation()
+        public static Quaternion GetControllerAimRotation()
         {
             if (!mainController)
             {
@@ -120,7 +148,7 @@ namespace GTFO_VR.Input
             return mainController.transform.rotation;
         }
 
-        public static Vector3 GetMainControllerPosition()
+        public static Vector3 GetControllerPosition()
         {
             if (!mainController)
             {

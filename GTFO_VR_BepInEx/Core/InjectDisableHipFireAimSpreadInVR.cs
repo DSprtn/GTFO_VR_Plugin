@@ -16,7 +16,7 @@ using UnityEngine;
 namespace GTFO_VR_BepInEx.Core
 {
     /// <summary>
-    /// Add event call onItemEquipped
+    /// Weapons are always firing as if they were ADS'd 
     /// </summary>
 
     [HarmonyPatch(typeof(BulletWeapon),"Fire")]

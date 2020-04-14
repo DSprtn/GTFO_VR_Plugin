@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace GTFO_VR.Events
 {
@@ -18,8 +19,12 @@ namespace GTFO_VR.Events
         {
             if(OnPlayerWieldItem != null && item.Owner.IsLocallyOwned)
             {
+                // Archetype names - Melee, SMG, Pistol, Revolver
                 currentItem = item;
                 OnPlayerWieldItem.Invoke(item);
+                Debug.Log("Item equip changed---");
+                Debug.Log(item.ArchetypeName);
+                Debug.Log(item.PublicName);
             }
         }
 

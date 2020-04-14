@@ -38,6 +38,7 @@
     <Compile Include="Core\VRSettings.cs" />
     <Compile Include="Events\FocusStateEvents.cs" />
     <Compile Include="Util\HandType.cs" />
+    <Compile Include="Util\WeaponArchetypeVRData.cs" />
     <Compile Include="VR_Input\Controllers.cs" />
     <Compile Include="VR_Input\HMD.cs" />
     <Compile Include="Util\DebugHelper.cs" />
