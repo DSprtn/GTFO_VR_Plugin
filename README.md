@@ -49,6 +49,7 @@ Try to get used to the game in Non-VR mode first before using!
 	-	Left handed mode 
 	-	No VR controller mode 
 	- 	IRL Crouching detection 
+	-	Two handed aiming
 	They can be found in a config file which is created after starting the game at least once with 
 	the VR mod installed. It can be found under "GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg"
 
