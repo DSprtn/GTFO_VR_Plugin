@@ -37,7 +37,7 @@ namespace GTFO_VR
 
             Ray raycast = new Ray(transform.parent.position, transform.parent.forward);
             RaycastHit hit;
-            bool bHit = Physics.Raycast(raycast, out hit, 51f, LayerManager.MASK_WEAPON_TARGETS, QueryTriggerInteraction.Ignore);
+            bool bHit = Physics.Raycast(raycast, out hit, 51f, LayerManager.MASK_BULLETWEAPON_RAY, QueryTriggerInteraction.Ignore);
 
             if (bHit && hit.distance < 100f)
             {

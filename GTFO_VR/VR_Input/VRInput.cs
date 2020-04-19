@@ -15,6 +15,8 @@ namespace GTFO_VR
 
         public static bool Initialized;
 
+        public static SteamVR_Action_Vibration hapticAction;
+
         private SteamVR_Action_Boolean snapLeftAction;
 
         private SteamVR_Action_Boolean snapRightAction;
@@ -62,6 +64,12 @@ namespace GTFO_VR
             InitializeActionMapping();
             VRInput.Initialized = true;
             Debug.Log("Input initialized");
+        }
+
+
+        public static void TriggerHapticPulse(float duration, float frequency, float amplitude, SteamVR_Input_Sources controller)
+        {
+            hapticAction.Execute(0.0f, duration, frequency, amplitude, controller);
         }
 
         public static bool GetActionDown(InputAction action)
@@ -140,6 +148,7 @@ namespace GTFO_VR
 
         private void InitializeActionMapping()
         {
+            hapticAction = SteamVR_Input.GetAction<SteamVR_Action_Vibration>("Haptic", false);
             weaponSwitchLeftAction = SteamVR_Input.GetBooleanAction("WeaponSwitchLeft", false);
             weaponSwitchRightAction = SteamVR_Input.GetBooleanAction("WeaponSwitchRight", false);
             reloadAction = SteamVR_Input.GetBooleanAction("Reload", false);

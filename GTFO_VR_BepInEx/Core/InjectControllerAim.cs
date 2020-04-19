@@ -1,6 +1,7 @@
 ﻿using GTFO_VR;
 using GTFO_VR.Core;
 using GTFO_VR.Input;
+using GTFO_VR.Util;
 using HarmonyLib;
 using UnityEngine;
 
@@ -9,9 +10,8 @@ using UnityEngine;
 namespace GTFO_VR_BepInEx.Core
 {
     /// <summary>
-    /// Makes the first person items follow the right controller of the player
+    /// Makes the first person items follow the position and aim direction of the main controller(s) of the player
     /// </summary>
-
     [HarmonyPatch(typeof(FirstPersonItemHolder),"LateUpdate")]
     class InjectControllerAim
     {
@@ -20,20 +20,33 @@ namespace GTFO_VR_BepInEx.Core
        
             if (PlayerVR.VRSetup && VRSettings.UseVRControllers)
             {
-                if(___WieldedItem == null)
+                if (___WieldedItem == null)
                 {
                     return;
                 }
-                ___WieldedItem.transform.position = Controllers.GetMainControllerPosition();
-                ___WieldedItem.transform.rotation = Controllers.GetMainControllerRotation();
+
+                Vector3 gripOffset = ___WieldedItem.transform.position - ___WieldedItem.transform.TransformPoint(WeaponArchetypeVRData.GetVRWeaponData(___WieldedItem.ArchetypeName).transformToVRGrip);
+
+                ___WieldedItem.transform.position = Controllers.GetControllerPosition() + gripOffset;
+
+                if (VRSettings.twoHandedAimingEnabled && Controllers.aimingTwoHanded && WeaponArchetypeVRData.GetVRWeaponData(___WieldedItem.ArchetypeName).allowsDoubleHanded)
+                {
+                    ___WieldedItem.transform.rotation = Controllers.GetTwoHandedRotation();
+                }
+                else
+                {
+                    ___WieldedItem.transform.rotation = Controllers.GetControllerAimRotation();
+                }
             }
         }
     }
 
-    
+
+
+
+    /// <summary>
     /// Inject this twice because otherwise data like weapon muzzle position is not updated correctly (makes tracers spawn in wrong location, for instance)
     /// </summary>
-
     [HarmonyPatch(typeof(FirstPersonItemHolder), "Update")]
     class InjectControllerAimAlign
     {
@@ -45,8 +58,18 @@ namespace GTFO_VR_BepInEx.Core
                 {
                     return;
                 }
-                ___WieldedItem.transform.position = Controllers.GetMainControllerPosition();
-                ___WieldedItem.transform.rotation = Controllers.GetMainControllerRotation();
+
+                Vector3 gripOffset = ___WieldedItem.transform.position - ___WieldedItem.transform.TransformPoint(WeaponArchetypeVRData.GetVRWeaponData(___WieldedItem.ArchetypeName).transformToVRGrip);
+
+                ___WieldedItem.transform.position = Controllers.GetControllerPosition() + gripOffset;
+
+                if(VRSettings.twoHandedAimingEnabled && Controllers.aimingTwoHanded && WeaponArchetypeVRData.GetVRWeaponData(___WieldedItem.ArchetypeName).allowsDoubleHanded)
+                {
+                    ___WieldedItem.transform.rotation = Controllers.GetTwoHandedRotation();
+                } else
+                {
+                    ___WieldedItem.transform.rotation = Controllers.GetControllerAimRotation();
+                }
             }
         }
     }

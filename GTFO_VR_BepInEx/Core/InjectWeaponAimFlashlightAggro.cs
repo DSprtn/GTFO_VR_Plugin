@@ -22,7 +22,7 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Prefix(ref Vector3 lookDir)
         {
-            lookDir = HMD.GetVRLookDir();
+            lookDir = HMD.GetVRInteractionLookDir();
         }
     }
 

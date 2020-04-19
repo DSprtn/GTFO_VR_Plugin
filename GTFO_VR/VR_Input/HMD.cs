@@ -26,7 +26,7 @@ namespace GTFO_VR.Input
             UnityEngine.Object.DontDestroyOnLoad(hmd);
         }
 
-        public static Vector3 GetVRLookDir()
+        public static Vector3 GetVRInteractionLookDir()
         {
             if(ItemEquippableEvents.CurrentItemHasFlashlight())
             {
@@ -35,6 +35,11 @@ namespace GTFO_VR.Input
             {
                 return hmd.transform.forward;
             }
+        }
+
+        public static Vector3 GetFlatForward()
+        {
+            return Vector3.Project(hmd.transform.rotation.eulerAngles, Vector3.up);
         }
 
         public static Vector3 GetPosition()
@@ -65,12 +70,10 @@ namespace GTFO_VR.Input
             {
                 return localRotation.eulerAngles;
             }
-            localRotation = Quaternion.Inverse(PlayerVR.fpscamera.m_holder.transform.rotation) * localRotation;
+
             // Get local rotation for FPS Camera from world hmd rotation to keep using the game's systems and keep player rotation in multiplayer in sync
-            //if (PlayerVR.LoadedAndInGame && PlayerVR.fpscamera && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
-            // {
-            //     localRotation = Quaternion.Inverse(PlayerVR.fpscamera.m_holder.transform.rotation) * localRotation;
-            // }
+            localRotation = Quaternion.Inverse(PlayerVR.fpscamera.m_holder.transform.rotation) * localRotation;
+
             return localRotation.eulerAngles;
         }
     }
