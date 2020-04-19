@@ -8,10 +8,11 @@ using GTFO_VR;
 using GTFO_VR.Core;
 using GTFO_VR.Events;
 using GTFO_VR.Input;
+using GTFO_VR.Util;
 using HarmonyLib;
 using Player;
 using UnityEngine;
-
+using static GTFO_VR.Util.WeaponArchetypeVRData;
 
 namespace GTFO_VR_BepInEx.Core
 {
@@ -24,9 +25,17 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Prefix(BulletWeapon __instance)
         {
-            if (PlayerVR.VRSetup && VRSettings.UseVRControllers)
+            if (PlayerVR.VRSetup)// && VRSettings.UseVRControllers)
             {
                 __instance.FPItemHolder.ItemAimTrigger = true;
+
+                // Toggle for hipfire-like spread when not using double handed aiming, some people might prefer playing it single handed though so I'm leaving this disabled
+                /*
+                VRWeaponData data = WeaponArchetypeVRData.GetVRWeaponData(__instance.ArchetypeName);
+                if(!data.allowsDoubleHanded || (data.allowsDoubleHanded && Controllers.aimingTwoHanded)) {
+                    __instance.FPItemHolder.ItemAimTrigger = true;
+                }
+                */
             }
         }
     }

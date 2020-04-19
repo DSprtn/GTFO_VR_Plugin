@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using Valve.VR;
+using static GTFO_VR.Util.WeaponArchetypeVRData;
 
 namespace GTFO_VR.Input
 {
@@ -22,10 +23,96 @@ namespace GTFO_VR.Input
 
         static GameObject offhandController;
 
+        public static bool aimingTwoHanded;
+
+        float doubleHandStartDistance = .25f;
+
+        float doubleHandLeaveDistance = .55f;
+
+        bool wasInDoubleHandPosLastFrame = false;
+
+        HandType mainControllerType = HandType.Right;
+        HandType offHandControllerType = HandType.Left;
+
         void Awake()
         {
             SetupControllers();
             SetMainController();
+            //ItemEquippableEvents.OnPlayerWieldItem += CheckShouldDoubleHand; 
+        }
+
+        void Update()
+        {
+            bool isInDoubleHandPos = false;
+            if(PlayerVR.LoadedAndInGame)
+            {
+                VRWeaponData itemData = WeaponArchetypeVRData.GetVRWeaponData(ItemEquippableEvents.currentItem);
+                if (itemData.allowsDoubleHanded)
+                {
+                    bool wasAimingTwoHanded = aimingTwoHanded;
+                    isInDoubleHandPos = AreControllersInDoubleHandedPosition();
+
+                    if (!aimingTwoHanded && !wasInDoubleHandPosLastFrame && isInDoubleHandPos)
+                    {
+                        VRInput.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, GetDeviceFromType(offHandControllerType));
+                    }
+
+                    if (aimingTwoHanded)
+                    {
+                        aimingTwoHanded = !AreControllersOutsideOfDoubleHandedAimingRange();
+                        if (wasAimingTwoHanded && !aimingTwoHanded)
+                        {
+                            VRInput.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, GetDeviceFromType(offHandControllerType));
+                        }
+                    }
+                    else
+                    {
+                        aimingTwoHanded = AreControllersInDoubleHandedPosition();
+                    }
+                }
+                wasInDoubleHandPosLastFrame = isInDoubleHandPos;
+            }
+        }
+
+        
+
+
+        SteamVR_Input_Sources GetDeviceFromType(HandType type)
+        {
+            if (type.Equals(HandType.Left))
+            {
+                return SteamVR_Input_Sources.LeftHand;
+            }
+            return SteamVR_Input_Sources.RightHand;
+        }
+
+        /*
+        private void CheckShouldDoubleHand(ItemEquippable item)
+        {
+            VRWeaponData itemData = WeaponArchetypeVRData.GetVRWeaponData(item.ArchetypeName);
+            if (itemData.allowsDoubleHanded)
+            {
+                aimingTwoHanded = AreControllersInDoubleHandedPosition();
+            }
+        }
+        */
+
+        bool AreControllersInDoubleHandedPosition()
+        {
+            if(Vector3.Distance(mainController.transform.position,offhandController.transform.position) < doubleHandStartDistance)
+            {
+                return true; 
+            }
+            return false;
+        }
+
+        bool AreControllersOutsideOfDoubleHandedAimingRange()
+        {
+            if (Vector3.Distance(mainController.transform.position, offhandController.transform.position) > doubleHandLeaveDistance)
+            {
+                return true;
+            }
+            return false;
         }
 
         private void SetMainController()
@@ -34,11 +121,15 @@ namespace GTFO_VR.Input
             {
                 mainController = rightController;
                 offhandController = leftController;
+                mainControllerType = HandType.Right;
+                offHandControllerType = HandType.Left;
             }
             else
             {
                 mainController = leftController;
                 offhandController = rightController;
+                mainControllerType = HandType.Left;
+                offHandControllerType = HandType.Right;
             }
         }
 
@@ -155,6 +246,12 @@ namespace GTFO_VR.Input
                 return Vector3.zero;
             }
             return mainController.transform.position;
+        }
+
+
+        void OnDestroy()
+        {
+            //ItemEquippableEvents.OnPlayerWieldItem -= CheckShouldDoubleHand;
         }
     }
 }

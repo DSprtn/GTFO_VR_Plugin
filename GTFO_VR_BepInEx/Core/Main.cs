@@ -48,7 +48,7 @@ namespace GTFO_VR_BepInEx.Core
             VRSettings.UseVRControllers = configUseControllers.Value;
             VRSettings.crouchOnIRLCrouch = configIRLCrouch.Value;
             VRSettings.lightRenderMode = configLightResMode.Value;
-            VRSettings.useTwoHandedAiming = configUseTwoHanded.Value;
+            VRSettings.twoHandedAimingEnabled = configUseTwoHanded.Value;
 
             if(configUseLeftHand.Value)
             {

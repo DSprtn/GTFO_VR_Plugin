@@ -29,7 +29,7 @@ namespace GTFO_VR_BepInEx.Core
 
                 ___WieldedItem.transform.position = Controllers.GetControllerPosition() + gripOffset;
 
-                if (VRSettings.useTwoHandedAiming && WeaponArchetypeVRData.GetVRWeaponData(___WieldedItem.ArchetypeName).doubleHandedAim)
+                if (VRSettings.twoHandedAimingEnabled && Controllers.aimingTwoHanded && WeaponArchetypeVRData.GetVRWeaponData(___WieldedItem.ArchetypeName).allowsDoubleHanded)
                 {
                     ___WieldedItem.transform.rotation = Controllers.GetTwoHandedRotation();
                 }
@@ -63,7 +63,7 @@ namespace GTFO_VR_BepInEx.Core
 
                 ___WieldedItem.transform.position = Controllers.GetControllerPosition() + gripOffset;
 
-                if(VRSettings.useTwoHandedAiming && WeaponArchetypeVRData.GetVRWeaponData(___WieldedItem.ArchetypeName).doubleHandedAim)
+                if(VRSettings.twoHandedAimingEnabled && Controllers.aimingTwoHanded && WeaponArchetypeVRData.GetVRWeaponData(___WieldedItem.ArchetypeName).allowsDoubleHanded)
                 {
                     ___WieldedItem.transform.rotation = Controllers.GetTwoHandedRotation();
                 } else

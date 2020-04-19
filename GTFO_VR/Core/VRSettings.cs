@@ -18,7 +18,7 @@ namespace GTFO_VR.Core
 
         public static int lightRenderMode = 0;
 
-        public static bool useTwoHandedAiming = true;
+        public static bool twoHandedAimingEnabled = true;
 
     }
 }
