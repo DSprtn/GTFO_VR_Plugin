@@ -9,7 +9,7 @@ Grab the newest version from here! https://github.com/DSprtn/GTFO_VR_Plugin/rele
 
 If you can't get the installation to work, double check with this video - https://www.youtube.com/watch?v=lrx90XxlyfU 
 It's up to date up to 02:34, except you need to get GTFO VR instead of GTFO Testing
-(Thanks Whisper!)
+(Thanks for the video Whisper!)
 
 Try to get used to the game in Non-VR mode first before using! 
 
