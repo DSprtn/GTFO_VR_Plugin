@@ -1,5 +1,5 @@
 # GTFO_VR_Plugin
-### A plugin to add full roomscale/virtual reality support your favorite game!
+### A plugin to add full roomscale/virtual reality support to your favorite game!
 
 Active trello board (upcoming features and ongoing work) - https://trello.com/b/zSk7bBMS/gtfovr
 
