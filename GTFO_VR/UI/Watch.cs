@@ -231,6 +231,9 @@ namespace GTFO_VR.UI
         {
             ItemEquippableEvents.OnPlayerWieldItem -= ItemSwitched;
             InventoryAmmoEvents.OnInventoryAmmoUpdate -= UiUpdate;
+            objectiveDisplay = null;
+            Health = null;
+            Infection = null;
         }
 
     }

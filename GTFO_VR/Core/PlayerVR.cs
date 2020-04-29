@@ -53,8 +53,11 @@ namespace GTFO_VR
 
         private void SpawnWatch()
         {
-            watch = Instantiate(VRGlobal.watchPrefab, new Vector3(0, 0, 0), Quaternion.Euler(new Vector3(0, 0, 0)), null).AddComponent<Watch>();
-            watch.transform.localScale = new Vector3(1.25f,1.25f,1.25f);
+            if(!watch)
+            {
+                watch = Instantiate(VRGlobal.watchPrefab, new Vector3(0, 0, 0), Quaternion.Euler(new Vector3(0, 0, 0)), null).AddComponent<Watch>();
+                watch.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
+            }
         }
 
         public void FocusStateChanged(eFocusState newState)
@@ -235,6 +238,7 @@ namespace GTFO_VR
         {
             FocusStateEvents.OnFocusStateChange -= FocusStateChanged;
             Destroy(pointer.gameObject);
+            Destroy(watch);
         }
 
     }
