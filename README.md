@@ -90,7 +90,7 @@ Try to get used to the game in Non-VR mode first before using!
 	
 	The shortcuts return the following:
 	
-		case ("L"): returns "LIST "
+		case ("L"): 	returns "LIST "
 		
 		case ("Q"):	returns "QUERY "
 		
