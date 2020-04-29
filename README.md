@@ -72,6 +72,10 @@ Try to get used to the game in Non-VR mode first before using!
 	
 	The watch can be toggled between inventory and objectives with the ToggleWatchMode action.
 	
+	The watch UI is as follows - The top 5 bars represent the inventory slots with ammo in them. On the bottom left
+	there are 2 bars (later might be 3) representing health, infection and possibly air. The big block divides 
+	itself up based on the amount of bullets in your currently held weapon. Each block is one bullet.
+	
 	Remember to bind openmenu and openmap too! They work in-game correctly as you'd expect.
 	
 	Menu and map UI is controlled by the 'movement', 'crouch' (for re-orienting), 'fire' and 'interact' actions.
