@@ -19,12 +19,12 @@ namespace GTFO_VR.Events
         {
             if(OnPlayerWieldItem != null && item.Owner.IsLocallyOwned)
             {
-                // Archetype names - Melee, SMG, Pistol, Revolver
                 currentItem = item;
-                OnPlayerWieldItem.Invoke(item);
                 Debug.Log("Item equip changed---");
                 Debug.Log(item.ArchetypeName);
                 Debug.Log(item.PublicName);
+                OnPlayerWieldItem.Invoke(item);
+                
             }
         }
 

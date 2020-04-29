@@ -20,5 +20,7 @@ namespace GTFO_VR.Core
 
         public static bool twoHandedAimingEnabled = true;
 
+        public static bool disableCompass = true;
+
     }
 }

@@ -19,20 +19,20 @@ namespace GTFO_VR.Input
 
         public static GameObject rightController;
 
-        static GameObject mainController;
+        public static GameObject mainController;
 
-        static GameObject offhandController;
+        public static GameObject offhandController;
 
         public static bool aimingTwoHanded;
 
-        float doubleHandStartDistance = .25f;
+        float doubleHandStartDistance = .14f;
 
-        float doubleHandLeaveDistance = .55f;
+        float doubleHandLeaveDistance = .60f;
 
         bool wasInDoubleHandPosLastFrame = false;
 
-        HandType mainControllerType = HandType.Right;
-        HandType offHandControllerType = HandType.Left;
+        public static HandType mainControllerType = HandType.Right;
+        public static HandType offHandControllerType = HandType.Left;
 
         void Awake()
         {
@@ -69,6 +69,9 @@ namespace GTFO_VR.Input
                     {
                         aimingTwoHanded = AreControllersInDoubleHandedPosition();
                     }
+                } else
+                {
+                    aimingTwoHanded = false;
                 }
                 wasInDoubleHandPosLastFrame = isInDoubleHandPos;
             }
@@ -77,7 +80,7 @@ namespace GTFO_VR.Input
         
 
 
-        SteamVR_Input_Sources GetDeviceFromType(HandType type)
+        public static SteamVR_Input_Sources GetDeviceFromType(HandType type)
         {
             if (type.Equals(HandType.Left))
             {

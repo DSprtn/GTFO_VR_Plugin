@@ -23,7 +23,7 @@ namespace GTFO_VR
 
         private SteamVR_Action_Boolean shootAction;
 
-        private SteamVR_Action_Boolean aimAction;
+        private SteamVR_Action_Boolean toggleWatchAction;
 
         private SteamVR_Action_Vector2 movementAxisAction;
 
@@ -46,6 +46,8 @@ namespace GTFO_VR
         private SteamVR_Action_Boolean openMenuAction;
 
         private SteamVR_Action_Boolean openMapAction;
+
+        private SteamVR_Action_Boolean pingAction;
 
         private static Dictionary<InputAction, SteamVR_Action_Boolean> boolActions;
 
@@ -156,7 +158,7 @@ namespace GTFO_VR
             snapLeftAction = SteamVR_Input.GetBooleanAction("SnapTurnLeft", false);
             snapRightAction = SteamVR_Input.GetBooleanAction("SnapTurnRight", false);
             shootAction = SteamVR_Input.GetBooleanAction("Shoot", false);
-            aimAction = SteamVR_Input.GetBooleanAction("Aim", false);
+            toggleWatchAction = SteamVR_Input.GetBooleanAction("ToggleWatchMode", false);
             movementAxisAction = SteamVR_Input.GetVector2Action("Movement", false);
             interactAction = SteamVR_Input.GetBooleanAction("interact", false);
             crouchAction = SteamVR_Input.GetBooleanAction("Crouch", false);
@@ -164,18 +166,20 @@ namespace GTFO_VR
             jumpAction = SteamVR_Input.GetBooleanAction("Jump", false);
             openMapAction = SteamVR_Input.GetBooleanAction("OpenMap", false);
             openMenuAction = SteamVR_Input.GetBooleanAction("OpenMenu", false);
+            pingAction = SteamVR_Input.GetBooleanAction("Ping", false);
 
 
             VRInput.boolActions = new Dictionary<InputAction, SteamVR_Action_Boolean>
             {
                 { InputAction.Jump, jumpAction },
                 { InputAction.Use, interactAction },
-                { InputAction.Aim, aimAction },
+                { InputAction.Aim, toggleWatchAction },
                 { InputAction.Fire, shootAction },
                 { InputAction.Run, sprintAction },
                 { InputAction.Crouch, crouchAction },
                 { InputAction.Reload, reloadAction },
-                { InputAction.Melee, aimAction },
+                //{ InputAction.Melee, aimAction },
+                { InputAction.NavMarkerPing, pingAction },
                 { InputAction.TerminalUp, weaponSwitchLeftAction },
                 { InputAction.TerminalDown, weaponSwitchRightAction },
                 { InputAction.TerminalExit, reloadAction },

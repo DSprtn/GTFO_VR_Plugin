@@ -22,6 +22,7 @@ namespace GTFO_VR_BepInEx.Core
         private ConfigEntry<bool> configUseLeftHand;
         private ConfigEntry<int>  configLightResMode;
         private ConfigEntry<bool> configUseTwoHanded;
+        private ConfigEntry<bool> configDisableCompass;
 
 
         void Awake()
@@ -38,17 +39,21 @@ namespace GTFO_VR_BepInEx.Core
             configIRLCrouch = Config.Bind("Input", "Crouch in-game when you crouch IRL?", true, "If true, when crouching down below a certain threshold IRL, the in-game character will also crouch");
             configUseLeftHand = Config.Bind("Input", "Use left hand as main hand?", false, "If true all items will appear in the left hand");
             configLightResMode = Config.Bind("Experimental performance tweaks", "Light render resolution tweak - the lower resolution the greater the performance gain!", 1, "0 = 1920x1080, 1 = 1024x768 (Seems to be no difference, big performance increase), 2=640x480 (some small artifacting on lights, great performance increase)");
-            configUseTwoHanded = Config.Bind("Input", "Use both hands to aim?", true, "If true, two-handed weapons will have to be aimed with both hands");
+            configUseTwoHanded = Config.Bind("Input", "Use both hands to aim?", true, "If true, two-handed weapons will be allowed to be aimed with both hands.");
+            configDisableCompass = Config.Bind("UI", "Disable compass in-game?", true, "If true, compass will not be shown in-game");
 
             Debug.Log("Use VR Controllers? : " + configUseControllers.Value);
             Debug.Log("Crouch on IRL crouch? : " + configIRLCrouch.Value);
             Debug.Log("Use left hand as main hand? : " + configUseLeftHand.Value);
             Debug.Log("Light resolution mode: " + configLightResMode.Value.ToString());
+            Debug.Log("Use two handed aiming: " + configUseTwoHanded.Value);
+            Debug.Log("Disable compass: " + configDisableCompass.Value);
 
             VRSettings.UseVRControllers = configUseControllers.Value;
             VRSettings.crouchOnIRLCrouch = configIRLCrouch.Value;
             VRSettings.lightRenderMode = configLightResMode.Value;
             VRSettings.twoHandedAimingEnabled = configUseTwoHanded.Value;
+            VRSettings.disableCompass = configDisableCompass.Value;
 
             if(configUseLeftHand.Value)
             {

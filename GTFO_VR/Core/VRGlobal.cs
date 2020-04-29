@@ -28,6 +28,12 @@ namespace GTFO_VR
 
         public static bool keyboardClosedThisFrame;
 
+        public static GameObject watchPrefab;
+
+        public static bool hackingToolRenderingOverriden;
+
+        public static Resolution VR_Resolution;
+
         void Awake()
         {
             if(!instance)
@@ -44,7 +50,15 @@ namespace GTFO_VR
             SteamVR_Events.System(EVREventType.VREvent_KeyboardDone).Listen(OnKeyboardDone);
             SteamVR_Events.System(EVREventType.VREvent_KeyboardClosed).Listen(OnKeyboardDone);
             FocusStateEvents.OnFocusStateChange += FocusChanged;
+
+            AssetBundle assetBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/vrwatch");
+            if (assetBundle == null)
+            {
+                Debug.LogError("No assetbundle present!");
+            }
+            watchPrefab = assetBundle.LoadAsset<GameObject>("assets/p_vrwatch.prefab");
             Setup();
+            
         }
 
         public void OnKeyboardDone(VREvent_t arg0)
@@ -88,6 +102,21 @@ namespace GTFO_VR
             {
                 DebugHelper.LogScene();
             }
+
+            if(UnityEngine.Input.GetKeyDown(KeyCode.F5))
+            {
+                HackingTool t = FindObjectOfType<HackingTool>(); 
+                if(t)
+                {
+                    foreach(MeshRenderer m in t.GetComponentsInChildren<MeshRenderer>())
+                    {
+                        foreach(Material mat in m.sharedMaterials)
+                        {
+                            Debug.Log("Mat : " + mat.name + "  Shader" + mat.shader.name + "\n");
+                        }
+                    }
+                }
+            }
         }
 
         private void Setup()
@@ -100,8 +129,10 @@ namespace GTFO_VR
             Invoke("SetupOverlay", .25f);
             gameObject.AddComponent<HMD>();
             gameObject.AddComponent<Controllers>();
+            VR_Resolution = new Resolution();
+            VR_Resolution.height = (int)SteamVR.instance.sceneHeight;
+            VR_Resolution.width = (int)SteamVR.instance.sceneWidth;
 
-           
             DontDestroyOnLoad(gameObject);
         }
 

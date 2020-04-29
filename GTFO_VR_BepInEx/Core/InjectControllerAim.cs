@@ -1,6 +1,8 @@
 ﻿using GTFO_VR;
 using GTFO_VR.Core;
+using GTFO_VR.Events;
 using GTFO_VR.Input;
+using GTFO_VR.UI;
 using GTFO_VR.Util;
 using HarmonyLib;
 using UnityEngine;
@@ -24,7 +26,7 @@ namespace GTFO_VR_BepInEx.Core
                 {
                     return;
                 }
-
+               
                 Vector3 gripOffset = ___WieldedItem.transform.position - ___WieldedItem.transform.TransformPoint(WeaponArchetypeVRData.GetVRWeaponData(___WieldedItem.ArchetypeName).transformToVRGrip);
 
                 ___WieldedItem.transform.position = Controllers.GetControllerPosition() + gripOffset;
@@ -37,6 +39,7 @@ namespace GTFO_VR_BepInEx.Core
                 {
                     ___WieldedItem.transform.rotation = Controllers.GetControllerAimRotation();
                 }
+
             }
         }
     }
@@ -58,7 +61,6 @@ namespace GTFO_VR_BepInEx.Core
                 {
                     return;
                 }
-
                 Vector3 gripOffset = ___WieldedItem.transform.position - ___WieldedItem.transform.TransformPoint(WeaponArchetypeVRData.GetVRWeaponData(___WieldedItem.ArchetypeName).transformToVRGrip);
 
                 ___WieldedItem.transform.position = Controllers.GetControllerPosition() + gripOffset;

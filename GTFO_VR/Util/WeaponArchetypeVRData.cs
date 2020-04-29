@@ -50,7 +50,7 @@ namespace GTFO_VR.Util
             // WeaponTransform (z forward, y up, x right)
             weaponArchetypes = new Dictionary<string, VRWeaponData>();
             weaponArchetypes.Add("Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false));
-            weaponArchetypes.Add("Melee", new VRWeaponData(new Vector3(0f, -.33f, 0f), false));
+            weaponArchetypes.Add("Melee", new VRWeaponData(new Vector3(0f, -.10f, 0f), false));
 
             weaponArchetypes.Add("Mine deployer", new VRWeaponData(new Vector3(0f, 0f, -.05f), false));
             weaponArchetypes.Add("Bioscanner", new VRWeaponData(new Vector3(0f, 0f, -.05f), false));

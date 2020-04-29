@@ -1,6 +1,7 @@
 ﻿using GTFO_VR.Core;
 using GTFO_VR.Events;
 using GTFO_VR.Input;
+using GTFO_VR.UI;
 using Player;
 using System;
 using UnityEngine;
@@ -30,9 +31,11 @@ namespace GTFO_VR
 
         public static bool UIVisible = true;
 
-        LaserPointer pointer;
-
         public static PlayerAgent playerAgent;
+
+        Watch watch;
+
+        LaserPointer pointer;
 
         void Awake()
         {
@@ -42,10 +45,16 @@ namespace GTFO_VR
                 return;
             }
             FocusStateEvents.OnFocusStateChange += FocusStateChanged;
-            Resolution res = new Resolution();
-            res.width = 1024;
-            res.height = 768;
-            ClusteredRendering.Current.OnResolutionChange(res);
+            //Resolution hmdResolution = new Resolution();
+            //hmdResolution.height = (int)SteamVR.instance.sceneHeight;
+            //hmdResolution.width = (int)SteamVR.instance.sceneWidth / 2;
+            //PlayerGui.OnResolutionChange(hmdResolution);
+        }
+
+        private void SpawnWatch()
+        {
+            watch = Instantiate(VRGlobal.watchPrefab, new Vector3(0, 0, 0), Quaternion.Euler(new Vector3(0, 0, 0)), null).AddComponent<Watch>();
+            watch.transform.localScale = new Vector3(1.25f,1.25f,1.25f);
         }
 
         public void FocusStateChanged(eFocusState newState)
@@ -95,15 +104,21 @@ namespace GTFO_VR
            
             if(VRInput.GetActionDown(InputAction.Aim))
             {
-                UIVisible = !UIVisible;
+                if (watch)
+                {
+                    watch.SwitchState();
+                }
+               
+                //UIVisible = !UIVisible;
 
 
-                VRGlobal.ClearUIRenderTex();
+                //VRGlobal.ClearUIRenderTex();
                 //PlayerGui.SetVisible(UIVisible);
                 //PlayerGui.Inventory.SetVisible(UIVisible);
                 // PlayerGui.m_playerStatus.SetVisible(UIVisible);
                 //PlayerGui.m_compass.SetVisible(UIVisible);
             }
+            UpdateOrigin();
         }
 
         
@@ -131,14 +146,17 @@ namespace GTFO_VR
             PlayerGui = gui;
         }
 
-        private void UpdateOrigin()
+        public void UpdateOrigin()
         {
             if(origin == null || playerController == null)
             {
                 return;
             }
-            origin.transform.position = playerController.SmoothPosition;          
+            origin.transform.position = playerController.SmoothPosition;
         }
+
+
+
 
         private void Setup()
         {
@@ -146,6 +164,8 @@ namespace GTFO_VR
             SetupOrigin();
             SetupLaserPointer();
             SetupVRPlayerCamera();
+            SpawnWatch();
+            
             VRSetup = true;
             LoadedAndInGame = true;
         }
@@ -201,6 +221,8 @@ namespace GTFO_VR
 
                 ClusteredRendering.Current.m_lightBufferCamera.fieldOfView = SteamVR.instance.fieldOfView;
                 ClusteredRendering.Current.m_lightBufferCamera.aspect = SteamVR.instance.aspect;
+                ClusteredRendering.Current.m_lightBufferCamera.transform.position = fpscamera.m_camera.transform.position;
+                ClusteredRendering.Current.m_lightBufferCamera.transform.rotation = fpscamera.m_camera.transform.rotation;
             }
 
             foreach(SteamVR_Camera cam in SteamVR_Render.instance.cameras)

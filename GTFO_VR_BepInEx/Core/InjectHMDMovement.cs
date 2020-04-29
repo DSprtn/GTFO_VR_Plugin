@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using GTFO_VR;
 using GTFO_VR.Core;
+using GTFO_VR.Events;
 using GTFO_VR.Input;
 using HarmonyLib;
 using Player;
@@ -17,7 +18,7 @@ namespace GTFO_VR_BepInEx.Core
 {
 
     // Patch position as raw HMD pos + player body position offset, everything is kept in world coords where possible
-    [HarmonyPatch(typeof(FPSCamera),"RotationUpdate")] // Trust me on this one
+    [HarmonyPatch(typeof(FPSCamera),"RotationUpdate")]
     class InjectHMDPosition
     {
 
@@ -38,15 +39,21 @@ namespace GTFO_VR_BepInEx.Core
     // We inject pitch and yaw rotation data into the same method where mouse and gamepad input is being handled
     // This way lookDirection gets synced correctly to other players in multiplayer 
 
-    [HarmonyPatch(typeof(FPSCamera), "UpdatePosOffset")] // Really, it makes sense in the code
+    [HarmonyPatch(typeof(FPSCamera), "UpdatePosOffset")]
     class InjectHMDRotationPitchYaw
     {
 
-        static void Postfix(FPSCamera __instance)
+        static void Postfix(FPSCamera __instance, PlayerAgent ___m_owner)
         {
             if (!PlayerVR.VRSetup)
             {
                 return;
+            }
+
+            // Repeat position inject or the transforms will get out of sync (Unity transform handling mumbo jumbo ensues, frame later or frame behind tracking)
+            if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
+            {
+                __instance.Position = ___m_owner.PlayerCharacterController.SmoothPosition + HMD.GetPosition();
             }
 
             if ((VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) || VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.Rotation)))

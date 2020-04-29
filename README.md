@@ -8,7 +8,7 @@ Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases
 Grab the newest version from here! https://github.com/DSprtn/GTFO_VR_Plugin/releases
 
 If you can't get the installation to work, double check with this video - https://www.youtube.com/watch?v=lrx90XxlyfU 
-It's up to date up to 02:34.
+It's up to date up to 02:34, except you need to get GTFO VR instead of GTFO Testing
 (Thanks Whisper!)
 
 Try to get used to the game in Non-VR mode first before using! 
@@ -32,7 +32,7 @@ Try to get used to the game in Non-VR mode first before using!
 	(Ignore the "GTFO does not support VR" warning and/or that it says launch in theatre mode in SteamVR!)
 	
 	If your controllers don't do anything in-game you might have to setup an input scheme. You can do so under 
-	SteamVR -> Settings -> Controllers -> Show old binding UI -> GTFO [Testing]
+	SteamVR -> Settings -> Controllers -> Show old binding UI -> GTFO VR
 	
 	You should be able to download bindings from there if anyone made them or create them yourself. Remember to set
 	an action pose! (Tip works best most of the time)
@@ -50,6 +50,7 @@ Try to get used to the game in Non-VR mode first before using!
 	-	No VR controller mode 
 	- 	IRL Crouching detection 
 	-	Two handed aiming
+	- 	Disabling some 2D UI elements
 	They can be found in a config file which is created after starting the game at least once with 
 	the VR mod installed. It can be found under "GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg"
 
@@ -60,30 +61,36 @@ Try to get used to the game in Non-VR mode first before using!
 	If you don't mind small artifacting on lights in exchange for a bit of extra performance
 	set light rendering mode to '2' in GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg
 	
-####	MISC ACTIONS
+#### MISC IN-GAME ACTIONS
+
+	Stay in the middle of your playspace, the player character's collision is there so you might be able to walk through
+	geometry otherwise (Will be fixed in new version)
+
+	Double handed aiming is triggered by proximity. Bring your hands together on a double handed weapon 
+	and you will enable it. Bring them far apart and it will switch back. 
+	
+	The watch can be toggled between inventory and objectives with the ToggleWatchMode action.
 	
 	Remember to bind openmenu and openmap too! They work in-game correctly as you'd expect.
 	
 	Menu and map UI is controlled by the 'movement', 'crouch' (for re-orienting), 'fire' and 'interact' actions.
-
-	Using the 'aim' action toggles UI (gives FPS too!), it doesn't do anything else!
 	
-####	STEAM_VR DESKTOP 
+#### STEAM_VR DESKTOP 
 	
 	
 	If you'd like to use SteamVR desktop set the game to windowed mode (unless you have multiple monitors) 
 	If you 'tab out' with SteamVR desktop remember to tab back in (by clicking on the game icon in the taskbar) 
-	to get game sound
+	to get game sound.
 	
 	
-####	TERMINAL
+#### TERMINAL
 	
 	Shortcuts exist as uppercase letters on the virtual keyboard. To use simply, set the keyboard to uppercase 
 	and it will autofill the text based on the uppercase letters you type in.
 	
 	The shortcuts return the following:
 	
-		case ("L"): 	returns "LIST "
+		case ("L"): returns "LIST "
 		
 		case ("Q"):	returns "QUERY "
 		
@@ -105,23 +112,22 @@ Try to get used to the game in Non-VR mode first before using!
 ## Features:
 	Mostly correctly working VR UI and gameplay (also works in multiplayer, with others not having the mod!)
 	
-	Full SteamVR_Input binding support, you can play with all VR controllers, 
-	provided they have enough buttons for all the actions in GTFO!
+	Full SteamVR_Input binding support, you can play with all VR controllers, provided they have enough buttons 
+	for all the actions in GTFO. All in-game actions are supported, except for 'undo' in the terminal!
 	
 	Full VR controller based aiming (including fancy laserpointer)
 	
 	Main menu, map UI and terminal working correctly in VR
+	Single or double handed aiming 
+	
+	Custom programmer art VR UI
 	
 ## Known issues: 
 	
-	Oculus integration seems to be working for at least the Rift S, but if it isn't working for you 
-	try to disable controllers in config to play with head aiming and let me know which HMD you have.
-	You can disable controllers in GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg
+	Rejoining might not work correctly --- please send me output logs that can be found under 
+	AppData\LocalLow\10 Chambers Collective\GTFO\output_log.txt if it happens to you!
 	
-	In-game HUD is crappy looking --- intel, objectives, ammo info (except in map) 
-	or not positioned correctly  --- enemy markings, teammate name/stats (except in map)
-	
-	Hacking tool minigame isn't rendered correctly for VR
+	No snap turn (Coming in the next version!)
 
 ## Want to contribute?
 

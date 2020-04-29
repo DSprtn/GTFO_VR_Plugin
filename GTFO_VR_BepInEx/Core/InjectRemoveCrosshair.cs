@@ -9,37 +9,17 @@ using UnityEngine;
 
 namespace GTFO_VR_BepInEx.Core
 {
+
+
     /// <summary>
-    /// Remove unneccessary crosshairs from gameview
+    /// Disable crosshair GUI layer
     /// </summary>
-
-    [HarmonyPatch(typeof(CrosshairGuiLayer), "ShowPrecisionDot")]
-    class InjectRemoveCrosshairDot
-    {
-        static void Postfix(CrosshairGuiLayer __instance)
-        {
-            __instance.HideAllCrosshairs();
-        }
-    }
-
-    [HarmonyPatch(typeof(CrosshairGuiLayer), "ShowSpreadCircle")]
-    class InjectRemoveCrosshairCircle
-    {
-        static void Postfix(CrosshairGuiLayer __instance)
-        {
-            __instance.HideAllCrosshairs();
-        }
-    }
-
-    // TODO, not working correctly yet --- Game is still showing hit indicators in game view (not in HMD though, so this only affects video recordings)
-    // Update - Might be fixed?
-    [HarmonyPatch(typeof(CrosshairGuiLayer), "ShowHitIndicator")]
+    [HarmonyPatch(typeof(GuiManager), "OnFocusStateChanged")]
     class InjectRemoveCrosshairHit
     {
-        static bool Prefix()
+        static void Postfix()
         {
-
-            return false;
+            GuiManager.CrosshairLayer.SetVisible(false);
         }
     }
 }
