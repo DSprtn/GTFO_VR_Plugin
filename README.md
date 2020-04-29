@@ -136,4 +136,5 @@ E-mail any suggestions for new features or tweaks over to GTFOVRMod@gmail.com
 Open up tickets for any issues you find over here on github, 
 or if you're unfamiliar with it send them to the same e-mail.
 
+Are you an experienced Unity programmer and want to contribute? 
 Give me a holler on Discord and I'll bring you up to speed - Spartan#8541 
