@@ -1,11 +1,11 @@
 # GTFO_VR_Plugin
-A BepInEx GTFO plugin to make GTFO work in VR almost as well as Subnautica VR!
+### A plugin to add full roomscale/virtual reality support your favorite game!
 
-Active trello board (upcoming features and ongoing work) - https://trello.com/b/zSk7bBMS/gtfovr
+**Active trello board (upcoming features and ongoing work) - https://trello.com/b/zSk7bBMS/gtfovr**
 
-Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases 
+**E-mail any suggestions for new features or tweaks over to GTFOVRMod@gmail.com**
 
-Grab the newest version from here! https://github.com/DSprtn/GTFO_VR_Plugin/releases
+**Grab the newest version from here! https://github.com/DSprtn/GTFO_VR_Plugin/releases**
 
 If you can't get the installation to work, double check with this video - https://www.youtube.com/watch?v=lrx90XxlyfU 
 It's up to date up to 02:34, except you need to get GTFO VR instead of GTFO Testing
@@ -130,5 +130,9 @@ Try to get used to the game in Non-VR mode first before using!
 	No snap turn (Coming in the next version!)
 
 ## Want to contribute?
+
+E-mail any suggestions for new features or tweaks over to GTFOVRMod@gmail.com
+Open up tickets for any issues you find over here on github, 
+or if you're unfamiliar with it send them to the same e-mail.
 
 Give me a holler on Discord and I'll bring you up to speed - Spartan#8541 
