@@ -98,6 +98,11 @@ namespace GTFO_VR
 
         private void DoDebugOnKeyDown()
         {
+            if(UnityEngine.Input.GetKeyDown(KeyCode.Space))
+            {
+                VRSettings.useSameFrameTransformUpdate = !VRSettings.useSameFrameTransformUpdate;
+            }
+
             if (UnityEngine.Input.GetKeyDown(KeyCode.F2))
             {
                 DebugHelper.LogScene();
@@ -273,6 +278,14 @@ namespace GTFO_VR
                     {
                         return "REACTOR";
                     }
+                case ("H"):
+                    {
+                        return "HELP";
+                    }
+                case ("C"):
+                    {
+                        return "COMMANDS";
+                    }
                 case ("V"):
                     {
                         return "REACTOR_VERIFY ";
@@ -292,6 +305,10 @@ namespace GTFO_VR
                 case ("M"):
                     {
                         return "MEDIPACK";
+                    }
+                 case ("U"):
+                    {
+                        return "UPLINK_VERIFY";
                     }
             }
             return input;

@@ -12,9 +12,9 @@ using UnityEngine;
 namespace GTFO_VR_BepInEx.Core
 {
     /// <summary>
-    /// HUD UI Toggle
+    /// HUD UI Toggle --- Not needed anymore?
     /// </summary>
-
+    /*
     [HarmonyPatch(typeof(UI_Core),"RenderUI")]
     class InjectToggleUI
     {
@@ -27,4 +27,5 @@ namespace GTFO_VR_BepInEx.Core
             return true;
         }
     }
+    */
 }

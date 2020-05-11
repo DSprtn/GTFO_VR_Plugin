@@ -1,10 +1,12 @@
-﻿using GTFO_VR.Core;
+﻿using CullingSystem;
+using GTFO_VR.Core;
 using GTFO_VR.Events;
 using GTFO_VR.Input;
 using GTFO_VR.UI;
 using Player;
 using System;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Valve.VR;
 using Valve.VR.Extras;
 
@@ -37,6 +39,10 @@ namespace GTFO_VR
 
         LaserPointer pointer;
 
+
+        public static CommandBuffer preRenderLights;
+
+
         void Awake()
         {
             if (VRSetup)
@@ -49,11 +55,85 @@ namespace GTFO_VR
             //hmdResolution.height = (int)SteamVR.instance.sceneHeight;
             //hmdResolution.width = (int)SteamVR.instance.sceneWidth / 2;
             //PlayerGui.OnResolutionChange(hmdResolution);
+
+            SteamVR_Events.NewPosesApplied.AddListener(() => OnNewPoses());
         }
+
+        void OnNewPoses()
+        {
+            if (!playerController || fpscamera)
+            {
+                return;
+            }
+            Vector3 camPos = playerController.SmoothPosition + HMD.hmd.transform.position;
+
+            fpscamera.transform.position = camPos;
+            fpscamera.transform.parent.localRotation = Quaternion.Euler(HMD.GetVRCameraEulerRotation());
+
+            Quaternion camRot = fpscamera.transform.parent.rotation;
+
+            if (fpscamera != null && fpscamera.m_camera != null)
+            {
+                fpscamera.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
+                fpscamera.m_camera.aspect = SteamVR.instance.aspect;
+                if (fpscamera.m_itemCamera != null)
+                {
+                    fpscamera.m_itemCamera.fieldOfView = SteamVR.instance.fieldOfView;
+                    fpscamera.m_itemCamera.aspect = SteamVR.instance.aspect;
+                    fpscamera.m_itemCamera.transform.position = camPos;
+                    fpscamera.m_itemCamera.transform.rotation = camRot;
+                }
+            }
+
+            if (ClusteredRendering.Current != null)
+            {
+
+                ClusteredRendering.Current.m_lightBufferCamera.fieldOfView = SteamVR.instance.fieldOfView;
+                ClusteredRendering.Current.m_lightBufferCamera.aspect = SteamVR.instance.aspect;
+                ClusteredRendering.Current.m_lightBufferCamera.transform.position = camPos;
+                ClusteredRendering.Current.m_lightBufferCamera.transform.rotation = camRot;
+
+
+                ClusteredRendering.Current.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
+                ClusteredRendering.Current.m_camera.aspect = SteamVR.instance.aspect;
+                ClusteredRendering.Current.m_camera.transform.position = camPos;
+                ClusteredRendering.Current.m_camera.transform.rotation = camRot;
+            }
+
+            foreach (SteamVR_Camera cam in SteamVR_Render.instance.cameras)
+            {
+                cam.camera.enabled = false;
+            }
+
+
+            C_Camera.Position = camPos;
+            C_Camera.Forward = HMD.GetFlatForward();
+
+
+            preRenderLights.Clear();
+
+            ClusteredRendering.Current.CollectCommands(preRenderLights);
+            if (GUIX_Manager.isSetup)
+            {
+                GUIX_Manager.Current.CollectCommands(preRenderLights);
+            }
+
+            if (MapDetails.s_isSetup)
+            {
+                MapDetails.Current.CollectCommands(preRenderLights);
+            }
+
+
+            Vector4 projectionParams = ClusteredRendering.GetProjectionParams(fpscamera.m_camera);
+            Vector4 zbufferParams = ClusteredRendering.GetZBufferParams(fpscamera.m_camera);
+            preRenderLights.SetGlobalVector(ClusteredRendering.ID_ProjectionParams, projectionParams);
+            preRenderLights.SetGlobalVector(ClusteredRendering.ID_ZBufferParams, zbufferParams);
+        }
+
 
         private void SpawnWatch()
         {
-            if(!watch)
+            if (!watch)
             {
                 watch = Instantiate(VRGlobal.watchPrefab, new Vector3(0, 0, 0), Quaternion.Euler(new Vector3(0, 0, 0)), null).AddComponent<Watch>();
                 watch.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
@@ -67,12 +147,12 @@ namespace GTFO_VR
 
         void Update()
         {
-            if(!fpscamera)
+            if (!fpscamera)
             {
                 VRSetup = false;
             }
             // Ugly, but works for now, assumes player is always created in elevator 
-            if(!VRSetup && FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
+            if (!VRSetup && FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 if (!fpscamera)
                 {
@@ -86,11 +166,12 @@ namespace GTFO_VR
                     playerController = FindObjectOfType<PlayerCharacterController>();
                 }
 
-                if (fpscamera && playerController && !VRSetup )
+                if (fpscamera && playerController && !VRSetup)
                 {
                     Setup();
                 }
-            } else
+            }
+            else
             {
                 UpdateOrigin();
             }
@@ -104,14 +185,14 @@ namespace GTFO_VR
             }
 
             DoUglyCameraHack();
-           
-            if(VRInput.GetActionDown(InputAction.Aim))
+
+            if (VRInput.GetActionDown(InputAction.Aim))
             {
                 if (watch)
                 {
                     watch.SwitchState();
                 }
-               
+
                 //UIVisible = !UIVisible;
 
 
@@ -124,15 +205,16 @@ namespace GTFO_VR
             UpdateOrigin();
         }
 
-        
+
 
         public static float VRDetectionMod(Vector3 dir, float distance, float m_flashLightRange, float m_flashlight_spotAngle)
         {
-            if (distance > m_flashLightRange) {
+            if (distance > m_flashLightRange)
+            {
                 return 0.0f;
             }
-            Vector3 VRLookDir = fpscamera.Forward; 
-            if(ItemEquippableEvents.CurrentItemHasFlashlight() && VRSettings.UseVRControllers)
+            Vector3 VRLookDir = fpscamera.Forward;
+            if (ItemEquippableEvents.CurrentItemHasFlashlight() && VRSettings.UseVRControllers)
             {
                 VRLookDir = Controllers.GetAimForward();
             }
@@ -151,7 +233,7 @@ namespace GTFO_VR
 
         public void UpdateOrigin()
         {
-            if(origin == null || playerController == null)
+            if (origin == null || playerController == null)
             {
                 return;
             }
@@ -168,14 +250,14 @@ namespace GTFO_VR
             SetupLaserPointer();
             SetupVRPlayerCamera();
             SpawnWatch();
-            
+
             VRSetup = true;
             LoadedAndInGame = true;
         }
 
         private void SetupOrigin()
         {
-            if(origin)
+            if (origin)
             {
                 return;
             }
@@ -186,7 +268,7 @@ namespace GTFO_VR
 
         private void SetupLaserPointer()
         {
-            if(pointer)
+            if (pointer)
             {
                 return;
             }
@@ -224,11 +306,17 @@ namespace GTFO_VR
 
                 ClusteredRendering.Current.m_lightBufferCamera.fieldOfView = SteamVR.instance.fieldOfView;
                 ClusteredRendering.Current.m_lightBufferCamera.aspect = SteamVR.instance.aspect;
-                ClusteredRendering.Current.m_lightBufferCamera.transform.position = fpscamera.m_camera.transform.position;
-                ClusteredRendering.Current.m_lightBufferCamera.transform.rotation = fpscamera.m_camera.transform.rotation;
+                ClusteredRendering.Current.m_lightBufferCamera.transform.position = fpscamera.transform.position;
+                ClusteredRendering.Current.m_lightBufferCamera.transform.rotation = fpscamera.transform.parent.rotation;
+
+
+                ClusteredRendering.Current.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
+                ClusteredRendering.Current.m_camera.aspect = SteamVR.instance.aspect;
+                ClusteredRendering.Current.m_camera.transform.position = fpscamera.transform.position;
+                ClusteredRendering.Current.m_camera.transform.rotation = fpscamera.transform.parent.rotation;
             }
 
-            foreach(SteamVR_Camera cam in SteamVR_Render.instance.cameras)
+            foreach (SteamVR_Camera cam in SteamVR_Render.instance.cameras)
             {
                 cam.camera.enabled = false;
             }
@@ -239,6 +327,7 @@ namespace GTFO_VR
             FocusStateEvents.OnFocusStateChange -= FocusStateChanged;
             Destroy(pointer.gameObject);
             Destroy(watch);
+            SteamVR_Events.NewPosesApplied.RemoveListener(() => OnNewPoses());
         }
 
     }

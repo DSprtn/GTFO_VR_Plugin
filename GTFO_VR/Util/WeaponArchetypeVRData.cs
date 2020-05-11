@@ -56,17 +56,17 @@ namespace GTFO_VR.Util
             weaponArchetypes.Add("Bioscanner", new VRWeaponData(new Vector3(0f, 0f, -.05f), false));
 
             weaponArchetypes.Add("Pistol", new VRWeaponData(new Vector3(0f, 0f, 0f), false));
-            weaponArchetypes.Add("Revolver", new VRWeaponData(new Vector3(-.02f, -.01f, 0f), false));
+            weaponArchetypes.Add("Revolver", new VRWeaponData(new Vector3(0f, -.01f, 0f), false));
             weaponArchetypes.Add("SMG", new VRWeaponData(new Vector3(0f, 0f, -.15f), true));
             weaponArchetypes.Add("DMR", new VRWeaponData(new Vector3(0f, 0f, -.05f), true));
-            weaponArchetypes.Add("Assault Rifle", new VRWeaponData(new Vector3(-.05f, 0f, 0f), true));
-            weaponArchetypes.Add("Machinepistol", new VRWeaponData(new Vector3(-.05f, 0f, 0f), false));
+            weaponArchetypes.Add("Assault Rifle", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
+            weaponArchetypes.Add("Machinepistol", new VRWeaponData(new Vector3(.0f, 0f, 0f), false));
 
             weaponArchetypes.Add("Sniper", new VRWeaponData(new Vector3(0f, 0f, -.05f), true));
             weaponArchetypes.Add("Shotgun", new VRWeaponData(new Vector3(0f, 0f, -.05f), true));
             weaponArchetypes.Add("Machinegun", new VRWeaponData(new Vector3(0f, 0f, -.07f), true));
-            weaponArchetypes.Add("Combat Shotgun", new VRWeaponData(new Vector3(-.05f, 0f, 0f), true));
-            weaponArchetypes.Add("Burst Rifle", new VRWeaponData(new Vector3(-.05f, 0f, 0f), true));
+            weaponArchetypes.Add("Combat Shotgun", new VRWeaponData(new Vector3(0f, 0f, 0f), true));
+            weaponArchetypes.Add("Burst Rifle", new VRWeaponData(new Vector3(0f, 0f, 0f), true));
 
         }
     }

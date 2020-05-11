@@ -90,7 +90,7 @@ namespace GTFO_VR_BepInEx.Core
         {
             if (PlayerVR.VRSetup && VRSettings.UseVRControllers)
             {
-                __instance.CameraRayDir = Controllers.GetAimForward();
+                __instance.CameraRayDir = HMD.GetVRInteractionLookDir();
                 RaycastHit hit;
                 if (Physics.Raycast(Controllers.GetAimFromPos(), Controllers.GetAimForward(), out hit, 50f, LayerManager.MASK_CAMERA_RAY))
                 {

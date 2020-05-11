@@ -61,6 +61,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\GameLibs\GlobalFramework-ASM.dll</HintPath>
     </Reference>
+    <Reference Include="GUIX-ASM">
+      <HintPath>..\lib\GameLibs\GUIX-ASM.dll</HintPath>
+    </Reference>
     <Reference Include="Modules-ASM, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\lib\GameLibs\Modules-ASM.dll</HintPath>
