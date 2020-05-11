@@ -1,15 +1,13 @@
 # GTFO_VR_Plugin
-A BepInEx GTFO plugin to make GTFO work in VR almost as well as Subnautica VR!
+### A plugin to add full roomscale/virtual reality support to your favorite game!
 
 Active trello board (upcoming features and ongoing work) - https://trello.com/b/zSk7bBMS/gtfovr
 
-Requires a BepInEx installation - https://github.com/BepInEx/BepInEx/releases 
+E-mail any suggestions for new features or tweaks over to GTFOVRMod@gmail.com
 
 Grab the newest version from here! https://github.com/DSprtn/GTFO_VR_Plugin/releases
 
-If you can't get the installation to work, double check with this video - https://www.youtube.com/watch?v=lrx90XxlyfU 
-It's up to date up to 02:34, except you need to get GTFO VR instead of GTFO Testing
-(Thanks Whisper!)
+Tutorial video for the installation: https://www.youtube.com/watch?v=sZPK1GfqxBE&feature=youtu.be (Thanks F4cepa1m!)
 
 Try to get used to the game in Non-VR mode first before using! 
 
@@ -29,7 +27,7 @@ Try to get used to the game in Non-VR mode first before using!
 	5. Start SteamVR
 	
 	6. Launch the game from within the library or from within SteamVR and you're in!
-	(Ignore the "GTFO does not support VR" warning and/or that it says launch in theatre mode in SteamVR!)
+	(Ignore the "GTFO does not support VR" warning, just click OK)
 	
 	If your controllers don't do anything in-game you might have to setup an input scheme. You can do so under 
 	SteamVR -> Settings -> Controllers -> Show old binding UI -> GTFO VR
@@ -70,6 +68,10 @@ Try to get used to the game in Non-VR mode first before using!
 	and you will enable it. Bring them far apart and it will switch back. 
 	
 	The watch can be toggled between inventory and objectives with the ToggleWatchMode action.
+	
+	The watch UI is as follows - The top 5 bars represent the inventory slots with ammo in them. On the bottom left
+	there are 2 bars (later might be 3) representing health, infection and possibly air. The big block divides 
+	itself up based on the amount of bullets in your currently held weapon. Each block is one bullet.
 	
 	Remember to bind openmenu and openmap too! They work in-game correctly as you'd expect.
 	
@@ -131,4 +133,9 @@ Try to get used to the game in Non-VR mode first before using!
 
 ## Want to contribute?
 
+E-mail any suggestions for new features or tweaks over to GTFOVRMod@gmail.com
+Open up tickets for any issues you find over here on github, 
+or if you're unfamiliar with it send them to the same e-mail.
+
+Are you an experienced Unity programmer and want to contribute? 
 Give me a holler on Discord and I'll bring you up to speed - Spartan#8541 
