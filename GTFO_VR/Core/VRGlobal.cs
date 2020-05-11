@@ -308,7 +308,7 @@ namespace GTFO_VR
                     }
                  case ("U"):
                     {
-                        return "UPLINK_VERIFY";
+                        return "UPLINK_VERIFY ";
                     }
             }
             return input;
