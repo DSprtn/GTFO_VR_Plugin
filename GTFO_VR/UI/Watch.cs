@@ -206,7 +206,8 @@ namespace GTFO_VR.UI
                 ItemEquippableEvents.IsCurrentItemShootableWeapon())
             {
                 //Debug.Log("Ammo update event (main or sub weapon): " + "MaxAmmo: " + item.BulletClipSize + " Current ammo: " + clipLeft + " Inventory slot: " + item.Slot);
-                BulletsInMag.maxAmmo = item.BulletClipSize;                
+
+                BulletsInMag.maxAmmo = Mathf.Max(item.BulletClipSize, 1);
                 BulletsInMag.UpdateCurrentAmmo(clipLeft);
                 BulletsInMag.UpdateAmmoGridDivisions();
                 BulletsInMag.inventorySlot = item.Slot;

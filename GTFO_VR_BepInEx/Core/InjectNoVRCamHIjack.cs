@@ -11,18 +11,6 @@ using UnityEngine;
 
 namespace GTFO_VR_BepInEx.Core
 {
-    /// <summary>
-    /// Prevents the game from overriding camera position
-    /// </summary>
-    [HarmonyPatch(typeof(FPSCamera), "LateUpdate")]
-    class InjectVRFreedom
-    {
-        static void Prefix(FPSCamera __instance)
-        {
-            __instance.MouseLookEnabled = true;
-            __instance.PlayerMoveEnabled = true;
-        }
-    }
 
     /// <summary>
     /// Make all transitions end instantly

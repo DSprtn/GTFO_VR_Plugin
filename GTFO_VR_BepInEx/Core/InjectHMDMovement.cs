@@ -79,7 +79,7 @@ namespace GTFO_VR_BepInEx.Core
                 return;
             }
             Vector3 euler = __instance.m_camera.transform.parent.localEulerAngles;
-            euler = HMD.GetVRCameraEulerRotation();
+            euler.z = HMD.GetVRCameraEulerRotation().z;
             __instance.m_camera.transform.parent.localRotation = Quaternion.Euler(euler);
         }
     }

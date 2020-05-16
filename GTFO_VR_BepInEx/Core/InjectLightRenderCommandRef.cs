@@ -16,7 +16,7 @@ namespace GTFO_VR_BepInEx.Core
     /// Replicate new objectives on the VR watch
     /// </summary>
 
-    [HarmonyPatch(typeof(FPSCamera),"Awake")]
+    [HarmonyPatch(typeof(FPSCamera),"Setup")]
     [HarmonyPatch(new Type[] {})]
     class InjectLightRenderCommandRef
     {

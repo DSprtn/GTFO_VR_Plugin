@@ -58,7 +58,7 @@ namespace GTFO_VR
             }
             watchPrefab = assetBundle.LoadAsset<GameObject>("assets/p_vrwatch.prefab");
             Setup();
-            
+            SteamVR_Settings.instance.poseUpdateMode = SteamVR_UpdateModes.OnLateUpdate;
         }
 
         public void OnKeyboardDone(VREvent_t arg0)
@@ -98,10 +98,6 @@ namespace GTFO_VR
 
         private void DoDebugOnKeyDown()
         {
-            if(UnityEngine.Input.GetKeyDown(KeyCode.Space))
-            {
-                VRSettings.useSameFrameTransformUpdate = !VRSettings.useSameFrameTransformUpdate;
-            }
 
             if (UnityEngine.Input.GetKeyDown(KeyCode.F2))
             {
