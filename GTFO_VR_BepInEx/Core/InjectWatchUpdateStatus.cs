@@ -11,7 +11,7 @@ using GTFO_VR.UI;
 namespace GTFO_VR_BepInEx.Core
 {
     /// <summary>
-    /// Replicate HP and infection on the VR watch
+    /// Replicate HP, oxygen and infection on the VR watch
     /// </summary>
 
     [HarmonyPatch(typeof(PlayerGuiLayer),"UpdateHealth")]
@@ -20,7 +20,15 @@ namespace GTFO_VR_BepInEx.Core
         static void Postfix(float health)
         {
             Watch.UpdateHealth(health);
-           
+        }
+    }
+
+    [HarmonyPatch(typeof(PlayerGuiLayer), "UpdateAir")]
+    class InjectWatchAir
+    {
+        static void Postfix(float val)
+        {
+            Watch.UpdateAir(val);
         }
     }
 
@@ -30,7 +38,6 @@ namespace GTFO_VR_BepInEx.Core
         static void Postfix(float infection, float infectionHealthRel)
         {
             Watch.UpdateInfection(infection);
-
         }
     }
 }

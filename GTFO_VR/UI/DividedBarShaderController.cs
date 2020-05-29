@@ -20,7 +20,9 @@ namespace GTFO_VR.UI
 
         void Awake()
         {
-            barGrid = GetComponent<MeshRenderer>().material;
+            renderer = GetComponent<MeshRenderer>();
+            barGrid = renderer.material;
+           
             SetColor(normalColor);
             UpdateShaderVals(5, 2);
         }
@@ -31,6 +33,13 @@ namespace GTFO_VR.UI
         const string vertProperty = "_DivisionsVertical";
         const string horizProperty = "_DivisionsHorizontal";
         const string fillProperty = "_Fill";
+
+        MeshRenderer renderer;
+
+        public void ToggleRendering(bool toggle)
+        {
+            renderer.enabled = toggle;
+        }
 
         public void UpdateShaderVals(int verticalDivisions, int horizontalDivisions)
         {

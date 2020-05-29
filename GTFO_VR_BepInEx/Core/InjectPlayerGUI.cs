@@ -12,7 +12,7 @@ namespace GTFO_VR_BepInEx.Core
 {
     /// <summary>
     /// Hacky thing to get the GUI visible to the player inside the HMD --- 
-    /// Basically moves all UI elements more towards the center to account for the bigger screen size necessary for lens distortion
+    /// Basically moves all UI elements more towards the center to compensate for lens distortion
     /// </summary>
 
     [HarmonyPatch(typeof(PlayerGuiLayer),"Setup")]

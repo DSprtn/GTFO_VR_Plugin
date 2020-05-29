@@ -22,5 +22,7 @@ namespace GTFO_VR.Core
 
         public static bool disableCompass = true;
 
+        public static bool startDoubleHanded = false;
+
     }
 }

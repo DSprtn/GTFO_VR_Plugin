@@ -24,7 +24,6 @@ namespace GTFO_VR.Events
                 Debug.Log(item.ArchetypeName);
                 Debug.Log(item.PublicName);
                 OnPlayerWieldItem.Invoke(item);
-                
             }
         }
 

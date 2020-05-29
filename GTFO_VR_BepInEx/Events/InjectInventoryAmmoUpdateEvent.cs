@@ -5,7 +5,7 @@ using Player;
 namespace GTFO_VR_BepInEx.Core
 {
     /// <summary>
-    /// Add event call onItemEquipped
+    /// Add event calls for changes in ammo
     /// </summary>
 
     [HarmonyPatch(typeof(PlayerAmmoStorage), nameof(PlayerAmmoStorage.UpdateSlotAmmoUI), new[] { typeof(InventorySlotAmmo), typeof(int)})]

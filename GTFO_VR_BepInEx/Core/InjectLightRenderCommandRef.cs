@@ -13,7 +13,7 @@ using UnityEngine.Rendering;
 namespace GTFO_VR_BepInEx.Core
 {
     /// <summary>
-    /// Replicate new objectives on the VR watch
+    /// Get reference for the clustered rendering command buffer for use in PlayerVR
     /// </summary>
 
     [HarmonyPatch(typeof(FPSCamera),"Setup")]

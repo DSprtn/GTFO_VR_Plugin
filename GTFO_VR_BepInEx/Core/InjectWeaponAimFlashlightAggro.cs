@@ -32,7 +32,7 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(PlayerAgent), "GetDetectionMod")]
     class InjectWeaponAimFlashlightAggro
     {
-        static void Postfix(PlayerAgent __instance, Vector3 dir, float distance,bool ___m_isSetup, ref float __result)
+        static void Postfix(PlayerAgent __instance, Vector3 dir, float distance, ref float __result)
         {
             __result = PlayerVR.VRDetectionMod(dir, distance, __instance.Inventory.m_flashlight.range, __instance.Inventory.m_flashlight.spotAngle);
         }

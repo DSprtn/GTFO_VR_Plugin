@@ -19,7 +19,6 @@ namespace GTFO_VR.Events
             if(OnInventoryAmmoUpdate != null)
             { 
                 OnInventoryAmmoUpdate.Invoke(item, clipleft);
-
             }
         }
 

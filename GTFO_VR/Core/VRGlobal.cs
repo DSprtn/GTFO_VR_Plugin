@@ -130,9 +130,11 @@ namespace GTFO_VR
             Invoke("SetupOverlay", .25f);
             gameObject.AddComponent<HMD>();
             gameObject.AddComponent<Controllers>();
-            VR_Resolution = new Resolution();
-            VR_Resolution.height = (int)SteamVR.instance.sceneHeight;
-            VR_Resolution.width = (int)SteamVR.instance.sceneWidth;
+            VR_Resolution = new Resolution
+            {
+                height = (int)SteamVR.instance.sceneHeight,
+                width = (int)SteamVR.instance.sceneWidth
+            };
 
             DontDestroyOnLoad(gameObject);
         }
@@ -235,7 +237,7 @@ namespace GTFO_VR
         {
             PlayerVR.LoadedAndInGame = toggle;
             SteamVR_Render.pauseRendering = !toggle;
-            Invoke("DisableUnneccessaryCams",.2f);
+            Invoke("DisableUnneccessaryCams",.1f);
 
         }
 

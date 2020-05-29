@@ -16,7 +16,7 @@ namespace GTFO_VR_BepInEx.Core
     public static class InjectTerminalKeyboardInput_Patch
     {
 
-        static MethodInfo VR_TXT_Input = SymbolExtensions.GetMethodInfo(() => VRGlobal.GetKeyboardInput());
+        static readonly MethodInfo VR_TXT_Input = SymbolExtensions.GetMethodInfo(() => VRGlobal.GetKeyboardInput());
 
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -39,7 +39,7 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(LG_ComputerTerminalCommandInterpreter), "UpdateTerminalScreen")]
     public static class InjectTerminalKeyboardCorrectAnyKeySkip_Patch
     {
-        static MethodInfo VR_TXT_Input = SymbolExtensions.GetMethodInfo(() => VRGlobal.GetKeyboardInput());
+        static readonly MethodInfo VR_TXT_Input = SymbolExtensions.GetMethodInfo(() => VRGlobal.GetKeyboardInput());
 
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {

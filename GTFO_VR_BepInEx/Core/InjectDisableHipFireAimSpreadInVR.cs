@@ -17,7 +17,7 @@ using static GTFO_VR.Util.WeaponArchetypeVRData;
 namespace GTFO_VR_BepInEx.Core
 {
     /// <summary>
-    /// Weapons are always firing as if they were ADS'd 
+    /// Weapons are always firing as if they were fired from the hip, so we make the game think we're always aiming
     /// </summary>
 
     [HarmonyPatch(typeof(BulletWeapon),"Fire")]

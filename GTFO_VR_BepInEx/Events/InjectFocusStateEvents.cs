@@ -13,7 +13,7 @@ using UnityEngine;
 namespace GTFO_VR_BepInEx.Core
 {
     /// <summary>
-    /// Add event calls for state
+    /// Add event calls for focus state
     /// </summary>
 
     [HarmonyPatch(typeof(InputMapper),"OnFocusStateChanged")]

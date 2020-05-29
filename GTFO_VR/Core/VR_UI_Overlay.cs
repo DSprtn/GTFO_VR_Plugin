@@ -19,8 +19,6 @@ namespace GTFO_VR
 
         public static UI_Pass UI_ref;
 
-        GameObject overlayOrigin; 
-
         void Awake()
         {
             if(instance)
@@ -28,7 +26,6 @@ namespace GTFO_VR
                 Debug.LogError("Duplicate UI overlay handler!");
                 return;
             }
-            overlayOrigin = new GameObject("OverlayOrigin");
             instance = this;
             OrientateOverlay();
             Setup();
@@ -46,11 +43,13 @@ namespace GTFO_VR
         {
             if(overlayHandle != OpenVR.k_ulOverlayHandleInvalid)
             {
-                    var texture = new Texture_t();
-                    texture.handle = UI_ref.m_UIRenderTarget.GetNativeTexturePtr();
-                    texture.eType = SteamVR.instance.textureType;
-                    texture.eColorSpace = EColorSpace.Auto;
-                    OpenVR.Overlay.SetOverlayTexture(overlayHandle, ref texture);
+                var texture = new Texture_t
+                {
+                    handle = UI_ref.m_UIRenderTarget.GetNativeTexturePtr(),
+                    eType = SteamVR.instance.textureType,
+                    eColorSpace = EColorSpace.Auto
+                };
+                OpenVR.Overlay.SetOverlayTexture(overlayHandle, ref texture);
 
                 if (VRInput.GetActionDown(InputAction.Crouch))
                 {
@@ -129,11 +128,13 @@ namespace GTFO_VR
                 // D3D textures are upside-down in Unity to match OpenGL.
                 if (SteamVR.instance.textureType == ETextureType.DirectX)
                 {
-                    var textureBounds = new VRTextureBounds_t();
-                    textureBounds.uMin = 0;
-                    textureBounds.vMin = 1;
-                    textureBounds.uMax = 1;
-                    textureBounds.vMax = 0;
+                    var textureBounds = new VRTextureBounds_t
+                    {
+                        uMin = 0,
+                        vMin = 1,
+                        uMax = 1,
+                        vMax = 0
+                    };
                     overlay.SetOverlayTextureBounds(handle, ref textureBounds);
                 }
 

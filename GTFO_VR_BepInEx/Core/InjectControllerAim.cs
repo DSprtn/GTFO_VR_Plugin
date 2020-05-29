@@ -26,26 +26,12 @@ namespace GTFO_VR_BepInEx.Core
                 {
                     return;
                 }
-               
-                Vector3 gripOffset = ___WieldedItem.transform.position - ___WieldedItem.transform.TransformPoint(WeaponArchetypeVRData.GetVRWeaponData(___WieldedItem.ArchetypeName).transformToVRGrip);
 
-                ___WieldedItem.transform.position = Controllers.GetControllerPosition() + gripOffset;
-
-                if (VRSettings.twoHandedAimingEnabled && Controllers.aimingTwoHanded && WeaponArchetypeVRData.GetVRWeaponData(___WieldedItem.ArchetypeName).allowsDoubleHanded)
-                {
-                    ___WieldedItem.transform.rotation = Controllers.GetTwoHandedRotation();
-                }
-                else
-                {
-                    ___WieldedItem.transform.rotation = Controllers.GetControllerAimRotation();
-                }
-
+                ___WieldedItem.transform.position = Controllers.GetControllerPosition() + WeaponArchetypeVRData.CalculateGripOffset();
+                ___WieldedItem.transform.rotation = Controllers.GetControllerAimRotation();
             }
         }
     }
-
-
-
 
     /// <summary>
     /// Inject this twice because otherwise data like weapon muzzle position is not updated correctly (makes tracers spawn in wrong location, for instance)
@@ -61,17 +47,10 @@ namespace GTFO_VR_BepInEx.Core
                 {
                     return;
                 }
-                Vector3 gripOffset = ___WieldedItem.transform.position - ___WieldedItem.transform.TransformPoint(WeaponArchetypeVRData.GetVRWeaponData(___WieldedItem.ArchetypeName).transformToVRGrip);
 
-                ___WieldedItem.transform.position = Controllers.GetControllerPosition() + gripOffset;
-
-                if(VRSettings.twoHandedAimingEnabled && Controllers.aimingTwoHanded && WeaponArchetypeVRData.GetVRWeaponData(___WieldedItem.ArchetypeName).allowsDoubleHanded)
-                {
-                    ___WieldedItem.transform.rotation = Controllers.GetTwoHandedRotation();
-                } else
-                {
-                    ___WieldedItem.transform.rotation = Controllers.GetControllerAimRotation();
-                }
+                
+                ___WieldedItem.transform.position = Controllers.GetControllerPosition() + WeaponArchetypeVRData.CalculateGripOffset();
+                ___WieldedItem.transform.rotation = Controllers.GetControllerAimRotation();
             }
         }
     }

@@ -38,7 +38,6 @@
     <Compile Include="Core\VRSettings.cs" />
     <Compile Include="Events\FocusStateEvents.cs" />
     <Compile Include="Events\InventoryAmmoEvents.cs" />
-    <Compile Include="Events\TransformUpdateEvents.cs" />
     <Compile Include="UI\DividedBarShaderController.cs" />
     <Compile Include="UI\Watch.cs" />
     <Compile Include="Util\HandType.cs" />
@@ -107,4 +106,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(TargetPath)" "S:/_VS_BUILDS" /E /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

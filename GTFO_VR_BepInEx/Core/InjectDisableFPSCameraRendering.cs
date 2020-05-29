@@ -11,7 +11,7 @@ using UnityEngine;
 namespace GTFO_VR_BepInEx.Core
 {
     /// <summary>
-    /// Handle virtual keyboard input
+    /// Remove command calls from FPSCamera and move them to PlayerVR instead to use them after poses have been updated for better reprojection and a smoother experience
     /// </summary>
 
     [HarmonyPatch(typeof(FPSCamera), "LateUpdate")]

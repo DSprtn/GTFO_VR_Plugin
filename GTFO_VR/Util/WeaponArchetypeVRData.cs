@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GTFO_VR.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,9 @@ namespace GTFO_VR.Util
 {
     public static class WeaponArchetypeVRData
     {
+
+        static VRWeaponData current;
+
         public struct VRWeaponData
         {
             public Vector3 transformToVRGrip;
@@ -25,28 +29,13 @@ namespace GTFO_VR.Util
 
         public static VRWeaponData GetVRWeaponData(ItemEquippable item)
         {
-            if(item == null)
-            {
-                return weaponArchetypes["Default"];
-            } else
-            {
-                return GetVRWeaponData(item.ArchetypeName);
-            }
-        }
-
-        public static VRWeaponData GetVRWeaponData(string archetype)
-        {
             
-            VRWeaponData data;
-            if(weaponArchetypes.TryGetValue(archetype, out data))
-            {
-                return data;
-            }
-            return weaponArchetypes["Default"];
+            return current;
         }
 
         public static void Setup()
         {
+            ItemEquippableEvents.OnPlayerWieldItem += PlayerSwitchedWeapon;
             // WeaponTransform (z forward, y up, x right)
             weaponArchetypes = new Dictionary<string, VRWeaponData>();
             weaponArchetypes.Add("Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false));
@@ -60,6 +49,8 @@ namespace GTFO_VR.Util
             weaponArchetypes.Add("SMG", new VRWeaponData(new Vector3(0f, 0f, -.15f), true));
             weaponArchetypes.Add("DMR", new VRWeaponData(new Vector3(0f, 0f, -.05f), true));
             weaponArchetypes.Add("Assault Rifle", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
+            weaponArchetypes.Add("Carbine", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
+            weaponArchetypes.Add("Gauss Gun", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
             weaponArchetypes.Add("Machinepistol", new VRWeaponData(new Vector3(.0f, 0f, 0f), false));
 
             weaponArchetypes.Add("Sniper", new VRWeaponData(new Vector3(0f, 0f, -.05f), true));
@@ -68,6 +59,28 @@ namespace GTFO_VR.Util
             weaponArchetypes.Add("Combat Shotgun", new VRWeaponData(new Vector3(0f, 0f, 0f), true));
             weaponArchetypes.Add("Burst Rifle", new VRWeaponData(new Vector3(0f, 0f, 0f), true));
 
+            current = weaponArchetypes["Default"];
+        }
+
+        private static void PlayerSwitchedWeapon(ItemEquippable item)
+        {
+            VRWeaponData data;
+            if (weaponArchetypes.TryGetValue(item.ArchetypeName, out data))
+            {
+                current = data;
+            }
+            else 
+            { 
+                current = weaponArchetypes["Default"]; 
+            }
+
+            CalculateGripOffset();
+        }
+
+        public static Vector3 CalculateGripOffset()
+        {
+           Transform itemEquip = ItemEquippableEvents.currentItem.transform;
+           return itemEquip.position - itemEquip.TransformPoint(current.transformToVRGrip);
         }
     }
 }

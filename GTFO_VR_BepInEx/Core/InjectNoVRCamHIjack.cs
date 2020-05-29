@@ -13,7 +13,7 @@ namespace GTFO_VR_BepInEx.Core
 {
 
     /// <summary>
-    /// Make all transitions end instantly
+    /// Make all camera transitions end instantly, we never want the player's control of the camera to be taken away
     /// </summary>
     /// 
 

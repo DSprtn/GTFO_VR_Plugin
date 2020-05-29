@@ -5,7 +5,7 @@ using HarmonyLib;
 namespace GTFO_VR_BepInEx.Core
 {
     /// <summary>
-    /// Add event call onItemEquipped
+    /// Add event calls for item equips
     /// </summary>
 
     [HarmonyPatch(typeof(ItemEquippable),"OnWield")]

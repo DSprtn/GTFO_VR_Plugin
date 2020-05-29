@@ -21,6 +21,12 @@ namespace GTFO_VR.UI
 
         static DividedBarShaderController Health;
         static DividedBarShaderController Infection;
+        static DividedBarShaderController Oxygen;
+
+        static Color normalHealthCol = new Color(0.33f, 0f, 0f);
+        static Color normalInfectionCol = new Color(0.533f / 3f, 1 / 3f, 0.8f / 3f);
+        static Color normalOxygenCol = Color.cyan / 3f;
+
         DividedBarShaderController BulletsInMag;
 
         Dictionary<InventorySlot, DividedBarShaderController> UIMappings = new Dictionary<InventorySlot, DividedBarShaderController>();
@@ -74,20 +80,35 @@ namespace GTFO_VR.UI
             UIMappings.Add(InventorySlot.ConsumableHeavy, UIMappings[InventorySlot.Consumable]);
 
             Health = transform.FindChildRecursive("HP").gameObject.AddComponent<DividedBarShaderController>();
+            Oxygen = transform.FindChildRecursive("Air").gameObject.AddComponent<DividedBarShaderController>();
             Infection = transform.FindChildRecursive("Infection").gameObject.AddComponent<DividedBarShaderController>();
             BulletsInMag = transform.FindChildRecursive("Ammo").gameObject.AddComponent<DividedBarShaderController>();
 
-            Health.SetColor(new Color(0.33f, 0f, 0f));
-            Infection.SetColor(new Color(0.533f / 3f, 1 / 3f, 0.8f / 3f));
+            Health.SetColor(normalHealthCol);
+            Infection.SetColor(normalInfectionCol);
+            Oxygen.SetColor(normalOxygenCol);
 
             Health.maxAmmo = 100;
             Health.currentAmmo = 100;
 
+            Oxygen.maxAmmo = 100;
+            Oxygen.currentAmmo = 100;
+
             Infection.maxAmmo = 100;
             Infection.currentAmmo = 0;
 
-            Health.UpdateShaderVals(5, 2);
-            Infection.UpdateShaderVals(5, 2);
+            Health.UpdateShaderVals(4, 5);
+            Infection.UpdateShaderVals(4, 5);
+            Oxygen.UpdateShaderVals(4, 5);
+
+            StartCoroutine(SetInitialVals());
+        }
+
+        IEnumerator SetInitialVals()
+        {
+            yield return new WaitForSeconds(0.1f);
+            UpdateAir(1f);
+            UpdateInfection(0f);
         }
 
         public void SwitchState()
@@ -141,8 +162,6 @@ namespace GTFO_VR.UI
             objectiveDisplay.enabled = toggle;
         }
 
-        
-
         IEnumerator SetRectSize(RectTransform t, Vector2 size)
         {
             yield return new WaitForSeconds(0.1f);
@@ -153,7 +172,16 @@ namespace GTFO_VR.UI
         {
             if(Infection)
             {
-                Infection.SetFill(infection);
+                if(infection < 0.01f)
+                {
+                    Infection.ToggleRendering(false);
+                } else
+                {
+                    Infection.SetFill(infection);
+                    Infection.ToggleRendering(true);
+
+                    Infection.SetColor(Color.Lerp(normalInfectionCol, normalInfectionCol * 1.6f, infection));
+                }
             }
         }
 
@@ -162,20 +190,46 @@ namespace GTFO_VR.UI
             if (Health)
             {
                 Health.SetFill(health);
+
+                Health.SetColor(Color.Lerp(normalHealthCol, normalHealthCol * 1.8f, 1 - health));
+            }
+        }
+
+        public static void UpdateAir(float val)
+        {
+            if(Oxygen)
+            {
+                if(val < .99f)
+                {
+                    Oxygen.SetFill(val);
+                    Oxygen.ToggleRendering(true);
+                }
+
+                if(val < 0.5)
+                {
+                    Oxygen.SetColor(Color.Lerp(Color.red / 2f, normalOxygenCol, val * 1.6f));
+                } else
+                {
+                    Oxygen.SetColor(Color.cyan / 3f);
+                }
+
+                if(Mathf.Approximately(val,1f))
+                {
+                    Oxygen.ToggleRendering(false);
+                }
             }
         }
 
         // Handle selection effect and grid updates
         private void ItemSwitched(ItemEquippable item)
         {
-            DividedBarShaderController UIBar = null;
             foreach (DividedBarShaderController d in UIMappings.Values)
             {
                 d.SetUnselected();
             }
-            UIMappings.TryGetValue(item.ItemDataBlock.inventorySlot, out UIBar);
+            UIMappings.TryGetValue(item.ItemDataBlock.inventorySlot, out DividedBarShaderController UIBar);
 
-            if(UIBar)
+            if (UIBar)
             {
                 UIBar.SetSelected();
             }
@@ -198,8 +252,7 @@ namespace GTFO_VR.UI
         // Listen for values in respective classes ( PUI_Inventory )
         private void UiUpdate(InventorySlotAmmo item, int clipLeft)
         {
-            DividedBarShaderController bar = null;
-            UIMappings.TryGetValue(item.Slot, out bar);
+            UIMappings.TryGetValue(item.Slot, out DividedBarShaderController bar);
 
             if (ItemEquippableEvents.currentItem != null && 
                 ItemEquippableEvents.currentItem.ItemDataBlock.inventorySlot.Equals(item.Slot) && 
@@ -235,6 +288,7 @@ namespace GTFO_VR.UI
             objectiveDisplay = null;
             Health = null;
             Infection = null;
+            Oxygen = null;
         }
 
     }
