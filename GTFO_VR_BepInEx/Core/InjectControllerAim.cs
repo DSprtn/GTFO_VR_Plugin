@@ -11,30 +11,9 @@ using UnityEngine;
 
 namespace GTFO_VR_BepInEx.Core
 {
+
     /// <summary>
     /// Makes the first person items follow the position and aim direction of the main controller(s) of the player
-    /// </summary>
-    [HarmonyPatch(typeof(FirstPersonItemHolder),"LateUpdate")]
-    class InjectControllerAim
-    {
-        static void Prefix(FirstPersonItemHolder __instance, ItemEquippable ___WieldedItem)
-        {
-       
-            if (PlayerVR.VRSetup && VRSettings.UseVRControllers)
-            {
-                if (___WieldedItem == null)
-                {
-                    return;
-                }
-
-                ___WieldedItem.transform.position = Controllers.GetControllerPosition() + WeaponArchetypeVRData.CalculateGripOffset();
-                ___WieldedItem.transform.rotation = Controllers.GetControllerAimRotation();
-            }
-        }
-    }
-
-    /// <summary>
-    /// Inject this twice because otherwise data like weapon muzzle position is not updated correctly (makes tracers spawn in wrong location, for instance)
     /// </summary>
     [HarmonyPatch(typeof(FirstPersonItemHolder), "Update")]
     class InjectControllerAimAlign
@@ -43,18 +22,10 @@ namespace GTFO_VR_BepInEx.Core
         {
             if (PlayerVR.VRSetup && VRSettings.UseVRControllers)
             {
-                if (___WieldedItem == null)
-                {
-                    return;
-                }
-
-                
-                ___WieldedItem.transform.position = Controllers.GetControllerPosition() + WeaponArchetypeVRData.CalculateGripOffset();
-                ___WieldedItem.transform.rotation = Controllers.GetControllerAimRotation();
+                PlayerVR.UpdateHeldItemPosition();
             }
         }
     }
-    
 
     /// <summary>
     /// Changes most actions (placing, firing, throwing) to follow the controller forward instead of camera forward 
@@ -65,10 +36,12 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(FPSCamera), "UpdateCameraRay")]
     class InjectForwardInteractions
     {
-        static void Postfix(FPSCamera __instance)
+        static bool Prefix(FPSCamera __instance)
         {
+            bool vis = false;
             if (PlayerVR.VRSetup && VRSettings.UseVRControllers)
             {
+               
                 __instance.CameraRayDir = HMD.GetVRInteractionLookDir();
                 RaycastHit hit;
                 if (Physics.Raycast(Controllers.GetAimFromPos(), Controllers.GetAimForward(), out hit, 50f, LayerManager.MASK_CAMERA_RAY))
@@ -78,7 +51,10 @@ namespace GTFO_VR_BepInEx.Core
                     __instance.CameraRayNormal = hit.normal;
                     __instance.CameraRayObject = hit.collider.gameObject;
                     __instance.CameraRayDist = hit.distance;
-                    
+                    if (FPSCamera.FriendlyTargetVisAllowed && hit.collider.gameObject.layer == LayerManager.LAYER_PLAYER_SYNCED)
+                    {
+                        vis = true;
+                    }
                 }
                 else
                 {
@@ -88,7 +64,9 @@ namespace GTFO_VR_BepInEx.Core
                     __instance.CameraRayObject = null;
                     __instance.CameraRayDist = 0.0f;
                 }
-            }
+        }
+        GuiManager.CrosshairLayer.SetFriendlyTargetVisible(vis);
+        return false;
         }
     }
 

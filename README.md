@@ -1,5 +1,5 @@
 # GTFO_VR_Plugin
-### A plugin to add full roomscale/virtual reality support to your favorite game!
+### A plugin to add full roomscale virtual reality support to your favorite game!
 
 Active trello board (upcoming features and ongoing work) - https://trello.com/b/zSk7bBMS/gtfovr
 
@@ -47,31 +47,30 @@ Try to get used to the game in Non-VR mode first before using!
 	-	Left handed mode 
 	-	No VR controller mode 
 	- 	IRL Crouching detection 
-	-	Two handed aiming
+	-	Two handed aiming (toggleable in-game based on the distance of your hands)
+	-	Always aiming two handed, ignoring hand distance
+	- 	Snap turn amount
 	- 	Disabling some 2D UI elements
 	They can be found in a config file which is created after starting the game at least once with 
 	the VR mod installed. It can be found under "GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg"
 
 #### PERFORMANCE
 
-	Lower your render resolution and in-game settings, GTFO VR is a BIG resource hog!
+	Lower your render resolution in SteamVR and the quality of the in-game settings, GTFO VR is a BIG resource hog!
 	
 	If you don't mind small artifacting on lights in exchange for a bit of extra performance
 	set light rendering mode to '2' in GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg
 	
 #### MISC IN-GAME ACTIONS
 
-	Stay in the middle of your playspace, the player character's collision is there so you might be able to walk through
-	geometry otherwise (Will be fixed in new version)
-
 	Double handed aiming is triggered by proximity. Bring your hands together on a double handed weapon 
 	and you will enable it. Bring them far apart and it will switch back. 
 	
 	The watch can be toggled between inventory and objectives with the ToggleWatchMode action.
 	
-	The watch UI is as follows - The top 5 bars represent the inventory slots with ammo in them. On the bottom left
-	there are 2 bars (later might be 3) representing health, infection and possibly air. The big block divides 
-	itself up based on the amount of bullets in your currently held weapon. Each block is one bullet.
+	The watch UI is as follows - The top 5 bars represent the inventory slots with ammo in them. Each bar is a mag of ammo.
+	On the bottom left there are bars representing HP, infection and oxygen. They are not visible if they don't have to be.
+	The big block divides itself up based on the amount of bullets in your currently held weapon. Each block is one bullet.
 	
 	Remember to bind openmenu and openmap too! They work in-game correctly as you'd expect.
 	
@@ -92,7 +91,7 @@ Try to get used to the game in Non-VR mode first before using!
 	
 	The shortcuts return the following:
 	
-		case ("L"):
+                case ("L"):
                         returns "LIST ";
                 case ("Q"):
                         returns "QUERY ";
@@ -112,6 +111,8 @@ Try to get used to the game in Non-VR mode first before using!
                         returns "TOOL_REFILL";
                 case ("M"):
                         returns "MEDIPACK";
+                case ("Z"):
+                        returns "ZONE_";
                 case ("U"):
                         returns "UPLINK_VERIFY ";
 		
@@ -127,16 +128,17 @@ Try to get used to the game in Non-VR mode first before using!
 	Full VR controller based aiming (including fancy laserpointer)
 	
 	Main menu, map UI and terminal working correctly in VR
-	Single or double handed aiming 
+	
+	Single or double handed aiming
+	
+	Snap turn
 	
 	Custom programmer art VR UI
 	
 ## Known issues: 
 	
-	Rejoining might not work correctly --- please send me output logs that can be found under 
+	Rejoining might not work correctly sometimes --- please send me the output log that can be found under 
 	AppData\LocalLow\10 Chambers Collective\GTFO\output_log.txt if it happens to you!
-	
-	No snap turn (Coming in the next version!)
 
 ## Want to contribute?
 

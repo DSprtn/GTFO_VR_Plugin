@@ -61,6 +61,8 @@ namespace GTFO_VR
             SteamVR_Settings.instance.poseUpdateMode = SteamVR_UpdateModes.OnLateUpdate;
         }
 
+
+
         public void OnKeyboardDone(VREvent_t arg0)
         {
             keyboardClosedThisFrame = true;
@@ -179,12 +181,12 @@ namespace GTFO_VR
             ClearUIRenderTex();
         }
 
+
         private static void OrientKeyboard()
         {
-            Quaternion Rot = Quaternion.Euler(Vector3.Project(HMD.hmd.transform.rotation.eulerAngles, Vector3.up));
+            Quaternion Rot = Quaternion.Euler(Vector3.Project(HMD.hmd.transform.localRotation.eulerAngles, Vector3.up));
             Vector3 Pos = HMD.hmd.transform.localPosition + Rot * Vector3.forward * 1f;
-            Pos.y = HMD.hmd.transform.position.y + .5f;
-            Rot = Quaternion.LookRotation(HMD.hmd.transform.forward);
+            Pos.y = HMD.hmd.transform.localPosition.y + .5f;
             Rot = Quaternion.Euler(0f, Rot.eulerAngles.y, 0f);
             var t = new SteamVR_Utils.RigidTransform(Pos, Rot).ToHmdMatrix34();
             SteamVR.instance.overlay.SetKeyboardTransformAbsolute(ETrackingUniverseOrigin.TrackingUniverseStanding, ref t);
@@ -217,6 +219,7 @@ namespace GTFO_VR
            
             ToggleOverlay(false);
             TogglePlayerCam(true);
+            ClusteredRendering.Current.OnResolutionChange(new Resolution());
         }
 
         void ToggleOverlay(bool toggle)
@@ -304,7 +307,11 @@ namespace GTFO_VR
                     {
                         return "MEDIPACK";
                     }
-                 case ("U"):
+                case ("Z"):
+                    {
+                        return "ZONE_";
+                    }
+                case ("U"):
                     {
                         return "UPLINK_VERIFY ";
                     }

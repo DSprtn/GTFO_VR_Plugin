@@ -40,6 +40,11 @@ namespace GTFO_VR_BepInEx.Core
 				codes.RemoveRange(startIndex, endIndex - startIndex);
 			}
 
+			if(startIndex == -1)
+			{
+				Debug.LogError("FPSCamera method changed, anchor not found!");
+			}
+
 			return codes.AsEnumerable();
 		}
     }

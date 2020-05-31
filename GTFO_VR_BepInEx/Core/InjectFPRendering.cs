@@ -175,8 +175,6 @@ class OverrideResolutionForGUI
             {
                 return;
             }
-            Matrix4x4 localToWorldMatrix = ___m_holoSpaceTransform.localToWorldMatrix;
-            Matrix4x4 worldToLocalMatrix = ___m_holoSpaceTransform.worldToLocalMatrix;
             for (int index = 0; index < ___m_holoParts.Count; ++index)
             {
                 Material material = ___m_holoParts[index].m_material;

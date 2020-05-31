@@ -43,10 +43,20 @@ namespace GTFO_VR.Input
 
         void Update()
         {
+            if(!VRSettings.alwaysDoubleHanded && !FocusStateEvents.currentState.Equals(eFocusState.InElevator))
+            {
+                HandleDoubleHandedChecks();
+            }
+        }
+
+        private void HandleDoubleHandedChecks()
+        {
             bool isInDoubleHandPos = false;
             if (PlayerVR.LoadedAndInGame)
             {
+
                 VRWeaponData itemData = WeaponArchetypeVRData.GetVRWeaponData(ItemEquippableEvents.currentItem);
+
                 if (itemData.allowsDoubleHanded)
                 {
                     bool wasAimingTwoHanded = aimingTwoHanded;
@@ -80,7 +90,6 @@ namespace GTFO_VR.Input
 
 
 
-
         public static SteamVR_Input_Sources GetDeviceFromType(HandType type)
         {
             if (type.Equals(HandType.Left))
@@ -96,10 +105,15 @@ namespace GTFO_VR.Input
             VRWeaponData itemData = WeaponArchetypeVRData.GetVRWeaponData(item);
             if (itemData.allowsDoubleHanded)
             {
-                if (VRSettings.startDoubleHanded)
+                Debug.Log("Item allows double hand!");
+                if (VRSettings.alwaysDoubleHanded)
                 {
+                    Debug.Log("Always double hand is on!");
                     aimingTwoHanded = true;
                 }
+            } else
+            {
+                aimingTwoHanded = false;
             }
         }
 
@@ -219,7 +233,7 @@ namespace GTFO_VR.Input
             }
             if (!mainController)
             {
-                return HMD.hmd.transform.position;
+                return HMD.GetWorldPosition();
             }
             return mainController.transform.position;
         }
@@ -244,7 +258,7 @@ namespace GTFO_VR.Input
                 return Quaternion.identity;
             }
 
-            if (VRSettings.twoHandedAimingEnabled && Controllers.aimingTwoHanded)
+            if ((VRSettings.twoHandedAimingEnabled || VRSettings.alwaysDoubleHanded) && Controllers.aimingTwoHanded)
             {
                 return GetTwoHandedRotation();
             }

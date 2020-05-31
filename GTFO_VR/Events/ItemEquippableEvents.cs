@@ -24,12 +24,13 @@ namespace GTFO_VR.Events
                 Debug.Log(item.ArchetypeName);
                 Debug.Log(item.PublicName);
                 OnPlayerWieldItem.Invoke(item);
+                
             }
         }
 
         public static bool IsCurrentItemShootableWeapon()
         {
-            return currentItem != null && currentItem.IsWeapon && currentItem.AmmoType != Player.AmmoType.None;
+            return currentItem != null && currentItem.IsWeapon && currentItem.AmmoType != Player.AmmoType.None && currentItem.HasFlashlight;
         }
 
         public static bool CurrentItemHasFlashlight()

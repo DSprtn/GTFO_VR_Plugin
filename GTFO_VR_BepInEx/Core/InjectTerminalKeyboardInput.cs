@@ -20,6 +20,7 @@ namespace GTFO_VR_BepInEx.Core
 
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
+            bool foundReplace = false;
             Debug.Log("New instruction!");
             Debug.Log(new CodeInstruction(OpCodes.Call, VR_TXT_Input));
             foreach (var instruction in instructions)
@@ -29,9 +30,14 @@ namespace GTFO_VR_BepInEx.Core
                  if (instruction.ToString().Equals("call System.String get_inputString()"))
                  {
                     Debug.Log("Replacing input.inputString call....");
+                    foundReplace = true;
                     curr = new CodeInstruction(OpCodes.Call, VR_TXT_Input);
                  }
                 yield return curr;
+            }
+            if (!foundReplace)
+            {
+                Debug.LogError("Failed to replace terminal input, no anchor found!");
             }
         }
     }
@@ -43,6 +49,7 @@ namespace GTFO_VR_BepInEx.Core
 
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
+            bool foundReplace = false;
             Debug.Log("New instruction!");
             Debug.Log(new CodeInstruction(OpCodes.Call, VR_TXT_Input));
             foreach (var instruction in instructions)
@@ -52,9 +59,14 @@ namespace GTFO_VR_BepInEx.Core
                 if (instruction.ToString().Equals("call System.String get_inputString()"))
                 {
                     Debug.Log("Replacing input.inputString call....");
+                    foundReplace = true;
                     curr = new CodeInstruction(OpCodes.Call, VR_TXT_Input);
                 }
                 yield return curr;
+            }
+            if(!foundReplace)
+            {
+                Debug.LogError("Failed to replace terminal input, no anchor found!");
             }
         }
     }

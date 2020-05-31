@@ -23,6 +23,7 @@ namespace GTFO_VR_BepInEx.Core
 
             ___Inventory.SetPosition(new Vector2(-500f, -250f));
             ___Inventory.transform.localScale *= .0f;
+            ___Inventory.enabled = false;
 
             ___m_compass.SetPosition(new Vector2(0.0f, -250f));
 
@@ -30,6 +31,7 @@ namespace GTFO_VR_BepInEx.Core
 
             if(VRSettings.disableCompass)
             {
+                ___m_compass.enabled = false;
                 ___m_compass.transform.localScale *= .0f;
             }
 
@@ -42,13 +44,13 @@ namespace GTFO_VR_BepInEx.Core
 
             ___m_wardenObjective.SetPosition(new Vector2(625f, -475f));
             ___m_wardenObjective.transform.localScale *= .0f;
+            ___m_wardenObjective.enabled = false;
 
             ___m_playerStatus.SetPosition(new Vector2(0.0f, 180f));
             ___m_playerStatus.transform.localScale *= 0f;
-            
+            ___m_playerStatus.enabled = false;
 
             PlayerVR.SetPlayerGUIInstance(__instance);
-
         }
     }
 }

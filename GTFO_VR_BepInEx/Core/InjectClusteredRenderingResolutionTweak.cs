@@ -13,8 +13,8 @@ using UnityEngine;
 namespace GTFO_VR_BepInEx.Core
 {
     /// <summary>
-    /// This works because the VR resolution is incorrectly applied relative to the aspect/fov of the camera. TODO - Calculate correct aspect.
     /// Experimental performance tweak - changes light rendering resolution (with none to little visual difference, but a pretty good performance increase!)
+    /// This works because the VR resolution is incorrectly applied relative to the aspect/fov of the camera. TODO - Calculate correct aspect.
     /// </summary>
 
     [HarmonyPatch(typeof(ClusteredRendering))]

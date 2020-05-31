@@ -27,8 +27,8 @@ namespace GTFO_VR.UI
             UpdateShaderVals(5, 2);
         }
 
-        public int maxAmmo = 10;
-        public int currentAmmo = 0;
+        public int maxValue = 10;
+        public int currentValue = 0;
 
         const string vertProperty = "_DivisionsVertical";
         const string horizProperty = "_DivisionsHorizontal";
@@ -51,21 +51,28 @@ namespace GTFO_VR.UI
 
         public void UpdatePackOrConsumableDivisions()
         {
-            if(maxAmmo == 0)
+            if(maxValue == 0)
             {
                 return;
             }
-            UpdateShaderVals(maxAmmo, 1);
+            UpdateShaderVals(maxValue, 1);
+        }
+
+        public void UpdateWeaponMagDivisions(float ammoInClip, float maxAmmo)
+        {
+            int numMags = Mathf.Max(1,Mathf.RoundToInt(maxAmmo / ammoInClip));
+
+            UpdateShaderVals(numMags,1);
         }
 
         public void UpdateAmmoGridDivisions()
         {
             //Debug.Log("MaxAmmo: " + maxAmmo + " Current ammo: " + currentAmmo + " Inventory slot: " + inventorySlot.ToString());
-            int horizDivisions = Utils.LargestDivisor(maxAmmo);
+            int horizDivisions = Utils.LargestDivisor(maxValue);
 
-            int vertDivisions = maxAmmo / horizDivisions;
+            int vertDivisions = maxValue / horizDivisions;
 
-            if (maxAmmo > 10)
+            if (maxValue > 10)
             {
                 if (horizDivisions % 2 == 0)
                 {
@@ -85,11 +92,11 @@ namespace GTFO_VR.UI
 
         float GetFill()
         {
-            if(currentAmmo == 0)
+            if(currentValue == 0)
             {
                 return 0;
             }
-            return (float)currentAmmo / (float)maxAmmo;
+            return (float)currentValue / (float)maxValue;
         }
 
         public void SetFill(float fill)
@@ -113,7 +120,7 @@ namespace GTFO_VR.UI
 
         public void UpdateCurrentAmmo(int ammoLeft)
         {
-            currentAmmo = ammoLeft;
+            currentValue = ammoLeft;
             SetFill(GetFill());
         }
 

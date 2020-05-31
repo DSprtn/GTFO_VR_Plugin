@@ -28,10 +28,12 @@ namespace GTFO_VR_BepInEx.Core
             {
                 return;
             }
+            
             if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
-                __instance.Position = ___m_owner.PlayerCharacterController.SmoothPosition + HMD.GetPosition();
+                __instance.Position = HMD.GetWorldPosition();
             }
+            
         }
     }
 
@@ -49,11 +51,11 @@ namespace GTFO_VR_BepInEx.Core
             {
                 return;
             }
-
+            
             // Repeat position inject or the transforms will get out of sync (Unity transform handling mumbo jumbo ensues, frame later or frame behind tracking)
             if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
-                __instance.Position = ___m_owner.PlayerCharacterController.SmoothPosition + HMD.GetPosition();
+                __instance.Position = HMD.GetWorldPosition();
             }
 
             if ((VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) || VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.Rotation)))
@@ -62,7 +64,6 @@ namespace GTFO_VR_BepInEx.Core
                 AccessTools.FieldRefAccess<LookCameraController, float>((LookCameraController)__instance, "m_pitch") = euler.x;
                 AccessTools.FieldRefAccess<LookCameraController, float>((LookCameraController)__instance, "m_yaw") = euler.y;
             }
-
         }
     }
 

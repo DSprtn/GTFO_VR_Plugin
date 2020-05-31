@@ -3,6 +3,7 @@ using GTFO_VR.Core;
 using GTFO_VR.Events;
 using GTFO_VR.Input;
 using GTFO_VR.UI;
+using GTFO_VR.Util;
 using Player;
 using System;
 using UnityEngine;
@@ -29,8 +30,6 @@ namespace GTFO_VR
 
         public static SteamVR_Camera VRCamera;
 
-        static Quaternion snapTurnRot = Quaternion.identity;
-
         public static bool UIVisible = true;
 
         public static PlayerAgent playerAgent;
@@ -43,6 +42,17 @@ namespace GTFO_VR
 
         static bool frameRendered = false;
 
+        public static Quaternion snapTurnRotation = Quaternion.identity;
+
+        float snapTurnTime = 0f;
+
+        float snapTurnDelay = 0.25f;
+
+        public static Vector3 offsetFromPlayerToHMD = Vector3.zero;
+
+        static bool headInCollision;
+        static bool controllerHeadToHMDHeadBlocked;
+
         void Awake()
         {
             if (VRSetup)
@@ -50,11 +60,12 @@ namespace GTFO_VR
                 Debug.LogWarning("Trying to create duplicate VRInit class...");
                 return;
             }
+            
             FocusStateEvents.OnFocusStateChange += FocusStateChanged;
             SteamVR_Events.NewPosesApplied.AddListener(() => OnNewPoses());
+            ClusteredRendering.Current.OnResolutionChange(new Resolution());
+
         }
-
-
 
         /// <summary>
         /// Before we get the final image into the HMD positions and rotations need to be updated one last time to match the newest positions/rotations to greatly reduce perceivable lag/stuttering. To not get the shadow/light rendering and culling out of sync
@@ -68,24 +79,78 @@ namespace GTFO_VR
             {
                 return;
             }
-            Vector3 camPos = playerController.SmoothPosition + HMD.hmd.transform.position;
 
-            if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
-            {
-                fpscamera.m_camera.transform.position = camPos;
-            }
-                
-            fpscamera.m_camera.transform.parent.localRotation = Quaternion.Euler(HMD.GetVRCameraEulerRotation());
-            DoUglyCameraHack();
             UpdateOrigin();
+            if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation))
+            {
+                if (!FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
+                {
+                    Vector3 camPos = HMD.GetWorldPosition();
+                    fpscamera.m_camera.transform.position = camPos;
+                    C_Camera.Position = camPos;
+                    C_Camera.Forward = HMD.hmd.transform.forward;
 
-            C_Camera.Position = camPos;
-            C_Camera.Forward = HMD.hmd.transform.forward;
+                    CheckCameraIsInCollision();
+                }
 
-            // Multiple pose updates happen per frame but we only need to react to the one after LateUpdate() 
+            }
+            fpscamera.m_camera.transform.parent.localRotation = Quaternion.Euler(HMD.GetVRCameraEulerRotation());
+
+            UpdateHeldItemPosition();
+
+            DoUglyCameraHack();
+
+            // Multiple pose updates happen per frame but we only need to react to the one after LateUpdate
             if (!frameRendered)
             {
                 RenderLoop();
+            }
+        }
+
+        private void CheckCameraIsInCollision()
+        {
+            if(Physics.OverlapBox(HMD.GetWorldPosition() + (HMD.GetWorldForward() * 0.05f), new Vector3(0.03f,0.03f,0.03f), HMD.hmd.transform.rotation, LayerManager.MASK_TENTACLE_BLOCKERS).Length > 0)
+            {
+                headInCollision = true;
+            } else
+            {
+                headInCollision = false;
+            }
+
+            Vector3 centerPlayerHeadPos = fpscamera.GetCamerposForPlayerPos(playerController.SmoothPosition);
+
+            if(Physics.Linecast(centerPlayerHeadPos, HMD.GetWorldPosition(), LayerManager.MASK_TENTACLE_BLOCKERS))
+            {
+                controllerHeadToHMDHeadBlocked = true;
+            } else
+            {
+                controllerHeadToHMDHeadBlocked = false;
+            }
+
+            if(controllerHeadToHMDHeadBlocked || headInCollision)
+            {
+                SteamVR_Fade.Start(Color.black, 0.2f, true);
+            } else
+            {
+                SteamVR_Fade.Start(Color.clear, 0.2f, true);
+            }
+
+        }
+
+        public static void UpdateHeldItemPosition()
+        {
+            ItemEquippable heldItem = playerAgent.FPItemHolder.WieldedItem;
+            if (heldItem != null)
+            {
+                heldItem.transform.position = Controllers.GetControllerPosition() + WeaponArchetypeVRData.CalculateGripOffset();
+                Vector3 recoilRot = heldItem.GetRecoilRotOffset(); 
+
+                if(!Util.Utils.IsFiringFromADS())
+                {
+                    recoilRot.x *= 2f;
+                }
+                heldItem.transform.rotation = Controllers.GetControllerAimRotation() * Quaternion.Euler(heldItem.GetRecoilRotOffset());
+                heldItem.transform.position += Controllers.GetControllerAimRotation() * heldItem.GetRecoilPosOffset();
             }
         }
 
@@ -124,18 +189,12 @@ namespace GTFO_VR
             frameRendered = true;
         }
 
-        private void SpawnWatch()
-        {
-            if (!watch)
-            {
-                watch = Instantiate(VRGlobal.watchPrefab, new Vector3(0, 0, 0), Quaternion.Euler(new Vector3(0, 0, 0)), null).AddComponent<Watch>();
-                watch.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
-            }
-        }
-
         public void FocusStateChanged(eFocusState newState)
         {
-            // Do nothing yet
+            if (FocusStateEvents.lastState.Equals(eFocusState.InElevator) && newState.Equals(eFocusState.FPS))
+            {
+                CenterPlayerToOrigin();
+            }
         }
 
         void Update()
@@ -167,7 +226,34 @@ namespace GTFO_VR
             }
             else
             {
+                HandleSnapturnInput();
                 UpdateOrigin();
+            }
+        }
+
+         void HandleSnapturnInput()
+        {
+            if (VRInput.GetSnapTurningLeft())
+            {
+                DoSnapTurn(-VRSettings.snapTurnAmount);
+            }
+
+            if (VRInput.GetSnapTurningRight())
+            {
+                DoSnapTurn(VRSettings.snapTurnAmount);
+            }
+            
+        }
+
+        void DoSnapTurn(float angle)
+        {
+            if(snapTurnTime + snapTurnDelay < Time.time)
+            {
+                SteamVR_Fade.Start(Color.black, 0f, true);
+                SteamVR_Fade.Start(Color.clear, 0.2f, true);
+                snapTurnRotation *= Quaternion.Euler(new Vector3(0, angle, 0f));
+                CenterPlayerToOrigin();
+                snapTurnTime = Time.time;
             }
         }
 
@@ -188,8 +274,6 @@ namespace GTFO_VR
             }
             UpdateOrigin();
         }
-
-
 
         public static float VRDetectionMod(Vector3 dir, float distance, float m_flashLightRange, float m_flashlight_spotAngle)
         {
@@ -215,13 +299,27 @@ namespace GTFO_VR
             PlayerGui = gui;
         }
 
-        public void UpdateOrigin()
+        void UpdateOrigin()
         {
             if (origin == null || playerController == null)
             {
                 return;
             }
-            origin.transform.position = playerController.SmoothPosition;
+            origin.transform.position = playerController.SmoothPosition - offsetFromPlayerToHMD;
+            origin.transform.rotation = snapTurnRotation;
+            origin.transform.position -= CalculateCrouchOffset();
+        }
+
+        Vector3 CalculateCrouchOffset()
+        {
+            if (PlayerVR.playerAgent.Locomotion.m_currentStateEnum.Equals(Player.PlayerLocomotion.PLOC_State.Crouch))
+            {
+                float goalCrouchHeight = VRInput.IRLCrouchBorder;
+
+                float diff = Mathf.Max(0f, HMD.GetPlayerHeight() - goalCrouchHeight);
+                return new Vector3(0, diff, 0);
+            }
+            return Vector3.zero;
         }
 
         private void Setup()
@@ -233,6 +331,11 @@ namespace GTFO_VR
             SpawnWatch();
             VRSetup = true;
             LoadedAndInGame = true;
+            Debug.Log("Crouching height... " + playerAgent.PlayerData.camPosCrouch);
+            offsetFromPlayerToHMD = Vector3.zero;
+            snapTurnRotation = Quaternion.Euler(new Vector3(0,-HMD.hmd.transform.localRotation.eulerAngles.y,0f));
+            Debug.Log("Setting snap turn rot to " + snapTurnRotation.eulerAngles);
+            UpdateOrigin();
         }
 
         private void SetupOrigin()
@@ -243,6 +346,7 @@ namespace GTFO_VR
             }
             origin = new GameObject("Origin");
             Controllers.SetOrigin(origin.transform);
+            HMD.SetOrigin(origin.transform);
             DontDestroyOnLoad(origin);
         }
 
@@ -266,6 +370,16 @@ namespace GTFO_VR
             // Handle head transform manually to better fit into the game's systems and allow things like syncing lookDir online
             // This is handled in harmony injections to FPSCamera
             VRCamera = fpscamera.gameObject.AddComponent<SteamVR_Camera>();
+            fpscamera.gameObject.AddComponent<SteamVR_Fade>();
+        }
+
+        private void SpawnWatch()
+        {
+            if (!watch)
+            {
+                watch = Instantiate(VRGlobal.watchPrefab, new Vector3(0, 0, 0), Quaternion.Euler(new Vector3(0, 0, 0)), null).AddComponent<Watch>();
+                watch.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
+            }
         }
 
         // Force FOV/Aspects and position match up for all relevant game cameras
@@ -304,6 +418,16 @@ namespace GTFO_VR
             {
                 cam.camera.enabled = false;
             }
+        }
+
+        private static void CenterPlayerToOrigin()
+        {
+            Vector3 pos = HMD.hmd.transform.localPosition;
+            pos.y = 0f;
+            pos = snapTurnRotation * pos;
+            offsetFromPlayerToHMD = pos;
+            
+            Debug.Log("Centering player... new offset = " + offsetFromPlayerToHMD);
         }
 
         void OnDestroy()

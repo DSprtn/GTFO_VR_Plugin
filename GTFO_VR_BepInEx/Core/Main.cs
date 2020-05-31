@@ -23,7 +23,8 @@ namespace GTFO_VR_BepInEx.Core
         private ConfigEntry<int>  configLightResMode;
         private ConfigEntry<bool> configUseTwoHanded;
         private ConfigEntry<bool> configDisableCompass;
-        private ConfigEntry<bool> configStartDoubleHanded;
+        private ConfigEntry<bool> configAlwaysDoubleHanded;
+        private ConfigEntry<float> configSnapTurnAmount;
 
 
         void Awake()
@@ -42,7 +43,8 @@ namespace GTFO_VR_BepInEx.Core
             configLightResMode = Config.Bind("Experimental performance tweaks", "Light render resolution tweak - the lower resolution the greater the performance gain!", 1, "0 = 1920x1080, 1 = 1024x768 (Seems to be no difference, big performance increase), 2=640x480 (some small artifacting on lights, great performance increase)");
             configUseTwoHanded = Config.Bind("Input", "Use both hands to aim?", true, "If true, two-handed weapons will be allowed to be aimed with both hands.");
             configDisableCompass = Config.Bind("UI", "Disable compass in-game?", true, "If true, compass will not be shown in-game");
-            configStartDoubleHanded = Config.Bind("Input", "Start with double handed aiming on weapon switch?", false, "If true, when switching weapons aiming will happen with both hands from the start (RECOMMENDED FOR STOCK USERS)");
+            configAlwaysDoubleHanded = Config.Bind("Input", "Always use double handed aiming? (Where it applies)", false, "If true, double handed weapons will always use double handed aiming (RECOMMENDED FOR GUN STOCK USERS)");
+            configSnapTurnAmount = Config.Bind("Input", "Snap turn angle", 60f, "The amount of degrees to turn on a snap turn");
 
             Debug.Log("Use VR Controllers? : " + configUseControllers.Value);
             Debug.Log("Crouch on IRL crouch? : " + configIRLCrouch.Value);
@@ -50,14 +52,16 @@ namespace GTFO_VR_BepInEx.Core
             Debug.Log("Light resolution mode: " + configLightResMode.Value.ToString());
             Debug.Log("Use two handed aiming: " + configUseTwoHanded.Value);
             Debug.Log("Disable compass: " + configDisableCompass.Value);
-            Debug.Log("Start with double handed aiming: " + configStartDoubleHanded);
+            Debug.Log("Start with double handed aiming: " + configAlwaysDoubleHanded.Value);
+            Debug.Log("Snapturn amount: " + configSnapTurnAmount.Value);
 
             VRSettings.UseVRControllers = configUseControllers.Value;
             VRSettings.crouchOnIRLCrouch = configIRLCrouch.Value;
             VRSettings.lightRenderMode = configLightResMode.Value;
             VRSettings.twoHandedAimingEnabled = configUseTwoHanded.Value;
             VRSettings.disableCompass = configDisableCompass.Value;
-            VRSettings.startDoubleHanded = configStartDoubleHanded.Value;
+            VRSettings.alwaysDoubleHanded = configAlwaysDoubleHanded.Value;
+            VRSettings.snapTurnAmount = configSnapTurnAmount.Value;
 
             if (configUseLeftHand.Value)
             {

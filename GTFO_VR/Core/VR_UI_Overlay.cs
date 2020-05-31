@@ -60,20 +60,14 @@ namespace GTFO_VR
 
         public void OrientateOverlay()
         {
-            Quaternion rot = Quaternion.Euler(Vector3.Project(HMD.hmd.transform.rotation.eulerAngles, Vector3.up));
-            transform.position = HMD.hmd.transform.localPosition + rot * Vector3.forward * 3.5f;
+            Quaternion rot = Quaternion.Euler(Vector3.Project(HMD.hmd.transform.localRotation.eulerAngles, Vector3.up));
+            transform.position = HMD.hmd.transform.localPosition + rot * Vector3.forward * 2.2f;
             Vector3 Pos = transform.position;
-            Pos.y = HMD.hmd.transform.position.y;
-            transform.rotation = Quaternion.LookRotation(HMD.hmd.transform.forward);//Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(-HMD.hmd.transform.forward), 0.2f);
+            Pos.y = HMD.hmd.transform.localPosition.y;
+            
 
-            transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
+            transform.rotation = Quaternion.Euler(0f, rot.eulerAngles.y, 0f);
             transform.position = Pos;
-
-
-                
-            //var offset = new SteamVR_Utils.RigidTransform(HMD.hmd.transform, transform);
-
-            //var t = offset.ToHmdMatrix34();
 
             var t = new SteamVR_Utils.RigidTransform(transform).ToHmdMatrix34();
             OpenVR.Overlay.SetOverlayTransformAbsolute(overlayHandle, SteamVR.settings.trackingSpace, ref t);

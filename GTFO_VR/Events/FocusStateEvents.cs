@@ -12,11 +12,16 @@ namespace GTFO_VR.Events
         public static event FocusStateChange OnFocusStateChange;
         public delegate void FocusStateChange(eFocusState newState);
 
+        public static eFocusState lastState = eFocusState.MainMenu;
+
+        public static eFocusState currentState = eFocusState.MainMenu;
         public static void FocusChanged(eFocusState state)
         {
             if(OnFocusStateChange != null)
             {
+                currentState = state;
                 OnFocusStateChange.Invoke(state);
+                lastState = state;
             }
         }
 
@@ -28,5 +33,6 @@ namespace GTFO_VR.Events
             }
             return false;
         }
+
     }
 }

@@ -1,6 +1,8 @@
 ﻿
 
+using GTFO_VR.Core;
 using GTFO_VR.Events;
+using System;
 using UnityEngine;
 using Valve.VR;
 
@@ -37,35 +39,35 @@ namespace GTFO_VR.Input
             }
         }
 
-        public static Vector3 GetFlatForward()
+        public static Vector3 GetWorldForward()
         {
-            return Vector3.Project(hmd.transform.rotation.eulerAngles, Vector3.up);
+            return hmd.transform.forward;
         }
 
-        public static Vector3 GetPosition()
+        public static float GetPlayerHeight()
         {
-            Vector3 position = hmd.transform.position; 
-
-
-            // TODO Incorporate origin and crouching a little better
-            //if(PlayerVR.LoadedAndInGame && PlayerVR.playerAgent)
-           // {
-           //     if(PlayerVR.playerAgent.Locomotion.m_currentStateEnum.Equals(Player.PlayerLocomotion.PLOC_State.Crouch))
-            //    {
-           //         position.y = Mathf.Min(position.y, 1.1f);
-           //     }
-           // }
-            return position;
+            if(!hmd)
+            {
+                return 1.8f;
+            }
+            return hmd.transform.localPosition.y;
         }
 
-        
+        public static Vector3 GetOffsetPosition(Vector3 playerPos)
+        {
+            return hmd.transform.position;
+        }
+
+        public static Vector3 GetWorldPosition()
+        {
+            return hmd.transform.position;
+        }
 
         public static Vector3 GetVRCameraEulerRotation()
         {
             Quaternion localRotation = hmd.transform.rotation;
-            // TODO Snaprot
-            // TODO Incorporate origin into transform code
-            //localRotation *= snapTurnRot;
+
+
             if(!PlayerVR.fpscamera || FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 return localRotation.eulerAngles;
@@ -75,6 +77,11 @@ namespace GTFO_VR.Input
             localRotation = Quaternion.Inverse(PlayerVR.fpscamera.m_holder.transform.rotation) * localRotation;
 
             return localRotation.eulerAngles;
+        }
+
+        public static void SetOrigin(Transform transform)
+        {
+            HMD.hmd.transform.SetParent(transform);
         }
     }
 }
