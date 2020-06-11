@@ -154,15 +154,6 @@ namespace GTFO_VR.Input
             }
         }
 
-        public static Transform GetNonMainControllerTransform()
-        {
-            if (rightController.Equals(mainController))
-            {
-                return leftController.transform;
-            }
-            return rightController.transform;
-        }
-
         private void SetupControllers()
         {
             leftController = SetupController(SteamVR_Input_Sources.LeftHand);

@@ -305,6 +305,7 @@ namespace GTFO_VR
             {
                 return;
             }
+
             origin.transform.position = playerController.SmoothPosition - offsetFromPlayerToHMD;
             origin.transform.rotation = snapTurnRotation;
             origin.transform.position -= CalculateCrouchOffset();
@@ -329,11 +330,16 @@ namespace GTFO_VR
             SetupLaserPointer();
             SetupVRPlayerCamera();
             SpawnWatch();
+            SetInitialSnapTurn();
+            Debug.Log("Crouching height... " + playerAgent.PlayerData.camPosCrouch);
             VRSetup = true;
             LoadedAndInGame = true;
-            Debug.Log("Crouching height... " + playerAgent.PlayerData.camPosCrouch);
+        }
+
+        private void SetInitialSnapTurn()
+        {
             offsetFromPlayerToHMD = Vector3.zero;
-            snapTurnRotation = Quaternion.Euler(new Vector3(0,-HMD.hmd.transform.localRotation.eulerAngles.y,0f));
+            snapTurnRotation = Quaternion.Euler(new Vector3(0, -HMD.hmd.transform.localRotation.eulerAngles.y, 0f));
             Debug.Log("Setting snap turn rot to " + snapTurnRotation.eulerAngles);
             UpdateOrigin();
         }

@@ -29,7 +29,6 @@ namespace GTFO_VR.Util
 
         public static VRWeaponData GetVRWeaponData(ItemEquippable item)
         {
-            
             return current;
         }
 
@@ -49,8 +48,7 @@ namespace GTFO_VR.Util
             weaponArchetypes.Add("SMG", new VRWeaponData(new Vector3(0f, 0f, -.15f), true));
             weaponArchetypes.Add("DMR", new VRWeaponData(new Vector3(0f, 0f, -.05f), true));
             weaponArchetypes.Add("Assault Rifle", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
-            weaponArchetypes.Add("Carbine", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
-            weaponArchetypes.Add("Gauss Gun", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
+
             weaponArchetypes.Add("Machinepistol", new VRWeaponData(new Vector3(.0f, 0f, 0f), false));
 
             weaponArchetypes.Add("Sniper", new VRWeaponData(new Vector3(0f, 0f, -.05f), true));
@@ -58,6 +56,15 @@ namespace GTFO_VR.Util
             weaponArchetypes.Add("Machinegun", new VRWeaponData(new Vector3(0f, 0f, -.07f), true));
             weaponArchetypes.Add("Combat Shotgun", new VRWeaponData(new Vector3(0f, 0f, 0f), true));
             weaponArchetypes.Add("Burst Rifle", new VRWeaponData(new Vector3(0f, 0f, 0f), true));
+
+            weaponArchetypes.Add("Carbine", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
+
+            weaponArchetypes.Add("Bullpup Rifle", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
+            weaponArchetypes.Add("Rifle", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
+
+            weaponArchetypes.Add("HEL Gun", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
+            weaponArchetypes.Add("HEL Rifle", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
+            weaponArchetypes.Add("Burst Cannon", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
 
             current = weaponArchetypes["Default"];
         }

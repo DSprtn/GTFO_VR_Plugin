@@ -16,7 +16,6 @@ namespace GTFO_VR_BepInEx.Core
     public class Main : BaseUnityPlugin
     {
 
-
         private ConfigEntry<bool> configUseControllers;
         private ConfigEntry<bool> configIRLCrouch;
         private ConfigEntry<bool> configUseLeftHand;

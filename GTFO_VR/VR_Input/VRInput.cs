@@ -51,7 +51,7 @@ namespace GTFO_VR
 
         private static Dictionary<InputAction, SteamVR_Action_Boolean> boolActions;
 
-        public static float IRLCrouchBorder = 1.2f;
+        public static float IRLCrouchBorder = 1.15f;
 
         public void Start()
         {

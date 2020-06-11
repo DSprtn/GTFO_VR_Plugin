@@ -8,7 +8,7 @@ namespace GTFO_VR
     {
         public float thickness = 1f / 400f;
 
-        public Color color = Color.red;
+        public Color color = Color.red / 2f;
         public GameObject pointer;
         public GameObject dot;
 
@@ -65,25 +65,19 @@ namespace GTFO_VR
             }
             if (item.HasFlashlight && item.AmmoType != Player.AmmoType.None)
             {
-                EnablePointer();
+                TogglePointer(true);
                 SetHolderTransform(item.MuzzleAlign);
             }
             else
             {
-                DisablePointer();
+                TogglePointer(false);
             }
         }
 
-        void EnablePointer()
+        void TogglePointer(bool toggle)
         {
-            pointer.SetActive(true);
-            dot.SetActive(true);
-        }
-
-        void DisablePointer()
-        {
-            pointer.SetActive(false);
-            dot.SetActive(false);
+            pointer.SetActive(toggle);
+            dot.SetActive(toggle);
         }
 
         void SetHolderTransform(Transform t)
@@ -120,7 +114,7 @@ namespace GTFO_VR
             dot.GetComponent<MeshRenderer>().material = material;
             setup = true;
 
-            DisablePointer();
+            TogglePointer(false);
         }
 
         void OnDestroy()

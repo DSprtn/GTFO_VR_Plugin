@@ -14,7 +14,7 @@ using UnityEngine.Rendering;
 namespace GTFO_VR_BepInEx.Core
 {
     [HarmonyPatch(typeof(FPSCamera), "RotationUpdate")]
-    class DisableRecoilOnCameraApply
+    class InjectDisableRecoilOnCameraApply
     {
         static void Prefix(FPS_RecoilSystem ___m_recoilSystem)
         {
@@ -22,7 +22,7 @@ namespace GTFO_VR_BepInEx.Core
         }
     }
     [HarmonyPatch(typeof(FPS_RecoilSystem), "FPS_Update")]
-    class DisableRecoilOnCamera
+    class InjectDisableRecoilOnCamera
     {
         static void Postfix(FPS_RecoilSystem __instance, int ___m_FPS_SightOffset_PropertyID)
         {
