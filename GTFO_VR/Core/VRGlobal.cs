@@ -22,7 +22,7 @@ namespace GTFO_VR
 
         static GameObject ingamePlayer;
 
-        VR_UI_Overlay overlay;
+        static VR_UI_Overlay overlay;
 
         static string currentFrameInput = "";
 
@@ -91,6 +91,23 @@ namespace GTFO_VR
         {
             currentFrameInput = "";
             keyboardClosedThisFrame = false;
+        }
+
+
+        public static bool GetPlayerPointingAtPositionOnScreen(out Vector2 uv)
+        {
+            if(overlay)
+            {
+                VR_UI_Overlay.IntersectionResults result = new VR_UI_Overlay.IntersectionResults();
+
+                if(overlay.ComputeIntersection(Controllers.GetLocalPosition(), Controllers.GetLocalAimForward(), ref result))
+                {
+                    uv = result.UVs;
+                    return true;
+                }
+            }
+            uv = Vector2.zero;
+            return false;
         }
         
         void Update()

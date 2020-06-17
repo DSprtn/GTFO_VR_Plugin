@@ -25,5 +25,7 @@ namespace GTFO_VR.Core
         public static bool alwaysDoubleHanded = false;
 
         public static float snapTurnAmount = 90f;
+
+        public static bool useSmoothTurn = false;
     }
 }

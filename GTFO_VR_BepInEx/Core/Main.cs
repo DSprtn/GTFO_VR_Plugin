@@ -24,6 +24,7 @@ namespace GTFO_VR_BepInEx.Core
         private ConfigEntry<bool> configDisableCompass;
         private ConfigEntry<bool> configAlwaysDoubleHanded;
         private ConfigEntry<float> configSnapTurnAmount;
+        private ConfigEntry<bool> configSmoothSnapTurn;
 
 
         void Awake()
@@ -43,7 +44,8 @@ namespace GTFO_VR_BepInEx.Core
             configUseTwoHanded = Config.Bind("Input", "Use both hands to aim?", true, "If true, two-handed weapons will be allowed to be aimed with both hands.");
             configDisableCompass = Config.Bind("UI", "Disable compass in-game?", true, "If true, compass will not be shown in-game");
             configAlwaysDoubleHanded = Config.Bind("Input", "Always use double handed aiming? (Where it applies)", false, "If true, double handed weapons will always use double handed aiming (RECOMMENDED FOR GUN STOCK USERS)");
-            configSnapTurnAmount = Config.Bind("Input", "Snap turn angle", 60f, "The amount of degrees to turn on a snap turn");
+            configSnapTurnAmount = Config.Bind("Input", "Snap turn angle", 60f, "The amount of degrees to turn on a snap turn (or turn per half a second if smooth turn is enabled)");
+            configSmoothSnapTurn = Config.Bind("Input", "Use smooth turning?", false, "If true, turning will use smooth turn instead of snap turn");
 
             Debug.Log("Use VR Controllers? : " + configUseControllers.Value);
             Debug.Log("Crouch on IRL crouch? : " + configIRLCrouch.Value);
@@ -53,6 +55,7 @@ namespace GTFO_VR_BepInEx.Core
             Debug.Log("Disable compass: " + configDisableCompass.Value);
             Debug.Log("Start with double handed aiming: " + configAlwaysDoubleHanded.Value);
             Debug.Log("Snapturn amount: " + configSnapTurnAmount.Value);
+            Debug.Log("Use smooth turn?: " + configSmoothSnapTurn.Value);
 
             VRSettings.UseVRControllers = configUseControllers.Value;
             VRSettings.crouchOnIRLCrouch = configIRLCrouch.Value;
@@ -61,6 +64,7 @@ namespace GTFO_VR_BepInEx.Core
             VRSettings.disableCompass = configDisableCompass.Value;
             VRSettings.alwaysDoubleHanded = configAlwaysDoubleHanded.Value;
             VRSettings.snapTurnAmount = configSnapTurnAmount.Value;
+            VRSettings.useSmoothTurn = configSmoothSnapTurn.Value;
 
             if (configUseLeftHand.Value)
             {

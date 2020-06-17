@@ -193,6 +193,16 @@ namespace GTFO_VR.Input
             return (mainController.transform.rotation * Vector3.forward);
         }
 
+        public static Vector3 GetLocalAimForward()
+        {
+            return mainController.transform.localRotation * Vector3.forward;
+        }
+
+        public static Vector3 GetLocalPosition()
+        {
+            return mainController.transform.localPosition;
+        }
+
         public static Vector3 GetTwoHandedAimForward()
         {
             float currentItemYOffset = 0f;

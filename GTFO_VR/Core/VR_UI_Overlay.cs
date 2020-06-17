@@ -5,6 +5,7 @@ using System;
 using UnityEngine;
 using Valve.VR;
 using Valve.VR.Extras;
+using static SteamVR_Utils;
 
 namespace GTFO_VR
 {
@@ -19,6 +20,8 @@ namespace GTFO_VR
 
         public static UI_Pass UI_ref;
 
+        RigidTransform current;
+
         void Awake()
         {
             if(instance)
@@ -27,8 +30,9 @@ namespace GTFO_VR
                 return;
             }
             instance = this;
-            OrientateOverlay();
+            
             Setup();
+            OrientateOverlay();
 
             OpenVR.Compositor.FadeToColor(9999f, 0, 0, 0, 0, false);
         }
@@ -58,6 +62,40 @@ namespace GTFO_VR
             } 
         }
 
+        public struct IntersectionResults
+        {
+            public Vector3 point;
+            public Vector3 normal;
+            public Vector2 UVs;
+            public float distance;
+        }
+
+        public bool ComputeIntersection(Vector3 source, Vector3 direction, ref IntersectionResults results)
+        {
+            var overlay = OpenVR.Overlay;
+            if (overlay == null)
+                return false;
+
+            var input = new VROverlayIntersectionParams_t();
+            input.eOrigin = SteamVR.settings.trackingSpace;
+            input.vSource.v0 = source.x;
+            input.vSource.v1 = source.y;
+            input.vSource.v2 = -source.z;
+            input.vDirection.v0 = direction.x;
+            input.vDirection.v1 = direction.y;
+            input.vDirection.v2 = -direction.z;
+
+            var output = new VROverlayIntersectionResults_t();
+            if (!overlay.ComputeOverlayIntersection(overlayHandle, ref input, ref output))
+                return false;
+
+            results.point = new Vector3(output.vPoint.v0, output.vPoint.v1, -output.vPoint.v2);
+            results.normal = new Vector3(output.vNormal.v0, output.vNormal.v1, -output.vNormal.v2);
+            results.UVs = new Vector2(output.vUVs.v0, output.vUVs.v1);
+            results.distance = output.fDistance;
+            return true;
+        }
+
         public void OrientateOverlay()
         {
             Quaternion rot = Quaternion.Euler(Vector3.Project(HMD.hmd.transform.localRotation.eulerAngles, Vector3.up));
@@ -69,10 +107,9 @@ namespace GTFO_VR
             transform.rotation = Quaternion.Euler(0f, rot.eulerAngles.y, 0f);
             transform.position = Pos;
 
-            var t = new SteamVR_Utils.RigidTransform(transform).ToHmdMatrix34();
+            current = new SteamVR_Utils.RigidTransform(transform);
+            var t = current.ToHmdMatrix34();
             OpenVR.Overlay.SetOverlayTransformAbsolute(overlayHandle, SteamVR.settings.trackingSpace, ref t);
-            
-            
         }
 
         public void SetupOverlay()
@@ -118,6 +155,12 @@ namespace GTFO_VR
                 overlay.ShowOverlay(handle);
                 overlay.SetOverlayAlpha(handle, 1f);
                 overlay.SetOverlayWidthInMeters(handle, widthInMeters);
+                overlay.SetOverlayCurvature(handle, 0.3f);
+
+                // Enables laser but disables all input for some reason? More research needed
+                //overlay.SetOverlayInputMethod(handle, VROverlayInputMethod.Mouse);
+                //overlay.SetOverlayFlag(handle, VROverlayFlags.MakeOverlaysInteractiveIfVisible, true);
+
 
                 // D3D textures are upside-down in Unity to match OpenGL.
                 if (SteamVR.instance.textureType == ETextureType.DirectX)
@@ -133,11 +176,10 @@ namespace GTFO_VR
                 }
 
 
-                var t = new SteamVR_Utils.RigidTransform(transform).ToHmdMatrix34();
+                current = new SteamVR_Utils.RigidTransform(transform);
+                var t = current.ToHmdMatrix34();
 
                 overlay.SetOverlayTransformAbsolute(handle, SteamVR.settings.trackingSpace, ref t);
-                    
-                
             }
 
             return handle;

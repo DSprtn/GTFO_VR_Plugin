@@ -139,12 +139,33 @@ namespace GTFO_VR
 
         public static bool GetSnapTurningLeft()
         {
-            return VRInput.Initialized && VRInput.instance.snapLeftAction.GetStateDown(SteamVR_Input_Sources.Any);
+            if(VRInput.Initialized)
+            {
+                if(VRSettings.useSmoothTurn)
+                {
+                    return VRInput.instance.snapLeftAction.GetState(SteamVR_Input_Sources.Any);
+                } else
+                {
+                    return VRInput.instance.snapLeftAction.GetStateDown(SteamVR_Input_Sources.Any);
+                }
+            }
+            return false;
         }
 
         public static bool GetSnapTurningRight()
         {
-            return VRInput.Initialized && VRInput.instance.snapRightAction.GetStateDown(SteamVR_Input_Sources.Any);
+            if (VRInput.Initialized)
+            {
+                if (VRSettings.useSmoothTurn)
+                {
+                    return VRInput.instance.snapRightAction.GetState(SteamVR_Input_Sources.Any);
+                }
+                else
+                {
+                    return VRInput.instance.snapRightAction.GetStateDown(SteamVR_Input_Sources.Any);
+                }
+            }
+            return false;
         }
 
         private void InitializeActionMapping()
@@ -183,7 +204,7 @@ namespace GTFO_VR
                 { InputAction.TerminalDown, weaponSwitchRightAction },
                 { InputAction.TerminalExit, reloadAction },
                 { InputAction.MenuClick, shootAction },
-                { InputAction.MenuClickAlternate, interactAction },
+                //{ InputAction.MenuClickAlternate, interactAction },
                 { InputAction.MenuExit, reloadAction },
                 { InputAction.MenuToggle, openMenuAction },
                 { InputAction.ToggleMap, openMapAction },
@@ -213,6 +234,27 @@ namespace GTFO_VR
                     return 1f;
                 }
                 return 0f;
+            } else if (InputAction.MenuScroll.Equals(action))
+            {
+                if (VRInput.instance.weaponSwitchLeftAction.GetStateDown(SteamVR_Input_Sources.Any))
+                {
+                    return 1f;
+                }
+                if (weaponSwitchRightAction.GetStateDown(SteamVR_Input_Sources.Any))
+                {
+                    return -1f;
+                }
+            }
+            else if(InputAction.MapZoom.Equals(action))
+            {
+                if (VRInput.instance.weaponSwitchLeftAction.GetState(SteamVR_Input_Sources.Any))
+                {
+                    return -1f * Time.deltaTime;
+                }
+                if (weaponSwitchRightAction.GetState(SteamVR_Input_Sources.Any))
+                {
+                    return 1f * Time.deltaTime;
+                }
             }
             else
             {
@@ -220,12 +262,12 @@ namespace GTFO_VR
                 {
                     if(FocusStateManager.CurrentState.Equals(eFocusState.MainMenu))
                     {
-                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x / 20f;
+                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x / 10f;
                     }
 
                     if(FocusStateManager.CurrentState.Equals(eFocusState.Map))
                     {
-                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x / 6f;
+                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x / 2f;
                     }
                     return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x;
                     
@@ -234,17 +276,17 @@ namespace GTFO_VR
                 {
                     if (FocusStateManager.CurrentState.Equals(eFocusState.MainMenu))
                     {
-                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y / 20f;
+                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y / 10f;
                     }
 
                     if (FocusStateManager.CurrentState.Equals(eFocusState.Map))
                     {
-                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y / 6f;
+                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y / 2f;
                     }
                     return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y;
                 }
-                return 0f;
             }
+            return 0f;
         }
 
     }

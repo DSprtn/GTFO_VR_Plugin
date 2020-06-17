@@ -60,7 +60,7 @@ namespace GTFO_VR
                 Debug.LogWarning("Trying to create duplicate VRInit class...");
                 return;
             }
-            
+
             FocusStateEvents.OnFocusStateChange += FocusStateChanged;
             SteamVR_Events.NewPosesApplied.AddListener(() => OnNewPoses());
             ClusteredRendering.Current.OnResolutionChange(new Resolution());
@@ -109,28 +109,31 @@ namespace GTFO_VR
 
         private void CheckCameraIsInCollision()
         {
-            if(Physics.OverlapBox(HMD.GetWorldPosition() + (HMD.GetWorldForward() * 0.05f), new Vector3(0.03f,0.03f,0.03f), HMD.hmd.transform.rotation, LayerManager.MASK_TENTACLE_BLOCKERS).Length > 0)
+            if (Physics.OverlapBox(HMD.GetWorldPosition() + (HMD.GetWorldForward() * 0.05f), new Vector3(0.03f, 0.03f, 0.03f), HMD.hmd.transform.rotation, LayerManager.MASK_TENTACLE_BLOCKERS).Length > 0)
             {
                 headInCollision = true;
-            } else
+            }
+            else
             {
                 headInCollision = false;
             }
 
             Vector3 centerPlayerHeadPos = fpscamera.GetCamerposForPlayerPos(playerController.SmoothPosition);
 
-            if(Physics.Linecast(centerPlayerHeadPos, HMD.GetWorldPosition(), LayerManager.MASK_TENTACLE_BLOCKERS))
+            if (Physics.Linecast(centerPlayerHeadPos, HMD.GetWorldPosition(), LayerManager.MASK_TENTACLE_BLOCKERS))
             {
                 controllerHeadToHMDHeadBlocked = true;
-            } else
+            }
+            else
             {
                 controllerHeadToHMDHeadBlocked = false;
             }
 
-            if(controllerHeadToHMDHeadBlocked || headInCollision)
+            if (controllerHeadToHMDHeadBlocked || headInCollision)
             {
                 SteamVR_Fade.Start(Color.black, 0.2f, true);
-            } else
+            }
+            else
             {
                 SteamVR_Fade.Start(Color.clear, 0.2f, true);
             }
@@ -143,9 +146,9 @@ namespace GTFO_VR
             if (heldItem != null)
             {
                 heldItem.transform.position = Controllers.GetControllerPosition() + WeaponArchetypeVRData.CalculateGripOffset();
-                Vector3 recoilRot = heldItem.GetRecoilRotOffset(); 
+                Vector3 recoilRot = heldItem.GetRecoilRotOffset();
 
-                if(!Util.Utils.IsFiringFromADS())
+                if (!Util.Utils.IsFiringFromADS())
                 {
                     recoilRot.x *= 2f;
                 }
@@ -166,7 +169,7 @@ namespace GTFO_VR
                 UI_Core.RenderUI();
             }
 
-            if(fpscamera.debugRenderClustered)
+            if (fpscamera.debugRenderClustered)
             {
                 ClusteredRendering.Current.CollectCommands(preRenderLights);
             }
@@ -176,7 +179,7 @@ namespace GTFO_VR
                 GUIX_Manager.Current.CollectCommands(preRenderLights);
             }
 
-            if(MapDetails.s_isSetup)
+            if (MapDetails.s_isSetup)
             {
                 MapDetails.Current.CollectCommands(preRenderLights);
             }
@@ -199,7 +202,7 @@ namespace GTFO_VR
 
         void Update()
         {
-            
+
             if (!fpscamera)
             {
                 VRSetup = false;
@@ -231,7 +234,7 @@ namespace GTFO_VR
             }
         }
 
-         void HandleSnapturnInput()
+        void HandleSnapturnInput()
         {
             if (VRInput.GetSnapTurningLeft())
             {
@@ -242,18 +245,26 @@ namespace GTFO_VR
             {
                 DoSnapTurn(VRSettings.snapTurnAmount);
             }
-            
+
         }
 
         void DoSnapTurn(float angle)
         {
-            if(snapTurnTime + snapTurnDelay < Time.time)
+            if (VRSettings.useSmoothTurn)
             {
-                SteamVR_Fade.Start(Color.black, 0f, true);
-                SteamVR_Fade.Start(Color.clear, 0.2f, true);
-                snapTurnRotation *= Quaternion.Euler(new Vector3(0, angle, 0f));
+                snapTurnRotation *= Quaternion.Euler(new Vector3(0, angle * Time.deltaTime * 2f, 0f));
                 CenterPlayerToOrigin();
-                snapTurnTime = Time.time;
+            }
+            else
+            {
+                if (snapTurnTime + snapTurnDelay < Time.time)
+                {
+                    SteamVR_Fade.Start(Color.black, 0f, true);
+                    SteamVR_Fade.Start(Color.clear, 0.2f, true);
+                    snapTurnRotation *= Quaternion.Euler(new Vector3(0, angle, 0f));
+                    CenterPlayerToOrigin();
+                    snapTurnTime = Time.time;
+                }
             }
         }
 
@@ -432,7 +443,7 @@ namespace GTFO_VR
             pos.y = 0f;
             pos = snapTurnRotation * pos;
             offsetFromPlayerToHMD = pos;
-            
+
             Debug.Log("Centering player... new offset = " + offsetFromPlayerToHMD);
         }
 
