@@ -29,14 +29,13 @@ Try to get used to the game in Non-VR mode first before using!
 	6. Launch the game from within the library or from within SteamVR and you're in!
 	(Ignore the "GTFO does not support VR" warning, just click OK)
 	
-	If your controllers don't do anything in-game you might have to setup an input scheme. You can do so under 
-	SteamVR -> Settings -> Controllers -> Show old binding UI -> GTFO VR
+	7. Tweak or setup your controls under SteamVR -> Settings -> Controllers -> Show old binding UI -> GTFO VR
+	When in doubt, consult the video here https://www.youtube.com/watch?v=sZPK1GfqxBE&feature=youtu.be&t=4m14s
 	
-	You should be able to download bindings from there if anyone made them or create them yourself. Remember to set
-	an action pose! (Tip works best most of the time)
+	To enable tracking or change the way the weapons are being held you must set an action pose within the binding menu.
+	Tip seems to be the most intuitive. Remember to set all required actions or the binding won't get saved!
 	
-	Note: When you save your binding SteamVR might not grab the latest action poses, in that cases just create 
-	another binding, switch to that one and switch back and it will update correctly.
+
 	
 ## Usage notes:
 
@@ -86,7 +85,7 @@ Try to get used to the game in Non-VR mode first before using!
 	
 #### TERMINAL
 	
-	Shortcuts exist as uppercase letters on the virtual keyboard. To use simply, set the keyboard to uppercase 
+	Shortcuts exist as uppercase letters on the virtual keyboard. To use, simply set the keyboard to uppercase 
 	and it will autofill the text based on the uppercase letters you type in.
 	
 	The shortcuts return the following:
