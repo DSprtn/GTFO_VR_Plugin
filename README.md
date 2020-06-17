@@ -29,8 +29,9 @@ Try to get used to the game in Non-VR mode first before using!
 	6. Launch the game from within the library or from within SteamVR and you're in!
 	(Ignore the "GTFO does not support VR" warning, just click OK)
 	
-	7. Tweak or setup your controls under SteamVR -> Settings -> Controllers -> Show old binding UI -> GTFO VR
+	7. Tweak or setup your controls under SteamVR -> Settings -> Controllers -> Manage Controller Bindings -> GTFO VR
 	When in doubt, consult the video here https://www.youtube.com/watch?v=sZPK1GfqxBE&feature=youtu.be&t=4m14s
+	It is still mostly up to date.
 	
 	To enable tracking or change the way the weapons are being held you must set an action pose within the binding menu.
 	Tip seems to be the most intuitive. Remember to set all required actions or the binding won't get saved!
