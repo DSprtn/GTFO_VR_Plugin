@@ -28,8 +28,8 @@ namespace GTFO_VR_BepInEx.Core
 				{
 						endIndex = i; 
 				}
-
-				if(codes[i].ToString().Equals("callvirt Void AfterCameraUpdate()"))
+				// Handle two different version of BepInEx
+				if(codes[i].ToString().Equals("callvirt System.Void PlayerInteraction::AfterCameraUpdate()") || codes[i].ToString().Equals("callvirt Void AfterCameraUpdate()"))
 				{
 					startIndex = i + 1;
 				}
