@@ -13,7 +13,7 @@ Try to get used to the game in Non-VR mode first before using!
 
 ## Installation: 
 
- 	1. Download and extract BepInEx v5.0.1 into your GTFO game folder (SteamLibrary\steamapps\common\GTFO\) 
+ 	1. Download and extract BepInEx into your GTFO game folder (SteamLibrary\steamapps\common\GTFO\) 
 	from https://github.com/BepInEx/BepInEx/releases
 	
 	2. Launch the game once and close it
