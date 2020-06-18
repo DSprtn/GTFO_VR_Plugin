@@ -142,6 +142,10 @@ namespace GTFO_VR
 
         public static void UpdateHeldItemPosition()
         {
+            if(!VRSettings.UseVRControllers)
+            {
+                return;
+            }
             ItemEquippable heldItem = playerAgent.FPItemHolder.WieldedItem;
             if (heldItem != null)
             {
@@ -395,7 +399,9 @@ namespace GTFO_VR
             if (!watch)
             {
                 watch = Instantiate(VRGlobal.watchPrefab, new Vector3(0, 0, 0), Quaternion.Euler(new Vector3(0, 0, 0)), null).AddComponent<Watch>();
-                watch.transform.localScale = new Vector3(1.25f, 1.25f, 1.25f);
+                Vector3 watchScale = new Vector3(1.25f, 1.25f, 1.25f);
+                watchScale *= VRSettings.watchScale;
+                watch.transform.localScale = watchScale;
             }
         }
 

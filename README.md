@@ -51,6 +51,7 @@ Try to get used to the game in Non-VR mode first before using!
 	-	Always aiming two handed, ignoring hand distance
 	- 	Snap turn amount
 	- 	Disabling some 2D UI elements
+	-	Smooth snap turning
 	They can be found in a config file which is created after starting the game at least once with 
 	the VR mod installed. It can be found under "GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg"
 

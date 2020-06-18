@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace GTFO_VR.Core
 {
@@ -27,5 +28,7 @@ namespace GTFO_VR.Core
         public static float snapTurnAmount = 90f;
 
         public static bool useSmoothTurn = false;
+
+        public static float watchScale = 1f;
     }
 }

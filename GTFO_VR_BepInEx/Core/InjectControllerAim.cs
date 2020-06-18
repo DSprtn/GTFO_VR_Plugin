@@ -20,7 +20,7 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Postfix(FirstPersonItemHolder __instance, ItemEquippable ___WieldedItem)
         {
-            if (PlayerVR.VRSetup && VRSettings.UseVRControllers)
+            if (PlayerVR.VRSetup)
             {
                 PlayerVR.UpdateHeldItemPosition();
             }
