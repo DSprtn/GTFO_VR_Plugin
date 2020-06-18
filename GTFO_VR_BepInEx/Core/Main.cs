@@ -12,7 +12,7 @@ namespace GTFO_VR_BepInEx.Core
     /// Entry point for patching existing methods in GTFO libraries
     /// </summary>
 
-    [BepInPlugin("com.github.dsprtn.gtfovr", "GTFO Virtual Reality Plug-in", "0.5.0.0")]
+    [BepInPlugin("com.github.dsprtn.gtfovr", "GTFO Virtual Reality Plug-in", "0.6.0.0")]
     public class Main : BaseUnityPlugin
     {
 
@@ -46,8 +46,8 @@ namespace GTFO_VR_BepInEx.Core
             configDisableCompass = Config.Bind("UI", "Disable compass in-game?", true, "If true, compass will not be shown in-game");
             configAlwaysDoubleHanded = Config.Bind("Input", "Always use double handed aiming? (Where it applies)", false, "If true, double handed weapons will always use double handed aiming (RECOMMENDED FOR GUN STOCK USERS)");
             configSnapTurnAmount = Config.Bind("Input", "Snap turn angle", 60f, "The amount of degrees to turn on a snap turn (or turn per half a second if smooth turn is enabled)");
-            configSmoothSnapTurn = Config.Bind("Input", "Use smooth turning?", false, "If true, turning will use smooth turn instead of snap turn");
-            configWatchScaling = Config.Bind("Misc", "Watch scale multipkier", 1.00f, "Size of the watch in-game will be multiplied by this value, down to half of its default size or up to double.");
+            configSmoothSnapTurn = Config.Bind("Input", "Use smooth turning?", false, "If true, will use smooth turn instead of snap turn");
+            configWatchScaling = Config.Bind("Misc", "Watch scale multiplier", 1.00f, "Size of the watch in-game will be multiplied by this value down to half of its default size or up to double (0.5 or 2.0)");
 
             Debug.Log("Use VR Controllers? : " + configUseControllers.Value);
             Debug.Log("Crouch on IRL crouch? : " + configIRLCrouch.Value);
