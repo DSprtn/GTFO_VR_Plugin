@@ -36,19 +36,22 @@
     {
       "name": "/actions/default/in/Movement",
       "type": "vector2",
-      "requirement": "suggested"
+      "requirement": "mandatory"
     },
     {
-      "name": "/actions/default/in/Aim",
-      "type": "boolean"
+      "name": "/actions/default/in/ToggleWatchMode",
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/default/in/Shoot",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/default/in/Interact",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/default/in/Jump",
@@ -56,15 +59,18 @@
     },
     {
       "name": "/actions/default/in/Crouch",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/default/in/WeaponSwitchLeft",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/default/in/WeaponSwitchRight",
-      "type": "boolean"
+      "type": "boolean",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/default/in/ToggleFlashlight",
@@ -76,6 +82,19 @@
     },
     {
       "name": "/actions/default/in/Reload",
+      "type": "boolean",
+      "requirement": "mandatory"
+    },
+    {
+      "name": "/actions/default/in/OpenMap",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/OpenMenu",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/Ping",
       "type": "boolean"
     },
     {

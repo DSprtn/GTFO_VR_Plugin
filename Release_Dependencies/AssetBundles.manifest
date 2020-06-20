@@ -1,10 +1,10 @@
 ManifestFileVersion: 0
-CRC: 627442398
+CRC: 2924669559
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: player
+      Name: vrshaders
       Dependencies: {}
     Info_1:
-      Name: vrshaders
+      Name: vrwatch
       Dependencies: {}
