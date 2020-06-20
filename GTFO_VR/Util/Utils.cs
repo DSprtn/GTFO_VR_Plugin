@@ -14,7 +14,7 @@ namespace GTFO_VR.Util
 
         public static bool IsFiringFromADS()
         {
-            return !VRSettings.twoHandedAimingEnabled || (Controllers.aimingTwoHanded || !WeaponArchetypeVRData.GetVRWeaponData(ItemEquippableEvents.currentItem).allowsDoubleHanded);
+            return !VR_Settings.twoHandedAimingEnabled || (Controllers.aimingTwoHanded || !WeaponArchetypeVRData.GetVRWeaponData(ItemEquippableEvents.currentItem).allowsDoubleHanded);
         }
 
         public static int LargestDivisor(int n)

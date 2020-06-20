@@ -22,7 +22,7 @@ namespace GTFO_VR_BepInEx.Core
         static void Prefix(ref Vector2 ___m_cursorPos)
         {
             Vector2 newCursorPos = Vector2.zero;
-            if(VRGlobal.GetPlayerPointingAtPositionOnScreen(out newCursorPos))
+            if(VR_Global.GetPlayerPointingAtPositionOnScreen(out newCursorPos))
             {
                 Vector2 res = new Vector2(GuiManager.ScreenRes.width, GuiManager.ScreenRes.height);
                 newCursorPos -= new Vector2(0.5f, 0.5f);

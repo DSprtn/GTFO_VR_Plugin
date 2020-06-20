@@ -44,10 +44,6 @@ namespace GTFO_VR_BepInEx.Core
             Debug.Log("Removing " + codes[endIndex - 2]);
             codes.RemoveAt(endIndex - 2);
 
-            foreach(CodeInstruction c in codes)
-            {
-                Debug.Log("Final - " + c);
-            }
             if (endIndex == -1)
             {
                 Debug.LogError("Failed to replace weapon fire origin, no anchor found!");

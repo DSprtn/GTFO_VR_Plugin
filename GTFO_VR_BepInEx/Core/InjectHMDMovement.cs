@@ -24,12 +24,12 @@ namespace GTFO_VR_BepInEx.Core
 
         static void Postfix(FPSCamera __instance, PlayerAgent ___m_owner)
         {
-            if (!PlayerVR.VRSetup)
+            if (!PlayerVR.VRPlayerIsSetup)
             {
                 return;
             }
             
-            if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
+            if (VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 __instance.Position = HMD.GetWorldPosition();
             }
@@ -47,18 +47,18 @@ namespace GTFO_VR_BepInEx.Core
 
         static void Postfix(FPSCamera __instance, PlayerAgent ___m_owner)
         {
-            if (!PlayerVR.VRSetup)
+            if (!PlayerVR.VRPlayerIsSetup)
             {
                 return;
             }
             
             // Repeat position inject or the transforms will get out of sync (Unity transform handling mumbo jumbo ensues, frame later or frame behind tracking)
-            if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
+            if (VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 __instance.Position = HMD.GetWorldPosition();
             }
 
-            if ((VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) || VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.Rotation)))
+            if ((VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) || VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.Rotation)))
             {
                 Vector3 euler = HMD.GetVRCameraEulerRotation();
                 AccessTools.FieldRefAccess<LookCameraController, float>((LookCameraController)__instance, "m_pitch") = euler.x;
@@ -75,7 +75,7 @@ namespace GTFO_VR_BepInEx.Core
 
         static void Postfix(FPSCamera __instance)
         {
-            if(!PlayerVR.VRSetup)
+            if(!PlayerVR.VRPlayerIsSetup)
             {
                 return;
             }

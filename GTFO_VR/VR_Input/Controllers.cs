@@ -14,14 +14,14 @@ namespace GTFO_VR.Input
 {
     public class Controllers : MonoBehaviourExtended
     {
-
-        public static GameObject leftController;
-
-        public static GameObject rightController;
-
         public static GameObject mainController;
 
         public static GameObject offhandController;
+
+
+        static GameObject leftController;
+
+        static GameObject rightController;
 
         public static bool aimingTwoHanded;
 
@@ -43,7 +43,7 @@ namespace GTFO_VR.Input
 
         void Update()
         {
-            if(!VRSettings.alwaysDoubleHanded && !FocusStateEvents.currentState.Equals(eFocusState.InElevator))
+            if(!VR_Settings.alwaysDoubleHanded && !FocusStateEvents.currentState.Equals(eFocusState.InElevator))
             {
                 HandleDoubleHandedChecks();
             }
@@ -52,7 +52,7 @@ namespace GTFO_VR.Input
         private void HandleDoubleHandedChecks()
         {
             bool isInDoubleHandPos = false;
-            if (PlayerVR.LoadedAndInGame)
+            if (PlayerVR.LoadedAndInIngameView)
             {
 
                 VRWeaponData itemData = WeaponArchetypeVRData.GetVRWeaponData(ItemEquippableEvents.currentItem);
@@ -106,7 +106,7 @@ namespace GTFO_VR.Input
             if (itemData.allowsDoubleHanded)
             {
                 Debug.Log("Item allows double hand!");
-                if (VRSettings.alwaysDoubleHanded)
+                if (VR_Settings.alwaysDoubleHanded)
                 {
                     Debug.Log("Always double hand is on!");
                     aimingTwoHanded = true;
@@ -138,7 +138,7 @@ namespace GTFO_VR.Input
 
         private void SetMainController()
         {
-            if (VRSettings.mainHand.Equals(HandType.Right))
+            if (VR_Settings.mainHand.Equals(HandType.Right))
             {
                 mainController = rightController;
                 offhandController = leftController;
@@ -178,6 +178,12 @@ namespace GTFO_VR.Input
             steamVR_Behaviour_Pose.inputSource = source;
             steamVR_Behaviour_Pose.broadcastDeviceChanges = true;
             return controller;
+        }
+
+        
+        public static Vector3 GetMainHandTransformRight()
+        {
+            return mainController.transform.right;
         }
 
         public static Vector3 GetAimForward()
@@ -259,7 +265,7 @@ namespace GTFO_VR.Input
                 return Quaternion.identity;
             }
 
-            if ((VRSettings.twoHandedAimingEnabled || VRSettings.alwaysDoubleHanded) && Controllers.aimingTwoHanded)
+            if ((VR_Settings.twoHandedAimingEnabled || VR_Settings.alwaysDoubleHanded) && Controllers.aimingTwoHanded)
             {
                 return GetTwoHandedRotation();
             }

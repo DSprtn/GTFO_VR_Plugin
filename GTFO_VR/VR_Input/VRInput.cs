@@ -86,7 +86,7 @@ namespace GTFO_VR
                 return (boolActionMapping != null && boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any)) || HMD.hmd.transform.localPosition.y < VRInput.IRLCrouchBorder;
             }
 
-            if(action.Equals(InputAction.TerminalExit) && VRGlobal.keyboardClosedThisFrame)
+            if(action.Equals(InputAction.TerminalExit) && VR_Keyboard.keyboardClosedThisFrame)
             {
                 return true;
             }
@@ -125,7 +125,7 @@ namespace GTFO_VR
 
         static bool IsIRLCrouchValid(InputAction action)
         {
-            return action.Equals(InputAction.Crouch) && PlayerVR.LoadedAndInGame && VRSettings.crouchOnIRLCrouch;
+            return action.Equals(InputAction.Crouch) && PlayerVR.LoadedAndInIngameView && VR_Settings.crouchOnIRLCrouch;
         }
 
         public static float GetAxis(InputAction action)
@@ -141,7 +141,7 @@ namespace GTFO_VR
         {
             if(VRInput.Initialized)
             {
-                if(VRSettings.useSmoothTurn)
+                if(VR_Settings.useSmoothTurn)
                 {
                     return VRInput.instance.snapLeftAction.GetState(SteamVR_Input_Sources.Any);
                 } else
@@ -156,7 +156,7 @@ namespace GTFO_VR
         {
             if (VRInput.Initialized)
             {
-                if (VRSettings.useSmoothTurn)
+                if (VR_Settings.useSmoothTurn)
                 {
                     return VRInput.instance.snapRightAction.GetState(SteamVR_Input_Sources.Any);
                 }

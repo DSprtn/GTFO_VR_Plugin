@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Reflection.Emit;
 using GTFO_VR;
+using GTFO_VR.Core;
 using HarmonyLib;
 using LevelGeneration;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace GTFO_VR_BepInEx.Core
     public static class InjectTerminalKeyboardInput_Patch
     {
 
-        static readonly MethodInfo VR_TXT_Input = SymbolExtensions.GetMethodInfo(() => VRGlobal.GetKeyboardInput());
+        static readonly MethodInfo VR_TXT_Input = SymbolExtensions.GetMethodInfo(() => VR_Keyboard.GetKeyboardInput());
 
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
@@ -45,7 +46,7 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(LG_ComputerTerminalCommandInterpreter), "UpdateTerminalScreen")]
     public static class InjectTerminalKeyboardCorrectAnyKeySkip_Patch
     {
-        static readonly MethodInfo VR_TXT_Input = SymbolExtensions.GetMethodInfo(() => VRGlobal.GetKeyboardInput());
+        static readonly MethodInfo VR_TXT_Input = SymbolExtensions.GetMethodInfo(() => VR_Keyboard.GetKeyboardInput());
 
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {

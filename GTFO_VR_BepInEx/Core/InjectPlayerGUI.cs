@@ -29,7 +29,7 @@ namespace GTFO_VR_BepInEx.Core
 
             ___m_compass.transform.localScale *= .75f;
 
-            if(VRSettings.disableCompass)
+            if(VR_Settings.disableCompass)
             {
                 ___m_compass.enabled = false;
                 ___m_compass.transform.localScale *= .0f;
@@ -49,8 +49,6 @@ namespace GTFO_VR_BepInEx.Core
             ___m_playerStatus.SetPosition(new Vector2(0.0f, 180f));
             ___m_playerStatus.transform.localScale *= 0f;
             ___m_playerStatus.enabled = false;
-
-            PlayerVR.SetPlayerGUIInstance(__instance);
         }
     }
 }

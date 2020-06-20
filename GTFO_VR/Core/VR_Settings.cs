@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace GTFO_VR.Core
 {
-    public static class VRSettings
+    public static class VR_Settings
     {
         public static bool crouchOnIRLCrouch = true;
 
@@ -30,5 +30,9 @@ namespace GTFO_VR.Core
         public static bool useSmoothTurn = false;
 
         public static float watchScale = 1f;
+
+        public static bool toggleVRBySteamVRRunning = true;
+
+        public static bool enabled = true;
     }
 }

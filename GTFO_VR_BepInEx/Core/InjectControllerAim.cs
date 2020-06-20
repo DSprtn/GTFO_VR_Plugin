@@ -20,7 +20,7 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Postfix(FirstPersonItemHolder __instance, ItemEquippable ___WieldedItem)
         {
-            if (PlayerVR.VRSetup)
+            if (PlayerVR.VRPlayerIsSetup)
             {
                 PlayerVR.UpdateHeldItemPosition();
             }
@@ -39,7 +39,7 @@ namespace GTFO_VR_BepInEx.Core
         static bool Prefix(FPSCamera __instance)
         {
             bool vis = false;
-            if (PlayerVR.VRSetup && VRSettings.UseVRControllers)
+            if (PlayerVR.VRPlayerIsSetup && VR_Settings.UseVRControllers)
             {
                
                 __instance.CameraRayDir = HMD.GetVRInteractionLookDir();

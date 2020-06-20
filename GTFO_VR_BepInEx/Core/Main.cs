@@ -4,6 +4,9 @@ using BepInEx;
 using HarmonyLib;
 using BepInEx.Configuration;
 using GTFO_VR.Core;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
+using System.Collections.Generic;
 
 namespace GTFO_VR_BepInEx.Core
 {
@@ -16,6 +19,8 @@ namespace GTFO_VR_BepInEx.Core
     public class Main : BaseUnityPlugin
     {
 
+        private ConfigEntry<bool> configEnableVR;
+        private ConfigEntry<bool> configToggleVRBySteamVR;
         private ConfigEntry<bool> configUseControllers;
         private ConfigEntry<bool> configIRLCrouch;
         private ConfigEntry<bool> configUseLeftHand;
@@ -33,11 +38,41 @@ namespace GTFO_VR_BepInEx.Core
             Debug.Log("Loading VR plugin...");
             SetupConfig();
             Harmony harmony = new Harmony("com.github.dsprtn.gtfovr");
-            harmony.PatchAll();
+
+            if(VR_Settings.enabled && SteamVRRunningCheck())
+            {
+                harmony.PatchAll();
+            } else
+            {
+                Debug.Log("VR launch aborted, VR is disabled or SteamVR is off!");
+            }
+        }
+
+        private bool SteamVRRunningCheck()
+        {
+            if(!VR_Settings.toggleVRBySteamVRRunning)
+            {
+                return true;
+            }
+
+            List<Process> possibleVRProcesses = new List<Process>();
+
+            possibleVRProcesses.AddRange(Process.GetProcessesByName("vrserver"));
+            possibleVRProcesses.AddRange(Process.GetProcessesByName("vrcompositor"));
+
+            Debug.Log("VR processes found - " + possibleVRProcesses.Count);
+            foreach(Process p in possibleVRProcesses)
+            {
+                Debug.Log(p);
+            }
+            return possibleVRProcesses.Count > 0;
         }
 
         private void SetupConfig()
         {
+            configEnableVR = Config.Bind("Startup", "Run VR plugin?", true, "If true, game will start in VR");
+            configToggleVRBySteamVR = Config.Bind("Startup", "Start in pancake if SteamVR is off?", true, "If true, will start the game in pancake mode if SteamVR is not detected");
+
             configUseControllers = Config.Bind("Input", "Use VR Controllers?", true, "If true, will use VR controllers. You can play with a gamepad and head aiming if you set this to false");
             configIRLCrouch = Config.Bind("Input", "Crouch in-game when you crouch IRL?", true, "If true, when crouching down below a certain threshold IRL, the in-game character will also crouch");
             configUseLeftHand = Config.Bind("Input", "Use left hand as main hand?", false, "If true, all items will appear in the left hand");
@@ -49,6 +84,8 @@ namespace GTFO_VR_BepInEx.Core
             configSmoothSnapTurn = Config.Bind("Input", "Use smooth turning?", false, "If true, will use smooth turn instead of snap turn");
             configWatchScaling = Config.Bind("Misc", "Watch scale multiplier", 1.00f, "Size of the watch in-game will be multiplied by this value down to half of its default size or up to double (0.5 or 2.0)");
 
+            Debug.Log("VR enabled?" + configEnableVR.Value);
+            Debug.Log("Toggle VR by SteamVR running?" + configToggleVRBySteamVR.Value);
             Debug.Log("Use VR Controllers? : " + configUseControllers.Value);
             Debug.Log("Crouch on IRL crouch? : " + configIRLCrouch.Value);
             Debug.Log("Use left hand as main hand? : " + configUseLeftHand.Value);
@@ -60,20 +97,21 @@ namespace GTFO_VR_BepInEx.Core
             Debug.Log("Use smooth turn?: " + configSmoothSnapTurn.Value);
             Debug.Log("Watch size multiplier: " + configWatchScaling.Value);
 
-            VRSettings.UseVRControllers = configUseControllers.Value;
-            VRSettings.crouchOnIRLCrouch = configIRLCrouch.Value;
-            VRSettings.lightRenderMode = configLightResMode.Value;
-            VRSettings.twoHandedAimingEnabled = configUseTwoHanded.Value;
-            VRSettings.disableCompass = configDisableCompass.Value;
-            VRSettings.alwaysDoubleHanded = configAlwaysDoubleHanded.Value;
-            VRSettings.snapTurnAmount = configSnapTurnAmount.Value;
-            VRSettings.useSmoothTurn = configSmoothSnapTurn.Value;
-            VRSettings.watchScale = Mathf.Clamp(configWatchScaling.Value, 0.5f, 2f);
+            VR_Settings.UseVRControllers = configUseControllers.Value;
+            VR_Settings.crouchOnIRLCrouch = configIRLCrouch.Value;
+            VR_Settings.lightRenderMode = configLightResMode.Value;
+            VR_Settings.twoHandedAimingEnabled = configUseTwoHanded.Value;
+            VR_Settings.disableCompass = configDisableCompass.Value;
+            VR_Settings.alwaysDoubleHanded = configAlwaysDoubleHanded.Value;
+            VR_Settings.snapTurnAmount = configSnapTurnAmount.Value;
+            VR_Settings.useSmoothTurn = configSmoothSnapTurn.Value;
+            VR_Settings.watchScale = Mathf.Clamp(configWatchScaling.Value, 0.5f, 2f);
+            VR_Settings.toggleVRBySteamVRRunning = configToggleVRBySteamVR.Value;
 
 
             if (configUseLeftHand.Value)
             {
-                VRSettings.mainHand = GTFO_VR.HandType.Left;
+                VR_Settings.mainHand = GTFO_VR.HandType.Left;
             }
         }
     }

@@ -68,13 +68,13 @@ namespace GTFO_VR.Input
             Quaternion localRotation = hmd.transform.rotation;
 
 
-            if(!PlayerVR.fpscamera || FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
+            if(!PlayerVR.fpsCamera || FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 return localRotation.eulerAngles;
             }
 
             // Get local rotation for FPS Camera from world hmd rotation to keep using the game's systems and keep player rotation in multiplayer in sync
-            localRotation = Quaternion.Inverse(PlayerVR.fpscamera.m_holder.transform.rotation) * localRotation;
+            localRotation = Quaternion.Inverse(PlayerVR.fpsCamera.m_holder.transform.rotation) * localRotation;
 
             return localRotation.eulerAngles;
         }

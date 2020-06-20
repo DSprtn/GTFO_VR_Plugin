@@ -98,6 +98,7 @@ namespace GTFO_VR
 
         public void OrientateOverlay()
         {
+            Debug.Log("Orienting overlay...");
             Quaternion rot = Quaternion.Euler(Vector3.Project(HMD.hmd.transform.localRotation.eulerAngles, Vector3.up));
             transform.position = HMD.hmd.transform.localPosition + rot * Vector3.forward * 2.2f;
             Vector3 Pos = transform.position;

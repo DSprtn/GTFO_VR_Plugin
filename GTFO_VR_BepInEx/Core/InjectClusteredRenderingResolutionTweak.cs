@@ -24,17 +24,17 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Prefix(ref Resolution res)
         {
-            if (VRSettings.lightRenderMode.Equals(0))
+            if (VR_Settings.lightRenderMode.Equals(0))
             {
                 res.width = 1920;
                 res.height = 1080;
             } else 
-            if (VRSettings.lightRenderMode.Equals(1))
+            if (VR_Settings.lightRenderMode.Equals(1))
             {
                 res.width = 1024;
                 res.height = 768;
             } 
-            else if(VRSettings.lightRenderMode.Equals(2))
+            else if(VR_Settings.lightRenderMode.Equals(2))
             {
                 res.width = 640;
                 res.height = 480;

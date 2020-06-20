@@ -48,6 +48,14 @@ namespace GTFO_VR.UI
             Setup();
         }
 
+        void Update()
+        {
+            if (VRInput.GetActionDown(InputAction.Aim))
+            {
+              SwitchState();
+            }
+        }
+
         public static void UpdateObjectives(string mainObj, string subObj)
         {
             if(objectiveDisplay != null)

@@ -20,9 +20,9 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Prefix(UI_Pass __instance)
         {
-            if(!VRGlobal.VR_ENABLED)
+            if(!VR_Global.VR_ENABLED)
             {
-                new GameObject("VR_Globals").AddComponent<VRGlobal>();
+                new GameObject("VR_Globals").AddComponent<VR_Global>();
                 VR_UI_Overlay.UI_ref = __instance;
             }
         }
