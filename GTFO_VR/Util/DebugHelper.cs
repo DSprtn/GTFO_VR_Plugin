@@ -32,7 +32,7 @@ namespace GTFO_VR
 		}
 		public static string GetTransformPositionAndRotationString(Transform t)
 		{
-			return "Pos: " + t.position + "Rot: " + t.rotation.eulerAngles + "\n LocalRot: " + t.localRotation.eulerAngles + "LocalPos: " + t.localPosition;
+			return "Pos: " + t.position + "Rot: " + t.rotation.eulerAngles + "\n LocalRot: " + t.localRotation.eulerAngles + "LocalPos: " + t.localPosition + " LocalScale " + t.localScale;
 		}
 
 		public static void LogTransformHierarchy(Transform t)

@@ -44,6 +44,16 @@ namespace GTFO_VR.Input
             return hmd.transform.forward;
         }
 
+        public static Quaternion GetFlatForward()
+        {
+            return Quaternion.LookRotation(new Vector3(0,hmd.transform.forward.y,0), Vector3.up);
+        }
+
+        public static Quaternion GetFlatRotationFacingHMD()
+        {
+            return Quaternion.Euler(Vector3.Project(hmd.transform.forward, Vector3.up));
+        }
+
         public static float GetPlayerHeight()
         {
             if(!hmd)

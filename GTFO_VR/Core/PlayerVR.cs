@@ -21,6 +21,7 @@ namespace GTFO_VR
         ColisionFade collisionFader;
         Watch watch;
         LaserPointer pointer;
+        VRWorldSpaceUI worldUI; 
 
         public static bool VRPlayerIsSetup;
         public static bool LoadedAndInIngameView = false;
@@ -146,6 +147,10 @@ namespace GTFO_VR
             {
                 collisionFader = gameObject.AddComponent<ColisionFade>();
             }
+            if(!worldUI)
+            {
+                worldUI = gameObject.AddComponent<VRWorldSpaceUI>();
+            }
             SetupLaserPointer();
             SetupVRPlayerCamera();
             SpawnWatch();
@@ -176,7 +181,7 @@ namespace GTFO_VR
 
         public static void UpdateHeldItemPosition()
         {
-            if (!VR_Settings.UseVRControllers)
+            if (!VR_Settings.useVRControllers)
             {
                 return;
             }
@@ -324,7 +329,7 @@ namespace GTFO_VR
                 return 0.0f;
             }
             Vector3 VRLookDir = fpsCamera.Forward;
-            if (ItemEquippableEvents.CurrentItemHasFlashlight() && VR_Settings.UseVRControllers)
+            if (ItemEquippableEvents.CurrentItemHasFlashlight() && VR_Settings.useVRControllers)
             {
                 VRLookDir = Controllers.GetAimForward();
             }

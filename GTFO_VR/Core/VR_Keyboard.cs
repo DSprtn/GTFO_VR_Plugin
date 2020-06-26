@@ -88,9 +88,14 @@ namespace GTFO_VR.Core
                     {
                         return "\r";
                     }
+                
                 case ("-"):
                     {
                         return "_";
+                    }
+                case ("~"):
+                    {
+                        return "-";
                     }
                 case ("L"):
                     {

@@ -39,10 +39,12 @@ namespace GTFO_VR_BepInEx.Core
         static bool Prefix(FPSCamera __instance)
         {
             bool vis = false;
-            if (PlayerVR.VRPlayerIsSetup && VR_Settings.UseVRControllers)
+            if (PlayerVR.VRPlayerIsSetup && VR_Settings.useVRControllers)
             {
                
+                //Used for throwing weapons
                 __instance.CameraRayDir = HMD.GetVRInteractionLookDir();
+
                 RaycastHit hit;
                 if (Physics.Raycast(Controllers.GetAimFromPos(), Controllers.GetAimForward(), out hit, 50f, LayerManager.MASK_CAMERA_RAY))
                 {

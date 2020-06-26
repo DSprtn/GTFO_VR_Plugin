@@ -180,7 +180,7 @@ namespace GTFO_VR.Input
             return controller;
         }
 
-        
+        // Used in bioscanner patch!
         public static Vector3 GetMainHandTransformRight()
         {
             return mainController.transform.right;
