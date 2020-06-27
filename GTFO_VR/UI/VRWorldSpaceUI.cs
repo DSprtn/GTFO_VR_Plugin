@@ -80,52 +80,50 @@ namespace GTFO_VR.UI
         {
             foreach (TextMeshPro p in statusBarHolder.GetComponentsInChildren<TextMeshPro>())
             {
-                //p.font = Watch.Debug_GetTextMeshFontAsset();
-                // if (p.GetComponent<MeshRenderer>())
-                // {
-                //p.GetComponent<MeshRenderer>().sharedMaterial = Watch.Debug_GetTextMeshProMat();
-                // }
-
-
                 if (p.canvas)
                 {
                     p.canvas.renderMode = RenderMode.WorldSpace;
                     p.canvas.worldCamera = UI_Core.UIPassHUD.Camera;
                 }
-
-                // p.fontSize = 1f;
-                //p.rectTransform.sizeDelta = Vector2.one;
-                p.alignment = TextAlignmentOptions.Center;
+                //p.f
             }
 
             foreach (TextMeshPro p in interactionBar.GetComponentsInChildren<TextMeshPro>())
             {
-                // p.font = Watch.Debug_GetTextMeshFontAsset();
-                // if (p.GetComponent<MeshRenderer>())
-                // {
-                //     p.GetComponent<MeshRenderer>().sharedMaterial = Watch.Debug_GetTextMeshProMat();
-                // }
                 if (p.canvas)
                 {
                     p.canvas.renderMode = RenderMode.WorldSpace;
+                    p.canvas.worldCamera = UI_Core.UIPassHUD.Camera;
                 }
-                p.fontSize = 1f;
-                //p.rectTransform.sizeDelta = Vector2.one;
-                //p.alignment = TextAlignmentOptions.Center;
+                //p.fontSize = 1f;
 
             }
 
-            foreach (Transform t in statusBar.GetComponentsInChildren<Transform>())
+            
+
+            statusBar.transform.SetParent(statusBarHolder.transform);
+            interactionBar.transform.SetParent(interactionBarHolder.transform);
+
+            foreach (RectTransform t in statusBar.GetComponentsInChildren<RectTransform>())
             {
                 t.gameObject.layer = 0;
             }
-            foreach (Transform t in interactionBar.GetComponentsInChildren<Transform>())
+            foreach (RectTransform t in interactionBar.GetComponentsInChildren<RectTransform>())
             {
                 t.gameObject.layer = 0;
             }
 
-            //statusBarHolder.transform.SetParent(Watch.Debug_GetTransform());
-            // interactionBarHolder.transform.SetParent(Watch.Debug_GetTransform());
+            statusBarHolder.transform.localScale = Vector3.one * 0.0012f;
+            interactionBarHolder.transform.localScale = Vector3.one * 0.0012f;
+
+            statusBar.transform.localPosition = Vector3.zero;
+            interactionBar.transform.localPosition = Vector3.zero;
+
+            //statusBar.transform.localRotation = Quaternion.identity;
+            //interactionBar.transform.localRotation = Quaternion.identity;
+
+            
+
             //statusBarHolder.transform.localPosition = Vector3.up * .2f;
             // interactionBarHolder.transform.localPosition = Vector3.up * .4f;
             // statusBarHolder.transform.rotation = Quaternion.identity;
@@ -142,6 +140,7 @@ namespace GTFO_VR.UI
 
             //statusBar.transform.localPosition = Vector3.zero + Vector3.up * .1f;
             //interactionBar.transform.localPosition = Vector3.zero + Vector3.up * .45f;
+            /*
             foreach (TextMeshPro textMeshPro in statusBar.GetComponentsInChildren<TextMeshPro>())
             {
                 textMeshPro.fontSize = 1f;
@@ -152,12 +151,12 @@ namespace GTFO_VR.UI
                 textMeshPro.fontSize = 1f;
                 //textMeshPro.rectTransform.sizeDelta = Vector2.one * .5f;
             }
+            */
+            //statusBar.m_headerText.transform.SetParent(null);
+            //statusBar.m_headerText.transform.localScale = Vector3.one;
 
-            statusBar.m_headerText.transform.SetParent(null);
-            statusBar.m_headerText.transform.localScale = Vector3.one;
-
-            interactionBar.m_headerText.transform.SetParent(null);
-            interactionBar.m_headerText.transform.localScale = Vector3.one;
+            //interactionBar.m_headerText.transform.SetParent(null);
+            //interactionBar.m_headerText.transform.localScale = Vector3.one;
             //interactGUI.GuiLayerBase.m_layerCanvas.renderMode = RenderMode.WorldSpace;
         }
 
@@ -169,6 +168,11 @@ namespace GTFO_VR.UI
 
         private void DebugKeys()
         {
+            if(UnityEngine.Input.GetKeyDown(KeyCode.F5))
+            {
+                DebugHelper.LogTransformHierarchy(interactGUI.CanvasTrans);
+            }
+            /*
             if (UnityEngine.Input.GetKeyDown(KeyCode.F4))
             {
                 if (statusBar)
@@ -219,6 +223,13 @@ namespace GTFO_VR.UI
                 }
 
             }
+            */
+
+            if(UnityEngine.Input.GetKeyDown(KeyCode.F6))
+            {
+                statusBar.transform.rotation *= Quaternion.Euler(new Vector3(0, 90, 0));
+                interactionBar.transform.rotation *= Quaternion.Euler(new Vector3(0, 90, 0));
+            }
             if (UnityEngine.Input.GetKeyDown(KeyCode.F7))
             {
                 statusBarHolder.transform.localScale = Vector3.one;
@@ -234,14 +245,11 @@ namespace GTFO_VR.UI
                 statusBarHolder.transform.localScale *= .1f;
                 interactionBarHolder.transform.localScale *= .1f;
             }
-
+            /*
             if (UnityEngine.Input.GetKeyDown(KeyCode.F10))
             {
                 foreach (TextMeshPro p in statusBarHolder.GetComponentsInChildren<TextMeshPro>())
                 {
-
-
-
                     if (p.canvas)
                     {
                         p.canvas.renderMode = RenderMode.WorldSpace;
@@ -266,11 +274,11 @@ namespace GTFO_VR.UI
                     p.alignment = TextAlignmentOptions.Center;
                 }
 
-                foreach (Transform t in statusBarHolder.GetComponentInChildren<Transform>())
+                foreach (Transform t in statusBarHolder.GetComponentsInChildren<Transform>())
                 {
                     t.gameObject.layer = 0;
                 }
-                foreach (Transform t in interactionBar.GetComponentInChildren<Transform>())
+                foreach (Transform t in interactionBar.GetComponentsInChildren<Transform>())
                 {
                     t.gameObject.layer = 0;
                 }
@@ -306,11 +314,29 @@ namespace GTFO_VR.UI
                 }
 
             }
+            */
 
         }
 
         void UpdateWorldSpaceUI()
         {
+            interactionBarHolder.SetActive(interactGUI.IsVisible() && interactGUI.InteractPromptVisible);
+            statusBarHolder.SetActive(interactGUI.IsVisible() && interactGUI.MessageVisible);
+
+            if(interactionBarHolder.activeSelf)
+            {
+                interactionBarHolder.transform.position = GetInteractionPromptPosition();
+                interactionBarHolder.transform.rotation = Quaternion.LookRotation(PlayerVR.fpsCamera.transform.forward);
+            }
+           
+            if(statusBarHolder.activeSelf)
+            {
+                statusBarHolder.transform.position = PlayerVR.fpsCamera.transform.position - new Vector3(0, -0.25f, 0) + PlayerVR.fpsCamera.transform.forward * .75f;
+                statusBarHolder.transform.rotation = Quaternion.LookRotation(PlayerVR.fpsCamera.transform.forward);
+            }
+
+
+            /*
             interactionBar.m_headerText.enabled = interactGUI.IsVisible() && interactGUI.InteractPromptVisible;
             if (interactionBar.m_headerText.enabled)
             {
@@ -326,6 +352,7 @@ namespace GTFO_VR.UI
                 statusBar.m_headerText.transform.position = PlayerVR.fpsCamera.transform.position - new Vector3(0, -0.25f, 0) + PlayerVR.fpsCamera.transform.forward * .75f;
                 statusBar.m_headerText.transform.rotation = Quaternion.LookRotation(PlayerVR.fpsCamera.transform.forward);
             }
+            */
         }
 
 
