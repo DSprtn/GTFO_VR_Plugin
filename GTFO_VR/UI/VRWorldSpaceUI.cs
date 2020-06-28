@@ -1,4 +1,6 @@
-﻿using GTFO_VR.Input;
+﻿using GTFO_VR.Core;
+using GTFO_VR.Events;
+using GTFO_VR.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +17,23 @@ namespace GTFO_VR.UI
     {
         public static PUI_InteractionPrompt statusBar;
         public static PUI_InteractionPrompt interactionBar;
+        public static PUI_Compass compass;
+        public static PUI_WardenIntel intel;
 
         GameObject statusBarHolder;
         GameObject interactionBarHolder;
+        GameObject compassHolder;
+        GameObject intelHolder;
 
         public static InteractionGuiLayer interactGUI;
+        public static PlayerGuiLayer playerGUI;
+
+        float compassCullDistance = 1.05f;
 
         void Awake()
         {
             SteamVR_Events.NewPosesApplied.AddListener(() => OnNewPoses());
+            Snapturn.OnAfterSnapTurn += PlayerUsedSnapturn;
         }
 
         private void OnNewPoses()
@@ -31,11 +41,18 @@ namespace GTFO_VR.UI
             UpdateWorldSpaceUI();
         }
 
-        public static void SetRef(PUI_InteractionPrompt status, PUI_InteractionPrompt interact)
+        public static void SetInteractionPromptRef(PUI_InteractionPrompt status, PUI_InteractionPrompt interact, InteractionGuiLayer interaction)
         {
             statusBar = status;
             interactionBar = interact;
-            //statusBar.RectTrans.anch
+            interactGUI = interaction;
+        }
+
+        public static void SetPlayerGUIRef(PlayerGuiLayer playerGUIRef, PUI_Compass compassRef, PUI_WardenIntel intelRef)
+        {
+            intel = intelRef;
+            compass = compassRef;
+            playerGUI = playerGUIRef;
         }
 
         void Start()
@@ -44,325 +61,274 @@ namespace GTFO_VR.UI
             Debug.Log("Creating status and interaction prompt VR UI");
             statusBarHolder = new GameObject("VR_StatusUI");
             interactionBarHolder = new GameObject("VR_InteractionUI");
-            //statusBarHolder.transform.localScale = Vector3.one * 0.005f;
-            //interactionBarHolder.transform.localScale = Vector3.one * 0.005f;
-
-
-            //GameObject testCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            //testCube.transform.SetParent(statusBarHolder.transform);
-            //testCube.GetComponent<Collider>().enabled = false;
-            //testCube.transform.localScale = Vector3.one * .2f;
-            //testCube.transform.localPosition = Vector3.zero;
-
-
-
-
-            //UnityEngine.GameObject PUI_Interact_Prefab = Resources.Load("Gui/Player/PUI_InteractionPrompt_CellUI") as GameObject;
-            //statusBar = Instantiate(PUI_Interact_Prefab, statusBarHolder.transform, false).GetComponent<PUI_InteractionPrompt>();
-            //interactionBar = Instantiate(PUI_Interact_Prefab, interactionBarHolder.transform, false).GetComponent<PUI_InteractionPrompt>();
-
-
-
-            //UpdateWorldSpaceUI();
-            // typeof(InteractionGuiLayer).GetField("m_message", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(interactGUI, statusBar);
-            //typeof(InteractionGuiLayer).GetField("m_interactPrompt", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(interactGUI, interactionBar);
-
-            //Debug.Log((typeof(InteractionGuiLayer).GetField("m_message", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(interactGUI) as PUI_InteractionPrompt).transform.root.name);
-
-
-
-
+            compassHolder = new GameObject("CompassHolder");
+            intelHolder = new GameObject("IntelHolder");
+            
             Invoke(nameof(VRWorldSpaceUI.Setup), 1f);
 
         }
 
         void Setup()
         {
-            foreach (TextMeshPro p in statusBarHolder.GetComponentsInChildren<TextMeshPro>())
+            SetupElement(statusBar.transform, statusBarHolder.transform, 0.0018f);
+            SetupElement(interactionBar.transform, interactionBarHolder.transform, 0.0012f);
+            SetupElement(compass.transform, compassHolder.transform, 0.0036f, false);
+            SetupElement(intel.transform, intelHolder.transform, 0.0012f);
+
+            SetTextShader(compass.transform, VR_Assets.textCull);
+            SetSpriteRendererShader(compass.transform, VR_Assets.spriteClip);
+
+            intelHolder.SetActive(true);
+
+            CenterRect(intel.transform);
+            CenterRect(compass.transform);
+            
+        }
+
+        private static void CenterRect(Transform t)
+        {
+            RectTransformComp rect = t.GetComponent<RectTransformComp>();
+            rect.SetAnchor(GuiAnchor.MidCenter);
+            rect.transform.localPosition = Vector3.zero;
+        }
+
+        void SetupElement(Transform ui, Transform holder, float scale, bool replaceShaders = true)
+        {
+            ui.SetParent(holder);
+            SetTransformHierarchyLayer(ui);
+            if(replaceShaders)
             {
+                SetSpriteRendererShader(ui);
+                SetTextShader(ui);
+            }
+
+            ui.transform.localScale = Vector3.one * scale;
+            ui.transform.localPosition = Vector3.zero;
+            ui.transform.localRotation = Quaternion.identity;
+        }
+
+        private void SetTextShader(Transform ui)
+        {
+            foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>())
+            {
+                Debug.Log("changing mat on " + p);
                 if (p.canvas)
                 {
                     p.canvas.renderMode = RenderMode.WorldSpace;
                     p.canvas.worldCamera = UI_Core.UIPassHUD.Camera;
-                }
-                //p.f
-            }
 
-            foreach (TextMeshPro p in interactionBar.GetComponentsInChildren<TextMeshPro>())
+                }
+                p.GetComponent<MeshRenderer>().material.shader = VR_Assets.textAlwaysRender;
+                p.GetComponent<MeshRenderer>().material.renderQueue = -1;
+            }
+        }
+
+        private void SetSpriteRendererShader(Transform ui)
+        {
+            foreach (SpriteRenderer s in ui.GetComponentsInChildren<SpriteRenderer>())
             {
+                Debug.Log("changing mat on " + s);
+                s.material.shader = VR_Assets.spriteAlwaysRender;
+                s.material.renderQueue = -1;
+            }
+        }
+
+        private void SetSpriteRendererShader(Transform ui, Shader shader)
+        {
+            foreach (SpriteRenderer s in ui.GetComponentsInChildren<SpriteRenderer>())
+            {
+                Debug.Log("changing mat on " + s);
+                s.material.shader = shader;
+                s.material.renderQueue = -1;
+            }
+        }
+
+        private void SetTextShader(Transform ui, Shader shader)
+        {
+            foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>())
+            {
+                Debug.Log("changing mat on " + p);
                 if (p.canvas)
                 {
                     p.canvas.renderMode = RenderMode.WorldSpace;
                     p.canvas.worldCamera = UI_Core.UIPassHUD.Camera;
+
                 }
-                //p.fontSize = 1f;
-
+                p.GetComponent<MeshRenderer>().material.shader = shader;
+                p.GetComponent<MeshRenderer>().material.renderQueue = -1;
             }
+        }
 
-            
+        
 
-            statusBar.transform.SetParent(statusBarHolder.transform);
-            interactionBar.transform.SetParent(interactionBarHolder.transform);
-
-            foreach (RectTransform t in statusBar.GetComponentsInChildren<RectTransform>())
+        void SetTransformHierarchyLayer(Transform transform)
+        {
+            foreach (RectTransform t in transform.GetComponentsInChildren<RectTransform>())
             {
-                t.gameObject.layer = 0;
+                t.gameObject.layer = LayerManager.LAYER_FIRST_PERSON_ITEM;
+
             }
-            foreach (RectTransform t in interactionBar.GetComponentsInChildren<RectTransform>())
-            {
-                t.gameObject.layer = 0;
-            }
-
-            statusBarHolder.transform.localScale = Vector3.one * 0.0012f;
-            interactionBarHolder.transform.localScale = Vector3.one * 0.0012f;
-
-            statusBar.transform.localPosition = Vector3.zero;
-            interactionBar.transform.localPosition = Vector3.zero;
-
-            //statusBar.transform.localRotation = Quaternion.identity;
-            //interactionBar.transform.localRotation = Quaternion.identity;
-
-            
-
-            //statusBarHolder.transform.localPosition = Vector3.up * .2f;
-            // interactionBarHolder.transform.localPosition = Vector3.up * .4f;
-            // statusBarHolder.transform.rotation = Quaternion.identity;
-            //interactionBarHolder.transform.rotation = Quaternion.identity;
-
-            //statusBar.gameObject.layer = 0;
-            //interactionBar.gameObject.layer = 0;
-
-            //statusBar.transform.localScale = Vector3.one * .001f;
-            //interactionBar.transform.localScale = Vector3.one * .001f;
-
-            //statusBarHolder.transform.localPosition = Vector3.zero + Vector3.up * .1f;
-            //interactionBarHolder.transform.localPosition = Vector3.zero + Vector3.up * .45f;
-
-            //statusBar.transform.localPosition = Vector3.zero + Vector3.up * .1f;
-            //interactionBar.transform.localPosition = Vector3.zero + Vector3.up * .45f;
-            /*
-            foreach (TextMeshPro textMeshPro in statusBar.GetComponentsInChildren<TextMeshPro>())
-            {
-                textMeshPro.fontSize = 1f;
-                //textMeshPro.rectTransform.sizeDelta = Vector2.one * .5f;
-            }
-            foreach (TextMeshPro textMeshPro in interactionBar.GetComponentsInChildren<TextMeshPro>())
-            {
-                textMeshPro.fontSize = 1f;
-                //textMeshPro.rectTransform.sizeDelta = Vector2.one * .5f;
-            }
-            */
-            //statusBar.m_headerText.transform.SetParent(null);
-            //statusBar.m_headerText.transform.localScale = Vector3.one;
-
-            //interactionBar.m_headerText.transform.SetParent(null);
-            //interactionBar.m_headerText.transform.localScale = Vector3.one;
-            //interactGUI.GuiLayerBase.m_layerCanvas.renderMode = RenderMode.WorldSpace;
         }
 
         void Update()
         {
             DebugKeys();
-            //UpdateWorldSpaceUI();
         }
+
+        
 
         private void DebugKeys()
         {
             if(UnityEngine.Input.GetKeyDown(KeyCode.F5))
             {
-                DebugHelper.LogTransformHierarchy(interactGUI.CanvasTrans);
+                DebugHelper.LogTransformHierarchy(statusBar.transform);
+                DebugHelper.LogTransformHierarchy(interactionBar.transform);
+                DebugHelper.LogTransformHierarchy(intel.transform);
+                DebugHelper.LogTransformHierarchy(compass.transform);
             }
-            /*
-            if (UnityEngine.Input.GetKeyDown(KeyCode.F4))
+            if(UnityEngine.Input.GetKeyDown(KeyCode.F9))
             {
-                if (statusBar)
-                {
-
-                    foreach (MeshRenderer m in statusBar.GetComponentsInChildren<MeshRenderer>())
-                    {
-                        foreach (Material mat in m.sharedMaterials)
-                        {
-                            Debug.Log("Status m " + mat + " s " + mat.shader);
-                        }
-                        Debug.Log("Status renderer - " + m + " enabled? " + m.enabled);
-                    }
-                }
-
-                if (interactionBar)
-                {
-                    foreach (MeshRenderer m in interactionBar.GetComponentsInChildren<MeshRenderer>())
-                    {
-                        foreach (Material mat in m.sharedMaterials)
-                        {
-                            Debug.Log("Interaction m " + mat + " s " + mat.shader);
-
-                        }
-                        Debug.Log("Interaction renderer - " + m + " enabled? " + m.enabled);
-                    }
-                }
-
-
-                //statusBar.gameObject.layer = 0;
-                //interactionBar.gameObject.layer = 0;
-
-                //statusBar.transform.localScale = Vector3.one * .001f;
-                //interactionBar.transform.localScale = Vector3.one * .001f;
-
-                statusBar.transform.localPosition = Vector3.zero + Vector3.up * .1f;
-                interactionBar.transform.localPosition = Vector3.zero + Vector3.up * .45f;
-
-                foreach (TextMeshPro textMeshPro in statusBar.GetComponentsInChildren<TextMeshPro>())
-                {
-                    textMeshPro.fontSize = 1f;
-                    textMeshPro.rectTransform.sizeDelta = Vector2.one;
-                }
-                foreach (TextMeshPro textMeshPro in interactionBar.GetComponentsInChildren<TextMeshPro>())
-                {
-                    textMeshPro.fontSize = 1f;
-                    textMeshPro.rectTransform.sizeDelta = Vector2.one;
-                }
-
+                compassCullDistance += .1f;
+                Debug.Log(compassCullDistance);
             }
-            */
-
-            if(UnityEngine.Input.GetKeyDown(KeyCode.F6))
-            {
-                statusBar.transform.rotation *= Quaternion.Euler(new Vector3(0, 90, 0));
-                interactionBar.transform.rotation *= Quaternion.Euler(new Vector3(0, 90, 0));
-            }
-            if (UnityEngine.Input.GetKeyDown(KeyCode.F7))
-            {
-                statusBarHolder.transform.localScale = Vector3.one;
-                interactionBarHolder.transform.localScale = Vector3.one;
-            }
-            if (UnityEngine.Input.GetKeyDown(KeyCode.F8))
-            {
-                statusBarHolder.transform.localScale *= 10f;
-                interactionBarHolder.transform.localScale *= 10f;
-            }
-            if (UnityEngine.Input.GetKeyDown(KeyCode.F9))
-            {
-                statusBarHolder.transform.localScale *= .1f;
-                interactionBarHolder.transform.localScale *= .1f;
-            }
-            /*
             if (UnityEngine.Input.GetKeyDown(KeyCode.F10))
             {
-                foreach (TextMeshPro p in statusBarHolder.GetComponentsInChildren<TextMeshPro>())
-                {
-                    if (p.canvas)
-                    {
-                        p.canvas.renderMode = RenderMode.WorldSpace;
-                    }
-
-                    p.fontSize = 1f;
-                    p.alignment = TextAlignmentOptions.Center;
-                }
-
-                foreach (TextMeshPro p in interactionBar.GetComponentsInChildren<TextMeshPro>())
-                {
-                    //p.font = Watch.Debug_GetTextMeshFontAsset();
-                    if (p.GetComponent<MeshRenderer>())
-                    {
-                        //p.GetComponent<MeshRenderer>().sharedMaterial = Watch.Debug_GetTextMeshProMat();
-                    }
-                    if (p.canvas)
-                    {
-                        p.canvas.renderMode = RenderMode.WorldSpace;
-                    }
-                    p.fontSize = 1f;
-                    p.alignment = TextAlignmentOptions.Center;
-                }
-
-                foreach (Transform t in statusBarHolder.GetComponentsInChildren<Transform>())
-                {
-                    t.gameObject.layer = 0;
-                }
-                foreach (Transform t in interactionBar.GetComponentsInChildren<Transform>())
-                {
-                    t.gameObject.layer = 0;
-                }
-
-                //statusBarHolder.transform.SetParent(Watch.Debug_GetTransform());
-                //interactionBarHolder.transform.SetParent(Watch.Debug_GetTransform());
-
-                //statusBar.gameObject.layer = 0;
-                //interactionBar.gameObject.layer = 0;
-
-                //statusBar.transform.localScale = Vector3.one * .001f;
-                //interactionBar.transform.localScale = Vector3.one * .001f;
-
-                statusBar.transform.localPosition = Vector3.zero + Vector3.up * .1f;
-                interactionBar.transform.localPosition = Vector3.zero + Vector3.up * .45f;
+                compassCullDistance -= .1f;
+                Debug.Log(compassCullDistance);
             }
+        }
 
-            if (UnityEngine.Input.GetKeyDown(KeyCode.F5))
+        private void PlayerUsedSnapturn()
+        {
+            if(statusBarHolder)
             {
-                if (statusBar)
-                {
-                    foreach (MeshRenderer m in statusBar.GetComponentsInChildren<MeshRenderer>())
-                    {
-                        //m.sharedMaterial = Watch.Debug_GetTextMeshProMat();
-                    }
-                }
-                if (interactionBar)
-                {
-                    foreach (MeshRenderer m in interactionBar.GetComponentsInChildren<MeshRenderer>())
-                    {
-                        //m.sharedMaterial = Watch.Debug_GetTextMeshProMat();
-                    }
-                }
-
+                statusBarHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
             }
-            */
-
+            if(intelHolder)
+            {
+                intelHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
+            }
+            if (interactionBarHolder) {
+                interactionBarHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
+            }
         }
 
         void UpdateWorldSpaceUI()
         {
-            interactionBarHolder.SetActive(interactGUI.IsVisible() && interactGUI.InteractPromptVisible);
-            statusBarHolder.SetActive(interactGUI.IsVisible() && interactGUI.MessageVisible);
+            UpdateInteraction();
+            UpdateStatus();
+            UpdateCompass();
+            UpdateIntel();
+        }
 
-            if(interactionBarHolder.activeSelf)
+        void UpdateIntel()
+        {
+
+            intelHolder.transform.position = GetIntelPosition();
+            
+            if(FocusStateEvents.currentState.Equals(eFocusState.InElevator))
+            {
+                Vector3 flatForward = PlayerVR.fpsCamera.m_camera.transform.forward;
+                flatForward.y = 0;
+                intelHolder.transform.rotation = Quaternion.LookRotation(flatForward);
+            } else
+            {
+                intelHolder.transform.rotation = LerpUIRot(intelHolder.transform);
+            }
+            
+        }
+
+        void UpdateStatus()
+        {
+            statusBarHolder.SetActive(interactGUI.IsVisible() && interactGUI.MessageVisible);
+            if (statusBarHolder.activeSelf)
+            {
+                statusBarHolder.transform.position = GetStatusBarPosition();
+                statusBarHolder.transform.rotation = LerpUIRot(statusBarHolder.transform);
+            }
+        }
+
+        Quaternion LerpUIRot(Transform t)
+        {
+            return Quaternion.Lerp(t.rotation, Quaternion.LookRotation(HMD.GetFlatForwardDirection()), Time.deltaTime * 5f);
+        }
+
+        void UpdateInteraction()
+        {
+            interactionBarHolder.SetActive(interactGUI.IsVisible() && interactGUI.InteractPromptVisible);
+            if (interactionBarHolder.activeSelf)
             {
                 interactionBarHolder.transform.position = GetInteractionPromptPosition();
-                interactionBarHolder.transform.rotation = Quaternion.LookRotation(PlayerVR.fpsCamera.transform.forward);
+                if(ShouldUsePointerPosition())
+                {
+                    interactionBarHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
+                } else
+                {
+                    interactionBarHolder.transform.rotation = LerpUIRot(interactionBarHolder.transform);
+                }
+                
             }
-           
-            if(statusBarHolder.activeSelf)
-            {
-                statusBarHolder.transform.position = PlayerVR.fpsCamera.transform.position - new Vector3(0, -0.25f, 0) + PlayerVR.fpsCamera.transform.forward * .75f;
-                statusBarHolder.transform.rotation = Quaternion.LookRotation(PlayerVR.fpsCamera.transform.forward);
-            }
+        }
 
-
-            /*
-            interactionBar.m_headerText.enabled = interactGUI.IsVisible() && interactGUI.InteractPromptVisible;
-            if (interactionBar.m_headerText.enabled)
+        void UpdateCompass()
+        {
+            compassHolder.SetActive(playerGUI.IsVisible());
+            if(compassHolder.activeSelf)
             {
-                interactionBar.m_headerText.transform.localScale = Vector3.one * 0.0012f;
-                interactionBar.m_headerText.transform.position = GetInteractionPromptPosition();
-                interactionBar.m_headerText.transform.rotation = Quaternion.LookRotation(PlayerVR.fpsCamera.transform.forward);
+                compassHolder.transform.position = GetCompassPosition();
+                compassHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
+            }
+            UpdateCompassCull();
+        }
 
-            }
-            statusBar.m_headerText.enabled = interactGUI.IsVisible() && interactGUI.MessageVisible;
-            if (statusBar.m_headerText.enabled)
-            {
-                statusBar.m_headerText.transform.localScale = Vector3.one * 0.0012f;
-                statusBar.m_headerText.transform.position = PlayerVR.fpsCamera.transform.position - new Vector3(0, -0.25f, 0) + PlayerVR.fpsCamera.transform.forward * .75f;
-                statusBar.m_headerText.transform.rotation = Quaternion.LookRotation(PlayerVR.fpsCamera.transform.forward);
-            }
-            */
+        private void UpdateCompassCull()
+        {
+            Vector3 compassPos = compassHolder.transform.position;
+            Shader.SetGlobalColor("_ClippingSphere", new Color(compassPos.x, compassPos.y, compassPos.z, compassCullDistance));
         }
 
 
+        Vector3 GetIntelPosition()
+        {
+            if(FocusStateEvents.currentState.Equals(eFocusState.InElevator))
+            {
+                Vector3 flatForward = PlayerVR.fpsCamera.m_camera.transform.forward;
+                flatForward.y = 0;
+                Vector3 pos = PlayerVR.fpsCamera.HolderPosition;
+                pos.y = PlayerVR.fpsCamera.HolderPosition.y;
+                pos -= new Vector3(0, 0.25f, 0);
+                return pos + flatForward;
+            }
+            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.75f;
+        }
+        Vector3 GetCompassPosition()
+        {
+            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.45f + new Vector3(0, 2.2f, 0);
+        }
+        
         Vector3 GetInteractionPromptPosition()
         {
-            if(PlayerVR.fpsCamera.CameraRayObject && PlayerVR.fpsCamera.CameraRayDist < 1f)
+            if (ShouldUsePointerPosition())
             {
-                return PlayerVR.fpsCamera.CameraRayPos - PlayerVR.fpsCamera.transform.forward * .1f;
+                return PlayerVR.fpsCamera.CameraRayPos + new Vector3(0, 0.05f, 0) - PlayerVR.fpsCamera.transform.forward * .1f;
             }
-            return PlayerVR.fpsCamera.transform.position - new Vector3(0, 0.25f, 0) + PlayerVR.fpsCamera.CameraRayDir * .5f;
+            return PlayerOrigin.GetUnadjustedPosition() + HMD.GetFlatForwardDirection() * .7f + new Vector3(0, .75f, 0);
+        }
+
+        private static bool ShouldUsePointerPosition()
+        {
+            return PlayerVR.fpsCamera.CameraRayObject && Vector3.Distance(HMD.GetVRInteractionFromPosition(), PlayerVR.fpsCamera.CameraRayPos) < 1f;
+        }
+
+        Vector3 GetStatusBarPosition()
+        {
+            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.75f + new Vector3(0, 1.8f, 0);
+        }
+
+        void OnDestroy()
+        {
+            SteamVR_Events.NewPosesApplied.RemoveListener(() => OnNewPoses());
+            Snapturn.OnAfterSnapTurn -= PlayerUsedSnapturn;
         }
     }
 }

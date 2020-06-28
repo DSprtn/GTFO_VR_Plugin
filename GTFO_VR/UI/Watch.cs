@@ -177,7 +177,6 @@ namespace GTFO_VR.UI
                     BulletsInMag.maxValue = Mathf.Max(item.BulletClipSize, 1);
                     BulletsInMag.UpdateCurrentAmmo(clipLeft);
                     BulletsInMag.UpdateAmmoGridDivisions();
-                    //BulletsInMag.inventorySlot = item.Slot;
                 }
             }
         }
@@ -233,11 +232,11 @@ namespace GTFO_VR.UI
 
             RectTransform watchObjectiveTransform = objectiveParent.GetComponent<RectTransform>();
             objectiveDisplay = objectiveParent.AddComponent<TextMeshPro>();
-
+            
             objectiveDisplay.enableAutoSizing = true;
             objectiveDisplay.fontSizeMin = 18;
             objectiveDisplay.fontSizeMax = 36;
-
+            objectiveDisplay.alignment = TextAlignmentOptions.Center;
             StartCoroutine(SetRectSize(watchObjectiveTransform, new Vector2(42, 34f)));
         }
 

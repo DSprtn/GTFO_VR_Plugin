@@ -39,19 +39,28 @@ namespace GTFO_VR.Input
             }
         }
 
+        public static Vector3 GetVRInteractionFromPosition()
+        {
+            if (ItemEquippableEvents.CurrentItemHasFlashlight())
+            {
+                return Controllers.GetAimFromPos();
+            }
+            else
+            {
+                return hmd.transform.position;
+            }
+        }
+
         public static Vector3 GetWorldForward()
         {
             return hmd.transform.forward;
         }
 
-        public static Quaternion GetFlatForward()
+        public static Vector3 GetFlatForwardDirection()
         {
-            return Quaternion.LookRotation(new Vector3(0,hmd.transform.forward.y,0), Vector3.up);
-        }
-
-        public static Quaternion GetFlatRotationFacingHMD()
-        {
-            return Quaternion.Euler(Vector3.Project(hmd.transform.forward, Vector3.up));
+            Vector3 dir = hmd.transform.forward;
+            dir.y = 0;
+            return dir.normalized;
         }
 
         public static float GetPlayerHeight()

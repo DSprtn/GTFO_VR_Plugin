@@ -18,6 +18,8 @@ namespace GTFO_VR.Core
 
         public static Vector3 offsetFromPlayerToHMD = Vector3.zero;
 
+        public static event Action OnSnapTurn;
+        public static event Action OnAfterSnapTurn;
 
         void Awake()
         {
@@ -36,6 +38,10 @@ namespace GTFO_VR.Core
                     SnapTurnFade(1f);
                     snapTurnRotation *= Quaternion.Euler(new Vector3(0, angle, 0f));
                     snapTurnTime = Time.time;
+                    
+                    OnSnapTurn?.Invoke();
+                    // Player origin updates in OnSnapTurn
+                    OnAfterSnapTurn?.Invoke();
                 }
             }
         }
