@@ -15,9 +15,9 @@ namespace GTFO_VR.Core
 
         public static Shader textAlwaysRender;
 
-        public static Shader textCull;
+        public static Shader textSphereClip;
 
-        public static Shader spriteClip;
+        public static Shader spriteSphereClip;
 
 
         void Awake()
@@ -29,17 +29,18 @@ namespace GTFO_VR.Core
             }
             watchPrefab = assetBundle.LoadAsset<GameObject>("assets/p_vrwatch.prefab");
             spriteAlwaysRender = assetBundle.LoadAsset<Shader>("assets/spritenoztest.shader");
-            textCull = assetBundle.LoadAsset<Shader>("assets/textmesh pro/resources/shaders/tmp_clipsphere.shader");
-            spriteClip = assetBundle.LoadAsset<Shader>("assets/spritenoztestandclip.shader");
+            textSphereClip = assetBundle.LoadAsset<Shader>("assets/textmesh pro/resources/shaders/tmp_clipsphere.shader");
+            spriteSphereClip = assetBundle.LoadAsset<Shader>("assets/spritenoztestandclip.shader");
+            textAlwaysRender = assetBundle.LoadAsset<Shader>("assets/textmesh pro/resources/shaders/tmp_noztest.shader");
             //fade = assetBundle.LoadAsset<Shader>("assets/steamvr/resources/steamvr_fade.shader");
             if (!spriteAlwaysRender)
             {
                 Debug.LogError("Could not find sprite shader!");
             }
-            textAlwaysRender = Shader.Find("TextMeshPro/Distance Field Overlay");
+
             if(!textAlwaysRender)
             {
-                Debug.LogError("Could not find text overlay shader!");
+                Debug.LogError("Could not find text noclip shader!");
             }
             
         }

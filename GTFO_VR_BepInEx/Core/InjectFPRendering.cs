@@ -12,7 +12,7 @@ using UnityEngine;
 namespace GTFO_VR_BepInEx.Core
 {
     /// <summary>
-    /// Makes most items render normally instead of in the 2D UI camera
+    /// Makes most items render normally instead of 'flattened' to the screen
     /// </summary>
     [HarmonyPatch(typeof(PlayerBackpackManager), "SetFPSRendering")]
     class InjectRenderFirstPersonItemsForVR
@@ -23,38 +23,7 @@ namespace GTFO_VR_BepInEx.Core
         }
     }
 
-    /// <summary>
-    /// Modifies ref screenres to match VR resolution, allowing markers to be placed correctly in the HMD
-    /// </summary>
-    [HarmonyPatch(typeof(GuiManager), "ScreenToGUIScaled")]
-    class InjectVRNavMarkers
-    {
-        static bool Prefix(GuiManager __instance, Vector3 screenPos, Vector2 refResolution, float canvasScaleFactor, ref Vector3 __result)
-        {
-            Vector3 vector3 = screenPos;
-            Vector2 vector2 = new Vector2(refResolution.x / (float)VR_Global.VR_Resolution.width, refResolution.y / (float)VR_Global.VR_Resolution.height);
-            float num1 = vector3.x - (float)VR_Global.VR_Resolution.width / 2f;
-            double num2 = (double)vector3.y - (float)VR_Global.VR_Resolution.height / 2f;
-            float x = num1 / canvasScaleFactor;
-            double num3 = (double)canvasScaleFactor;
-            float y = (float)(num2 / num3);
-            vector3 = new Vector3(x, y, vector3.z);
-            __result = vector3;
-            return false;
-        }
-    }
-
-    /// <summary>
-    /// Makes all nav markers a tad smaller for VR
-    /// </summary>
-    [HarmonyPatch(typeof(NavMarker), "Setup")]
-    class InjectVRNavMarkerScale
-    {
-        static void Postfix(NavMarker __instance)
-        {
-            __instance.m_initScale *= 0.65f;
-        }
-    }
+    
 
     /// <summary>
     /// Makes the hacking tool render normally instead of in 2D

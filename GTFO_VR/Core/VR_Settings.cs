@@ -36,5 +36,7 @@ namespace GTFO_VR.Core
         public static bool enabled = true;
 
         public static bool useNumbersForAmmoDisplay = false;
+
+        public static bool Render2DUI = false;
     }
 }

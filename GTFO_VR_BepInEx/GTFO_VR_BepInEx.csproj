@@ -30,6 +30,9 @@
     <Reference Include="Modules-ASM">
       <HintPath>..\lib\GameLibs\Modules-ASM.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>..\lib\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>..\lib\UnityEngine.dll</HintPath>
     </Reference>

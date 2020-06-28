@@ -27,6 +27,7 @@ namespace GTFO_VR
 
         public static Resolution VR_Resolution;
 
+
         void Awake()
         {
             if(!instance)

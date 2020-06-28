@@ -31,11 +31,10 @@ namespace GTFO_VR_BepInEx.Core
 
             ___m_compass.transform.localScale *= .75f;
 
-            if(VR_Settings.disableCompass)
-            {
-                ___m_compass.enabled = false;
-                ___m_compass.transform.localScale *= .0f;
-            }
+
+            ___m_compass.enabled = false;
+            ___m_compass.transform.localScale *= .0f;
+            
 
            
             ___m_gameEventLog.SetPosition(new Vector2(150f, 100f));

@@ -28,7 +28,8 @@ namespace GTFO_VR.UI
         public static InteractionGuiLayer interactGUI;
         public static PlayerGuiLayer playerGUI;
 
-        float compassCullDistance = 1.05f;
+        // Compass will not be visible after this distance from the center of its rect
+        float compassCullDistance = 1.2f;
 
         void Awake()
         {
@@ -73,26 +74,26 @@ namespace GTFO_VR.UI
             SetupElement(statusBar.transform, statusBarHolder.transform, 0.0018f);
             SetupElement(interactionBar.transform, interactionBarHolder.transform, 0.0012f);
             SetupElement(compass.transform, compassHolder.transform, 0.0036f, false);
-            SetupElement(intel.transform, intelHolder.transform, 0.0012f);
+            SetupElement(intel.transform, intelHolder.transform, 0.0018f);
 
-            SetTextShader(compass.transform, VR_Assets.textCull);
-            SetSpriteRendererShader(compass.transform, VR_Assets.spriteClip);
+            SetTextShader(compass.transform, VR_Assets.textSphereClip);
+            SetSpriteRendererShader(compass.transform, VR_Assets.spriteSphereClip);
 
             intelHolder.SetActive(true);
 
             CenterRect(intel.transform);
             CenterRect(compass.transform);
-            
         }
+        
 
-        private static void CenterRect(Transform t)
+        static void CenterRect(Transform t)
         {
             RectTransformComp rect = t.GetComponent<RectTransformComp>();
             rect.SetAnchor(GuiAnchor.MidCenter);
             rect.transform.localPosition = Vector3.zero;
         }
 
-        void SetupElement(Transform ui, Transform holder, float scale, bool replaceShaders = true)
+        static void SetupElement(Transform ui, Transform holder, float scale, bool replaceShaders = true)
         {
             ui.SetParent(holder);
             SetTransformHierarchyLayer(ui);
@@ -107,98 +108,52 @@ namespace GTFO_VR.UI
             ui.transform.localRotation = Quaternion.identity;
         }
 
-        private void SetTextShader(Transform ui)
+        static void SetTextShader(Transform ui)
         {
-            foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>())
+            foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>(true))
             {
-                Debug.Log("changing mat on " + p);
-                if (p.canvas)
-                {
-                    p.canvas.renderMode = RenderMode.WorldSpace;
-                    p.canvas.worldCamera = UI_Core.UIPassHUD.Camera;
-
-                }
                 p.GetComponent<MeshRenderer>().material.shader = VR_Assets.textAlwaysRender;
-                p.GetComponent<MeshRenderer>().material.renderQueue = -1;
             }
         }
 
-        private void SetSpriteRendererShader(Transform ui)
+        static void SetSpriteRendererShader(Transform ui)
         {
-            foreach (SpriteRenderer s in ui.GetComponentsInChildren<SpriteRenderer>())
+            foreach (SpriteRenderer s in ui.GetComponentsInChildren<SpriteRenderer>(true))
             {
-                Debug.Log("changing mat on " + s);
                 s.material.shader = VR_Assets.spriteAlwaysRender;
-                s.material.renderQueue = -1;
             }
         }
 
-        private void SetSpriteRendererShader(Transform ui, Shader shader)
+        static void SetSpriteRendererShader(Transform ui, Shader shader)
         {
-            foreach (SpriteRenderer s in ui.GetComponentsInChildren<SpriteRenderer>())
+            foreach (SpriteRenderer s in ui.GetComponentsInChildren<SpriteRenderer>(true))
             {
-                Debug.Log("changing mat on " + s);
                 s.material.shader = shader;
-                s.material.renderQueue = -1;
             }
         }
 
-        private void SetTextShader(Transform ui, Shader shader)
+        static void SetTextShader(Transform ui, Shader shader)
         {
-            foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>())
+            foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>(true))
             {
-                Debug.Log("changing mat on " + p);
-                if (p.canvas)
-                {
-                    p.canvas.renderMode = RenderMode.WorldSpace;
-                    p.canvas.worldCamera = UI_Core.UIPassHUD.Camera;
-
-                }
                 p.GetComponent<MeshRenderer>().material.shader = shader;
-                p.GetComponent<MeshRenderer>().material.renderQueue = -1;
             }
         }
 
-        
-
-        void SetTransformHierarchyLayer(Transform transform)
+        static void SetTransformHierarchyLayer(Transform transform)
         {
-            foreach (RectTransform t in transform.GetComponentsInChildren<RectTransform>())
+            foreach (RectTransform t in transform.GetComponentsInChildren<RectTransform>(true))
             {
                 t.gameObject.layer = LayerManager.LAYER_FIRST_PERSON_ITEM;
+            }
 
+            foreach(Transform t in transform.GetComponentsInChildren<Transform>(true))
+            {
+                t.gameObject.layer = LayerManager.LAYER_FIRST_PERSON_ITEM;
             }
         }
 
-        void Update()
-        {
-            DebugKeys();
-        }
-
-        
-
-        private void DebugKeys()
-        {
-            if(UnityEngine.Input.GetKeyDown(KeyCode.F5))
-            {
-                DebugHelper.LogTransformHierarchy(statusBar.transform);
-                DebugHelper.LogTransformHierarchy(interactionBar.transform);
-                DebugHelper.LogTransformHierarchy(intel.transform);
-                DebugHelper.LogTransformHierarchy(compass.transform);
-            }
-            if(UnityEngine.Input.GetKeyDown(KeyCode.F9))
-            {
-                compassCullDistance += .1f;
-                Debug.Log(compassCullDistance);
-            }
-            if (UnityEngine.Input.GetKeyDown(KeyCode.F10))
-            {
-                compassCullDistance -= .1f;
-                Debug.Log(compassCullDistance);
-            }
-        }
-
-        private void PlayerUsedSnapturn()
+        void PlayerUsedSnapturn()
         {
             if(statusBarHolder)
             {
@@ -223,7 +178,6 @@ namespace GTFO_VR.UI
 
         void UpdateIntel()
         {
-
             intelHolder.transform.position = GetIntelPosition();
             
             if(FocusStateEvents.currentState.Equals(eFocusState.InElevator))
@@ -244,14 +198,11 @@ namespace GTFO_VR.UI
             if (statusBarHolder.activeSelf)
             {
                 statusBarHolder.transform.position = GetStatusBarPosition();
-                statusBarHolder.transform.rotation = LerpUIRot(statusBarHolder.transform);
+                statusBarHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
             }
         }
 
-        Quaternion LerpUIRot(Transform t)
-        {
-            return Quaternion.Lerp(t.rotation, Quaternion.LookRotation(HMD.GetFlatForwardDirection()), Time.deltaTime * 5f);
-        }
+
 
         void UpdateInteraction()
         {
@@ -281,7 +232,7 @@ namespace GTFO_VR.UI
             UpdateCompassCull();
         }
 
-        private void UpdateCompassCull()
+        void UpdateCompassCull()
         {
             Vector3 compassPos = compassHolder.transform.position;
             Shader.SetGlobalColor("_ClippingSphere", new Color(compassPos.x, compassPos.y, compassPos.z, compassCullDistance));
@@ -297,13 +248,13 @@ namespace GTFO_VR.UI
                 Vector3 pos = PlayerVR.fpsCamera.HolderPosition;
                 pos.y = PlayerVR.fpsCamera.HolderPosition.y;
                 pos -= new Vector3(0, 0.25f, 0);
-                return pos + flatForward;
+                return pos + flatForward * 1.2f;
             }
             return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.75f;
         }
         Vector3 GetCompassPosition()
         {
-            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.45f + new Vector3(0, 2.2f, 0);
+            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.45f + new Vector3(0, 2.15f, 0);
         }
         
         Vector3 GetInteractionPromptPosition()
@@ -315,14 +266,82 @@ namespace GTFO_VR.UI
             return PlayerOrigin.GetUnadjustedPosition() + HMD.GetFlatForwardDirection() * .7f + new Vector3(0, .75f, 0);
         }
 
-        private static bool ShouldUsePointerPosition()
+        Vector3 GetStatusBarPosition()
+        {
+            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.75f + new Vector3(0, 1.5f, 0);
+        }
+
+        Quaternion LerpUIRot(Transform t)
+        {
+            return Quaternion.Lerp(t.rotation, Quaternion.LookRotation(HMD.GetFlatForwardDirection()), Time.deltaTime * 5f);
+        }
+
+        static bool ShouldUsePointerPosition()
         {
             return PlayerVR.fpsCamera.CameraRayObject && Vector3.Distance(HMD.GetVRInteractionFromPosition(), PlayerVR.fpsCamera.CameraRayPos) < 1f;
         }
 
-        Vector3 GetStatusBarPosition()
+        public static void PrepareNavMarker(NavMarker n)
         {
-            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.75f + new Vector3(0, 1.8f, 0);
+            n.transform.SetParent(null);
+
+            n.m_initScale *= 0.0075f;
+            SetTransformHierarchyLayer(n.transform);
+            SetTextShader(n.transform);
+            SetSpriteRendererShader(n.transform);
+
+            if (n.m_trackingObj)
+            {
+                n.transform.position = n.m_trackingObj.transform.position;
+                n.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
+            }
+        }
+
+        public static void UpdateAllNavMarkers(List<NavMarker> markers)
+        {
+            Quaternion rotToCamera = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
+            float tempScale = 1f;
+            foreach (NavMarker n in markers)
+            {
+                if(UnityEngine.Input.GetKeyDown(KeyCode.F10))
+                {
+                    DebugHelper.LogTransformHierarchy(n.transform);
+                }
+                if (n != null && n.m_trackingObj != null)
+                {
+                    n.transform.position = n.m_trackingObj.transform.position;
+                    n.transform.rotation = rotToCamera;
+
+                    float dotToCamera = Vector3.Dot((n.m_trackingObj.transform.position - HMD.GetWorldPosition()).normalized, HMD.GetWorldForward());
+
+
+                    if (dotToCamera < 0)
+                    {
+                        n.SetState(NavMarkerState.Inactive);
+                    }
+                    else
+                    {
+                        float distanceToCamera = Vector3.Distance(n.m_trackingObj.transform.position, HMD.GetWorldPosition());
+
+                        if (dotToCamera > 0.94f)
+                        {
+                            if (n.m_currentState != NavMarkerState.InFocus)
+                            {
+
+                                n.SetState(NavMarkerState.InFocus);
+                            }
+                        }
+                        else if (n.m_currentState != NavMarkerState.Visible)
+                        {
+
+                            n.SetState(NavMarkerState.Visible);
+                        }
+                        tempScale = Mathf.Clamp(14f / distanceToCamera, 0.4f, 1f);
+                        n.transform.localScale = n.m_initScale * tempScale;
+                        n.SetDistance(distanceToCamera);
+                    }
+                }
+            }
         }
 
         void OnDestroy()
