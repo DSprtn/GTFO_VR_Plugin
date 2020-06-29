@@ -11,6 +11,9 @@ Tutorial video for the installation: https://www.youtube.com/watch?v=sZPK1GfqxBE
 
 Try to get used to the game in Non-VR mode first before using! 
 
+Requires a beefy PC! I can get around 80-90FPS on a 2080 Ti on 140% render res and max settings in-game on v0.8
+I recommend turning down the SteamVR render resolution and in-game settings for a smooth experience!
+
 ## Installation: 
 
  	1. Download and extract BepInEx into your GTFO game folder (SteamLibrary\steamapps\common\GTFO\) 
