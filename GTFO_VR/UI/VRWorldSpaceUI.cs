@@ -72,7 +72,7 @@ namespace GTFO_VR.UI
         void Setup()
         {
             SetupElement(statusBar.transform, statusBarHolder.transform, 0.0018f);
-            SetupElement(interactionBar.transform, interactionBarHolder.transform, 0.0012f);
+            SetupElement(interactionBar.transform, interactionBarHolder.transform, 0.0018f);
             SetupElement(compass.transform, compassHolder.transform, 0.0036f, false);
             SetupElement(intel.transform, intelHolder.transform, 0.0018f);
 
@@ -145,12 +145,12 @@ namespace GTFO_VR.UI
         {
             foreach (RectTransform t in transform.GetComponentsInChildren<RectTransform>(true))
             {
-                t.gameObject.layer = LayerManager.LAYER_FIRST_PERSON_ITEM;
+                t.gameObject.layer = LayerManager.LAYER_THIRD_PERSON_ITEM;
             }
 
             foreach(Transform t in transform.GetComponentsInChildren<Transform>(true))
             {
-                t.gameObject.layer = LayerManager.LAYER_FIRST_PERSON_ITEM;
+                t.gameObject.layer = LayerManager.LAYER_THIRD_PERSON_ITEM;
             }
         }
 
@@ -163,9 +163,6 @@ namespace GTFO_VR.UI
             if(intelHolder)
             {
                 intelHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
-            }
-            if (interactionBarHolder) {
-                interactionBarHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
             }
         }
 
@@ -184,6 +181,7 @@ namespace GTFO_VR.UI
             if(FocusStateEvents.currentState.Equals(eFocusState.InElevator))
             {
                 Vector3 flatForward = (intelHolder.transform.position - PlayerVR.fpsCamera.transform.position).normalized;
+                flatForward.y = 0;
                 intelHolder.transform.rotation = Quaternion.LookRotation(flatForward.normalized);
             } else
             {
@@ -202,22 +200,13 @@ namespace GTFO_VR.UI
             }
         }
 
-
-
         void UpdateInteraction()
         {
             interactionBarHolder.SetActive(interactGUI.IsVisible() && interactGUI.InteractPromptVisible);
             if (interactionBarHolder.activeSelf)
             {
                 interactionBarHolder.transform.position = GetInteractionPromptPosition();
-                if(ShouldUsePointerPosition())
-                {
-                    interactionBarHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
-                } else
-                {
-                    interactionBarHolder.transform.rotation = LerpUIRot(interactionBarHolder.transform);
-                }
-                
+                interactionBarHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection()); 
             }
         }
 
@@ -244,9 +233,8 @@ namespace GTFO_VR.UI
             if(FocusStateEvents.currentState.Equals(eFocusState.InElevator))
             {
                 Vector3 flatForward = PlayerVR.fpsCamera.m_camera.transform.forward;
-
-                Vector3 pos = PlayerVR.fpsCamera.Position;
-                pos -= new Vector3(0, 0.25f, 0);
+                flatForward.y = 0f;
+                Vector3 pos = PlayerVR.fpsCamera.m_camera.transform.position;
                 return pos + flatForward.normalized * 1.2f;
             }
             return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.75f;
@@ -298,16 +286,21 @@ namespace GTFO_VR.UI
 
         public static void UpdateAllNavMarkers(List<NavMarker> markers)
         {
-            Quaternion rotToCamera = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
+            
             float tempScale = 1f;
+            bool inElevator = FocusStateManager.CurrentState.Equals(eFocusState.InElevator);
+
             foreach (NavMarker n in markers)
             {
-                if(UnityEngine.Input.GetKeyDown(KeyCode.F10))
+                if(inElevator && n)
                 {
-                    DebugHelper.LogTransformHierarchy(n.transform);
+                    n.transform.localScale = Vector3.zero;
+                    return;
                 }
+
                 if (n != null && n.m_trackingObj != null)
                 {
+                    Quaternion rotToCamera = Quaternion.LookRotation((n.m_trackingObj.transform.position - HMD.GetWorldPosition()).normalized);
                     n.transform.position = n.m_trackingObj.transform.position;
                     n.transform.rotation = rotToCamera;
 
