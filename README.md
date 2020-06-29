@@ -29,12 +29,15 @@ Try to get used to the game in Non-VR mode first before using!
 	6. Launch the game from within the library or from within SteamVR and you're in!
 	(Ignore the "GTFO does not support VR" warning, just click OK)
 	
-	7. Tweak or setup your controls under SteamVR -> Settings -> Controllers -> Manage Controller Bindings -> GTFO VR
+	7. Tweak or setup your controls under SteamVR -> Settings -> Controllers 
+	-> Manage Controller Bindings -> GTFO VR
+	
 	When in doubt, consult the video here https://www.youtube.com/watch?v=sZPK1GfqxBE&feature=youtu.be&t=4m14s
 	It is still mostly up to date.
 	
-	To enable tracking or change the way the weapons are being held you must set an action pose within the binding menu.
-	Tip seems to be the most intuitive. Remember to set all required actions or the binding won't get saved!
+	To enable tracking or change the angle at which the weapons are being held you must set an action pose 
+	within the binding menu. Tip seems to be the most intuitive. Remember to set all required actions or the 
+	binding won't get saved!
 	
 
 	
@@ -114,11 +117,11 @@ Try to get used to the game in Non-VR mode first before using!
                 case ("P"):
                         returns "PING ";
                 case ("A"):
-                        returns "AMMOPACK";
+                        returns "AMMOPACK_";
                 case ("T"):
-                        returns "TOOL_REFILL";
+                        returns "TOOL_REFILL_";
                 case ("M"):
-                        returns "MEDIPACK";
+                        returns "MEDIPACK_";
                 case ("Z"):
                         returns "ZONE_";
                 case ("U"):
@@ -128,22 +131,22 @@ Try to get used to the game in Non-VR mode first before using!
 	If you'd like to have custom bindable shortcuts let me know! 
 				
 ## Features:
-	Fully customized VR UI
-	
 	Works in multiplayer, with others not having to have the mod!
 	
 	Full SteamVR_Input binding support, you can play with all VR controllers, provided they have enough buttons 
 	for all the actions in GTFO. All in-game actions are supported, except for 'undo' in the terminal!
 	
 	Full VR controller based aiming (including fancy laserpointer)
+		
+	Fully customized VR UI
 	
 	Main menu, map UI and terminal working correctly in VR
 	
-	Single or double handed aiming
+	Support for single or double handed aiming
 	
 	Snap turn
 	
-	Custom programmer art VR UI
+	Loads of configurable options (more coming soon!)
 	
 ## Known issues: 
 	
@@ -155,6 +158,3 @@ Try to get used to the game in Non-VR mode first before using!
 E-mail any suggestions for new features or tweaks over to GTFOVRMod@gmail.com
 Open up tickets for any issues you find over here on github, 
 or if you're unfamiliar with it send them to the same e-mail.
-
-Are you an experienced Unity programmer and want to contribute? 
-Give me a holler on Discord and I'll bring you up to speed - Spartan#8541 
