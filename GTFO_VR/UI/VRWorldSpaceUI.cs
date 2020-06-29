@@ -145,12 +145,12 @@ namespace GTFO_VR.UI
         {
             foreach (RectTransform t in transform.GetComponentsInChildren<RectTransform>(true))
             {
-                t.gameObject.layer = LayerManager.LAYER_THIRD_PERSON_ITEM;
+                t.gameObject.layer = LayerManager.LAYER_FIRST_PERSON_ITEM;
             }
 
             foreach(Transform t in transform.GetComponentsInChildren<Transform>(true))
             {
-                t.gameObject.layer = LayerManager.LAYER_THIRD_PERSON_ITEM;
+                t.gameObject.layer = LayerManager.LAYER_FIRST_PERSON_ITEM;
             }
         }
 
@@ -300,9 +300,9 @@ namespace GTFO_VR.UI
 
                 if (n != null && n.m_trackingObj != null)
                 {
-                    Quaternion rotToCamera = Quaternion.LookRotation((n.m_trackingObj.transform.position - HMD.GetWorldPosition()).normalized);
+                   
                     n.transform.position = n.m_trackingObj.transform.position;
-                    n.transform.rotation = rotToCamera;
+                   
 
                     float dotToCamera = Vector3.Dot((n.m_trackingObj.transform.position - HMD.GetWorldPosition()).normalized, HMD.GetWorldForward());
 
@@ -314,6 +314,14 @@ namespace GTFO_VR.UI
                     else
                     {
                         float distanceToCamera = Vector3.Distance(n.m_trackingObj.transform.position, HMD.GetWorldPosition());
+                        Vector3 hmdToTrackObj = (n.m_trackingObj.transform.position - HMD.GetWorldPosition()).normalized;
+                        Quaternion rotToCamera = Quaternion.LookRotation(hmdToTrackObj.normalized);
+                        n.transform.rotation = rotToCamera;
+
+                        if(distanceToCamera > 60)
+                        {
+                            n.transform.position = HMD.GetWorldPosition() + hmdToTrackObj * 60f;
+                        }
 
                         if (dotToCamera > 0.94f)
                         {
@@ -330,7 +338,9 @@ namespace GTFO_VR.UI
                         }
                         n.SetDistance(distanceToCamera);
 
-                        tempScale = 1 + Mathf.Clamp(distanceToCamera / 25f, 0, 5);
+                        // Scale up to camera culling distance
+                        // If nav marker is beyond that it will place itself back to 60m away
+                        tempScale = 1 + Mathf.Clamp(distanceToCamera / 25f, 0, 2.4f);
                        
                         n.transform.localScale = n.m_initScale * tempScale;
                        
