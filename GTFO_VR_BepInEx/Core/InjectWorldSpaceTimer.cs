@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace GTFO_VR_BepInEx.Core
 {
-
+    /*
     [HarmonyPatch(typeof(PUI_InteractionPrompt), "SetTimerFill")]
     class InjectWorldSpaceTimer
     {
@@ -45,4 +45,5 @@ namespace GTFO_VR_BepInEx.Core
             bg.color = ColorExt.Hex(___m_colorHex);
         }
     }
+    */
 }

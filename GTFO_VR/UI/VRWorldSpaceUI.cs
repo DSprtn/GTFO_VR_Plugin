@@ -81,6 +81,7 @@ namespace GTFO_VR.UI
 
             intelHolder.SetActive(true);
 
+            interactionBar.transform.FindChildRecursive("Timer BG").gameObject.SetActive(false);
             CenterRect(intel.transform);
             CenterRect(compass.transform);
         }
@@ -285,7 +286,7 @@ namespace GTFO_VR.UI
         {
             n.transform.SetParent(null);
 
-            n.m_initScale *= 0.0075f;
+            n.m_initScale *= 0.009f;
             SetTransformHierarchyLayer(n.transform);
             SetTextShader(n.transform);
             SetSpriteRendererShader(n.transform);
@@ -336,9 +337,11 @@ namespace GTFO_VR.UI
 
                             n.SetState(NavMarkerState.Visible);
                         }
-                        tempScale = Mathf.Clamp(14f / distanceToCamera, 0.4f, 1f);
-                        n.transform.localScale = n.m_initScale * tempScale;
                         n.SetDistance(distanceToCamera);
+                        distanceToCamera += 11f;
+                        tempScale = Mathf.Clamp(20f / distanceToCamera, 0.65f, 1f);
+                        n.transform.localScale = n.m_initScale * tempScale;
+                       
                     }
                 }
             }

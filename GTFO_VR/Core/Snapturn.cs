@@ -23,7 +23,7 @@ namespace GTFO_VR.Core
 
         void Awake()
         {
-            Debug.Log("Snapturn script created");
+            Debug.Log("Snapturn init");
         }
         public void DoSnapTurn(float angle)
         {
