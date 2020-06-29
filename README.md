@@ -102,6 +102,10 @@ Try to get used to the game in Non-VR mode first before using!
 	
 	The shortcuts return the following:
 	
+		case ("-"):
+                        returns "_";	// More accessible, dash is less needed and tilde is hidden away
+		case ("~"):		
+                        returns "-";
                 case ("L"):
                         returns "LIST ";
                 case ("Q"):
