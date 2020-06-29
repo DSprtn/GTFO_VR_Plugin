@@ -58,7 +58,7 @@ namespace GTFO_VR_BepInEx.Core
                 __instance.Position = HMD.GetWorldPosition();
             }
 
-            if ((VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) || VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.Rotation)))
+            if (VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) || VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.Rotation))
             {
                 Vector3 euler = HMD.GetVRCameraEulerRotation();
                 AccessTools.FieldRefAccess<LookCameraController, float>((LookCameraController)__instance, "m_pitch") = euler.x;

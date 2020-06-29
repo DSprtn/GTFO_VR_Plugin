@@ -183,9 +183,8 @@ namespace GTFO_VR.UI
             
             if(FocusStateEvents.currentState.Equals(eFocusState.InElevator))
             {
-                Vector3 flatForward = (PlayerVR.fpsCamera.transform.position - intelHolder.transform.position).normalized;
-                flatForward.y = 0;
-                intelHolder.transform.rotation = Quaternion.LookRotation(flatForward.normalized, Vector3.up);
+                Vector3 flatForward = (intelHolder.transform.position - PlayerVR.fpsCamera.transform.position).normalized;
+                intelHolder.transform.rotation = Quaternion.LookRotation(flatForward.normalized);
             } else
             {
                 intelHolder.transform.rotation = LerpUIRot(intelHolder.transform);
@@ -245,9 +244,8 @@ namespace GTFO_VR.UI
             if(FocusStateEvents.currentState.Equals(eFocusState.InElevator))
             {
                 Vector3 flatForward = PlayerVR.fpsCamera.m_camera.transform.forward;
-                flatForward.y = 0;
-                Vector3 pos = PlayerVR.fpsCamera.HolderPosition;
-                pos.y = PlayerVR.fpsCamera.HolderPosition.y;
+
+                Vector3 pos = PlayerVR.fpsCamera.Position;
                 pos -= new Vector3(0, 0.25f, 0);
                 return pos + flatForward.normalized * 1.2f;
             }

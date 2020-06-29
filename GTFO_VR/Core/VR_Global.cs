@@ -48,6 +48,11 @@ namespace GTFO_VR
 
         public static bool GetPlayerPointingAtPositionOnScreen(out Vector2 uv)
         {
+            if(Controllers.GetLocalPosition().magnitude < 0.01f)
+            {
+                uv = Vector2.zero;
+                return false;
+            }
             if(overlay)
             {
                 VR_UI_Overlay.IntersectionResults result = new VR_UI_Overlay.IntersectionResults();
