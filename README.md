@@ -103,33 +103,33 @@ Try to get used to the game in Non-VR mode first before using!
 	The shortcuts return the following:
 	
 		case ("-"):
-                        returns "_";	// More accessible, dash is less needed and tilde is hidden away
-		case ("~"):		
-                        returns "-";
-                case ("L"):
-                        returns "LIST ";
-                case ("Q"):
-                        returns "QUERY ";
-                case ("R"):
-                        returns "REACTOR";
-                case ("H"):
-                        returns "HELP";
-                case ("C"):
-                        returns "COMMANDS";
-                case ("V"):
-                        returns "REACTOR_VERIFY ";
-                case ("P"):
-                        returns "PING ";
-                case ("A"):
-                        returns "AMMOPACK_";
-                case ("T"):
-                        returns "TOOL_REFILL_";
-                case ("M"):
-                        returns "MEDIPACK_";
-                case ("Z"):
-                        returns "ZONE_";
-                case ("U"):
-                        returns "UPLINK_VERIFY ";
+				returns "_";	// More accessible, dash is less needed and tilde is hidden away
+		case ("~"):
+				returns "-";
+		case ("L"):
+				returns "LIST ";
+		case ("Q"):
+				returns "QUERY ";
+		case ("R"):
+				returns "REACTOR";
+		case ("H"):
+				returns "HELP";
+		case ("C"):
+				returns "COMMANDS";
+		case ("V"):
+				returns "REACTOR_VERIFY ";
+		case ("P"):
+				returns "PING ";
+		case ("A"):
+				returns "AMMOPACK_";
+		case ("T"):
+				returns "TOOL_REFILL_";
+		case ("M"):
+				returns "MEDIPACK_";
+		case ("Z"):
+				returns "ZONE_";
+		case ("U"):
+				returns "UPLINK_VERIFY ";
 		
 
 	If you'd like to have custom bindable shortcuts let me know! 
