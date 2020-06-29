@@ -85,7 +85,7 @@ Try to get used to the game in Non-VR mode first before using!
 	
 	Remember to bind openmenu and openmap too! They work in-game correctly as you'd expect.
 	
-	Menu and map UI is controlled by the 'movement', 'crouch' (for re-orienting) and the 'fire' action.
+	Menu and map UI are controlled by aiming and the 'movement', 'crouch' (for re-orienting) and the 'fire' actions.
 	
 #### STEAM_VR DESKTOP 
 	
