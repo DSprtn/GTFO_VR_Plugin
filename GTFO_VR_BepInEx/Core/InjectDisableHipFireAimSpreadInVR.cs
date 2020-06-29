@@ -25,7 +25,7 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Prefix(BulletWeapon __instance)
         {
-            if (PlayerVR.VRPlayerIsSetup && VR_Settings.UseVRControllers)
+            if (PlayerVR.VRPlayerIsSetup && VR_Settings.useVRControllers)
             {
                 if (Utils.IsFiringFromADS())
                 {

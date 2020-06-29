@@ -50,8 +50,12 @@ Try to get used to the game in Non-VR mode first before using!
 	-	Two handed aiming (toggleable in-game based on the distance of your hands)
 	-	Always aiming two handed, ignoring hand distance
 	- 	Snap turn amount
-	- 	Disabling some 2D UI elements
 	-	Smooth snap turning
+	-	UI Watch scale
+	-	Number display for ammo
+	- 	Toggle for SteamVR check (so you can play the game without VR without removing anything!) 
+	-	VR mod on/off switch (I recommend just using the SteamVR check)
+
 	They can be found in a config file which is created after starting the game at least once with 
 	the VR mod installed. It can be found under "GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg"
 
@@ -69,13 +73,16 @@ Try to get used to the game in Non-VR mode first before using!
 	
 	The watch can be toggled between inventory and objectives with the ToggleWatchMode action.
 	
-	The watch UI is as follows - The top 5 bars represent the inventory slots with ammo in them. Each bar is a mag of ammo.
-	On the bottom left there are bars representing HP, infection and oxygen. They are not visible if they don't have to be.
-	The big block divides itself up based on the amount of bullets in your currently held weapon. Each block is one bullet.
+	The watch UI is as follows ---
+	The top 5 bars represent the inventory slots, with ammo percentages.
+	Each bar is a mag of ammo, 20% of your tool ammo or a single use of a consumable item. 
+	On the bottom left there are bars for HP, infection and oxygen, they are each 20% and are not visible 
+	if they don't have to be at the moment. 
+	On the bottom right you can see the ammo in your current mag. Each block is a bullet.
 	
 	Remember to bind openmenu and openmap too! They work in-game correctly as you'd expect.
 	
-	Menu and map UI is controlled by the 'movement', 'crouch' (for re-orienting), 'fire' and 'interact' actions.
+	Menu and map UI is controlled by the 'movement', 'crouch' (for re-orienting) and the 'fire' action.
 	
 #### STEAM_VR DESKTOP 
 	
@@ -121,7 +128,9 @@ Try to get used to the game in Non-VR mode first before using!
 	If you'd like to have custom bindable shortcuts let me know! 
 				
 ## Features:
-	Mostly correctly working VR UI and gameplay (also works in multiplayer, with others not having the mod!)
+	Fully customized VR UI
+	
+	Works in multiplayer, with others not having to have the mod!
 	
 	Full SteamVR_Input binding support, you can play with all VR controllers, provided they have enough buttons 
 	for all the actions in GTFO. All in-game actions are supported, except for 'undo' in the terminal!
@@ -138,8 +147,8 @@ Try to get used to the game in Non-VR mode first before using!
 	
 ## Known issues: 
 	
-	Rejoining might not work correctly sometimes --- please send me the output log that can be found under 
-	AppData\LocalLow\10 Chambers Collective\GTFO\output_log.txt if it happens to you!
+	Nothing left over here! If you do encounter a bug please send me the output log that can be found under 
+	AppData\LocalLow\10 Chambers Collective\GTFO\output_log.txt
 
 ## Want to contribute?
 

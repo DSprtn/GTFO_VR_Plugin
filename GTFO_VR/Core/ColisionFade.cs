@@ -18,7 +18,7 @@ namespace GTFO_VR.Core
         static bool headInCollision;
         static bool controllerHeadToHMDHeadBlocked;
 
-        bool wasFadingLastFrame;
+        bool wasFadedLastFrame;
 
         public void HandleCameraInCollision()
         {
@@ -44,16 +44,15 @@ namespace GTFO_VR.Core
 
             if (controllerHeadToHMDHeadBlocked || headInCollision)
             {
-                wasFadingLastFrame = true;
+                wasFadedLastFrame = true;
                 SteamVR_Fade.Start(Color.black, 0.2f, true);
                 return;
             }
-            else if (wasFadingLastFrame)
+            else if (wasFadedLastFrame)
             {
                 SteamVR_Fade.Start(Color.clear, 0.2f, true);
-                wasFadingLastFrame = false;
+                wasFadedLastFrame = false;
             }
-            wasFadingLastFrame = false;
         }
     }
 }

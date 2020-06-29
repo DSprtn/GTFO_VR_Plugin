@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GTFO_VR.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,10 +19,12 @@ namespace GTFO_VR.Core
 
         public static Vector3 offsetFromPlayerToHMD = Vector3.zero;
 
+        public static event Action OnSnapTurn;
+        public static event Action OnAfterSnapTurn;
 
         void Awake()
         {
-            Debug.Log("Snapturn script created");
+            Debug.Log("Snapturn init");
         }
         public void DoSnapTurn(float angle)
         {
@@ -36,6 +39,10 @@ namespace GTFO_VR.Core
                     SnapTurnFade(1f);
                     snapTurnRotation *= Quaternion.Euler(new Vector3(0, angle, 0f));
                     snapTurnTime = Time.time;
+                    
+                    OnSnapTurn?.Invoke();
+                    // Player origin updates in OnSnapTurn
+                    OnAfterSnapTurn?.Invoke();
                 }
             }
         }
@@ -48,7 +55,12 @@ namespace GTFO_VR.Core
 
         public void DoSnapTurnTowards(Vector3 rotation, float snapTurnFadeMult)
         {
-            snapTurnRotation = Quaternion.Euler(new Vector3(0, rotation.y, 0));
+            Vector3 deltaRot = Quaternion.LookRotation(rotation).eulerAngles;
+            deltaRot.x = 0;
+            deltaRot.z = 0;
+            deltaRot.y -= HMD.GetVRCameraEulerRotation().y;
+
+            snapTurnRotation *= Quaternion.Euler(deltaRot);
             SnapTurnFade(snapTurnFadeMult);
         }
 

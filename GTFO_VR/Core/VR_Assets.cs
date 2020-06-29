@@ -11,6 +11,15 @@ namespace GTFO_VR.Core
     {
         public static GameObject watchPrefab;
 
+        public static Shader spriteAlwaysRender;
+
+        public static Shader textAlwaysRender;
+
+        public static Shader textSphereClip;
+
+        public static Shader spriteSphereClip;
+
+
         void Awake()
         {
             AssetBundle assetBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/vrwatch");
@@ -19,6 +28,21 @@ namespace GTFO_VR.Core
                 Debug.LogError("No assetbundle present!");
             }
             watchPrefab = assetBundle.LoadAsset<GameObject>("assets/p_vrwatch.prefab");
+            spriteAlwaysRender = assetBundle.LoadAsset<Shader>("assets/spritenoztest.shader");
+            textSphereClip = assetBundle.LoadAsset<Shader>("assets/textmesh pro/resources/shaders/tmp_clipsphere.shader");
+            spriteSphereClip = assetBundle.LoadAsset<Shader>("assets/spritenoztestandclip.shader");
+            textAlwaysRender = assetBundle.LoadAsset<Shader>("assets/textmesh pro/resources/shaders/tmp_noztest.shader");
+            //fade = assetBundle.LoadAsset<Shader>("assets/steamvr/resources/steamvr_fade.shader");
+            if (!spriteAlwaysRender)
+            {
+                Debug.LogError("Could not find sprite shader!");
+            }
+
+            if(!textAlwaysRender)
+            {
+                Debug.LogError("Could not find text noclip shader!");
+            }
+            
         }
 
     }

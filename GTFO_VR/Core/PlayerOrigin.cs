@@ -24,6 +24,7 @@ namespace GTFO_VR.Core
         void Awake()
         {
             Debug.Log("Origin created");
+            Snapturn.OnSnapTurn += UpdateOrigin;
         }
         public void Setup(Snapturn snapturn)
         {
@@ -66,6 +67,11 @@ namespace GTFO_VR.Core
             origin.transform.rotation = snapTurn.snapTurnRotation;
             origin.transform.position -= CalculateCrouchOffset();
 
+        }
+
+        public static Vector3 GetUnadjustedPosition()
+        {
+            return PlayerVR.playerController.SmoothPosition;
         }
 
         Vector3 CalculateCrouchOffset()

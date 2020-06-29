@@ -21,6 +21,7 @@ namespace GTFO_VR
         ColisionFade collisionFader;
         Watch watch;
         LaserPointer pointer;
+        VRWorldSpaceUI worldUI; 
 
         public static bool VRPlayerIsSetup;
         public static bool LoadedAndInIngameView = false;
@@ -97,7 +98,11 @@ namespace GTFO_VR
 
         void LadderEntered(LG_Ladder ladder)
         {
-            snapTurn.DoSnapTurnTowards(Quaternion.LookRotation(-ladder.transform.right).eulerAngles, 5f);
+            Debug.Log("Ladder forward " + ladder.transform.forward);
+            Debug.Log("Ladder right " + ladder.transform.right);
+            Debug.Log("Ladder up " + ladder.transform.up);
+            
+            snapTurn.DoSnapTurnTowards(Quaternion.LookRotation(ladder.transform.forward).eulerAngles, 10f);
             origin.CenterPlayerToOrigin();
         }
 
@@ -146,6 +151,10 @@ namespace GTFO_VR
             {
                 collisionFader = gameObject.AddComponent<ColisionFade>();
             }
+            if(!worldUI)
+            {
+                worldUI = gameObject.AddComponent<VRWorldSpaceUI>();
+            }
             SetupLaserPointer();
             SetupVRPlayerCamera();
             SpawnWatch();
@@ -176,7 +185,7 @@ namespace GTFO_VR
 
         public static void UpdateHeldItemPosition()
         {
-            if (!VR_Settings.UseVRControllers)
+            if (!VR_Settings.useVRControllers)
             {
                 return;
             }
@@ -324,7 +333,7 @@ namespace GTFO_VR
                 return 0.0f;
             }
             Vector3 VRLookDir = fpsCamera.Forward;
-            if (ItemEquippableEvents.CurrentItemHasFlashlight() && VR_Settings.UseVRControllers)
+            if (ItemEquippableEvents.CurrentItemHasFlashlight() && VR_Settings.useVRControllers)
             {
                 VRLookDir = Controllers.GetAimForward();
             }

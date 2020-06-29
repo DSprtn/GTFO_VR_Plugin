@@ -39,9 +39,28 @@ namespace GTFO_VR.Input
             }
         }
 
+        public static Vector3 GetVRInteractionFromPosition()
+        {
+            if (ItemEquippableEvents.CurrentItemHasFlashlight())
+            {
+                return Controllers.GetAimFromPos();
+            }
+            else
+            {
+                return hmd.transform.position;
+            }
+        }
+
         public static Vector3 GetWorldForward()
         {
             return hmd.transform.forward;
+        }
+
+        public static Vector3 GetFlatForwardDirection()
+        {
+            Vector3 dir = hmd.transform.forward;
+            dir.y = 0;
+            return dir.normalized;
         }
 
         public static float GetPlayerHeight()

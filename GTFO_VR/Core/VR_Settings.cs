@@ -15,7 +15,7 @@ namespace GTFO_VR.Core
 
         public static HandType mainHand = HandType.Right;
 
-        public static bool UseVRControllers = true;
+        public static bool useVRControllers = true;
 
         public static int lightRenderMode = 0;
 
@@ -34,5 +34,9 @@ namespace GTFO_VR.Core
         public static bool toggleVRBySteamVRRunning = true;
 
         public static bool enabled = true;
+
+        public static bool useNumbersForAmmoDisplay = false;
+
+        public static bool Render2DUI = false;
     }
 }

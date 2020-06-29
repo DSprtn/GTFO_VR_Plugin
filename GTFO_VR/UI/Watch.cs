@@ -1,4 +1,5 @@
-﻿using GTFO_VR.Events;
+﻿using GTFO_VR.Core;
+using GTFO_VR.Events;
 using GTFO_VR.Input;
 using Player;
 using System;
@@ -32,6 +33,8 @@ namespace GTFO_VR.UI
         Dictionary<InventorySlot, DividedBarShaderController> UIMappings = new Dictionary<InventorySlot, DividedBarShaderController>();
 
         DividedBarShaderController BulletsInMag;
+        TextMesh numberAmmoDisplay;
+
         static DividedBarShaderController Health;
         static DividedBarShaderController Infection;
         static DividedBarShaderController Oxygen;
@@ -122,7 +125,7 @@ namespace GTFO_VR.UI
 
         private void AmmoUpdate(InventorySlotAmmo item, int clipLeft)
         {
-            UpdateBulletGridAmount(item, clipLeft);
+            UpdateBulletDisplayAmount(item, clipLeft);
             UpdateInventoryAmmoGrids(item, clipLeft);
         }
 
@@ -161,31 +164,47 @@ namespace GTFO_VR.UI
             }
         }
 
-        private void UpdateBulletGridAmount(InventorySlotAmmo item, int clipLeft)
+        private void UpdateBulletDisplayAmount(InventorySlotAmmo item, int clipLeft)
         {
             if (ItemEquippableEvents.IsCurrentItemShootableWeapon() &&
                 ItemEquippableEvents.currentItem.ItemDataBlock.inventorySlot.Equals(item.Slot))
             {
-                BulletsInMag.maxValue = Mathf.Max(item.BulletClipSize, 1);
-                BulletsInMag.UpdateCurrentAmmo(clipLeft);
-                BulletsInMag.UpdateAmmoGridDivisions();
-                BulletsInMag.inventorySlot = item.Slot;
+                if(VR_Settings.useNumbersForAmmoDisplay)
+                {
+                    numberAmmoDisplay.text = ((int)(item.BulletsMaxCap * item.RelInPack)).ToString() + "\n ━━━━ \n" + clipLeft;
+                } else
+                {
+                    BulletsInMag.maxValue = Mathf.Max(item.BulletClipSize, 1);
+                    BulletsInMag.UpdateCurrentAmmo(clipLeft);
+                    BulletsInMag.UpdateAmmoGridDivisions();
+                }
             }
         }
 
         private void UpdateBulletGridDivisions(ItemEquippable item)
         {
+            
             if (ItemEquippableEvents.IsCurrentItemShootableWeapon())
             {
-                BulletsInMag.maxValue = item.GetMaxClip();
-                BulletsInMag.currentValue = item.GetCurrentClip();
-                BulletsInMag.UpdateAmmoGridDivisions();
-                BulletsInMag.inventorySlot = item.ItemDataBlock.inventorySlot;
+                if(!VR_Settings.useNumbersForAmmoDisplay)
+                {
+                    BulletsInMag.maxValue = item.GetMaxClip();
+                    BulletsInMag.currentValue = item.GetCurrentClip();
+                    BulletsInMag.UpdateAmmoGridDivisions();
+                    //BulletsInMag.inventorySlot = item.ItemDataBlock.inventorySlot;
+                }
             }
             else
             {
-                BulletsInMag.currentValue = 0;
-                BulletsInMag.UpdateShaderVals(1, 1);
+                if(!VR_Settings.useNumbersForAmmoDisplay)
+                {
+                    BulletsInMag.currentValue = 0;
+                    BulletsInMag.UpdateShaderVals(1, 1);
+                } else
+                {
+                    numberAmmoDisplay.text = "";
+                }
+                
             }
         }
 
@@ -213,11 +232,11 @@ namespace GTFO_VR.UI
 
             RectTransform watchObjectiveTransform = objectiveParent.GetComponent<RectTransform>();
             objectiveDisplay = objectiveParent.AddComponent<TextMeshPro>();
-
+            
             objectiveDisplay.enableAutoSizing = true;
             objectiveDisplay.fontSizeMin = 18;
             objectiveDisplay.fontSizeMax = 36;
-
+            objectiveDisplay.alignment = TextAlignmentOptions.Center;
             StartCoroutine(SetRectSize(watchObjectiveTransform, new Vector2(42, 34f)));
         }
 
@@ -239,6 +258,18 @@ namespace GTFO_VR.UI
             Health = transform.FindChildRecursive("HP").gameObject.AddComponent<DividedBarShaderController>();
             Oxygen = transform.FindChildRecursive("Air").gameObject.AddComponent<DividedBarShaderController>();
             Infection = transform.FindChildRecursive("Infection").gameObject.AddComponent<DividedBarShaderController>();
+
+            numberAmmoDisplay = transform.FindChildRecursive("NumberedAmmo").gameObject.AddComponent<TextMesh>();
+
+            numberAmmoDisplay.characterSize = 0.5f;
+            numberAmmoDisplay.lineSpacing = 0.6f;
+            numberAmmoDisplay.alignment = TextAlignment.Center;
+            numberAmmoDisplay.anchor = TextAnchor.MiddleCenter;
+            numberAmmoDisplay.tabSize = 4;
+            numberAmmoDisplay.fontSize = 190;
+            numberAmmoDisplay.fontStyle = FontStyle.Bold;
+            numberAmmoDisplay.richText = true;
+            numberAmmoDisplay.color = DividedBarShaderController.normalColor;
             BulletsInMag = transform.FindChildRecursive("Ammo").gameObject.AddComponent<DividedBarShaderController>();
         }
 
@@ -298,6 +329,17 @@ namespace GTFO_VR.UI
             {
                 m.enabled = toggle;
             }
+
+            if(VR_Settings.useNumbersForAmmoDisplay)
+            {
+                numberAmmoDisplay.gameObject.SetActive(toggle);
+                BulletsInMag.gameObject.SetActive(false);
+            } else
+            {
+                numberAmmoDisplay.gameObject.SetActive(false);
+                BulletsInMag.gameObject.SetActive(toggle);
+            }
+
             //Force update to possibly disable those bars depending on oxygen level/infection level
             UpdateAir(Oxygen.currentValue);
             UpdateInfection(Infection.currentValue);

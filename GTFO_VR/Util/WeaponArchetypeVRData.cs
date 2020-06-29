@@ -38,6 +38,7 @@ namespace GTFO_VR.Util
             // WeaponTransform (z forward, y up, x right)
             weaponArchetypes = new Dictionary<string, VRWeaponData>();
             weaponArchetypes.Add("Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false));
+            weaponArchetypes.Add("DefaultDoubleHanded", new VRWeaponData(new Vector3(0f, 0f, -0.05f), true));
             weaponArchetypes.Add("Melee", new VRWeaponData(new Vector3(0f, -.10f, 0f), false));
 
             weaponArchetypes.Add("Mine deployer", new VRWeaponData(new Vector3(0f, 0f, -.05f), false));
@@ -59,7 +60,7 @@ namespace GTFO_VR.Util
 
             weaponArchetypes.Add("Carbine", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
 
-            weaponArchetypes.Add("Bullpup Rifle", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
+            weaponArchetypes.Add("Bullpup Rifle", new VRWeaponData(new Vector3(.0f, 0f, -.08f), true));
             weaponArchetypes.Add("Rifle", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
 
             weaponArchetypes.Add("HEL Gun", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
@@ -78,9 +79,13 @@ namespace GTFO_VR.Util
             }
             else 
             { 
-                current = weaponArchetypes["Default"]; 
+                if(item.ItemDataBlock.inventorySlot.Equals(Player.InventorySlot.GearStandard) || item.ItemDataBlock.inventorySlot.Equals(Player.InventorySlot.GearSpecial)) {
+                    current = weaponArchetypes["DefaultDoubleHanded"];
+                } else
+                {
+                    current = weaponArchetypes["Default"];
+                }
             }
-
             CalculateGripOffset();
         }
 

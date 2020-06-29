@@ -46,6 +46,7 @@
     <Compile Include="Events\PlayerLocomotionEvents.cs" />
     <Compile Include="UI\DividedBarShaderController.cs" />
     <Compile Include="UI\Watch.cs" />
+    <Compile Include="UI\VRWorldSpaceUI.cs" />
     <Compile Include="Util\HandType.cs" />
     <Compile Include="Util\Utils.cs" />
     <Compile Include="Util\WeaponArchetypeVRData.cs" />
@@ -56,7 +57,7 @@
     <Compile Include="Core\LaserPointer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\TrackingType.cs" />
-    <Compile Include="Core\VR_UI_Overlay.cs" />
+    <Compile Include="UI\VR_UI_Overlay.cs" />
     <Compile Include="Core\VR_Global.cs" />
     <Compile Include="Core\PlayerVR.cs" />
     <Compile Include="VR_Input\VRInput.cs" />
