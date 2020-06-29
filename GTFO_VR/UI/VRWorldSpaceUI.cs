@@ -265,7 +265,7 @@ namespace GTFO_VR.UI
 
         static bool ShouldUsePointerPosition()
         {
-            return PlayerVR.fpsCamera.CameraRayObject && Vector3.Distance(HMD.GetVRInteractionFromPosition(), PlayerVR.fpsCamera.CameraRayPos) < 1f;
+            return PlayerVR.fpsCamera.CameraRayObject && Vector3.Distance(HMD.GetVRInteractionFromPosition(), PlayerVR.fpsCamera.CameraRayPos) < 1.2f;
         }
 
         public static void PrepareNavMarker(NavMarker n)
