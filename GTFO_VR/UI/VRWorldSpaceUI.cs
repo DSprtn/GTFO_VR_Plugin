@@ -183,9 +183,9 @@ namespace GTFO_VR.UI
             
             if(FocusStateEvents.currentState.Equals(eFocusState.InElevator))
             {
-                Vector3 flatForward = PlayerVR.fpsCamera.m_camera.transform.forward;
+                Vector3 flatForward = (PlayerVR.fpsCamera.transform.position - intelHolder.transform.position).normalized;
                 flatForward.y = 0;
-                intelHolder.transform.rotation = Quaternion.LookRotation(flatForward);
+                intelHolder.transform.rotation = Quaternion.LookRotation(flatForward.normalized, Vector3.up);
             } else
             {
                 intelHolder.transform.rotation = LerpUIRot(intelHolder.transform);
@@ -249,7 +249,7 @@ namespace GTFO_VR.UI
                 Vector3 pos = PlayerVR.fpsCamera.HolderPosition;
                 pos.y = PlayerVR.fpsCamera.HolderPosition.y;
                 pos -= new Vector3(0, 0.25f, 0);
-                return pos + flatForward * 1.2f;
+                return pos + flatForward.normalized * 1.2f;
             }
             return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.75f;
         }
@@ -338,8 +338,9 @@ namespace GTFO_VR.UI
                             n.SetState(NavMarkerState.Visible);
                         }
                         n.SetDistance(distanceToCamera);
-                        distanceToCamera += 11f;
-                        tempScale = Mathf.Clamp(20f / distanceToCamera, 0.65f, 1f);
+
+                        tempScale = 1 + Mathf.Clamp(distanceToCamera / 25f, 0, 5);
+                       
                         n.transform.localScale = n.m_initScale * tempScale;
                        
                     }

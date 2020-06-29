@@ -98,7 +98,11 @@ namespace GTFO_VR
 
         void LadderEntered(LG_Ladder ladder)
         {
-            snapTurn.DoSnapTurnTowards(Quaternion.LookRotation(-ladder.transform.right).eulerAngles, 5f);
+            Debug.Log("Ladder forward " + ladder.transform.forward);
+            Debug.Log("Ladder right " + ladder.transform.right);
+            Debug.Log("Ladder up " + ladder.transform.up);
+            
+            snapTurn.DoSnapTurnTowards(Quaternion.LookRotation(ladder.transform.forward).eulerAngles, 10f);
             origin.CenterPlayerToOrigin();
         }
 

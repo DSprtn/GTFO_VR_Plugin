@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GTFO_VR.Input;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,7 +55,12 @@ namespace GTFO_VR.Core
 
         public void DoSnapTurnTowards(Vector3 rotation, float snapTurnFadeMult)
         {
-            snapTurnRotation = Quaternion.Euler(new Vector3(0, rotation.y, 0));
+            Vector3 deltaRot = Quaternion.LookRotation(rotation).eulerAngles;
+            deltaRot.x = 0;
+            deltaRot.z = 0;
+            deltaRot.y -= HMD.GetVRCameraEulerRotation().y;
+
+            snapTurnRotation *= Quaternion.Euler(deltaRot);
             SnapTurnFade(snapTurnFadeMult);
         }
 
