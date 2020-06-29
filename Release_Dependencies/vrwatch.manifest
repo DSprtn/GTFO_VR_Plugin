@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3740901566
+CRC: 1753633061
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 22cf976b9e018a93f2cf7d768b59ee5e
+    Hash: de0d3d0494cf04c3292d3bf67476106e
   TypeTreeHash:
     serializedVersion: 2
     Hash: 2fb03ea0db35765b58dbcc9411bbb3cb
@@ -29,4 +29,8 @@ ClassTypes:
   Script: {instanceID: 0}
 Assets:
 - Assets/P_VRWatch.prefab
+- Assets/TextMesh Pro/Resources/Shaders/TMP_ClipSphere.shader
+- Assets/SpriteNoZTestAndClip.shader
+- Assets/TextMesh Pro/Resources/Shaders/TMP_NoZTest.shader
+- Assets/SpriteNoZTest.shader
 Dependencies: []

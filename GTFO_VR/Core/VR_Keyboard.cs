@@ -127,15 +127,15 @@ namespace GTFO_VR.Core
                     }
                 case ("A"):
                     {
-                        return "AMMOPACK";
+                        return "AMMOPACK_";
                     }
                 case ("T"):
                     {
-                        return "TOOL_REFILL";
+                        return "TOOL_REFILL_";
                     }
                 case ("M"):
                     {
-                        return "MEDIPACK";
+                        return "MEDIPACK_";
                     }
                 case ("Z"):
                     {
