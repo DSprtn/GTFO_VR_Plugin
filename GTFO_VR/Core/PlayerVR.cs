@@ -199,7 +199,8 @@ namespace GTFO_VR
                 {
                     recoilRot.x *= 2f;
                 }
-                heldItem.transform.rotation = Controllers.GetControllerAimRotation() * Quaternion.Euler(recoilRot);
+                heldItem.transform.rotation = Controllers.GetControllerAimRotation();
+                heldItem.transform.localRotation *= Quaternion.Euler(recoilRot) * WeaponArchetypeVRData.GetVRWeaponData(heldItem).rotationOffset;
                 heldItem.transform.position += Controllers.GetControllerAimRotation() * heldItem.GetRecoilPosOffset();
             }
         }

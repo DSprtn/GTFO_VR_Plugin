@@ -51,6 +51,11 @@ namespace GTFO_VR.UI
             Setup();
         }
 
+        void Start()
+        {
+            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = VR_Settings.watchColor;
+        }
+
         void Update()
         {
             if (VRInput.GetActionDown(InputAction.Aim))
@@ -77,9 +82,8 @@ namespace GTFO_VR.UI
                     Infection.ToggleRendering(false);
                 } else
                 {
-                    Infection.SetFill(infection);
                     Infection.ToggleRendering(true);
-
+                    Infection.SetFill(infection);
                     Infection.SetColor(Color.Lerp(normalInfectionCol, normalInfectionCol * 1.6f, infection));
                 }
             }

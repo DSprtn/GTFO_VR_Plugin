@@ -80,20 +80,7 @@ namespace GTFO_VR
                 DebugHelper.LogScene();
             }
 
-            if(UnityEngine.Input.GetKeyDown(KeyCode.F5))
-            {
-                HackingTool t = FindObjectOfType<HackingTool>(); 
-                if(t)
-                {
-                    foreach(MeshRenderer m in t.GetComponentsInChildren<MeshRenderer>())
-                    {
-                        foreach(Material mat in m.sharedMaterials)
-                        {
-                            Debug.Log("Mat : " + mat.name + "  Shader" + mat.shader.name + "\n");
-                        }
-                    }
-                }
-            }
+            
         }
 
         private void Setup()

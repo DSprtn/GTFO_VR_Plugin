@@ -17,11 +17,20 @@ namespace GTFO_VR.Util
         {
             public Vector3 transformToVRGrip;
             public bool allowsDoubleHanded;
+            public Quaternion rotationOffset;
             
             public VRWeaponData(Vector3 transformToGrip, bool doubleHandedAim)
             {
                 transformToVRGrip = transformToGrip;
                 this.allowsDoubleHanded = doubleHandedAim;
+                rotationOffset = Quaternion.identity;
+            }
+
+            public VRWeaponData(Vector3 transformToGrip, Quaternion rotationOffset, bool doubleHandedAim)
+            {
+                transformToVRGrip = transformToGrip;
+                this.allowsDoubleHanded = doubleHandedAim;
+                this.rotationOffset = rotationOffset;
             }
         }
 
@@ -39,7 +48,7 @@ namespace GTFO_VR.Util
             weaponArchetypes = new Dictionary<string, VRWeaponData>();
             weaponArchetypes.Add("Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false));
             weaponArchetypes.Add("DefaultDoubleHanded", new VRWeaponData(new Vector3(0f, 0f, -0.05f), true));
-            weaponArchetypes.Add("Melee", new VRWeaponData(new Vector3(0f, -.10f, 0f), false));
+            weaponArchetypes.Add("Melee", new VRWeaponData(new Vector3(0f, -.45f, 0f), Quaternion.Euler(new Vector3(45f,0,0)), false));
 
             weaponArchetypes.Add("Mine deployer", new VRWeaponData(new Vector3(0f, 0f, -.05f), false));
             weaponArchetypes.Add("Bioscanner", new VRWeaponData(new Vector3(0f, 0f, -.05f), false));
@@ -94,5 +103,6 @@ namespace GTFO_VR.Util
            Transform itemEquip = ItemEquippableEvents.currentItem.transform;
            return itemEquip.position - itemEquip.TransformPoint(current.transformToVRGrip);
         }
+
     }
 }

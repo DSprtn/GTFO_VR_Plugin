@@ -7,6 +7,7 @@ using GTFO_VR.Core;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 using System.Collections.Generic;
+using GTFO_VR;
 
 namespace GTFO_VR_BepInEx.Core
 {
@@ -15,7 +16,7 @@ namespace GTFO_VR_BepInEx.Core
     /// Entry point for patching existing methods in GTFO assemblies
     /// </summary>
 
-    [BepInPlugin("com.github.dsprtn.gtfovr", "GTFO Virtual Reality Plug-in", "0.6.0.0")]
+    [BepInPlugin("com.github.dsprtn.gtfovr", "GTFO Virtual Reality Plug-in", "0.8.0.0")]
     public class Main : BaseUnityPlugin
     {
 
@@ -31,6 +32,8 @@ namespace GTFO_VR_BepInEx.Core
         private ConfigEntry<bool> configSmoothSnapTurn;
         private ConfigEntry<float> configWatchScaling;
         private ConfigEntry<bool> configUseNumbersForAmmoDisplay;
+        private ConfigEntry<string> configWatchColorHex;
+        private ConfigEntry<float> configCrouchHeight;
 
 
 
@@ -84,7 +87,10 @@ namespace GTFO_VR_BepInEx.Core
             configSmoothSnapTurn = Config.Bind("Input", "Use smooth turning?", false, "If true, will use smooth turn instead of snap turn");
             configWatchScaling = Config.Bind("Misc", "Watch scale multiplier", 1.00f, "Size of the watch in-game will be multiplied by this value down to half of its default size or up to double (0.5 or 2.0)");
             configUseNumbersForAmmoDisplay = Config.Bind("Misc", "Use numbers for ammo display?", false, "If true, current ammo and max ammo will be displayed as numbers on the watch");
-           
+            configWatchColorHex = Config.Bind("Misc", "Hex color to use for watch", "#ffffff", "Google hexcolor and paste whatever color you want here");
+            configCrouchHeight = Config.Bind("Input", "Crouch height in meters", 1.15f, "In-game character will be crouching if your head is lower than this height above the playspace (clamped to 1-1.35m)");
+
+
 
             Debug.Log("VR enabled?" + configEnableVR.Value);
             Debug.Log("Toggle VR by SteamVR running?" + configToggleVRBySteamVR.Value);
@@ -98,6 +104,8 @@ namespace GTFO_VR_BepInEx.Core
             Debug.Log("Use smooth turn?: " + configSmoothSnapTurn.Value);
             Debug.Log("Watch size multiplier: " + configWatchScaling.Value);
             Debug.Log("Use numbers for number display?: " + configUseNumbersForAmmoDisplay.Value);
+            Debug.Log("Watch color - " + configWatchColorHex.Value);
+            Debug.Log("Crouching height - " + configCrouchHeight.Value);
 
             VR_Settings.useVRControllers = configUseControllers.Value;
             VR_Settings.crouchOnIRLCrouch = configIRLCrouch.Value;
@@ -109,6 +117,8 @@ namespace GTFO_VR_BepInEx.Core
             VR_Settings.watchScale = Mathf.Clamp(configWatchScaling.Value, 0.5f, 2f);
             VR_Settings.toggleVRBySteamVRRunning = configToggleVRBySteamVR.Value;
             VR_Settings.useNumbersForAmmoDisplay = configUseNumbersForAmmoDisplay.Value;
+            VR_Settings.watchColor = ColorExt.Hex(configWatchColorHex.Value);
+            VRInput.IRLCrouchBorder = Mathf.Clamp(configCrouchHeight.Value, 1f, 1.35f);
 
 
             if (configUseLeftHand.Value)
