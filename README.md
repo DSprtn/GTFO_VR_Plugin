@@ -1,5 +1,5 @@
 # GTFO_VR_Plugin
-### A plugin to add full roomscale virtual reality support to your favorite game!
+## A plugin to add full roomscale virtual reality support to your favorite game!
 
 
 ### As of the newest update the game uses a different compiler and the current mods are no longer supported. I'll be looking into alternatives...
