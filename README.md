@@ -2,7 +2,7 @@
 ## A plugin to add full roomscale virtual reality support to your favorite game!
 
 
-### As of the newest update the game uses a different compiler and the current mods are no longer supported. I'll be looking into alternatives...
+### As of the newest update the game uses a different compiler and the current mods are no longer supported. The new version is currently being made!
 
 Active trello board (upcoming features and ongoing work) - https://trello.com/b/zSk7bBMS/gtfovr
 
