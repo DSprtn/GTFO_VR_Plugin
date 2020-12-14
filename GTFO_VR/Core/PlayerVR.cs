@@ -31,6 +31,7 @@ namespace GTFO_VR
         public static FPSCamera fpsCamera;
         public static SteamVR_Camera VRCamera;
         public static CommandBuffer preRenderLights;
+        public static CommandBuffer beforeForwardCmd;
 
         bool frameRendered = false;
 
@@ -229,7 +230,7 @@ namespace GTFO_VR
             }
             GameObject laserPointer = new GameObject("LaserPointer");
             pointer = laserPointer.AddComponent<LaserPointer>();
-            pointer.color = Color.red;
+            pointer.color = ColorExt.OrangeBright();
         }
 
         void SetupVRPlayerCamera()
@@ -297,24 +298,29 @@ namespace GTFO_VR
             C_Camera.Current.RunVisibilityOnPreCull();
 
             preRenderLights.Clear();
+            beforeForwardCmd.Clear();
 
-
-            if (fpsCamera.debugRenderUI)
+            if (fpsCamera.m_renderUI)
             {
                 UI_Core.RenderUI();
             }
 
-            if (fpsCamera.debugRenderClustered)
+            if (ScreenLiquidManager.LiquidSystem != null)
+                ScreenLiquidManager.LiquidSystem.CollectCommands(preRenderLights);
+            if (AirParticleSystem.AirParticleSystem.Current != (UnityEngine.Object)null)
+                AirParticleSystem.AirParticleSystem.Current.CollectCommands(preRenderLights, beforeForwardCmd);
+
+            if (fpsCamera.m_collectCommandsClustered)
             {
                 ClusteredRendering.Current.CollectCommands(preRenderLights);
             }
 
-            if (fpsCamera.debugRenderGUIX)
+            if (fpsCamera.m_collectCommandsGUIX)
             {
                 GUIX_Manager.Current.CollectCommands(preRenderLights);
             }
 
-            if (MapDetails.s_isSetup)
+            if (MapDetails.s_isSetup && fpsCamera.m_collectCommandsMap)
             {
                 MapDetails.Current.CollectCommands(preRenderLights);
             }
@@ -349,8 +355,14 @@ namespace GTFO_VR
         void OnDestroy()
         {
             PlayerLocomotionEvents.OnPlayerEnterLadder -= LadderEntered;
-            Destroy(pointer.gameObject);
-            Destroy(watch);
+            if(pointer.gameObject)
+            {
+                Destroy(pointer.gameObject);
+            }
+            if(watch)
+            {
+                Destroy(watch);
+            }
             SteamVR_Events.NewPosesApplied.RemoveListener(() => OnNewPoses());
         }
 

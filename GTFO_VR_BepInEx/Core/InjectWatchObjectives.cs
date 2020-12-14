@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using CellMenu;
+using GameData;
 using Globals;
 using GTFO_VR;
 using GTFO_VR.UI;
 using HarmonyLib;
+using LevelGeneration;
 using Player;
 using UnityEngine;
 
@@ -19,9 +21,23 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(PlayerGuiLayer),"UpdateObjectives")]
     class InjectWatchObjectives
     {
-        static void Postfix(string mainObjective, string subObjective)
+        static void Postfix(LG_LayerType layer,
+    string mainObjective,
+    WardenObjectiveDataBlock data,
+    eWardenSubObjectiveStatus sub,
+    bool visible = true,
+    bool isAdditionalHelp = false)
         {
-            Watch.UpdateObjectives(mainObjective, subObjective);
+            Watch.UpdateMainObjective(mainObjective);
+        }
+    }
+
+    [HarmonyPatch(typeof(PUI_GameObjectives), "SetSubObjective")]
+    class InjectWatchSubObjectives
+    {
+        static void Postfix(PUI_GameObjectives __instance)
+        {
+            Watch.UpdateSubObjective(__instance.m_subObjective.text);
         }
     }
 }

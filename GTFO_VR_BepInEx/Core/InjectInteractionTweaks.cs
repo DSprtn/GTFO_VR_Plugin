@@ -170,7 +170,7 @@ namespace GTFO_VR_BepInEx.Core
         }
     }
 
-    [HarmonyPatch(typeof(ResourcePackFirstPerson), "UpdateApplyActionInput")]
+    [HarmonyPatch(typeof(ResourcePackFirstPerson), "UpdateInteraction")]
     public static class InjectResourcePackInteraction_Patch
     {
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

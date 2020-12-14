@@ -8,6 +8,7 @@ using UnityEngine;
 
 namespace GTFO_VR_BepInEx.Core
 {
+    /*
     /// <summary>
     /// Do not play any animations
     /// </summary>

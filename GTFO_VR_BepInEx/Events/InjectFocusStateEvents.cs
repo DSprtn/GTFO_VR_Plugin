@@ -16,7 +16,7 @@ namespace GTFO_VR_BepInEx.Core
     /// Add event calls for focus state
     /// </summary>
 
-    [HarmonyPatch(typeof(InputMapper),"OnFocusStateChanged")]
+    [HarmonyPatch(typeof(InputMapper),nameof(InputMapper.OnFocusStateChanged))]
     class InjectFocusStateEvents
     {
         static void Prefix(eFocusState state)

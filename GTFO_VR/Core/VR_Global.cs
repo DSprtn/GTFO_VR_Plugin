@@ -9,6 +9,7 @@ using UnityEngine;
 using Valve.VR;
 using Valve.VR.Extras;
 
+
 namespace GTFO_VR
 {
     public class VR_Global : MonoBehaviour
@@ -74,12 +75,6 @@ namespace GTFO_VR
 
         private void DoDebugOnKeyDown()
         {
-
-            if (UnityEngine.Input.GetKeyDown(KeyCode.F2))
-            {
-                DebugHelper.LogScene();
-            }
-
             
         }
 

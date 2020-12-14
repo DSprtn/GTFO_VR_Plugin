@@ -20,9 +20,10 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(new Type[] {})]
     class InjectLightRenderCommandRef
     {
-        static void Postfix(CommandBuffer ___m_preRenderCmds)
+        static void Postfix(CommandBuffer ___m_preRenderCmds, CommandBuffer ___m_beforeForwardAlpahCmds)
         {
             PlayerVR.preRenderLights = ___m_preRenderCmds;
+            PlayerVR.beforeForwardCmd = ___m_beforeForwardAlpahCmds;
         }
     }
 }

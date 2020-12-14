@@ -8,7 +8,7 @@ namespace GTFO_VR
     {
         public float thickness = 1f / 400f;
 
-        public Color color = Color.red / 2f;
+        public Color color = ColorExt.OrangeBright();
         public GameObject pointer;
         public GameObject dot;
 

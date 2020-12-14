@@ -201,12 +201,12 @@ namespace GTFO_VR.Input
 
         public static Vector3 GetLocalAimForward()
         {
-            return mainController.transform.localRotation * Vector3.forward;
+            return mainController ? mainController.transform.localRotation * Vector3.forward : Vector3.forward;
         }
 
         public static Vector3 GetLocalPosition()
         {
-            return mainController.transform.localPosition;
+            return mainController ? mainController.transform.localPosition : Vector3.zero;
         }
 
         public static Vector3 GetTwoHandedAimForward()

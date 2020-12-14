@@ -230,7 +230,7 @@ namespace GTFO_VR.UI
 
         Vector3 GetIntelPosition()
         {
-            if(FocusStateEvents.currentState.Equals(eFocusState.InElevator))
+            if(FocusStateEvents.currentState.Equals(eFocusState.InElevator) && PlayerVR.fpsCamera)
             {
                 Vector3 flatForward = PlayerVR.fpsCamera.m_camera.transform.forward;
                 flatForward.y = 0f;

@@ -40,8 +40,11 @@ namespace GTFO_VR.UI
         static DividedBarShaderController Oxygen;
 
         static readonly Color normalHealthCol = new Color(0.33f, 0f, 0f);
-        static readonly Color normalInfectionCol = new Color(0.533f / 3f, 1 / 3f, 0.8f / 3f);
-        static readonly Color normalOxygenCol = Color.cyan / 3f;
+        static readonly Color normalInfectionCol = new Color(0.533f, 1, 0.8f);
+        static readonly Color normalOxygenCol = Color.cyan;
+
+        static string mainObj;
+        static string subObj;
 
         void Awake()
         {
@@ -63,12 +66,22 @@ namespace GTFO_VR.UI
               SwitchState();
             }
         }
-
-        public static void UpdateObjectives(string mainObj, string subObj)
+        public static void UpdateMainObjective(string mainObj)
         {
+            Watch.mainObj = mainObj;
+            Watch.UpdateObjectiveDisplay();
+        }
+
+        public static void UpdateSubObjective(string subObj)
+        {
+            Watch.subObj = subObj;
+            Watch.UpdateObjectiveDisplay();
+        }
+
+        public static void UpdateObjectiveDisplay() {
             if(objectiveDisplay != null)
             {
-                objectiveDisplay.text = "WARDEN OBJECTIVE: \n \n " + mainObj + "\n \n " + subObj;
+                objectiveDisplay.text = "WARDEN OBJECTIVE: \n \n " + mainObj + " \n \n "  + subObj;
                 VRInput.TriggerHapticPulse(0.01f, 1 / .025f, 0.2f, Controllers.GetDeviceFromType(Controllers.offHandControllerType));
             }
         }
