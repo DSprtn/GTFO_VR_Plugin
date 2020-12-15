@@ -33,7 +33,7 @@ namespace GTFO_VR.UI
         Dictionary<InventorySlot, DividedBarShaderController> UIMappings = new Dictionary<InventorySlot, DividedBarShaderController>();
 
         DividedBarShaderController BulletsInMag;
-        TextMesh numberAmmoDisplay;
+        TextMeshPro numberAmmoDisplay;
 
         static DividedBarShaderController Health;
         static DividedBarShaderController Infection;
@@ -122,11 +122,11 @@ namespace GTFO_VR.UI
 
                     if (val < 0.5)
                     {
-                        Oxygen.SetColor(Color.Lerp(Color.red / 2f, normalOxygenCol, val * 1.6f));
+                        Oxygen.SetColor(Color.Lerp(Color.red, normalOxygenCol, val * 1.6f));
                     }
                     else
                     {
-                        Oxygen.SetColor(Color.cyan / 3f);
+                        Oxygen.SetColor(Color.cyan);
                     }
                 } else
                 {

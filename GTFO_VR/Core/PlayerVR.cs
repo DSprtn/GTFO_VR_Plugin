@@ -44,7 +44,7 @@ namespace GTFO_VR
             }
 
             PlayerLocomotionEvents.OnPlayerEnterLadder += LadderEntered;
-            SteamVR_Events.NewPosesApplied.AddListener(() => OnNewPoses());
+            SteamVR_Events.NewPosesApplied.AddListener(new Action(OnNewPoses));
             ClusteredRendering.Current.OnResolutionChange(new Resolution());
         }
 
@@ -363,7 +363,7 @@ namespace GTFO_VR
             {
                 Destroy(watch);
             }
-            SteamVR_Events.NewPosesApplied.RemoveListener(() => OnNewPoses());
+            SteamVR_Events.NewPosesApplied.RemoveListener(new Action(OnNewPoses));
         }
 
     }

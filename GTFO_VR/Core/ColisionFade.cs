@@ -22,14 +22,7 @@ namespace GTFO_VR.Core
 
         public void HandleCameraInCollision()
         {
-            if (Physics.OverlapBox(HMD.GetWorldPosition() + (HMD.GetWorldForward() * 0.05f), new Vector3(0.03f, 0.03f, 0.03f), HMD.hmd.transform.rotation, LayerManager.MASK_TENTACLE_BLOCKERS).Length > 0)
-            {
-                headInCollision = true;
-            }
-            else
-            {
-                headInCollision = false;
-            }
+            headInCollision = Physics.OverlapBox(HMD.GetWorldPosition() + (HMD.GetWorldForward() * 0.05f), new Vector3(0.03f, 0.03f, 0.03f), HMD.hmd.transform.rotation, LayerManager.MASK_TENTACLE_BLOCKERS).Length > 0;
 
             Vector3 centerPlayerHeadPos = PlayerVR.fpsCamera.GetCamerposForPlayerPos(PlayerVR.playerController.SmoothPosition);
 
