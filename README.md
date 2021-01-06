@@ -2,6 +2,7 @@
 ## A plugin to add full roomscale virtual reality support to your favorite game!
 
 
+### WARNING: MOD NOT WORKING AS OF R4 
 ### As of the R4 update the game uses the il2cpp compiler which sadly makes it impossible to get the VR mod working again. If the developers decide to switch back to Mono I will resume work on it, until then all we can do is complain to the devs.
 
 Active trello board (upcoming features and ongoing work) - https://trello.com/b/zSk7bBMS/gtfovr
