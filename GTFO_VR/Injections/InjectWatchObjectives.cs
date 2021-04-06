@@ -29,6 +29,7 @@ namespace GTFO_VR_BepInEx.Core
     bool isAdditionalHelp = false)
         {
             Watch.UpdateMainObjective(mainObjective);
+            GTFO_VR_Plugin.log.LogDebug($"Got new objective! - {mainObjective}");
         }
     }
 
@@ -38,6 +39,7 @@ namespace GTFO_VR_BepInEx.Core
         static void Postfix(PUI_GameObjectives __instance)
         {
             Watch.UpdateSubObjective(__instance.m_subObjective.text);
+            GTFO_VR_Plugin.log.LogDebug($"Got new subobjective! - {__instance.m_subObjective.text}");
         }
     }
 }

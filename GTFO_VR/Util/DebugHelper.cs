@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GTFO_VR_BepInEx.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace GTFO_VR
 			{
 				if (transform.parent == null)
 				{
-					Debug.Log("RootObject ---\n");
+					GTFO_VR_Plugin.log.LogDebug("RootObject ---\n");
 					LogTransformHierarchy(transform);
 				}
 			}
@@ -28,7 +29,7 @@ namespace GTFO_VR
 
 		public static void LogPosRotData(Transform t)
 		{
-			Debug.Log(t.name + ": " + "---" + GetTransformPositionAndRotationString(t));
+			GTFO_VR_Plugin.log.LogDebug(t.name + ": " + "---" + GetTransformPositionAndRotationString(t));
 		}
 		public static string GetTransformPositionAndRotationString(Transform t)
 		{
@@ -37,7 +38,7 @@ namespace GTFO_VR
 
 		public static void LogTransformHierarchy(Transform t)
 		{
-			Debug.Log(GetTransformData(t, 0));
+			GTFO_VR_Plugin.log.LogDebug(GetTransformData(t, 0));
 		}
 
 		static string GetCurrentTransformInfo(Transform t, int depth)

@@ -2,6 +2,7 @@
 using GTFO_VR.Events;
 using GTFO_VR.Input;
 using GTFO_VR.Util;
+using GTFO_VR_BepInEx.Core;
 using Player;
 using SteamVR_Standalone_IL2CPP.Util;
 using System;
@@ -42,7 +43,7 @@ namespace GTFO_VR
                 instance = this;
             } else
             {
-                Debug.LogError("Trying to create duplicate VRGlobal class");
+                GTFO_VR_Plugin.log.LogError("Trying to create duplicate VRGlobal class");
                 return;
             }
             // Prevent SteamVR from adding a tracking script automatically. We handle this manually in HMD
@@ -143,7 +144,7 @@ namespace GTFO_VR
             }
             if(ingamePlayer == null)
             {
-                Debug.Log("Creating VR Player...");
+                GTFO_VR_Plugin.log.LogInfo("Creating VR Player...");
 
                 ingamePlayer = new GameObject("VR_Player").AddComponent<PlayerVR>();
             }

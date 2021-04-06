@@ -17,8 +17,8 @@ namespace GTFO_VR.UI
 
         Material barGrid;
 
-        public static Color normalColor = new Color(0.83f / 3, 1f / 3, 0.964f / 3);
-        public static Color selectedColor = new Color(1f / 2.5f, 0.5f / 2.5f, 0f);
+        public static Color normalColor = new Color(0.83f, 1f, 0.964f);
+        public static Color selectedColor = new Color(1f, 0.5f, 0f);
 
         public InventorySlot inventorySlot;
 

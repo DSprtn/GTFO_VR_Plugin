@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.Input;
+using GTFO_VR_BepInEx.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace GTFO_VR.Core
 
         void Awake()
         {
-            Debug.Log("Snapturn init");
+            GTFO_VR_Plugin.log.LogInfo("Snapturn init");
         }
         public void DoSnapTurn(float angle)
         {

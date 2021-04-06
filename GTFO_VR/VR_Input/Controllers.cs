@@ -1,6 +1,7 @@
 ﻿using GTFO_VR.Core;
 using GTFO_VR.Events;
 using GTFO_VR.Util;
+using GTFO_VR_BepInEx.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,10 +109,10 @@ namespace GTFO_VR.Input
             VRWeaponData itemData = WeaponArchetypeVRData.GetVRWeaponData(item);
             if (itemData.allowsDoubleHanded)
             {
-                Debug.Log("Item allows double hand!");
+                GTFO_VR_Plugin.log.LogDebug("Item allows double hand!");
                 if (VR_Settings.alwaysDoubleHanded)
                 {
-                    Debug.Log("Always double hand is on!");
+                    GTFO_VR_Plugin.log.LogDebug("Always double hand is on!");
                     aimingTwoHanded = true;
                 }
             } else

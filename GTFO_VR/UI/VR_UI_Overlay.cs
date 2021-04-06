@@ -1,5 +1,6 @@
 ﻿using GTFO_VR.Events;
 using GTFO_VR.Input;
+using GTFO_VR_BepInEx.Core;
 using Player;
 using System;
 using UnityEngine;
@@ -27,7 +28,7 @@ namespace GTFO_VR
         {
             if(instance)
             {
-                Debug.LogError("Duplicate UI overlay handler!");
+                GTFO_VR_Plugin.log.LogError("Duplicate UI overlay handler!");
                 return;
             }
             instance = this;
@@ -99,7 +100,7 @@ namespace GTFO_VR
 
         public void OrientateOverlay()
         {
-            Debug.Log("Orienting overlay...");
+            GTFO_VR_Plugin.log.LogDebug("Orienting overlay...");
             Quaternion rot = Quaternion.Euler(Vector3.Project(HMD.hmd.transform.localRotation.eulerAngles, Vector3.up));
             transform.position = HMD.hmd.transform.localPosition + rot * Vector3.forward * 2.2f;
             Vector3 Pos = transform.position;

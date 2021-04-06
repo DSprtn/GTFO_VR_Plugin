@@ -1,5 +1,6 @@
 ﻿
 
+using GTFO_VR_BepInEx.Core;
 using System;
 using UnityEngine;
 
@@ -28,7 +29,7 @@ namespace GTFO_VR.Core
             AssetBundle assetBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/vrwatch");
             if (assetBundle == null)
             {
-                Debug.LogError("No assetbundle present!");
+                GTFO_VR_Plugin.log.LogError("No assetbundle present!");
             }
             watchPrefab = assetBundle.LoadAsset("assets/p_vrwatch.prefab").Cast<GameObject>();
             spriteAlwaysRender = assetBundle.LoadAsset("assets/spritenoztest.shader").Cast<Shader>();
@@ -38,12 +39,12 @@ namespace GTFO_VR.Core
             //fade = assetBundle.LoadAsset<Shader>("assets/steamvr/resources/steamvr_fade.shader");
             if (!spriteAlwaysRender)
             {
-                Debug.LogError("Could not find sprite shader!");
+                GTFO_VR_Plugin.log.LogError("Could not find sprite shader!");
             }
 
             if(!textAlwaysRender)
             {
-                Debug.LogError("Could not find text noclip shader!");
+                GTFO_VR_Plugin.log.LogError("Could not find text noclip shader!");
             }
             
         }

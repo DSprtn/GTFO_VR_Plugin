@@ -19,6 +19,12 @@ using SteamVR_Standalone_IL2CPP.Util;
 using Mathf = SteamVR_Standalone_IL2CPP.Util.Mathf;
 using static Valve.VR.SteamVR;
 using SteamVR_Standalone_IL2CPP.Standalone;
+using BepInEx.Logging;
+using Logger = BepInEx.Logging.Logger;
+using UnhollowerBaseLib;
+using BepInEx.IL2CPP.Hook;
+using System.Runtime.InteropServices;
+using System.Reflection;
 
 namespace GTFO_VR_BepInEx.Core
 {
@@ -28,14 +34,14 @@ namespace GTFO_VR_BepInEx.Core
     /// </summary>
 
     [BepInPlugin(GUID, MODNAME, VERSION)]
-    public class Main : BasePlugin
+    public class GTFO_VR_Plugin : BasePlugin
     {
 
         public const string
             MODNAME = "GTFO_VR_Plugin",
             AUTHOR = "Spartan",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "0.8.0";
+            VERSION = "0.8.1";
 
         private ConfigEntry<bool> configEnableVR;
         private ConfigEntry<bool> configToggleVRBySteamVR;
@@ -52,12 +58,17 @@ namespace GTFO_VR_BepInEx.Core
         private ConfigEntry<string> configWatchColorHex;
         private ConfigEntry<float> configCrouchHeight;
 
+        public static ManualLogSource log;
+
 
         public override void Load()
         {
-
+            log = Logger.CreateLogSource(MODNAME);
             SetupClassInjections();
-            Debug.Log("Loading VR plugin...");
+            NativeDetours.HookAll();
+            
+
+            log.LogInfo("Loading VR plugin...");
             SetupConfig();
             Harmony harmony = new Harmony("com.github.dsprtn.gtfovr");
 
@@ -67,11 +78,13 @@ namespace GTFO_VR_BepInEx.Core
             }
             else
             {
-                Debug.Log("VR launch aborted, VR is disabled or SteamVR is off!");
+                log.LogWarning("VR launch aborted, VR is disabled or SteamVR is off!");
             }
 
 
         }
+
+       
 
         void SetupClassInjections()
         {
@@ -103,10 +116,10 @@ namespace GTFO_VR_BepInEx.Core
             possibleVRProcesses.AddRange(Process.GetProcessesByName("vrserver"));
             possibleVRProcesses.AddRange(Process.GetProcessesByName("vrcompositor"));
 
-            Debug.Log("VR processes found - " + possibleVRProcesses.Count);
+            log.LogDebug("VR processes found - " + possibleVRProcesses.Count);
             foreach(Process p in possibleVRProcesses)
             {
-                Debug.Log(p.ToString());
+                log.LogDebug(p.ToString());
             }
             return possibleVRProcesses.Count > 0;
         }
@@ -133,20 +146,20 @@ namespace GTFO_VR_BepInEx.Core
 
 
 
-            Debug.Log("VR enabled?" + configEnableVR.Value);
-            Debug.Log("Toggle VR by SteamVR running?" + configToggleVRBySteamVR.Value);
-            Debug.Log("Use VR Controllers? : " + configUseControllers.Value);
-            Debug.Log("Crouch on IRL crouch? : " + configIRLCrouch.Value);
-            Debug.Log("Use left hand as main hand? : " + configUseLeftHand.Value);
-            Debug.Log("Light resolution mode: " + configLightResMode.Value.ToString());
-            Debug.Log("Use two handed aiming: " + configUseTwoHanded.Value);
-            Debug.Log("Start with double handed aiming: " + configAlwaysDoubleHanded.Value);
-            Debug.Log("Snapturn amount: " + configSnapTurnAmount.Value);
-            Debug.Log("Use smooth turn?: " + configSmoothSnapTurn.Value);
-            Debug.Log("Watch size multiplier: " + configWatchScaling.Value);
-            Debug.Log("Use numbers for number display?: " + configUseNumbersForAmmoDisplay.Value);
-            Debug.Log("Watch color - " + configWatchColorHex.Value);
-            Debug.Log("Crouching height - " + configCrouchHeight.Value);
+            log.LogDebug("VR enabled?" + configEnableVR.Value);
+            log.LogDebug("Toggle VR by SteamVR running?" + configToggleVRBySteamVR.Value);
+            log.LogDebug("Use VR Controllers? : " + configUseControllers.Value);
+            log.LogDebug("Crouch on IRL crouch? : " + configIRLCrouch.Value);
+            log.LogDebug("Use left hand as main hand? : " + configUseLeftHand.Value);
+            log.LogDebug("Light resolution mode: " + configLightResMode.Value.ToString());
+            log.LogDebug("Use two handed aiming: " + configUseTwoHanded.Value);
+            log.LogDebug("Start with double handed aiming: " + configAlwaysDoubleHanded.Value);
+            log.LogDebug("Snapturn amount: " + configSnapTurnAmount.Value);
+            log.LogDebug("Use smooth turn?: " + configSmoothSnapTurn.Value);
+            log.LogDebug("Watch size multiplier: " + configWatchScaling.Value);
+            log.LogDebug("Use numbers for number display?: " + configUseNumbersForAmmoDisplay.Value);
+            log.LogDebug("Watch color - " + configWatchColorHex.Value);
+            log.LogDebug("Crouching height - " + configCrouchHeight.Value);
 
             VR_Settings.useVRControllers = configUseControllers.Value;
             VR_Settings.crouchOnIRLCrouch = configIRLCrouch.Value;

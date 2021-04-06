@@ -46,7 +46,7 @@ namespace GTFO_VR.UI
         static DividedBarShaderController Infection;
         static DividedBarShaderController Oxygen;
 
-        static readonly Color normalHealthCol = new Color(0.33f, 0f, 0f);
+        static readonly Color normalHealthCol = new Color(0.66f, 0f, 0f);
         static readonly Color normalInfectionCol = new Color(0.533f, 1, 0.8f);
         static readonly Color normalOxygenCol = Color.cyan;
 
@@ -70,7 +70,7 @@ namespace GTFO_VR.UI
         {
             if (VRInput.GetActionDown(InputAction.Aim))
             {
-              SwitchState();
+                SwitchState();
             }
         }
         public static void UpdateMainObjective(string mainObj)
@@ -86,18 +86,19 @@ namespace GTFO_VR.UI
         }
 
         public static void UpdateObjectiveDisplay() {
-            if(objectiveDisplay != null)
+            if (objectiveDisplay != null)
             {
-                objectiveDisplay.text = "WARDEN OBJECTIVE: \n \n " + mainObj + " \n \n "  + subObj;
+                objectiveDisplay.text = "WARDEN OBJECTIVE: \n \n " + mainObj + " \n \n " + subObj;
+                objectiveDisplay.ForceMeshUpdate(false);
                 VRInput.TriggerHapticPulse(0.01f, 1 / .025f, 0.2f, Controllers.GetDeviceFromType(Controllers.offHandControllerType));
             }
         }
 
         public static void UpdateInfection(float infection)
         {
-            if(Infection)
+            if (Infection)
             {
-                if(infection < 0.01f)
+                if (infection < 0.01f)
                 {
                     Infection.ToggleRendering(false);
                 } else
@@ -120,9 +121,9 @@ namespace GTFO_VR.UI
 
         public static void UpdateAir(float val)
         {
-            if(Oxygen)
+            if (Oxygen)
             {
-                if(val < .95f)
+                if (val < .95f)
                 {
                     Oxygen.SetFill(val);
                     Oxygen.ToggleRendering(true);
@@ -193,9 +194,10 @@ namespace GTFO_VR.UI
             if (ItemEquippableEvents.IsCurrentItemShootableWeapon() &&
                 ItemEquippableEvents.currentItem.ItemDataBlock.inventorySlot.Equals(item.Slot))
             {
-                if(VR_Settings.useNumbersForAmmoDisplay)
+                if (VR_Settings.useNumbersForAmmoDisplay)
                 {
-                    numberAmmoDisplay.text = ((int)(item.BulletsMaxCap * item.RelInPack)).ToString() + "\n ━━━━ \n" + clipLeft;
+                    numberAmmoDisplay.text = clipLeft + "\n----\n" + ((int)(item.BulletsMaxCap * item.RelInPack)).ToString();
+                    numberAmmoDisplay.ForceMeshUpdate(false);
                 } else
                 {
                     BulletsInMag.maxValue = Mathf.Max(item.BulletClipSize, 1);
@@ -207,10 +209,10 @@ namespace GTFO_VR.UI
 
         private void UpdateBulletGridDivisions(ItemEquippable item)
         {
-            
+
             if (ItemEquippableEvents.IsCurrentItemShootableWeapon())
             {
-                if(!VR_Settings.useNumbersForAmmoDisplay)
+                if (!VR_Settings.useNumbersForAmmoDisplay)
                 {
                     BulletsInMag.maxValue = item.GetMaxClip();
                     BulletsInMag.currentValue = item.GetCurrentClip();
@@ -220,15 +222,16 @@ namespace GTFO_VR.UI
             }
             else
             {
-                if(!VR_Settings.useNumbersForAmmoDisplay)
+                if (!VR_Settings.useNumbersForAmmoDisplay)
                 {
                     BulletsInMag.currentValue = 0;
                     BulletsInMag.UpdateShaderVals(1, 1);
                 } else
                 {
                     numberAmmoDisplay.text = "";
+                    numberAmmoDisplay.ForceMeshUpdate(false);
                 }
-                
+
             }
         }
 
@@ -252,11 +255,11 @@ namespace GTFO_VR.UI
 
         private void SetupObjectiveDisplay()
         {
-            GameObject objectiveParent = Utils.FindDeepChild(transform,"WardenObjective").gameObject;
+            GameObject objectiveParent = Utils.FindDeepChild(transform, "WardenObjective").gameObject;
 
             RectTransform watchObjectiveTransform = objectiveParent.GetComponent<RectTransform>();
             objectiveDisplay = objectiveParent.AddComponent<TextMeshPro>();
-            
+
             objectiveDisplay.enableAutoSizing = true;
             objectiveDisplay.fontSizeMin = 18;
             objectiveDisplay.fontSizeMax = 36;
@@ -266,7 +269,7 @@ namespace GTFO_VR.UI
 
         IEnumerator SetRectSize(RectTransform t, Vector2 size)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForEndOfFrame();
             t.sizeDelta = size;
         }
 
@@ -285,11 +288,11 @@ namespace GTFO_VR.UI
 
             numberAmmoDisplay = Utils.FindDeepChild(transform, "NumberedAmmo").gameObject.AddComponent<TextMeshPro>();
 
-            numberAmmoDisplay.m_fontSize = 0.5f;
-            numberAmmoDisplay.lineSpacing = 0.6f;
+            numberAmmoDisplay.lineSpacing = -30f;
+
             numberAmmoDisplay.alignment = TextAlignmentOptions.Center;
-            numberAmmoDisplay.m_tabSpacing = 4;
-            numberAmmoDisplay.fontSize = 190;
+            numberAmmoDisplay.fontSize = 92f;
+            numberAmmoDisplay.enableWordWrapping = false;
             numberAmmoDisplay.fontStyle = FontStyles.Bold;
             numberAmmoDisplay.richText = true;
             numberAmmoDisplay.color = DividedBarShaderController.normalColor;
@@ -353,16 +356,18 @@ namespace GTFO_VR.UI
                 m.enabled = toggle;
             }
 
-            if(VR_Settings.useNumbersForAmmoDisplay)
+            if (VR_Settings.useNumbersForAmmoDisplay)
             {
                 numberAmmoDisplay.gameObject.SetActive(toggle);
                 BulletsInMag.gameObject.SetActive(false);
+
+                
             } else
             {
                 numberAmmoDisplay.gameObject.SetActive(false);
                 BulletsInMag.gameObject.SetActive(toggle);
             }
-
+            numberAmmoDisplay.ForceMeshUpdate();
             //Force update to possibly disable those bars depending on oxygen level/infection level
             UpdateAir(Oxygen.currentValue);
             UpdateInfection(Infection.currentValue);
@@ -371,6 +376,7 @@ namespace GTFO_VR.UI
         void ToggleObjectiveRendering(bool toggle)
         {
             objectiveDisplay.enabled = toggle;
+            objectiveDisplay.ForceMeshUpdate();
         }
 
         void OnDestroy()

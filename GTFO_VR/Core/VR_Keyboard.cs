@@ -66,6 +66,10 @@ namespace GTFO_VR.Core
 
         public static string GetKeyboardInput()
         {
+            if(currentFrameInput == null)
+            {
+                return "";
+            }
             return currentFrameInput;
         }
 

@@ -1,4 +1,5 @@
-﻿using Player;
+﻿using GTFO_VR_BepInEx.Core;
+using Player;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +18,8 @@ namespace GTFO_VR.Events
         {
             if(OnPlayerEnterLadder != null && owner.IsLocallyOwned)
             {
-                Debug.Log("Player entered ladder");
-                Debug.Log(owner.Locomotion.CurrentLadder);
+                GTFO_VR_Plugin.log.LogDebug("Player entered ladder");
+                GTFO_VR_Plugin.log.LogDebug(owner.Locomotion.CurrentLadder);
                 OnPlayerEnterLadder.Invoke(owner.Locomotion.CurrentLadder);
             }
         }

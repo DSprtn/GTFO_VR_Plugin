@@ -1,5 +1,6 @@
 ﻿using GTFO_VR.Core;
 using GTFO_VR.Input;
+using GTFO_VR_BepInEx.Core;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -62,14 +63,14 @@ namespace GTFO_VR
         {
             if (VRInput.instance != null)
             {
-                Debug.LogError("Trying to create duplicate VR_Input class! -- Don't!");
+                GTFO_VR_Plugin.log.LogError("Trying to create duplicate VR_Input class! -- Don't!");
                 return;
             }
             VRInput.instance = this;
            
             InitializeActionMapping();
             VRInput.Initialized = true;
-            Debug.Log("Input initialized");
+            GTFO_VR_Plugin.log.LogInfo("Input initialized");
         }
 
 

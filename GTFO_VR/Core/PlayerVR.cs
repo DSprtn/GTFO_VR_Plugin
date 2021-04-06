@@ -4,6 +4,7 @@ using GTFO_VR.Events;
 using GTFO_VR.Input;
 using GTFO_VR.UI;
 using GTFO_VR.Util;
+using GTFO_VR_BepInEx.Core;
 using Player;
 using System;
 using UnityEngine;
@@ -199,9 +200,9 @@ namespace GTFO_VR
 
         void LadderEntered(LG_Ladder ladder)
         {
-            Debug.Log("Ladder forward " + ladder.transform.forward);
-            Debug.Log("Ladder right " + ladder.transform.right);
-            Debug.Log("Ladder up " + ladder.transform.up);
+            GTFO_VR_Plugin.log.LogDebug("Ladder forward " + ladder.transform.forward);
+            GTFO_VR_Plugin.log.LogDebug("Ladder right " + ladder.transform.right);
+            GTFO_VR_Plugin.log.LogDebug("Ladder up " + ladder.transform.up);
 
             snapTurn.DoSnapTurnTowards(Quaternion.LookRotation(ladder.transform.forward).eulerAngles, 10f);
             origin.CenterPlayerToOrigin();
@@ -213,7 +214,7 @@ namespace GTFO_VR
             {
                 if (!fpsCamera)
                 {
-                    Debug.Log("FPSCamera lookup...");
+                    GTFO_VR_Plugin.log.LogDebug("FPSCamera lookup...");
                     if (playerAgent)
                     {
                         fpsCamera = playerAgent.FPSCamera;
@@ -222,7 +223,7 @@ namespace GTFO_VR
 
                 if (!playerController)
                 {
-                    Debug.Log("PlayerController lookup...");
+                    GTFO_VR_Plugin.log.LogDebug("PlayerController lookup...");
                     if (playerAgent)
                     {
                         playerController = playerAgent.PlayerCharacterController;
@@ -257,7 +258,7 @@ namespace GTFO_VR
             SpawnWatch();
 
 
-            Debug.Log("Crouching height... " + playerAgent.PlayerData.camPosCrouch);
+            GTFO_VR_Plugin.log.LogDebug("Crouching height... " + playerAgent.PlayerData.camPosCrouch);
             VRPlayerIsSetup = true;
             LoadedAndInIngameView = true;
         }

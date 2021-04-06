@@ -1,6 +1,7 @@
 ﻿using GTFO_VR.Core;
 using GTFO_VR.Events;
 using GTFO_VR.Input;
+using GTFO_VR_BepInEx.Core;
 using Player;
 using System;
 using System.Collections.Generic;
@@ -28,7 +29,7 @@ namespace GTFO_VR.Core
 
         void Awake()
         {
-            Debug.Log("Origin created");
+            GTFO_VR_Plugin.log.LogInfo("Origin created");
             Snapturn.OnSnapTurn += UpdateOrigin;
         }
         public void Setup(Snapturn snapturn)
@@ -99,7 +100,7 @@ namespace GTFO_VR.Core
             {
                 return;
             }
-            Debug.Log("Creating origin GO");
+            GTFO_VR_Plugin.log.LogInfo("Creating origin GO");
             origin = new GameObject("Origin");
             Controllers.SetOrigin(origin.transform);
             HMD.SetOrigin(origin.transform);
@@ -113,7 +114,7 @@ namespace GTFO_VR.Core
             pos = snapTurn.snapTurnRotation * pos;
             offsetFromPlayerToHMD = pos;
 
-            Debug.Log("Centering player... new offset = " + offsetFromPlayerToHMD);
+            GTFO_VR_Plugin.log.LogDebug("Centering player... new offset = " + offsetFromPlayerToHMD);
         }
 
         void OnDestroy()

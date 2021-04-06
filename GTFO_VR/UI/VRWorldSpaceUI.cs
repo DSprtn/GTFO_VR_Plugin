@@ -2,6 +2,7 @@
 using GTFO_VR.Events;
 using GTFO_VR.Input;
 using GTFO_VR.Util;
+using GTFO_VR_BepInEx.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,7 +68,7 @@ namespace GTFO_VR.UI
         void Start()
         {
 
-            Debug.Log("Creating status and interaction prompt VR UI");
+            GTFO_VR_Plugin.log.LogInfo("Creating status and interaction prompt VR UI");
             statusBarHolder = new GameObject("VR_StatusUI");
             interactionBarHolder = new GameObject("VR_InteractionUI");
             compassHolder = new GameObject("CompassHolder");
