@@ -12,8 +12,8 @@ using UnityEngine;
 namespace GTFO_VR_BepInEx.Core
 {
 
-
-
+    // TODO - Replace crouch height transpiler
+    /*
     [HarmonyPatch(typeof(PlayerCharacterController), "SetColliderCrouched")]
     public static class InjectCrouchHeight_Patch
     {
@@ -48,4 +48,5 @@ namespace GTFO_VR_BepInEx.Core
             return codes.AsEnumerable();
         }
     }
+    */
 }

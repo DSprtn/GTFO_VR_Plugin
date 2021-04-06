@@ -12,12 +12,15 @@ using static GTFO_VR.Util.WeaponArchetypeVRData;
 
 namespace GTFO_VR.Input
 {
-    public class Controllers : MonoBehaviourExtended
+    public class Controllers : MonoBehaviour
     {
+        public Controllers(IntPtr value)
+: base(value) { }
+
+
         public static GameObject mainController;
 
         public static GameObject offhandController;
-
 
         static GameObject leftController;
 

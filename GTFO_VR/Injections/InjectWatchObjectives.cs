@@ -18,7 +18,7 @@ namespace GTFO_VR_BepInEx.Core
     /// Replicate new objectives on the VR watch
     /// </summary>
 
-    [HarmonyPatch(typeof(PlayerGuiLayer),"UpdateObjectives")]
+    [HarmonyPatch(typeof(PlayerGuiLayer), "UpdateObjectives")]
     class InjectWatchObjectives
     {
         static void Postfix(LG_LayerType layer,

@@ -9,19 +9,21 @@ using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Valve.VR;
-using Valve.VR.Extras;
+
 
 namespace GTFO_VR
 {
     public class PlayerVR : MonoBehaviour
     {
 
+        public PlayerVR(IntPtr value)
+: base(value) { }
+
         PlayerOrigin origin;
         Snapturn snapTurn;
-        ColisionFade collisionFader;
         Watch watch;
         LaserPointer pointer;
-        VRWorldSpaceUI worldUI; 
+        VRWorldSpaceUI worldUI;
 
         public static bool VRPlayerIsSetup;
         public static bool LoadedAndInIngameView = false;
@@ -33,31 +35,134 @@ namespace GTFO_VR
         public static CommandBuffer preRenderLights;
         public static CommandBuffer beforeForwardCmd;
 
-        bool frameRendered = false;
-
         void Start()
         {
+            SteamVR_Render.eyePreRenderCallback += RenderLoop;
             if (VRPlayerIsSetup)
             {
                 Debug.LogError("Trying to create duplicate VRInit class...");
                 return;
             }
-
             PlayerLocomotionEvents.OnPlayerEnterLadder += LadderEntered;
-            SteamVR_Events.NewPosesApplied.AddListener(new Action(OnNewPoses));
+            FocusStateEvents.OnFocusStateChange += ForceFPRenderingOnEnterGame;
+
+            SteamVR_Events.NewPosesApplied.Listen(new Action(OnNewPoses));
             ClusteredRendering.Current.OnResolutionChange(new Resolution());
+        }
+
+        private void ForceFPRenderingOnEnterGame(eFocusState state)
+        {
+           if(state == eFocusState.FPS)
+            {
+                foreach (var m in fpsCamera.m_holder.GetComponentsInChildren<Renderer>(true))
+                {
+                    if (m != null && m.sharedMaterial != null)
+                    {
+                        m.sharedMaterial.DisableKeyword("ENABLE_FPS_RENDERING");
+                        m.sharedMaterial.DisableKeyword("FPS_RENDERING_ALLOWED");
+                    }
+                }
+            }
+        }
+
+        static int lastCulledFrame = 0;
+
+        void RenderLoop(EVREye eye)
+        {
+            DoUglyCameraHack();
+
+            // Only cull once per frame because the cull will most likely be valid for both eyes
+            if (Time.frameCount != lastCulledFrame || true)
+            {
+                C_Camera.Current.RunVisibilityOnPreCull();
+                lastCulledFrame = Time.frameCount;
+            }
+
+            preRenderLights.Clear();
+            beforeForwardCmd.Clear();
+
+            if (fpsCamera.m_renderUI)
+            {
+                UI_Core.RenderUI();
+            }
+
+            if (ScreenLiquidManager.LiquidSystem != null)
+                ScreenLiquidManager.LiquidSystem.CollectCommands(preRenderLights);
+            if (AirParticleSystem.AirParticleSystem.Current != (UnityEngine.Object)null)
+                AirParticleSystem.AirParticleSystem.Current.CollectCommands(preRenderLights, beforeForwardCmd);
+
+            if (fpsCamera.m_collectCommandsClustered)
+            {
+                ClusteredRendering.Current.CollectCommands(preRenderLights);
+            }
+
+            if (fpsCamera.m_collectCommandsGUIX)
+            {
+                GUIX_Manager.Current.CollectCommands(preRenderLights);
+            }
+
+            if (MapDetails.s_isSetup && fpsCamera.m_collectCommandsMap)
+            {
+                MapDetails.Current.CollectCommands(preRenderLights);
+            }
+
+            Vector4 projectionParams = ClusteredRendering.GetProjectionParams(ClusteredRendering.Current.m_camera);
+            Vector4 zbufferParams = ClusteredRendering.GetZBufferParams(ClusteredRendering.Current.m_camera);
+            preRenderLights.SetGlobalVector(ClusteredRendering.ID_ProjectionParams, projectionParams);
+            preRenderLights.SetGlobalVector(ClusteredRendering.ID_ZBufferParams, zbufferParams);
+        }
+
+        // Force FOV/Aspects and position match up for all relevant game cameras
+        void DoUglyCameraHack()
+        {
+            fpsCamera.PlayerMoveEnabled = true;
+            fpsCamera.MouseLookEnabled = true;
+
+            if (fpsCamera != null && fpsCamera.m_camera != null)
+            {
+                fpsCamera.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
+                fpsCamera.m_camera.aspect = SteamVR.instance.aspect;
+                if (fpsCamera.m_itemCamera != null)
+                {
+                    fpsCamera.m_itemCamera.fieldOfView = SteamVR.instance.fieldOfView;
+                    fpsCamera.m_itemCamera.aspect = SteamVR.instance.aspect;
+                }
+            }
+
+            if (ClusteredRendering.Current != null && ClusteredRendering.Current.m_lightBufferCamera != null)
+            {
+
+                ClusteredRendering.Current.m_lightBufferCamera.fieldOfView = SteamVR.instance.fieldOfView;
+                ClusteredRendering.Current.m_lightBufferCamera.aspect = SteamVR.instance.aspect;
+                ClusteredRendering.Current.m_lightBufferCamera.transform.position = fpsCamera.m_camera.transform.position;
+                ClusteredRendering.Current.m_lightBufferCamera.transform.rotation = fpsCamera.m_camera.transform.rotation;
+
+
+                ClusteredRendering.Current.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
+                ClusteredRendering.Current.m_camera.aspect = SteamVR.instance.aspect;
+                ClusteredRendering.Current.m_camera.transform.position = fpsCamera.m_camera.transform.position;
+                ClusteredRendering.Current.m_camera.transform.rotation = fpsCamera.m_camera.transform.rotation;
+                ClusteredRendering.Current.m_camera.nearClipPlane = 0.075f;
+                
+            }
+
+            foreach (SteamVR_Camera cam in SteamVR_Render.instance.cameras)
+            {
+                cam.camera.enabled = false;
+            }
         }
 
         void Update()
         {
-            if(!fpsCamera || !playerController)
+            if (!fpsCamera || !playerController)
             {
-              VRPlayerIsSetup = false;
+                VRPlayerIsSetup = false;
             }
             if (!VRPlayerIsSetup)
             {
                 TrySetup();
-            } else
+            }
+            else
             {
                 HandleSnapturnInput();
                 origin.UpdateOrigin();
@@ -70,7 +175,6 @@ namespace GTFO_VR
             {
                 return;
             }
-            frameRendered = false;
             origin.UpdateOrigin();
         }
 
@@ -88,21 +192,17 @@ namespace GTFO_VR
             origin.UpdateOrigin();
             UpdateVRCameraPosition();
             UpdateHeldItemPosition();
-            DoUglyCameraHack();
 
-            // Multiple pose updates happen per frame but we only need to react to the one after LateUpdate
-            if (!frameRendered)
-            {
-                RenderLoop();
-            }
         }
+
+
 
         void LadderEntered(LG_Ladder ladder)
         {
             Debug.Log("Ladder forward " + ladder.transform.forward);
             Debug.Log("Ladder right " + ladder.transform.right);
             Debug.Log("Ladder up " + ladder.transform.up);
-            
+
             snapTurn.DoSnapTurnTowards(Quaternion.LookRotation(ladder.transform.forward).eulerAngles, 10f);
             origin.CenterPlayerToOrigin();
         }
@@ -114,7 +214,7 @@ namespace GTFO_VR
                 if (!fpsCamera)
                 {
                     Debug.Log("FPSCamera lookup...");
-                    if(playerAgent)
+                    if (playerAgent)
                     {
                         fpsCamera = playerAgent.FPSCamera;
                     }
@@ -123,7 +223,7 @@ namespace GTFO_VR
                 if (!playerController)
                 {
                     Debug.Log("PlayerController lookup...");
-                    if(playerAgent)
+                    if (playerAgent)
                     {
                         playerController = playerAgent.PlayerCharacterController;
                     }
@@ -148,19 +248,15 @@ namespace GTFO_VR
                 origin = gameObject.AddComponent<PlayerOrigin>();
                 origin.Setup(snapTurn);
             }
-            if (!collisionFader)
-            {
-                collisionFader = gameObject.AddComponent<ColisionFade>();
-            }
-            if(!worldUI)
+            if (!worldUI)
             {
                 worldUI = gameObject.AddComponent<VRWorldSpaceUI>();
             }
             SetupLaserPointer();
             SetupVRPlayerCamera();
             SpawnWatch();
-            
-            
+
+
             Debug.Log("Crouching height... " + playerAgent.PlayerData.camPosCrouch);
             VRPlayerIsSetup = true;
             LoadedAndInIngameView = true;
@@ -177,7 +273,7 @@ namespace GTFO_VR
                     C_Camera.Position = camPos;
                     C_Camera.Forward = HMD.hmd.transform.forward;
 
-                    collisionFader.HandleCameraInCollision();
+                    CollisionFade.HandleCameraInCollision();
                 }
 
             }
@@ -219,7 +315,7 @@ namespace GTFO_VR
                 snapTurn.DoSnapTurn(VR_Settings.snapTurnAmount);
                 origin.CenterPlayerToOrigin();
             }
-            
+
         }
 
         void SetupLaserPointer()
@@ -239,6 +335,7 @@ namespace GTFO_VR
             {
                 return;
             }
+
             VRCamera = fpsCamera.gameObject.AddComponent<SteamVR_Camera>();
             fpsCamera.gameObject.AddComponent<SteamVR_Fade>();
         }
@@ -247,90 +344,11 @@ namespace GTFO_VR
         {
             if (!watch)
             {
-                watch = Instantiate(VR_Assets.watchPrefab, new Vector3(0, 0, 0), Quaternion.Euler(new Vector3(0, 0, 0)), null).AddComponent<Watch>();
+                watch = Instantiate(VR_Assets.watchPrefab, Vector3.zero, Quaternion.identity, null).AddComponent<Watch>();
                 Vector3 watchScale = new Vector3(1.25f, 1.25f, 1.25f);
                 watchScale *= VR_Settings.watchScale;
                 watch.transform.localScale = watchScale;
             }
-        }
-
-        // Force FOV/Aspects and position match up for all relevant game cameras
-        void DoUglyCameraHack()
-        {
-            fpsCamera.PlayerMoveEnabled = true;
-            fpsCamera.MouseLookEnabled = true;
-
-            if (fpsCamera != null && fpsCamera.m_camera != null)
-            {
-                fpsCamera.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
-                fpsCamera.m_camera.aspect = SteamVR.instance.aspect;
-                if (fpsCamera.m_itemCamera != null)
-                {
-                    fpsCamera.m_itemCamera.fieldOfView = SteamVR.instance.fieldOfView;
-                    fpsCamera.m_itemCamera.aspect = SteamVR.instance.aspect;
-                }
-            }
-
-            if (ClusteredRendering.Current != null && ClusteredRendering.Current.m_lightBufferCamera != null)
-            {
-
-                ClusteredRendering.Current.m_lightBufferCamera.fieldOfView = SteamVR.instance.fieldOfView;
-                ClusteredRendering.Current.m_lightBufferCamera.aspect = SteamVR.instance.aspect;
-                ClusteredRendering.Current.m_lightBufferCamera.transform.position = fpsCamera.m_camera.transform.position;
-                ClusteredRendering.Current.m_lightBufferCamera.transform.rotation = fpsCamera.m_camera.transform.rotation;
-
-
-                ClusteredRendering.Current.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
-                ClusteredRendering.Current.m_camera.aspect = SteamVR.instance.aspect;
-                ClusteredRendering.Current.m_camera.transform.position = fpsCamera.m_camera.transform.position;
-                ClusteredRendering.Current.m_camera.transform.rotation = fpsCamera.m_camera.transform.rotation;
-            }
-
-            foreach (SteamVR_Camera cam in SteamVR_Render.instance.cameras)
-            {
-                cam.camera.enabled = false;
-            }
-        }
-
-        
-        void RenderLoop()
-        {
-            C_Camera.Current.RunVisibilityOnPreCull();
-
-            preRenderLights.Clear();
-            beforeForwardCmd.Clear();
-
-            if (fpsCamera.m_renderUI)
-            {
-                UI_Core.RenderUI();
-            }
-
-            if (ScreenLiquidManager.LiquidSystem != null)
-                ScreenLiquidManager.LiquidSystem.CollectCommands(preRenderLights);
-            if (AirParticleSystem.AirParticleSystem.Current != (UnityEngine.Object)null)
-                AirParticleSystem.AirParticleSystem.Current.CollectCommands(preRenderLights, beforeForwardCmd);
-
-            if (fpsCamera.m_collectCommandsClustered)
-            {
-                ClusteredRendering.Current.CollectCommands(preRenderLights);
-            }
-
-            if (fpsCamera.m_collectCommandsGUIX)
-            {
-                GUIX_Manager.Current.CollectCommands(preRenderLights);
-            }
-
-            if (MapDetails.s_isSetup && fpsCamera.m_collectCommandsMap)
-            {
-                MapDetails.Current.CollectCommands(preRenderLights);
-            }
-
-            Vector4 projectionParams = ClusteredRendering.GetProjectionParams(ClusteredRendering.Current.m_camera);
-            Vector4 zbufferParams = ClusteredRendering.GetZBufferParams(ClusteredRendering.Current.m_camera);
-            preRenderLights.SetGlobalVector(ClusteredRendering.ID_ProjectionParams, projectionParams);
-            preRenderLights.SetGlobalVector(ClusteredRendering.ID_ZBufferParams, zbufferParams);
-
-            frameRendered = true;
         }
 
         public static float VRDetectionMod(Vector3 dir, float distance, float m_flashLightRange, float m_flashlight_spotAngle)
@@ -354,16 +372,18 @@ namespace GTFO_VR
 
         void OnDestroy()
         {
+            SteamVR_Render.eyePreRenderCallback -= RenderLoop;
             PlayerLocomotionEvents.OnPlayerEnterLadder -= LadderEntered;
-            if(pointer.gameObject)
+            FocusStateEvents.OnFocusStateChange += ForceFPRenderingOnEnterGame;
+            if (pointer)
             {
                 Destroy(pointer.gameObject);
             }
-            if(watch)
+            if (watch)
             {
-                Destroy(watch);
+                Destroy(watch.gameObject);
             }
-            SteamVR_Events.NewPosesApplied.RemoveListener(new Action(OnNewPoses));
+            SteamVR_Events.NewPosesApplied.Remove(new Action(OnNewPoses));
         }
 
     }

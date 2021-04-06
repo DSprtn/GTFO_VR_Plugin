@@ -10,9 +10,8 @@ namespace GTFO_VR_BepInEx.Core
     class InjectSmallerEnemyMarkers
     {
 
-        static void Postfix(NavMarker ___m_tagMarker)
-        {
-            ___m_tagMarker.m_initScale *= .7f;
+        static void Postfix(EnemyAgent __instance) {
+            __instance.m_tagMarker.m_initScale *= .7f;
         }
     }
 

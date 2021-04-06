@@ -17,33 +17,42 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(PlayerBackpackManager), "SetFPSRendering")]
     class InjectRenderFirstPersonItemsForVR
     {
-        static void Prefix(ref bool enable)
+        static void Prefix(ref bool enable, GameObject go)
         {
             enable = false;
+            foreach (var m in go.GetComponentsInChildren<MeshRenderer>(true))
+            {
+                if (m == null || m.sharedMaterials == null)
+                {
+                    continue;
+                }
+                foreach(Material mat in m.sharedMaterials)
+                {
+                    if(mat != null)
+                    {
+                        mat.DisableKeyword("ENABLE_FPS_RENDERING");
+                        mat.DisableKeyword("FPS_RENDERING_ALLOWED");
+                    }
+
+                }
+                
+            }
+            
         }
     }
-
+    //ToDO - Fix hacking tool rendering
     
-
     /// <summary>
     /// Makes the hacking tool render normally instead of in 2D
     /// </summary>
-    [HarmonyPatch(typeof(HologramGraphics), "FeedParams")]
+    [HarmonyPatch(typeof(HologramGraphics), nameof(HologramGraphics.AddHoloPart))]
     class InjectRenderFirstPersonHackingToolForVR
     {
-        static void Postfix(HackingTool __instance, List<HologramGraphicsPart> ___m_holoParts, Transform ___m_holoSpaceTransform)
+        static void Prefix(HologramGraphicsPart part, HologramGraphics __instance)
         {
-            if(___m_holoSpaceTransform == null || ___m_holoParts.Count < 1 || VR_Global.hackingToolRenderingOverriden)
-            {
-                return;
-            }
-            for (int index = 0; index < ___m_holoParts.Count; ++index)
-            {
-                Material material = ___m_holoParts[index].m_material;
-                material.DisableKeyword("ENABLE_FPS_RENDERING");
-                material.DisableKeyword("FPS_RENDERING_ALLOWED");
-            }
-            VR_Global.hackingToolRenderingOverriden = true;
+            Material material = part.m_renderer.sharedMaterial;
+            material.DisableKeyword("ENABLE_FPS_RENDERING");
+            material.DisableKeyword("FPS_RENDERING_ALLOWED");
         }
     }
     

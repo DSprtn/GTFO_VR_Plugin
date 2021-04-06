@@ -3,17 +3,23 @@ using GTFO_VR.Events;
 using GTFO_VR.Input;
 using GTFO_VR.Util;
 using Player;
+using SteamVR_Standalone_IL2CPP.Util;
 using System;
 using System.Text;
+using UnhollowerRuntimeLib;
 using UnityEngine;
 using Valve.VR;
-using Valve.VR.Extras;
+
 
 
 namespace GTFO_VR
 {
     public class VR_Global : MonoBehaviour
     {
+
+        public VR_Global(IntPtr value)
+: base(value) { }
+
         public static VR_Global instance;
 
         public static bool VR_ENABLED;
@@ -31,7 +37,7 @@ namespace GTFO_VR
 
         void Awake()
         {
-            if(!instance)
+            if (!instance)
             {
                 instance = this;
             } else
@@ -46,6 +52,9 @@ namespace GTFO_VR
             Setup();
             SteamVR_Settings.instance.poseUpdateMode = SteamVR_UpdateModes.OnLateUpdate;
         }
+
+
+
 
         public static bool GetPlayerPointingAtPositionOnScreen(out Vector2 uv)
         {
@@ -67,16 +76,6 @@ namespace GTFO_VR
             uv = Vector2.zero;
             return false;
         }
-        
-        void Update()
-        {
-            DoDebugOnKeyDown();
-        }
-
-        private void DoDebugOnKeyDown()
-        {
-            
-        }
 
         private void Setup()
         {
@@ -92,13 +91,15 @@ namespace GTFO_VR
                 height = (int)SteamVR.instance.sceneHeight,
                 width = (int)SteamVR.instance.sceneWidth
             };
-            Invoke("SetupOverlay", .25f);
+            Invoke(nameof(VR_Global.SetupOverlay), .25f);
             DontDestroyOnLoad(gameObject);
         }
 
         void SetupOverlay()
         {
-            overlay = new GameObject("Overlay").AddComponent<VR_UI_Overlay>();
+            GameObject o = new GameObject("Overlay");
+            DontDestroyOnLoad(o);
+            overlay = o.AddComponent<VR_UI_Overlay>();
         }
 
         public static void ClearUIRenderTex()

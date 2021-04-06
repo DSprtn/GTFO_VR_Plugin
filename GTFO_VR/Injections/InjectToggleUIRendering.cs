@@ -6,7 +6,7 @@ using System.Text;
 
 namespace GTFO_VR_BepInEx.Core
 {
-    [HarmonyPatch(typeof(UI_Core), "RenderUI")]
+    [HarmonyPatch(typeof(UI_Core), nameof(UI_Core.RenderUI), new Type[0])]
     class InjectToggleUIRendering
     {
         static bool Prefix()

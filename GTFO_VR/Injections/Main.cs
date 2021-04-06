@@ -10,6 +10,15 @@ using System;
 using GTFO_VR;
 using BepInEx.IL2CPP;
 using System.Collections.Generic;
+using UnhollowerRuntimeLib;
+using GTFO_VR.Input;
+using GTFO_VR.UI;
+using Valve.VR;
+using Standalone;
+using SteamVR_Standalone_IL2CPP.Util;
+using Mathf = SteamVR_Standalone_IL2CPP.Util.Mathf;
+using static Valve.VR.SteamVR;
+using SteamVR_Standalone_IL2CPP.Standalone;
 
 namespace GTFO_VR_BepInEx.Core
 {
@@ -18,9 +27,15 @@ namespace GTFO_VR_BepInEx.Core
     /// Entry point for patching existing methods in GTFO assemblies
     /// </summary>
 
-    [BepInPlugin("com.github.dsprtn.gtfovr", "GTFO Virtual Reality Plug-in", "0.8.0.0")]
+    [BepInPlugin(GUID, MODNAME, VERSION)]
     public class Main : BasePlugin
     {
+
+        public const string
+            MODNAME = "GTFO_VR_Plugin",
+            AUTHOR = "Spartan",
+            GUID = "com." + AUTHOR + "." + MODNAME,
+            VERSION = "0.8.0";
 
         private ConfigEntry<bool> configEnableVR;
         private ConfigEntry<bool> configToggleVRBySteamVR;
@@ -38,20 +53,42 @@ namespace GTFO_VR_BepInEx.Core
         private ConfigEntry<float> configCrouchHeight;
 
 
-
-        void Awake()
+        public override void Load()
         {
+
+            SetupClassInjections();
             Debug.Log("Loading VR plugin...");
             SetupConfig();
             Harmony harmony = new Harmony("com.github.dsprtn.gtfovr");
 
-            if(VR_Settings.enabled && SteamVRRunningCheck())
+            if (VR_Settings.enabled && SteamVRRunningCheck())
             {
                 harmony.PatchAll();
-            } else
+            }
+            else
             {
                 Debug.Log("VR launch aborted, VR is disabled or SteamVR is off!");
             }
+
+
+        }
+
+        void SetupClassInjections()
+        {
+            ClassInjector.RegisterTypeInIl2Cpp<VR_Assets>();
+            ClassInjector.RegisterTypeInIl2Cpp<VR_Global>();
+            ClassInjector.RegisterTypeInIl2Cpp<LaserPointer>();
+            ClassInjector.RegisterTypeInIl2Cpp<PlayerOrigin>();
+            ClassInjector.RegisterTypeInIl2Cpp<PlayerVR>();
+            ClassInjector.RegisterTypeInIl2Cpp<Snapturn>();
+            ClassInjector.RegisterTypeInIl2Cpp<VR_Keyboard>();
+            ClassInjector.RegisterTypeInIl2Cpp<DividedBarShaderController>();
+            ClassInjector.RegisterTypeInIl2Cpp<VR_UI_Overlay>();
+            ClassInjector.RegisterTypeInIl2Cpp<VRWorldSpaceUI>();
+            ClassInjector.RegisterTypeInIl2Cpp<Watch>();
+            ClassInjector.RegisterTypeInIl2Cpp<Controllers>();
+            ClassInjector.RegisterTypeInIl2Cpp<HMD>();
+            ClassInjector.RegisterTypeInIl2Cpp<VRInput>();
         }
 
         private bool SteamVRRunningCheck()
@@ -69,15 +106,12 @@ namespace GTFO_VR_BepInEx.Core
             Debug.Log("VR processes found - " + possibleVRProcesses.Count);
             foreach(Process p in possibleVRProcesses)
             {
-                Debug.Log(p);
+                Debug.Log(p.ToString());
             }
             return possibleVRProcesses.Count > 0;
         }
 
-        public override void Load()
-        {
-            throw new NotImplementedException();
-        }
+
 
         private void SetupConfig()
         {
@@ -127,13 +161,11 @@ namespace GTFO_VR_BepInEx.Core
             VR_Settings.watchColor = ColorExt.Hex(configWatchColorHex.Value);
             VRInput.IRLCrouchBorder = Mathf.Clamp(configCrouchHeight.Value, 1f, 1.35f);
 
-
             if (configUseLeftHand.Value)
             {
                 VR_Settings.mainHand = GTFO_VR.HandType.Left;
             }
         }
 
-        
     }
 }

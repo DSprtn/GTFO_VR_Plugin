@@ -6,12 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 using Valve.VR;
 
 namespace GTFO_VR.Core
 {
     public class VR_Keyboard : MonoBehaviour
     {
+
+        public VR_Keyboard(IntPtr value)
+: base(value) { }
+
         static string currentFrameInput = "";
 
         public static bool keyboardClosedThisFrame;

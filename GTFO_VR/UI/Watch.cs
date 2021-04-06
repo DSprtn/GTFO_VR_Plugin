@@ -1,7 +1,9 @@
 ﻿using GTFO_VR.Core;
 using GTFO_VR.Events;
 using GTFO_VR.Input;
+using GTFO_VR.Util;
 using Player;
+using SteamVR_Standalone_IL2CPP.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,12 +13,17 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using Valve.VR;
-
+using Mathf = SteamVR_Standalone_IL2CPP.Util.Mathf;
 
 namespace GTFO_VR.UI
 {
     public class Watch : MonoBehaviour
     {
+
+        public Watch(IntPtr value)
+: base(value) { }
+
+
         enum WatchState
         {
             Inventory,
@@ -227,7 +234,7 @@ namespace GTFO_VR.UI
 
         private void Setup()
         {
-            inventoryMeshes = transform.FindChildRecursive("Inventory_UI").GetComponentsInChildren<MeshRenderer>();
+            inventoryMeshes = Utils.FindDeepChild(transform, "Inventory_UI").GetComponentsInChildren<MeshRenderer>();
 
             SetupTransform();
             SetupObjectiveDisplay();
@@ -245,7 +252,7 @@ namespace GTFO_VR.UI
 
         private void SetupObjectiveDisplay()
         {
-            GameObject objectiveParent = transform.FindChildRecursive("WardenObjective").gameObject;
+            GameObject objectiveParent = Utils.FindDeepChild(transform,"WardenObjective").gameObject;
 
             RectTransform watchObjectiveTransform = objectiveParent.GetComponent<RectTransform>();
             objectiveDisplay = objectiveParent.AddComponent<TextMeshPro>();
@@ -254,7 +261,7 @@ namespace GTFO_VR.UI
             objectiveDisplay.fontSizeMin = 18;
             objectiveDisplay.fontSizeMax = 36;
             objectiveDisplay.alignment = TextAlignmentOptions.Center;
-            StartCoroutine(SetRectSize(watchObjectiveTransform, new Vector2(42, 34f)));
+            MelonCoroutines.Start(SetRectSize(watchObjectiveTransform, new Vector2(42, 34f)));
         }
 
         IEnumerator SetRectSize(RectTransform t, Vector2 size)
@@ -265,29 +272,28 @@ namespace GTFO_VR.UI
 
         private void SetupInventoryLinkData()
         {
-            UIMappings.Add(InventorySlot.GearStandard, transform.FindChildRecursive("MainWeapon").gameObject.AddComponent<DividedBarShaderController>());
-            UIMappings.Add(InventorySlot.GearSpecial, transform.FindChildRecursive("SubWeapon").gameObject.AddComponent<DividedBarShaderController>());
-            UIMappings.Add(InventorySlot.GearClass, transform.FindChildRecursive("Tool").gameObject.AddComponent<DividedBarShaderController>());
-            UIMappings.Add(InventorySlot.ResourcePack, transform.FindChildRecursive("Pack").gameObject.AddComponent<DividedBarShaderController>());
-            UIMappings.Add(InventorySlot.Consumable, transform.FindChildRecursive("Consumable").gameObject.AddComponent<DividedBarShaderController>());
+            UIMappings.Add(InventorySlot.GearStandard, Utils.FindDeepChild(transform, "MainWeapon").gameObject.AddComponent<DividedBarShaderController>());
+            UIMappings.Add(InventorySlot.GearSpecial, Utils.FindDeepChild(transform, "SubWeapon").gameObject.AddComponent<DividedBarShaderController>());
+            UIMappings.Add(InventorySlot.GearClass, Utils.FindDeepChild(transform, "Tool").gameObject.AddComponent<DividedBarShaderController>());
+            UIMappings.Add(InventorySlot.ResourcePack, Utils.FindDeepChild(transform, "Pack").gameObject.AddComponent<DividedBarShaderController>());
+            UIMappings.Add(InventorySlot.Consumable, Utils.FindDeepChild(transform, "Consumable").gameObject.AddComponent<DividedBarShaderController>());
             UIMappings.Add(InventorySlot.ConsumableHeavy, UIMappings[InventorySlot.Consumable]);
 
-            Health = transform.FindChildRecursive("HP").gameObject.AddComponent<DividedBarShaderController>();
-            Oxygen = transform.FindChildRecursive("Air").gameObject.AddComponent<DividedBarShaderController>();
-            Infection = transform.FindChildRecursive("Infection").gameObject.AddComponent<DividedBarShaderController>();
+            Health = Utils.FindDeepChild(transform, "HP").gameObject.AddComponent<DividedBarShaderController>();
+            Oxygen = Utils.FindDeepChild(transform, "Air").gameObject.AddComponent<DividedBarShaderController>();
+            Infection = Utils.FindDeepChild(transform, "Infection").gameObject.AddComponent<DividedBarShaderController>();
 
-            numberAmmoDisplay = transform.FindChildRecursive("NumberedAmmo").gameObject.AddComponent<TextMesh>();
+            numberAmmoDisplay = Utils.FindDeepChild(transform, "NumberedAmmo").gameObject.AddComponent<TextMeshPro>();
 
-            numberAmmoDisplay.characterSize = 0.5f;
+            numberAmmoDisplay.m_fontSize = 0.5f;
             numberAmmoDisplay.lineSpacing = 0.6f;
-            numberAmmoDisplay.alignment = TextAlignment.Center;
-            numberAmmoDisplay.anchor = TextAnchor.MiddleCenter;
-            numberAmmoDisplay.tabSize = 4;
+            numberAmmoDisplay.alignment = TextAlignmentOptions.Center;
+            numberAmmoDisplay.m_tabSpacing = 4;
             numberAmmoDisplay.fontSize = 190;
-            numberAmmoDisplay.fontStyle = FontStyle.Bold;
+            numberAmmoDisplay.fontStyle = FontStyles.Bold;
             numberAmmoDisplay.richText = true;
             numberAmmoDisplay.color = DividedBarShaderController.normalColor;
-            BulletsInMag = transform.FindChildRecursive("Ammo").gameObject.AddComponent<DividedBarShaderController>();
+            BulletsInMag = Utils.FindDeepChild(transform, "Ammo").gameObject.AddComponent<DividedBarShaderController>();
         }
 
         private static void SetInitialPlayerStatusValues()

@@ -19,9 +19,9 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(MeleeWeaponFirstPerson),"Setup")]
     class InjectMeleeIgnoreCameraDir
     {
-        static void Postfix(ref float ___m_cameraDamageRayLength)
+        static void Postfix(MeleeWeaponFirstPerson __instance)
         {
-            ___m_cameraDamageRayLength = 0f;
+            __instance.m_cameraDamageRayLength = 0f;
         }
     }
 }

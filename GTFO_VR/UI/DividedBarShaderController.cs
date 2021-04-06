@@ -9,8 +9,12 @@ using Player;
 
 namespace GTFO_VR.UI
 {
-    class DividedBarShaderController : MonoBehaviourExtended
+    class DividedBarShaderController : MonoBehaviour
     {
+
+        public DividedBarShaderController(IntPtr value)
+: base(value) { }
+
         Material barGrid;
 
         public static Color normalColor = new Color(0.83f / 3, 1f / 3, 0.964f / 3);

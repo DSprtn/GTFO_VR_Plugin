@@ -25,6 +25,10 @@ namespace GTFO_VR_BepInEx.Core
     }
 
 
+    // ToDO - Replace bioscanner transpiler
+
+    /*
+
     [HarmonyPatch(typeof(EnemyScanner), "TryGetTaggableEnemies")]
     public static class InjectBioscanFromHand_Patch
     {
@@ -67,4 +71,5 @@ namespace GTFO_VR_BepInEx.Core
             return codes.AsEnumerable();
         }
     }
+    */
 }

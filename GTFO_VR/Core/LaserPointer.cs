@@ -1,11 +1,18 @@
 ﻿
 using GTFO_VR.Events;
+using System;
+using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
 namespace GTFO_VR
 {
     public class LaserPointer : MonoBehaviour
     {
+
+        public LaserPointer(IntPtr value)
+        : base(value) { }
+
+
         public float thickness = 1f / 400f;
 
         public Color color = ColorExt.OrangeBright();
@@ -74,6 +81,7 @@ namespace GTFO_VR
             }
         }
 
+        [HideFromIl2Cpp]
         void TogglePointer(bool toggle)
         {
             pointer.SetActive(toggle);

@@ -15,11 +15,11 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(NavMarker), "Setup")]
     class InjectNavMarkerWorldSpaceSetup
     {
-        static void Postfix(NavMarker __instance, ref Vector3 ___m_pingScale, ref Vector3 ___m_pinStartScale)
+        static void Postfix(NavMarker __instance)
         {
             GTFO_VR.UI.VRWorldSpaceUI.PrepareNavMarker(__instance);
-            ___m_pingScale = __instance.m_initScale * 5.5f;
-            ___m_pinStartScale = __instance.m_initScale;
+            __instance.m_pingScale = __instance.m_initScale * 5.5f;
+            __instance.m_pinStartScale = __instance.m_initScale;
             
         }
     }
@@ -31,11 +31,11 @@ namespace GTFO_VR_BepInEx.Core
     class InjectNavMarkerWorldDistanceHack
     {
 
-        static void Postfix(NavMarker __instance, TextMeshPro ___m_distance)
+        static void Postfix(NavMarker __instance)
         {
-            if(___m_distance)
+            if(__instance.m_distance)
             {
-                ___m_distance.GetComponent<MeshRenderer>().material.shader = VR_Assets.textAlwaysRender;
+                __instance.m_distance.GetComponent<MeshRenderer>().material.shader = VR_Assets.textAlwaysRender;
             }
         }
     }
@@ -46,9 +46,9 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(NavMarkerLayer), "AfterCameraUpdate")]
     class InjectNavMarkerWorldSpacePositioning
     {
-        static bool Prefix(NavMarkerLayer __instance, List<NavMarker> ___m_markersActive)
+        static bool Prefix(NavMarkerLayer __instance)
         {
-            VRWorldSpaceUI.UpdateAllNavMarkers(___m_markersActive);
+            VRWorldSpaceUI.UpdateAllNavMarkers(__instance.m_markersActive);
             return false;
         }
     }

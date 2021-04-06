@@ -16,18 +16,18 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(FPSCamera), "RotationUpdate")]
     class InjectDisableRecoilOnCameraApply
     {
-        static void Prefix(FPS_RecoilSystem ___m_recoilSystem)
+        static void Prefix(FPSCamera __instance)
         {
-            ___m_recoilSystem.m_hasOverrideParentRotation = false;
+            __instance.m_recoilSystem.m_hasOverrideParentRotation = false;
         }
     }
     [HarmonyPatch(typeof(FPS_RecoilSystem), "FPS_Update")]
     class InjectDisableRecoilOnCamera
     {
-        static void Postfix(FPS_RecoilSystem __instance, int ___m_FPS_SightOffset_PropertyID)
+        static void Postfix(FPS_RecoilSystem __instance)
         {
             __instance.transform.localEulerAngles = Vector3.zero;
-            Shader.SetGlobalVector(___m_FPS_SightOffset_PropertyID, Vector4.zero);
+            Shader.SetGlobalVector(__instance.m_FPS_SightOffset_PropertyID, Vector4.zero);
         }
     }
 }

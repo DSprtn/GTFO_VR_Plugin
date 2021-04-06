@@ -1,6 +1,7 @@
 ﻿using GTFO_VR.Core;
 using GTFO_VR.Events;
 using GTFO_VR.Input;
+using GTFO_VR.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,12 +10,17 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using Valve.VR;
 
 namespace GTFO_VR.UI
 {
     public class VRWorldSpaceUI : MonoBehaviour
     {
+
+        public VRWorldSpaceUI(IntPtr value)
+: base(value) { }
+
         public static PUI_InteractionPrompt statusBar;
         public static PUI_InteractionPrompt interactionBar;
         public static PUI_Compass compass;
@@ -33,7 +39,7 @@ namespace GTFO_VR.UI
 
         void Awake()
         {
-            SteamVR_Events.NewPosesApplied.AddListener(() => OnNewPoses());
+            SteamVR_Events.NewPosesApplied.Listen(OnNewPoses);
             Snapturn.OnAfterSnapTurn += PlayerUsedSnapturn;
         }
 
@@ -48,6 +54,8 @@ namespace GTFO_VR.UI
             interactionBar = interact;
             interactGUI = interaction;
         }
+
+
 
         public static void SetPlayerGUIRef(PlayerGuiLayer playerGUIRef, PUI_Compass compassRef, PUI_WardenIntel intelRef)
         {
@@ -81,7 +89,7 @@ namespace GTFO_VR.UI
 
             intelHolder.SetActive(true);
 
-            interactionBar.transform.FindChildRecursive("Timer BG").gameObject.SetActive(false);
+            Utils.FindDeepChild(interactionBar.transform, "Timer BG").gameObject.SetActive(false);
             CenterRect(intel.transform);
             CenterRect(compass.transform);
         }
@@ -284,15 +292,15 @@ namespace GTFO_VR.UI
             }
         }
 
-        public static void UpdateAllNavMarkers(List<NavMarker> markers)
+        internal static void UpdateAllNavMarkers(Il2CppSystem.Collections.Generic.List<NavMarker> m_markersActive)
         {
-            
+
             float tempScale = 1f;
             bool inElevator = FocusStateManager.CurrentState.Equals(eFocusState.InElevator);
 
-            foreach (NavMarker n in markers)
+            foreach (NavMarker n in m_markersActive)
             {
-                if(inElevator && n)
+                if (inElevator && n)
                 {
                     n.transform.localScale = Vector3.zero;
                     return;
@@ -300,9 +308,9 @@ namespace GTFO_VR.UI
 
                 if (n != null && n.m_trackingObj != null)
                 {
-                   
+
                     n.transform.position = n.m_trackingObj.transform.position;
-                   
+
 
                     float dotToCamera = Vector3.Dot((n.m_trackingObj.transform.position - HMD.GetWorldPosition()).normalized, HMD.GetWorldForward());
 
@@ -318,7 +326,7 @@ namespace GTFO_VR.UI
                         Quaternion rotToCamera = Quaternion.LookRotation(hmdToTrackObj.normalized);
                         n.transform.rotation = rotToCamera;
 
-                        if(distanceToCamera > 60)
+                        if (distanceToCamera > 60)
                         {
                             n.transform.position = HMD.GetWorldPosition() + hmdToTrackObj * 60f;
                         }
@@ -341,9 +349,9 @@ namespace GTFO_VR.UI
                         // Scale up to camera culling distance
                         // If nav marker is beyond that it will place itself back to 60m away
                         tempScale = 1 + Mathf.Clamp(distanceToCamera / 25f, 0, 2.4f);
-                       
+
                         n.transform.localScale = n.m_initScale * tempScale;
-                       
+
                     }
                 }
             }
@@ -351,7 +359,7 @@ namespace GTFO_VR.UI
 
         void OnDestroy()
         {
-            SteamVR_Events.NewPosesApplied.RemoveListener(() => OnNewPoses());
+            SteamVR_Events.NewPosesApplied.Remove(OnNewPoses);
             Snapturn.OnAfterSnapTurn -= PlayerUsedSnapturn;
         }
     }

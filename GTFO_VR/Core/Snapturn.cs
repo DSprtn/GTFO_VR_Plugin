@@ -11,6 +11,11 @@ namespace GTFO_VR.Core
 {
     public class Snapturn : MonoBehaviour
     {
+
+        public Snapturn(IntPtr value)
+: base(value) { }
+
+
         public Quaternion snapTurnRotation = Quaternion.identity;
 
         float snapTurnTime = 0f;

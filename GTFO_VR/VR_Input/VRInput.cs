@@ -1,5 +1,6 @@
 ﻿using GTFO_VR.Core;
 using GTFO_VR.Input;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
@@ -11,6 +12,10 @@ namespace GTFO_VR
     /// </summary>
     public class VRInput : MonoBehaviour
     {
+
+        public VRInput(IntPtr value)
+: base(value) { }
+
         private static VRInput instance;
 
         public static bool Initialized;
@@ -110,12 +115,12 @@ namespace GTFO_VR
 
         public static bool GetActionUp(InputAction action)
         {
-            if (!VRInput.Initialized)
+            if (!Initialized)
             {
                 return false;
             }
             
-            SteamVR_Action_Boolean boolActionMapping = VRInput.instance.GetBoolActionMapping(action);
+            SteamVR_Action_Boolean boolActionMapping = instance.GetBoolActionMapping(action);
             if (IsIRLCrouchValid(action))
             {
               return boolActionMapping != null && !boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any) || !boolActionMapping.GetState(SteamVR_Input_Sources.Any) && (boolActionMapping.GetStateUp(SteamVR_Input_Sources.Any) || (HMD.hmd.transform.localPosition.y > VRInput.IRLCrouchBorder));

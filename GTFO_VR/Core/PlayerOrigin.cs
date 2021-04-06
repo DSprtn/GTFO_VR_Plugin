@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 using Valve.VR;
 
@@ -14,6 +15,10 @@ namespace GTFO_VR.Core
 {
     public class PlayerOrigin : MonoBehaviour
     {
+        public PlayerOrigin(IntPtr value)
+       : base(value) { }
+
+
         public static GameObject origin;
 
         public Snapturn snapTurn;
@@ -33,7 +38,7 @@ namespace GTFO_VR.Core
             SetupOrigin();
             SetInitialSnapTurn();
         }
-
+        [HideFromIl2Cpp]
         private void FocusStateChanged(eFocusState newState)
         {
             if (FocusStateEvents.lastState.Equals(eFocusState.InElevator) && newState.Equals(eFocusState.FPS))
@@ -51,7 +56,6 @@ namespace GTFO_VR.Core
         {
             offsetFromPlayerToHMD = Vector3.zero;
             snapTurn.snapTurnRotation = Quaternion.Euler(new Vector3(0, -HMD.hmd.transform.localRotation.eulerAngles.y, 0f));
-            Debug.Log("Setting snap turn rot to " + snapTurn.snapTurnRotation.eulerAngles);
             UpdateOrigin();
         }
 
@@ -74,6 +78,7 @@ namespace GTFO_VR.Core
             return PlayerVR.playerController.SmoothPosition;
         }
 
+        [HideFromIl2Cpp]
         Vector3 CalculateCrouchOffset()
         {
             if (PlayerVR.playerAgent && PlayerVR.playerAgent.Locomotion.m_currentStateEnum.Equals(PlayerLocomotion.PLOC_State.Crouch))

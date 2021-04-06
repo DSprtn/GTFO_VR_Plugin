@@ -15,6 +15,9 @@ using UnityEngine;
 
 namespace GTFO_VR_BepInEx.Core
 {
+
+    // ToDO - Replace fire from muzzle transpiler
+    /*
     [HarmonyPatch(typeof(BulletWeapon), "Fire")]
     public static class InjectFireFromMuzzle_Patch
     {
@@ -50,8 +53,9 @@ namespace GTFO_VR_BepInEx.Core
             }
 
             return codes.AsEnumerable();
-        }
-    }
+        }*/
+
+}
 
     /*
      * 
@@ -68,5 +72,3 @@ namespace GTFO_VR_BepInEx.Core
     stloc.0
 
     */
-
-}

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>GTFO_VR</RootNamespace>
     <AssemblyName>GTFO_VR</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <_HasReferenceToSystemRuntime>true</_HasReferenceToSystemRuntime>
@@ -51,6 +51,7 @@
     <Compile Include="Injections\InjectAimCursor.cs" />
     <Compile Include="Injections\InjectBioscannerFixes.cs" />
     <Compile Include="Injections\InjectClusteredRenderingResolutionTweak.cs" />
+    <Compile Include="Injections\InjectClusteredRenderingTweaks.cs" />
     <Compile Include="Injections\InjectControllerAim.cs" />
     <Compile Include="Injections\InjectCrouchHeight.cs" />
     <Compile Include="Injections\InjectDisableButtonPromptOnInteract.cs" />
@@ -81,165 +82,6 @@
     <Compile Include="Injections\InjectWatchUpdateStatus.cs" />
     <Compile Include="Injections\InjectWeaponAimFlashlightAggro.cs" />
     <Compile Include="Injections\Main.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Actions\SteamVR_Actions.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Actions\SteamVR_Input_ActionSet_default.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Extras\SteamVR_ForceSteamVRMode.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Extras\SteamVR_GazeTracker.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Extras\SteamVR_LaserPointer.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Extras\SteamVR_TestThrow.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Extras\SteamVR_TestTrackedCamera.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_BooleanEvent.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_PoseEvent.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_Pose_ConnectedChangedEvent.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_Pose_DeviceIndexChangedEvent.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_Pose_TrackingChangedEvent.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_SingleEvent.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_SkeletonEvent.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_Skeleton_ConnectedChangedEvent.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_Skeleton_TrackingChangedEvent.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_Vector2Event.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\BehaviourUnityEvents\SteamVR_Behaviour_Vector3Event.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SerializeFieldAttribute.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Action.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_ActionDirections.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_ActionSet.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_ActionSet_Manager.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Action_Boolean.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Action_In.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Action_Out.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Action_Pose.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Action_Single.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Action_Skeleton.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Action_Vector2.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Action_Vector3.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Action_Vibration.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_ActivateActionSetOnLoad.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Behaviour_Boolean.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Behaviour_Pose.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Behaviour_Single.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Behaviour_Skeleton.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Behaviour_SkeletonCustom.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Behaviour_Vector2.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Behaviour_Vector3.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_DefaultAction.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_DefaultActionSet.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Input.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Input_ActionFile.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Input_ActionScopes.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Input_ActionSetUsages.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Input_BindingFile.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Input_Generator_Names.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Input_References.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Input_Source.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Input_Sources.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Skeleton_Pose.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_Skeleton_Poser.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Input\SteamVR_UpdateModes.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\BodyCollider.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\CircularDrive.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\ComplexThrowable.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\ControllerHoverHighlight.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\CustomEvents.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\DebugUI.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\DestroyOnDetachedFromHand.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\DestroyOnParticleSystemDeath.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\DestroyOnTriggerEnter.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\DistanceHaptics.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\DontDestroyOnLoad.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\EnumFlags.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\Equippable.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\FallbackCameraController.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\GrabTypes.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\Hand.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\HandCollider.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\HandPhysics.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\HapticRack.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\HeaderAttribute.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\HideOnHandFocusLost.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\HoverButton.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\IgnoreHovering.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\InputModule.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\Interactable.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\InteractableDebug.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\InteractableHoverEvents.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\ItemPackage.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\ItemPackageReference.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\ItemPackageSpawner.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\LinearAnimation.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\LinearAnimator.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\LinearAudioPitch.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\LinearBlendshape.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\LinearDisplacement.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\LinearDrive.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\LinearMapping.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\ModalThrowable.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\Player.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\PlaySound.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\RenderModel.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\SeeThru.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\SleepOnAwake.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\SoundDeparent.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\SoundPlayOneshot.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\SpawnAndAttachAfterControllerIsTracking.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\SpawnAndAttachToHand.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\Throwable.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\TooltipAttribute.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\UIElement.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\Unparent.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\Util.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Scripts\VelocityEstimator.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Hints\Scripts\ControllerButtonHints.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Longbow\Scripts\ArcheryTarget.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Longbow\Scripts\Arrow.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Longbow\Scripts\ArrowHand.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Longbow\Scripts\ArrowheadRotation.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Longbow\Scripts\Balloon.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Longbow\Scripts\BalloonColliders.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Longbow\Scripts\BalloonHapticBump.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Longbow\Scripts\BalloonSpawner.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Longbow\Scripts\ExplosionWobble.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Longbow\Scripts\FireSource.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Longbow\Scripts\Longbow.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Longbow\Scripts\SoundBowClick.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\SnapTurn\SnapTurn.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Teleport\Scripts\AllowTeleportWhileAttachedToHand.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Teleport\Scripts\ChaperoneInfo.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Teleport\Scripts\IgnoreTeleportTrace.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Teleport\Scripts\Teleport.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Teleport\Scripts\TeleportArc.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Teleport\Scripts\TeleportArea.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Teleport\Scripts\TeleportMarkerBase.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\InteractionSystem\Teleport\Scripts\TeleportPoint.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Plugins\openvr_api.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_Behaviour.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_Camera.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_CameraFlip.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_CameraMask.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_Ears.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_EnumEqualityComparer.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_Events.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_ExternalCamera.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_ExternalCamera_LegacyManager.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_Fade.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_Frustum.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_IK.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_LoadLevel.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_Menu.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_Overlay.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_PlayArea.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_Render.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_RenderModel.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_RingBuffer.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_Settings.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_Skybox.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_SphericalProjection.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_TrackedCamera.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_TrackedObject.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_TrackingReferenceManager.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Scripts\SteamVR_Utils.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Standalone\SteamVR_GameView.cs" />
-    <Compile Include="SteamVR\Assets\SteamVR\Standalone\VRShaders.cs" />
     <Compile Include="UI\DividedBarShaderController.cs" />
     <Compile Include="UI\Watch.cs" />
     <Compile Include="UI\VRWorldSpaceUI.cs" />
@@ -259,134 +101,278 @@
     <Compile Include="VR_Input\VRInput.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Shaders\SeeThru.shader" />
-    <None Include="SteamVR\Assets\SteamVR\InteractionSystem\Core\Shaders\Silhouette.shader" />
-    <None Include="SteamVR\Assets\SteamVR\InteractionSystem\Hints\Shaders\ControllerButtonHints.shader" />
-    <None Include="SteamVR\Assets\SteamVR\InteractionSystem\Teleport\Shaders\HighlighGlobal.shader" />
-    <None Include="SteamVR\Assets\SteamVR\InteractionSystem\Teleport\Shaders\Highlight.shader" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SteamVR\Assets\SteamVR\link.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SteamVR\Assets\SteamVR\readme.txt" />
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\lib\GameLibs\0Harmony.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Addons-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Addons-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="AlienFXManagedWrapper3.5">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\AlienFXManagedWrapper3.5.dll</HintPath>
+    </Reference>
+    <Reference Include="AssetPrefabs-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\AssetPrefabs-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="Assets-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Assets-ASM.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.Core">
-      <HintPath>..\lib\GameLibs\BepInEx.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="BepInEx.Harmony">
-      <HintPath>..\lib\GameLibs\BepInEx.Harmony.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\BepInEx.Core.dll</HintPath>
     </Reference>
     <Reference Include="BepInEx.IL2CPP">
-      <HintPath>..\lib\GameLibs\BepInEx.IL2CPP.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\BepInEx.IL2CPP.dll</HintPath>
+    </Reference>
+    <Reference Include="CellSound-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\CellSound-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="CommandSystem">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\CommandSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="DevConsoleCommands-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\DevConsoleCommands-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="DevConsoloe-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\DevConsoloe-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="Dissonance-integrations-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Dissonance-integrations-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="DissonanceVoip">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\DissonanceVoip.dll</HintPath>
+    </Reference>
+    <Reference Include="DropServerSDK-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\DropServerSDK-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcludeInBuild-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\ExcludeInBuild-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="FluffyUnderware.DevTools">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\FluffyUnderware.DevTools.dll</HintPath>
     </Reference>
     <Reference Include="GameData-ASM">
-      <HintPath>..\lib\GameLibs\GameData-ASM.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\GameData-ASM.dll</HintPath>
     </Reference>
-    <Reference Include="GlobalFramework-ASM, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GameLibs\GlobalFramework-ASM.dll</HintPath>
+    <Reference Include="GlobalFramework-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\GlobalFramework-ASM.dll</HintPath>
     </Reference>
-    <Reference Include="GUIX-ASM, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GameLibs\GUIX-ASM.dll</HintPath>
+    <Reference Include="GUIX-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\GUIX-ASM.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppMono.Security">
-      <HintPath>..\lib\GameLibs\Il2CppMono.Security.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppMono.Security.dll</HintPath>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
-      <HintPath>..\lib\GameLibs\Il2Cppmscorlib.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2Cppmscorlib.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppSystem">
-      <HintPath>..\lib\GameLibs\Il2CppSystem.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppSystem.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppSystem.Configuration">
-      <HintPath>..\lib\GameLibs\Il2CppSystem.Configuration.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppSystem.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppSystem.Core">
-      <HintPath>..\lib\GameLibs\Il2CppSystem.Core.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppSystem.Core.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppSystem.Net.Http">
-      <HintPath>..\lib\GameLibs\Il2CppSystem.Net.Http.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppSystem.Net.Http.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppSystem.Runtime.Serialization">
-      <HintPath>..\lib\GameLibs\Il2CppSystem.Runtime.Serialization.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppSystem.Runtime.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppSystem.Xml">
-      <HintPath>..\lib\GameLibs\Il2CppSystem.Xml.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppSystem.Xml.dll</HintPath>
     </Reference>
     <Reference Include="Il2CppSystem.Xml.Linq">
-      <HintPath>..\lib\GameLibs\Il2CppSystem.Xml.Linq.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppSystem.Xml.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="Modules-ASM, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="LibTessDotNet">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\LibTessDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Modules-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Modules-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GameLibs\Modules-ASM.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\base\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PlayFab-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\PlayFab-ASM.dll</HintPath>
     </Reference>
     <Reference Include="Plugins-ASM">
-      <HintPath>..\lib\GameLibs\Plugins-ASM.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Plugins-ASM.dll</HintPath>
     </Reference>
-    <Reference Include="UnhollowerBaseLib">
-      <HintPath>..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnhollowerBaseLib.dll</HintPath>
+    <Reference Include="Prototype">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Prototype.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Prototypes_ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Prototypes_ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="Resources-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Resources-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="RootMotion-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\RootMotion-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="Scenes-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Scenes-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="Shards-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Shards-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="SNet_ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\SNet_ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="StandardAssets-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\StandardAssets-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="SteamVR_Standalone_IL2CPP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GameLibs\Unity.TextMeshPro.dll</HintPath>
+      <HintPath>..\..\..\..\..\_VS_BUILDS\SteamVR_Standalone_IL2CPP.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GameLibs\UnityEngine.dll</HintPath>
+    <Reference Include="SteamWorks_ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\SteamWorks_ASM.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GameLibs\UnityEngine.AssetBundleModule.dll</HintPath>
+    <Reference Include="System" />
+    <Reference Include="ToolBuddy.Curvy">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\ToolBuddy.Curvy.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ToolBuddy.Curvy.Examples">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\ToolBuddy.Curvy.Examples.dll</HintPath>
+    </Reference>
+    <Reference Include="UnhollowerBaseLib, Version=0.4.13.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GameLibs\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\UnhollowerBaseLib.dll</HintPath>
+    </Reference>
+    <Reference Include="UnhollowerRuntimeLib, Version=0.4.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\UnhollowerRuntimeLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.AIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AndroidJNIModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.AndroidJNIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClothModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.ClothModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CrashReportingModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.CrashReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DirectorModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.DirectorModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GridModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.GridModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
-      <HintPath>..\lib\GameLibs\UnityEngine.ImageConversionModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.ImageConversionModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GameLibs\UnityEngine.InputLegacyModule.dll</HintPath>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.InputModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule">
-      <HintPath>..\lib\GameLibs\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.ParticleSystemModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GameLibs\UnityEngine.PhysicsModule.dll</HintPath>
+    <Reference Include="UnityEngine.PerformanceReportingModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.PerformanceReportingModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GameLibs\UnityEngine.TextRenderingModule.dll</HintPath>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.Physics2DModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GameLibs\UnityEngine.UI.dll</HintPath>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GameLibs\UnityEngine.UIModule.dll</HintPath>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SharedInternalsModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.SharedInternalsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteMaskModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.SpriteMaskModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SubsystemsModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.SubsystemsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.TerrainModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.TextCoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TilemapModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.TilemapModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VFXModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.VFXModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.VideoModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VRModule">
-      <HintPath>..\lib\GameLibs\UnityEngine.VRModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.VRModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.XRModule">
-      <HintPath>..\lib\GameLibs\UnityEngine.XRModule.dll</HintPath>
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.XRModule.dll</HintPath>
     </Reference>
-    <Reference Include="Utils-ASM, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\GameLibs\Utils-ASM.dll</HintPath>
+    <Reference Include="UnityFileDebug-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityFileDebug-ASM.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
+    <Reference Include="Utils-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Utils-ASM.dll</HintPath>
+    </Reference>
+    <Reference Include="Wwise-ASM">
+      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Wwise-ASM.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

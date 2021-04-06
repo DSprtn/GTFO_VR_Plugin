@@ -18,22 +18,20 @@ namespace GTFO_VR_BepInEx.Core
 {
 
     // Patch position as raw HMD pos + player body position offset, everything is kept in world coords where possible
-    [HarmonyPatch(typeof(FPSCamera),"RotationUpdate")]
+    [HarmonyPatch(typeof(FPSCamera),nameof(FPSCamera.RotationUpdate))]
     class InjectHMDPosition
     {
 
-        static void Postfix(FPSCamera __instance, PlayerAgent ___m_owner)
+        static void Prefix(FPSCamera __instance)
         {
             if (!PlayerVR.VRPlayerIsSetup)
             {
                 return;
             }
-            
-            if (VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
-            {
-                __instance.Position = HMD.GetWorldPosition();
-            }
-            
+            Vector3 euler = HMD.GetVRCameraEulerRotation();
+            __instance.m_pitch = euler.x;
+            __instance.m_yaw = euler.y;
+
         }
     }
 
@@ -41,11 +39,11 @@ namespace GTFO_VR_BepInEx.Core
     // We inject pitch and yaw rotation data into the same method where mouse and gamepad input is being handled
     // This way lookDirection gets synced correctly to other players in multiplayer 
 
-    [HarmonyPatch(typeof(FPSCamera), "UpdatePosOffset")]
+    [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.UpdatePosOffset))]
     class InjectHMDRotationPitchYaw
     {
 
-        static void Postfix(FPSCamera __instance, PlayerAgent ___m_owner)
+        static void Postfix(FPSCamera __instance)
         {
             if (!PlayerVR.VRPlayerIsSetup)
             {
@@ -61,15 +59,15 @@ namespace GTFO_VR_BepInEx.Core
             if (VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) || VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.Rotation))
             {
                 Vector3 euler = HMD.GetVRCameraEulerRotation();
-                AccessTools.FieldRefAccess<LookCameraController, float>((LookCameraController)__instance, "m_pitch") = euler.x;
-                AccessTools.FieldRefAccess<LookCameraController, float>((LookCameraController)__instance, "m_yaw") = euler.y;
+                __instance.m_pitch = euler.x;
+                __instance.m_yaw = euler.y;
             }
         }
     }
 
     // Roll is patched in a separate method because it does not exist as a field within FPSCamera
     // Since nothing else is done with the roll of the m_camera anywhere we can just set it and forget it
-    [HarmonyPatch(typeof(FPSCamera), "RotationUpdate")]
+    [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.RotationUpdate))]
     class InjectHMDRotationRoll
     {
 
@@ -79,9 +77,15 @@ namespace GTFO_VR_BepInEx.Core
             {
                 return;
             }
+            if (VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
+            {
+                __instance.Position = HMD.GetWorldPosition();
+            }
+
             Vector3 euler = __instance.m_camera.transform.parent.localEulerAngles;
             euler.z = HMD.GetVRCameraEulerRotation().z;
             __instance.m_camera.transform.parent.localRotation = Quaternion.Euler(euler);
+            __instance.UpdateFlatTransform();
         }
     }
 }

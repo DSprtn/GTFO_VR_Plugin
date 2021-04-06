@@ -19,7 +19,7 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(CM_PageBase),"UpdateCursorPosition")]
     class InjectAimAtOverlay
     {
-        static void Prefix(ref Vector2 ___m_cursorPos)
+        static void Prefix()
         {
             Vector2 newCursorPos = Vector2.zero;
             if(VR_Global.GetPlayerPointingAtPositionOnScreen(out newCursorPos))
@@ -28,7 +28,7 @@ namespace GTFO_VR_BepInEx.Core
                 newCursorPos -= new Vector2(0.5f, 0.5f);
                 newCursorPos.y *= -1f;
                 newCursorPos *= res;
-                ___m_cursorPos = newCursorPos;
+                CM_PageBase.m_cursorPos = newCursorPos;
             }
         }
     }

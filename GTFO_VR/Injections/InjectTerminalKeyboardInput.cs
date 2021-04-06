@@ -12,6 +12,11 @@ namespace GTFO_VR_BepInEx.Core
     /// <summary>
     /// Handle virtual keyboard input
     /// </summary>
+    /// 
+
+
+    // ToDO - Fix VR keyboard transpilers
+    /*
 
     [HarmonyPatch(typeof(LG_TERM_PlayerInteracting),"ParseInput")]
     public static class InjectTerminalKeyboardInput_Patch
@@ -71,4 +76,5 @@ namespace GTFO_VR_BepInEx.Core
             }
         }
     }
+    */
 }

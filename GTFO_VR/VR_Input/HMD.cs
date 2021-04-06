@@ -8,8 +8,12 @@ using Valve.VR;
 
 namespace GTFO_VR.Input
 {
-    public class HMD : MonoBehaviourExtended
+    public class HMD : MonoBehaviour
     {
+
+        public HMD(IntPtr value)
+: base(value) { }
+
         public static GameObject hmd;
 
         SteamVR_TrackedObject tracking;
@@ -26,6 +30,11 @@ namespace GTFO_VR.Input
             tracking.index = SteamVR_TrackedObject.EIndex.Hmd;
 
             UnityEngine.Object.DontDestroyOnLoad(hmd);
+        }
+
+        public static void SetOrigin(Transform transform)
+        {
+            HMD.hmd.transform.SetParent(transform);
         }
 
         public static Vector3 GetVRInteractionLookDir()
@@ -98,9 +107,5 @@ namespace GTFO_VR.Input
             return localRotation.eulerAngles;
         }
 
-        public static void SetOrigin(Transform transform)
-        {
-            HMD.hmd.transform.SetParent(transform);
-        }
     }
 }

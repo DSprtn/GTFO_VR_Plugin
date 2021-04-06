@@ -3,15 +3,30 @@ using GTFO_VR.Events;
 using GTFO_VR.Input;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace GTFO_VR.Util
 {
     public static class Utils
     {
+        public static Transform FindDeepChild(Transform aParent, string aName)
+        {
+            Queue<Transform> queue = new Queue<Transform>();
+            queue.Enqueue(aParent);
+            while (queue.Count > 0)
+            {
+                var c = queue.Dequeue();
+                if (c.name == aName)
+                    return c;
+                foreach (var t in c)
+                {
+                    Transform transform = t.Cast<Transform>();
+                    queue.Enqueue(transform);
+                }
+                    
+            }
+            return null;
+        }
 
         public static bool IsFiringFromADS()
         {

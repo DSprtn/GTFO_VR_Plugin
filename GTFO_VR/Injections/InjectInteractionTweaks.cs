@@ -13,21 +13,24 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(Interact_Timed), "EvaluateTimedInteraction")]
     class InjectInteractionFromPos
     {
-        static void Prefix(ref Vector3 ___m_triggerStartAgentWorldPos)
+        static void Prefix(Interact_Timed __instance)
         {
-            ___m_triggerStartAgentWorldPos = HMD.GetVRInteractionFromPosition();
+            __instance.m_triggerStartAgentWorldPos = HMD.GetVRInteractionFromPosition();
         }
     }
 
     [HarmonyPatch(typeof(GuiManager), "IsOnScreen")]
     class InjectDisableOnScreenCheck
     {
-        static bool Prefix(ref bool __result)
+        static bool Prefix()
         {
-            __result = true;
             return false;
         }
     }
+
+    // ToDO - Replace interaction transpilers
+
+    /*
 
     [HarmonyPatch(typeof(MeleeWeaponFirstPerson), "CheckForAttackTargets")]
     public static class InjectClosestPlayerNode_Patch
@@ -272,4 +275,5 @@ namespace GTFO_VR_BepInEx.Core
             return codes.AsEnumerable();
         }
     }
+    */
 }

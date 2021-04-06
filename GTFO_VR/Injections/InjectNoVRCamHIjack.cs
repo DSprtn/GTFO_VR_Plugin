@@ -16,8 +16,7 @@ namespace GTFO_VR_BepInEx.Core
     /// Make all camera transitions end instantly, we never want the player's control of the camera to be taken away
     /// </summary>
     /// 
-
-    [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.StartTransition), new[] { typeof(Vector3), typeof(Quaternion), typeof(float), typeof(DelEasingFunction), typeof(DelEasingFunction), typeof(Action)})]
+    [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.StartTransition), new[] { typeof(Vector3), typeof(Quaternion), typeof(float), typeof(DelEasingFunction), typeof(DelEasingFunction),typeof(Il2CppSystem.Action)})]
     //[HarmonyPatch(typeof(FPSCamera))]
     //[HarmonyPatch("StartTransition", new[] {typeof(Vector3), typeof(Quaternion), typeof(float), typeof(DelEasingFunction), typeof(DelEasingFunction), typeof(Action))})]
     class InjectTransitionKill

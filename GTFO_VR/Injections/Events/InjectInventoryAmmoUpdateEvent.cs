@@ -11,9 +11,9 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(PlayerAmmoStorage), nameof(PlayerAmmoStorage.UpdateSlotAmmoUI), new[] { typeof(InventorySlotAmmo), typeof(int)})]
     class InjectInventoryAmmoUpdateEvent
     {
-        static void Postfix(InventorySlotAmmo ammo, int clip, PlayerBackpack ___m_playerBackpack)
+        static void Postfix(PlayerAmmoStorage __instance, InventorySlotAmmo ammo, int clip)
         {
-            if(___m_playerBackpack.IsLocal)
+            if(__instance.m_playerBackpack.IsLocal)
             {
                 InventoryAmmoEvents.AmmoUpdate(ammo, clip);
             }

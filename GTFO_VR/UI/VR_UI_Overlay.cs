@@ -4,13 +4,14 @@ using Player;
 using System;
 using UnityEngine;
 using Valve.VR;
-using Valve.VR.Extras;
 using static SteamVR_Utils;
 
 namespace GTFO_VR
 {
     public class VR_UI_Overlay : MonoBehaviour
     {
+        public VR_UI_Overlay(IntPtr value)
+: base(value) { }
 
         public static VR_UI_Overlay instance;
 
@@ -55,7 +56,7 @@ namespace GTFO_VR
                 };
                 OpenVR.Overlay.SetOverlayTexture(overlayHandle, ref texture);
 
-                if (VRInput.GetActionDown(InputAction.Crouch))
+                if (VRInput.GetActionDown(InputAction.Crouch) || VRInput.GetActionDown(InputAction.Aim))
                 {
                     OrientateOverlay();
                 }
@@ -107,7 +108,6 @@ namespace GTFO_VR
 
             transform.rotation = Quaternion.Euler(0f, rot.eulerAngles.y, 0f);
             transform.position = Pos;
-
             current = new SteamVR_Utils.RigidTransform(transform);
             var t = current.ToHmdMatrix34();
             OpenVR.Overlay.SetOverlayTransformAbsolute(overlayHandle, SteamVR.settings.trackingSpace, ref t);

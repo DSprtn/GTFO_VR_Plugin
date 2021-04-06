@@ -12,15 +12,15 @@ namespace GTFO_VR.Core
     /// <summary>
     /// Fades player's screen if he is within collision or trying to walk behind doors/walls in roomspace
     /// </summary>
-    public class ColisionFade : MonoBehaviour
+    public static class CollisionFade
     {
 
         static bool headInCollision;
         static bool controllerHeadToHMDHeadBlocked;
 
-        bool wasFadedLastFrame;
+        static bool wasFadedLastFrame;
 
-        public void HandleCameraInCollision()
+        public static void HandleCameraInCollision()
         {
             headInCollision = Physics.OverlapBox(HMD.GetWorldPosition() + (HMD.GetWorldForward() * 0.05f), new Vector3(0.03f, 0.03f, 0.03f), HMD.hmd.transform.rotation, LayerManager.MASK_TENTACLE_BLOCKERS).Length > 0;
 

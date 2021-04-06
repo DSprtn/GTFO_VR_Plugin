@@ -18,7 +18,7 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(FirstPersonItemHolder), "Update")]
     class InjectControllerAimAlign
     {
-        static void Postfix(FirstPersonItemHolder __instance, ItemEquippable ___WieldedItem)
+        static void Postfix()
         {
             if (PlayerVR.VRPlayerIsSetup)
             {
