@@ -46,7 +46,6 @@ namespace GTFO_VR_BepInEx.Core
             Material material = part.m_renderer.sharedMaterial;
             material.DisableKeyword("ENABLE_FPS_RENDERING");
             material.DisableKeyword("FPS_RENDERING_ALLOWED");
-            PlayerAgent a;
         }
     }
     

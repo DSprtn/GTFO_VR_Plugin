@@ -236,7 +236,7 @@ namespace GTFO_VR.UI
         {
             if(FocusStateEvents.currentState.Equals(eFocusState.InElevator) && PlayerVR.fpsCamera)
             {
-                Vector3 flatForward = HMD.GetFlatForwardDirection();
+                Vector3 flatForward = PlayerVR.fpsCamera.m_camera.transform.forward;
                 flatForward.y = 0f;
                 Vector3 pos = PlayerVR.fpsCamera.m_camera.transform.position;
                 return pos + flatForward.normalized * 1.2f;
