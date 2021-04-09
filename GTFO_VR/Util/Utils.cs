@@ -1,6 +1,6 @@
 ﻿using GTFO_VR.Core;
+using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
-using GTFO_VR.Input;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

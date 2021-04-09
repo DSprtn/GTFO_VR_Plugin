@@ -1,10 +1,6 @@
 ﻿using GTFO_VR.Core;
 using GTFO_VR.UI;
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using TMPro;
 using UnityEngine;
 
 namespace GTFO_VR_BepInEx.Core

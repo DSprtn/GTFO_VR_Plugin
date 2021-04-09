@@ -1,10 +1,8 @@
-﻿
-using GTFO_VR.Events;
+﻿using GTFO_VR.Events;
 using System;
-using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
-namespace GTFO_VR
+namespace GTFO_VR.Core.PlayerBehaviours
 {
     public class LaserPointer : MonoBehaviour
     {
@@ -36,7 +34,7 @@ namespace GTFO_VR
 
         private void LateUpdate()
         {
-            if(transform.parent == null)
+            if (transform.parent == null)
             {
                 return;
             }
@@ -66,7 +64,7 @@ namespace GTFO_VR
 
         public void PlayerChangedItem(ItemEquippable item)
         {
-            if(!setup)
+            if (!setup)
             {
                 return;
             }
@@ -81,7 +79,6 @@ namespace GTFO_VR
             }
         }
 
-        [HideFromIl2Cpp]
         void TogglePointer(bool toggle)
         {
             pointer.SetActive(toggle);
@@ -117,7 +114,7 @@ namespace GTFO_VR
             pointer.transform.localRotation = Quaternion.identity;
             dot.transform.localRotation = Quaternion.identity;
             Material material = new Material(Shader.Find("Unlit/Color"));
-            material.SetColor("_Color", this.color);
+            material.SetColor("_Color", color);
             pointer.GetComponent<MeshRenderer>().material = material;
             dot.GetComponent<MeshRenderer>().material = material;
             setup = true;

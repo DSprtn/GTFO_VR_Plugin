@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GTFO_VR;
+﻿using GTFO_VR.Core.VR_Input;
 using HarmonyLib;
-using Player;
-using UnityEngine;
 
 namespace GTFO_VR_BepInEx.Core
 {
@@ -21,7 +16,7 @@ namespace GTFO_VR_BepInEx.Core
 
         static void Postfix(InputAction action, ref float __result)
         {
-                __result += VRInput.GetAxis(action);
+                __result += SteamVR_InputHandler.GetAxis(action);
         }
     }
 
@@ -30,7 +25,7 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Postfix(InputAction action, ref bool __result)
         {
-                __result = __result || VRInput.GetActionUp(action);
+                __result = __result || SteamVR_InputHandler.GetActionUp(action);
         }
     }
 
@@ -39,7 +34,7 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Postfix(InputAction action, ref bool __result)
         {
-                __result = __result || VRInput.GetActionDown(action);
+                __result = __result || SteamVR_InputHandler.GetActionDown(action);
         }
     }
 
@@ -48,7 +43,7 @@ namespace GTFO_VR_BepInEx.Core
     {
         static void Postfix(InputAction action, ref bool __result)
         {
-                __result = __result || VRInput.GetAction(action);
+                __result = __result || SteamVR_InputHandler.GetAction(action);
         }
     }
 }

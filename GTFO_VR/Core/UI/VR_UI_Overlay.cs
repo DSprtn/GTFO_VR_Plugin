@@ -1,13 +1,11 @@
-﻿using GTFO_VR.Events;
-using GTFO_VR.Input;
+﻿using GTFO_VR.Core.VR_Input;
 using GTFO_VR_BepInEx.Core;
-using Player;
 using System;
 using UnityEngine;
 using Valve.VR;
 using static SteamVR_Utils;
 
-namespace GTFO_VR
+namespace GTFO_VR.Core.UI
 {
     public class VR_UI_Overlay : MonoBehaviour
     {
@@ -26,13 +24,13 @@ namespace GTFO_VR
 
         void Awake()
         {
-            if(instance)
+            if (instance)
             {
                 GTFO_VR_Plugin.log.LogError("Duplicate UI overlay handler!");
                 return;
             }
             instance = this;
-            
+
             Setup();
             OrientateOverlay();
 
@@ -47,7 +45,7 @@ namespace GTFO_VR
 
         void Update()
         {
-            if(overlayHandle != OpenVR.k_ulOverlayHandleInvalid)
+            if (overlayHandle != OpenVR.k_ulOverlayHandleInvalid)
             {
                 var texture = new Texture_t
                 {
@@ -57,11 +55,11 @@ namespace GTFO_VR
                 };
                 OpenVR.Overlay.SetOverlayTexture(overlayHandle, ref texture);
 
-                if (VRInput.GetActionDown(InputAction.Crouch) || VRInput.GetActionDown(InputAction.Aim))
+                if (SteamVR_InputHandler.GetActionDown(InputAction.Crouch) || SteamVR_InputHandler.GetActionDown(InputAction.Aim))
                 {
                     OrientateOverlay();
                 }
-            } 
+            }
         }
 
         public struct IntersectionResults
@@ -105,11 +103,11 @@ namespace GTFO_VR
             transform.position = HMD.hmd.transform.localPosition + rot * Vector3.forward * 2.2f;
             Vector3 Pos = transform.position;
             Pos.y = HMD.hmd.transform.localPosition.y;
-            
+
 
             transform.rotation = Quaternion.Euler(0f, rot.eulerAngles.y, 0f);
             transform.position = Pos;
-            current = new SteamVR_Utils.RigidTransform(transform);
+            current = new RigidTransform(transform);
             var t = current.ToHmdMatrix34();
             OpenVR.Overlay.SetOverlayTransformAbsolute(overlayHandle, SteamVR.settings.trackingSpace, ref t);
         }
@@ -117,7 +115,7 @@ namespace GTFO_VR
         public void SetupOverlay()
         {
             CVROverlay overlay = OpenVR.Overlay;
-            if(overlay != null && overlayHandle == OpenVR.k_ulOverlayHandleInvalid)
+            if (overlay != null && overlayHandle == OpenVR.k_ulOverlayHandleInvalid)
             {
                 overlayHandle = GetOverlayHandle("GTFO_Menu", transform, 5f);
             }
@@ -178,7 +176,7 @@ namespace GTFO_VR
                 }
 
 
-                current = new SteamVR_Utils.RigidTransform(transform);
+                current = new RigidTransform(transform);
                 var t = current.ToHmdMatrix34();
 
                 overlay.SetOverlayTransformAbsolute(handle, SteamVR.settings.trackingSpace, ref t);

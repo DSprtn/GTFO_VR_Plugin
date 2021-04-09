@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using CellMenu;
-using Globals;
-using GTFO_VR;
-using GTFO_VR.UI;
+﻿using GTFO_VR.UI;
 using HarmonyLib;
-using Player;
-using UnityEngine;
 
 
 namespace GTFO_VR_BepInEx.Core
@@ -21,7 +12,6 @@ namespace GTFO_VR_BepInEx.Core
         {
             VRWorldSpaceUI.SetInteractionPromptRef(__instance.m_message, __instance.m_interactPrompt, __instance);
         }
-
     }
 
 }

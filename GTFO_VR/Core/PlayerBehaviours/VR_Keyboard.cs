@@ -1,15 +1,11 @@
-﻿using GTFO_VR.Events;
-using GTFO_VR.Input;
+﻿using GTFO_VR.Core.VR_Input;
+using GTFO_VR.Events;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Events;
 using Valve.VR;
 
-namespace GTFO_VR.Core
+namespace GTFO_VR.Core.PlayerBehaviours
 {
     public class VR_Keyboard : MonoBehaviour
     {
@@ -58,7 +54,7 @@ namespace GTFO_VR.Core
             byte[] inputBytes = new byte[] { keyboard.cNewInput0, keyboard.cNewInput1, keyboard.cNewInput2, keyboard.cNewInput3, keyboard.cNewInput4, keyboard.cNewInput5, keyboard.cNewInput6, keyboard.cNewInput7 };
             int len = 0;
             for (; inputBytes[len] != 0 && len < 7; len++) ;
-            string input = System.Text.Encoding.UTF8.GetString(inputBytes, 0, len);
+            string input = Encoding.UTF8.GetString(inputBytes, 0, len);
             input = HandleSpecialConversionAndShortcuts(input);
 
             currentFrameInput = input;
@@ -66,7 +62,7 @@ namespace GTFO_VR.Core
 
         public static string GetKeyboardInput()
         {
-            if(currentFrameInput == null)
+            if (currentFrameInput == null)
             {
                 return "";
             }
@@ -93,71 +89,71 @@ namespace GTFO_VR.Core
         {
             switch (input)
             {
-                case ("\n"):
+                case "\n":
                     {
                         return "\r";
                     }
-                
-                case ("-"):
+
+                case "-":
                     {
                         return "_";
                     }
-                case ("~"):
+                case "~":
                     {
                         return "-";
                     }
-                case ("L"):
+                case "L":
                     {
                         return "LIST ";
                     }
-                case ("Q"):
+                case "Q":
                     {
                         return "QUERY ";
                     }
-                case ("R"):
+                case "R":
                     {
                         return "REACTOR";
                     }
-                case ("H"):
+                case "H":
                     {
                         return "HELP";
                     }
-                case ("C"):
+                case "C":
                     {
                         return "COMMANDS";
                     }
-                case ("V"):
+                case "V":
                     {
                         return "REACTOR_VERIFY ";
                     }
-                case ("P"):
+                case "P":
                     {
                         return "PING ";
                     }
-                case ("A"):
+                case "A":
                     {
                         return "AMMOPACK_";
                     }
-                case ("T"):
+                case "T":
                     {
                         return "TOOL_REFILL_";
                     }
-                case ("M"):
+                case "M":
                     {
                         return "MEDIPACK_";
                     }
-                case ("Z"):
+                case "Z":
                     {
                         return "ZONE_";
                     }
-                case ("U"):
+                case "U":
                     {
                         return "UPLINK_VERIFY ";
                     }
             }
             return input;
         }
-        
+
 
         void OnDestroy()
         {

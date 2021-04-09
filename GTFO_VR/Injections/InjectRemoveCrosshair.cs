@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using GTFO_VR;
-using HarmonyLib;
-using Player;
-using UnityEngine;
+﻿using HarmonyLib;
 
 
 namespace GTFO_VR_BepInEx.Core

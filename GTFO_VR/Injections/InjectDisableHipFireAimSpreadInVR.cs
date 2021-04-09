@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CellMenu;
-using Gear;
-using Globals;
-using GTFO_VR;
+﻿using Gear;
 using GTFO_VR.Core;
-using GTFO_VR.Events;
-using GTFO_VR.Input;
+using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Util;
 using HarmonyLib;
-using Player;
-using UnityEngine;
-using static GTFO_VR.Util.WeaponArchetypeVRData;
+
 
 namespace GTFO_VR_BepInEx.Core
 {

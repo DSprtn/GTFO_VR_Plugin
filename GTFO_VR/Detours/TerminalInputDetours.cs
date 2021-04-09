@@ -2,23 +2,22 @@
 using UnhollowerBaseLib;
 using BepInEx.IL2CPP.Hook;
 using System.Runtime.InteropServices;
-using System.Reflection;
 using GTFO_VR_BepInEx.Core;
+using GTFO_VR.Core.PlayerBehaviours;
 
-namespace GTFO_VR.Core
+namespace GTFO_VR.Detours
 {
-    public static class NativeDetours
+    public static class TerminalInputDetours
     {
 
         public static void HookAll()
         {
             GTFO_VR_Plugin.log.LogInfo($"Patching all native functions...");
 
-            FastNativeDetour.CreateAndApply(IL2CPP.il2cpp_resolve_icall("UnityEngine.Input::" + "get_inputString"), 
+            FastNativeDetour.CreateAndApply(IL2CPP.il2cpp_resolve_icall("UnityEngine.Input::" + "get_inputString"),
                 OurGetInputString, out originalInputStringGetter, CallingConvention.Cdecl);
 
-
-            FastNativeDetour.CreateAndApply(IL2CPP.il2cpp_resolve_icall("UnityEngine.Input::" + "get_anyKeyDown"), 
+            FastNativeDetour.CreateAndApply(IL2CPP.il2cpp_resolve_icall("UnityEngine.Input::" + "get_anyKeyDown"),
                 OurGetAnyInput, out originalAnyInputDownGetter, CallingConvention.Cdecl);
         }
 

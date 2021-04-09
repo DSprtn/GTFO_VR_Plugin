@@ -16,9 +16,6 @@ namespace GTFO_VR_BepInEx.Core
     /// </summary>
 	/// 
 
-
-
-
     [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.LateUpdate))]
     class InjectDisableFPSCameraRendering
     {

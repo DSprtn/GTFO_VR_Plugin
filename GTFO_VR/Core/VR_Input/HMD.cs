@@ -1,12 +1,13 @@
 ﻿
 
 using GTFO_VR.Core;
+using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Events;
 using System;
 using UnityEngine;
 using Valve.VR;
 
-namespace GTFO_VR.Input
+namespace GTFO_VR.Core.VR_Input
 {
     public class HMD : MonoBehaviour
     {

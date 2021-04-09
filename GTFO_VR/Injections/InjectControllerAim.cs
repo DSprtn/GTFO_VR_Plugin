@@ -1,13 +1,8 @@
-﻿using GTFO_VR;
-using GTFO_VR.Core;
-using GTFO_VR.Events;
-using GTFO_VR.Input;
-using GTFO_VR.UI;
-using GTFO_VR.Util;
+﻿using GTFO_VR.Core;
+using GTFO_VR.Core.PlayerBehaviours;
+using GTFO_VR.Core.VR_Input;
 using HarmonyLib;
 using UnityEngine;
-
-
 
 namespace GTFO_VR_BepInEx.Core
 {

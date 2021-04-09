@@ -1,18 +1,11 @@
-﻿using GTFO_VR.Core;
+﻿using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
-using GTFO_VR.Input;
 using GTFO_VR_BepInEx.Core;
 using Player;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnhollowerBaseLib.Attributes;
 using UnityEngine;
-using Valve.VR;
 
-namespace GTFO_VR.Core
+namespace GTFO_VR.Core.PlayerBehaviours
 {
     public class PlayerOrigin : MonoBehaviour
     {
@@ -34,12 +27,12 @@ namespace GTFO_VR.Core
         }
         public void Setup(Snapturn snapturn)
         {
-            this.snapTurn = snapturn;
+            snapTurn = snapturn;
             FocusStateEvents.OnFocusStateChange += FocusStateChanged;
             SetupOrigin();
             SetInitialSnapTurn();
         }
-        [HideFromIl2Cpp]
+
         private void FocusStateChanged(eFocusState newState)
         {
             if (FocusStateEvents.lastState.Equals(eFocusState.InElevator) && newState.Equals(eFocusState.FPS))
@@ -67,7 +60,7 @@ namespace GTFO_VR.Core
                 return;
             }
             Vector3 newPosition = PlayerVR.playerController.SmoothPosition;
-            
+
             origin.transform.position = newPosition - offsetFromPlayerToHMD;
             origin.transform.rotation = snapTurn.snapTurnRotation;
             origin.transform.position -= CalculateCrouchOffset();
@@ -79,13 +72,13 @@ namespace GTFO_VR.Core
             return PlayerVR.playerController.SmoothPosition;
         }
 
-        [HideFromIl2Cpp]
+
         Vector3 CalculateCrouchOffset()
         {
             if (PlayerVR.playerAgent && PlayerVR.playerAgent.Locomotion.m_currentStateEnum.Equals(PlayerLocomotion.PLOC_State.Crouch))
             {
 
-                float goalCrouchHeight = VRInput.IRLCrouchBorder;
+                float goalCrouchHeight = VR_Settings.IRLCrouchBorder;
 
                 float diff = Mathf.Max(0f, HMD.GetPlayerHeight() - goalCrouchHeight);
                 return new Vector3(0, diff, 0);

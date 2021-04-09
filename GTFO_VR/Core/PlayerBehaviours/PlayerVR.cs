@@ -1,7 +1,6 @@
 ﻿using CullingSystem;
-using GTFO_VR.Core;
+using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
-using GTFO_VR.Input;
 using GTFO_VR.UI;
 using GTFO_VR.Util;
 using GTFO_VR_BepInEx.Core;
@@ -12,7 +11,7 @@ using UnityEngine.Rendering;
 using Valve.VR;
 
 
-namespace GTFO_VR
+namespace GTFO_VR.Core.PlayerBehaviours
 {
     public class PlayerVR : MonoBehaviour
     {
@@ -36,9 +35,11 @@ namespace GTFO_VR
         public static CommandBuffer preRenderLights;
         public static CommandBuffer beforeForwardCmd;
 
+
+
         void Start()
         {
-            SteamVR_Render.eyePreRenderCallback += RenderLoop;
+            SteamVR_Render.eyePreRenderCallback += PreRenderEye;
             if (VRPlayerIsSetup)
             {
                 Debug.LogError("Trying to create duplicate VRInit class...");
@@ -53,7 +54,7 @@ namespace GTFO_VR
 
         private void ForceFPRenderingOnEnterGame(eFocusState state)
         {
-           if(state == eFocusState.FPS)
+            if (state == eFocusState.FPS)
             {
                 foreach (var m in fpsCamera.m_holder.GetComponentsInChildren<Renderer>(true))
                 {
@@ -66,21 +67,36 @@ namespace GTFO_VR
             }
         }
 
-        static int lastCulledFrame = 0;
+        static bool skipLeft;
 
-        void RenderLoop(EVREye eye)
+        void PreRenderEye(EVREye eye)
         {
-            DoUglyCameraHack();
-
-            // Only cull once per frame because the cull will most likely be valid for both eyes
-            if (Time.frameCount != lastCulledFrame || true)
+            if (Time.frameCount % 2 == 0)
             {
-                C_Camera.Current.RunVisibilityOnPreCull();
-                lastCulledFrame = Time.frameCount;
+                skipLeft = true;
+            } else
+            {
+                skipLeft = false;
             }
 
+            DoUglyCameraHack();
+
+            
+            fpsCamera.m_cullingCamera.RunVisibilityOnPreCull();
             preRenderLights.Clear();
             beforeForwardCmd.Clear();
+
+            if (VR_Settings.alternateLightRenderingPerEye)
+            {
+                if(skipLeft && eye == EVREye.Eye_Left)
+                {
+                    return;
+                }
+                if(!skipLeft && eye == EVREye.Eye_Right)
+                {
+                    return;
+                }
+            }
 
             if (fpsCamera.m_renderUI)
             {
@@ -89,7 +105,7 @@ namespace GTFO_VR
 
             if (ScreenLiquidManager.LiquidSystem != null)
                 ScreenLiquidManager.LiquidSystem.CollectCommands(preRenderLights);
-            if (AirParticleSystem.AirParticleSystem.Current != (UnityEngine.Object)null)
+            if (AirParticleSystem.AirParticleSystem.Current != null)
                 AirParticleSystem.AirParticleSystem.Current.CollectCommands(preRenderLights, beforeForwardCmd);
 
             if (fpsCamera.m_collectCommandsClustered)
@@ -106,6 +122,7 @@ namespace GTFO_VR
             {
                 MapDetails.Current.CollectCommands(preRenderLights);
             }
+
 
             Vector4 projectionParams = ClusteredRendering.GetProjectionParams(ClusteredRendering.Current.m_camera);
             Vector4 zbufferParams = ClusteredRendering.GetZBufferParams(ClusteredRendering.Current.m_camera);
@@ -138,13 +155,12 @@ namespace GTFO_VR
                 ClusteredRendering.Current.m_lightBufferCamera.transform.position = fpsCamera.m_camera.transform.position;
                 ClusteredRendering.Current.m_lightBufferCamera.transform.rotation = fpsCamera.m_camera.transform.rotation;
 
-
                 ClusteredRendering.Current.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
                 ClusteredRendering.Current.m_camera.aspect = SteamVR.instance.aspect;
                 ClusteredRendering.Current.m_camera.transform.position = fpsCamera.m_camera.transform.position;
                 ClusteredRendering.Current.m_camera.transform.rotation = fpsCamera.m_camera.transform.rotation;
                 ClusteredRendering.Current.m_camera.nearClipPlane = 0.075f;
-                
+
             }
 
             foreach (SteamVR_Camera cam in SteamVR_Render.instance.cameras)
@@ -305,13 +321,13 @@ namespace GTFO_VR
 
         void HandleSnapturnInput()
         {
-            if (VRInput.GetSnapTurningLeft())
+            if (SteamVR_InputHandler.GetSnapTurningLeft())
             {
                 snapTurn.DoSnapTurn(-VR_Settings.snapTurnAmount);
                 origin.CenterPlayerToOrigin();
             }
 
-            if (VRInput.GetSnapTurningRight())
+            if (SteamVR_InputHandler.GetSnapTurningRight())
             {
                 snapTurn.DoSnapTurn(VR_Settings.snapTurnAmount);
                 origin.CenterPlayerToOrigin();
@@ -373,7 +389,7 @@ namespace GTFO_VR
 
         void OnDestroy()
         {
-            SteamVR_Render.eyePreRenderCallback -= RenderLoop;
+            SteamVR_Render.eyePreRenderCallback -= PreRenderEye;
             PlayerLocomotionEvents.OnPlayerEnterLadder -= LadderEntered;
             FocusStateEvents.OnFocusStateChange += ForceFPRenderingOnEnterGame;
             if (pointer)

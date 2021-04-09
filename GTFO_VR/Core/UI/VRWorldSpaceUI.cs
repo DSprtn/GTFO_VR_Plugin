@@ -1,17 +1,12 @@
 ﻿using GTFO_VR.Core;
+using GTFO_VR.Core.PlayerBehaviours;
+using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
-using GTFO_VR.Input;
 using GTFO_VR.Util;
 using GTFO_VR_BepInEx.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using Valve.VR;
 
 namespace GTFO_VR.UI

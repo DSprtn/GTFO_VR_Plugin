@@ -1,23 +1,22 @@
-﻿using GTFO_VR.Core;
-using GTFO_VR.Input;
+﻿using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR_BepInEx.Core;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 
-namespace GTFO_VR
+namespace GTFO_VR.Core.VR_Input
 {
     /// <summary>
     /// Handles binding and getting VR input into GTFO's input systems
     /// </summary>
-    public class VRInput : MonoBehaviour
+    public class SteamVR_InputHandler : MonoBehaviour
     {
 
-        public VRInput(IntPtr value)
+        public SteamVR_InputHandler(IntPtr value)
 : base(value) { }
 
-        private static VRInput instance;
+        private static SteamVR_InputHandler instance;
 
         public static bool Initialized;
 
@@ -55,21 +54,23 @@ namespace GTFO_VR
 
         private SteamVR_Action_Boolean pingAction;
 
+        //private SteamVR_Action_Boolean pushToTalkAction;
+
         private static Dictionary<InputAction, SteamVR_Action_Boolean> boolActions;
 
-        public static float IRLCrouchBorder = 1.15f;
+
 
         public void Start()
         {
-            if (VRInput.instance != null)
+            if (SteamVR_InputHandler.instance != null)
             {
                 GTFO_VR_Plugin.log.LogError("Trying to create duplicate VR_Input class! -- Don't!");
                 return;
             }
-            VRInput.instance = this;
+            SteamVR_InputHandler.instance = this;
            
             InitializeActionMapping();
-            VRInput.Initialized = true;
+            SteamVR_InputHandler.Initialized = true;
             GTFO_VR_Plugin.log.LogInfo("Input initialized");
         }
 
@@ -81,15 +82,15 @@ namespace GTFO_VR
 
         public static bool GetActionDown(InputAction action)
         {
-            if (!VRInput.Initialized)
+            if (!SteamVR_InputHandler.Initialized)
             {
                 return false;
             }
             
-            SteamVR_Action_Boolean boolActionMapping = VRInput.instance.GetBoolActionMapping(action);
+            SteamVR_Action_Boolean boolActionMapping = SteamVR_InputHandler.instance.GetBoolActionMapping(action);
             if (IsIRLCrouchValid(action))
             {
-                return (boolActionMapping != null && boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any)) || HMD.hmd.transform.localPosition.y < VRInput.IRLCrouchBorder;
+                return (boolActionMapping != null && boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any)) || HMD.hmd.transform.localPosition.y < VR_Settings.IRLCrouchBorder;
             }
 
             if(action.Equals(InputAction.TerminalExit) && VR_Keyboard.keyboardClosedThisFrame)
@@ -101,15 +102,15 @@ namespace GTFO_VR
 
         public static bool GetAction(InputAction action)
         {
-            if (!VRInput.Initialized)
+            if (!SteamVR_InputHandler.Initialized)
             {
                 return false;
             }
            
-            SteamVR_Action_Boolean boolActionMapping = VRInput.instance.GetBoolActionMapping(action);
+            SteamVR_Action_Boolean boolActionMapping = SteamVR_InputHandler.instance.GetBoolActionMapping(action);
             if (IsIRLCrouchValid(action))
             {
-                return (boolActionMapping != null && boolActionMapping.GetState(SteamVR_Input_Sources.Any)) || HMD.hmd.transform.localPosition.y < VRInput.IRLCrouchBorder;
+                return (boolActionMapping != null && boolActionMapping.GetState(SteamVR_Input_Sources.Any)) || HMD.hmd.transform.localPosition.y < VR_Settings.IRLCrouchBorder;
             }
             return boolActionMapping != null && boolActionMapping.GetState(SteamVR_Input_Sources.Any);
         }
@@ -124,7 +125,7 @@ namespace GTFO_VR
             SteamVR_Action_Boolean boolActionMapping = instance.GetBoolActionMapping(action);
             if (IsIRLCrouchValid(action))
             {
-              return boolActionMapping != null && !boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any) || !boolActionMapping.GetState(SteamVR_Input_Sources.Any) && (boolActionMapping.GetStateUp(SteamVR_Input_Sources.Any) || (HMD.hmd.transform.localPosition.y > VRInput.IRLCrouchBorder));
+              return boolActionMapping != null && !boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any) || !boolActionMapping.GetState(SteamVR_Input_Sources.Any) && (boolActionMapping.GetStateUp(SteamVR_Input_Sources.Any) || (HMD.hmd.transform.localPosition.y > VR_Settings.IRLCrouchBorder));
             }
             return boolActionMapping != null && boolActionMapping.GetStateUp(SteamVR_Input_Sources.Any);
         }
@@ -136,23 +137,23 @@ namespace GTFO_VR
 
         public static float GetAxis(InputAction action)
         {
-            if (!VRInput.Initialized)
+            if (!SteamVR_InputHandler.Initialized)
             {
                 return 0f;
             }
-            return VRInput.instance.GetAxisValue(action);
+            return SteamVR_InputHandler.instance.GetAxisValue(action);
         }
 
         public static bool GetSnapTurningLeft()
         {
-            if(VRInput.Initialized)
+            if(SteamVR_InputHandler.Initialized)
             {
                 if(VR_Settings.useSmoothTurn)
                 {
-                    return VRInput.instance.snapLeftAction.GetState(SteamVR_Input_Sources.Any);
+                    return SteamVR_InputHandler.instance.snapLeftAction.GetState(SteamVR_Input_Sources.Any);
                 } else
                 {
-                    return VRInput.instance.snapLeftAction.GetStateDown(SteamVR_Input_Sources.Any);
+                    return SteamVR_InputHandler.instance.snapLeftAction.GetStateDown(SteamVR_Input_Sources.Any);
                 }
             }
             return false;
@@ -160,15 +161,15 @@ namespace GTFO_VR
 
         public static bool GetSnapTurningRight()
         {
-            if (VRInput.Initialized)
+            if (SteamVR_InputHandler.Initialized)
             {
                 if (VR_Settings.useSmoothTurn)
                 {
-                    return VRInput.instance.snapRightAction.GetState(SteamVR_Input_Sources.Any);
+                    return SteamVR_InputHandler.instance.snapRightAction.GetState(SteamVR_Input_Sources.Any);
                 }
                 else
                 {
-                    return VRInput.instance.snapRightAction.GetStateDown(SteamVR_Input_Sources.Any);
+                    return SteamVR_InputHandler.instance.snapRightAction.GetStateDown(SteamVR_Input_Sources.Any);
                 }
             }
             return false;
@@ -193,9 +194,10 @@ namespace GTFO_VR
             openMapAction = SteamVR_Input.GetBooleanAction("OpenMap", false);
             openMenuAction = SteamVR_Input.GetBooleanAction("OpenMenu", false);
             pingAction = SteamVR_Input.GetBooleanAction("Ping", false);
+            //pushToTalkAction = SteamVR_Input.GetBooleanAction("PushToTalk", false);
 
 
-            VRInput.boolActions = new Dictionary<InputAction, SteamVR_Action_Boolean>
+            SteamVR_InputHandler.boolActions = new Dictionary<InputAction, SteamVR_Action_Boolean>
             {
                 { InputAction.Jump, jumpAction },
                 { InputAction.Use, interactAction },
@@ -204,7 +206,7 @@ namespace GTFO_VR
                 { InputAction.Run, sprintAction },
                 { InputAction.Crouch, crouchAction },
                 { InputAction.Reload, reloadAction },
-                //{ InputAction.Melee, aimAction },
+                //{ InputAction.VoiceChatPushToTalk, pushToTalkAction},
                 { InputAction.NavMarkerPing, pingAction },
                 { InputAction.TerminalUp, weaponSwitchLeftAction },
                 { InputAction.TerminalDown, weaponSwitchRightAction },
@@ -220,9 +222,9 @@ namespace GTFO_VR
 
         private SteamVR_Action_Boolean GetBoolActionMapping(InputAction action)
         {
-            if (VRInput.boolActions.ContainsKey(action))
+            if (SteamVR_InputHandler.boolActions.ContainsKey(action))
             {
-                return VRInput.boolActions[action];
+                return SteamVR_InputHandler.boolActions[action];
             }
             return null;
         }
@@ -231,7 +233,7 @@ namespace GTFO_VR
         {
             if (InputAction.ScrollItems.Equals(action))
             {
-                if (VRInput.instance.weaponSwitchLeftAction.GetStateDown(SteamVR_Input_Sources.Any))
+                if (SteamVR_InputHandler.instance.weaponSwitchLeftAction.GetStateDown(SteamVR_Input_Sources.Any))
                 {
                     return -1f;
                 }
@@ -242,7 +244,7 @@ namespace GTFO_VR
                 return 0f;
             } else if (InputAction.MenuScroll.Equals(action))
             {
-                if (VRInput.instance.weaponSwitchLeftAction.GetStateDown(SteamVR_Input_Sources.Any))
+                if (SteamVR_InputHandler.instance.weaponSwitchLeftAction.GetStateDown(SteamVR_Input_Sources.Any))
                 {
                     return 1f;
                 }
@@ -253,7 +255,7 @@ namespace GTFO_VR
             }
             else if(InputAction.MapZoom.Equals(action))
             {
-                if (VRInput.instance.weaponSwitchLeftAction.GetState(SteamVR_Input_Sources.Any))
+                if (SteamVR_InputHandler.instance.weaponSwitchLeftAction.GetState(SteamVR_Input_Sources.Any))
                 {
                     return -1f * Time.deltaTime;
                 }

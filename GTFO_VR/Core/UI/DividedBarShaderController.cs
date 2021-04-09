@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using GTFO_VR.Util;
 using Player;
@@ -19,8 +15,6 @@ namespace GTFO_VR.UI
 
         public static Color normalColor = new Color(0.83f, 1f, 0.964f);
         public static Color selectedColor = new Color(1f, 0.5f, 0f);
-
-        public InventorySlot inventorySlot;
 
         void Awake()
         {
@@ -71,7 +65,6 @@ namespace GTFO_VR.UI
 
         public void UpdateAmmoGridDivisions()
         {
-            //Debug.Log("MaxAmmo: " + maxAmmo + " Current ammo: " + currentAmmo + " Inventory slot: " + inventorySlot.ToString());
             int horizDivisions = Utils.LargestDivisor(maxValue);
 
             int vertDivisions = maxValue / horizDivisions;

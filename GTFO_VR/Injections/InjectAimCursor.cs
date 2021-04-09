@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text;
 using CellMenu;
 using Globals;
-using GTFO_VR;
+using GTFO_VR.Core;
 using HarmonyLib;
 using Player;
 using UnityEngine;

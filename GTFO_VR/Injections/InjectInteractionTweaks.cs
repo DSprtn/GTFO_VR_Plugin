@@ -1,12 +1,5 @@
-﻿using Gear;
-using GTFO_VR.Input;
+﻿using GTFO_VR.Core.VR_Input;
 using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using UnityEngine;
 
 namespace GTFO_VR_BepInEx.Core
 {

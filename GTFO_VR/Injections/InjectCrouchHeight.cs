@@ -1,52 +1,33 @@
-﻿using Gear;
-using GTFO_VR.Input;
-using HarmonyLib;
+﻿using HarmonyLib;
 using Player;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
 using UnityEngine;
 
 namespace GTFO_VR_BepInEx.Core
 {
 
-    // TODO - Replace crouch height transpiler
-    /*
-    [HarmonyPatch(typeof(PlayerCharacterController), "SetColliderCrouched")]
-    public static class InjectCrouchHeight_Patch
+    /// <summary>
+    /// Makes the first person items follow the position and aim direction of the main controller(s) of the player
+    /// </summary>
+    [HarmonyPatch(typeof(PlayerCharacterController), nameof(PlayerCharacterController.SetColliderCrouched))]
+    class InjectCrouchPopFix
     {
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        static bool Prefix(PlayerCharacterController __instance, bool crouched)
         {
-            int endIndex = -1;
-
-            CodeInstruction oldInstruction = new CodeInstruction(OpCodes.Ldc_R4, .55f);
-            CodeInstruction newInstruction = new CodeInstruction(OpCodes.Ldc_R4, .5f);
-            Debug.Log("Listening for " + oldInstruction);
-
-
-            var codes = new List<CodeInstruction>(instructions);
-            for (int i = 0; i < codes.Count; i++)
+            if (__instance.m_characterController == null || __instance.m_owner == null || __instance.m_owner.IsBeingDespawned)
+                return false;
+            if (crouched)
             {
-                if (codes[i].ToString().Equals(oldInstruction.ToString()))
-                {
-                    endIndex = i;
-                    break;
-                }
+                __instance.m_characterController.height = __instance.m_collCrouchHeight;
+                __instance.m_characterController.center = new Vector3(0.0f, __instance.m_collCrouchHeight * 0.5f, 0.0f);
+            }
+            else
+            {
+                __instance.m_characterController.height = __instance.m_collStandHeight;
+                __instance.m_characterController.center = new Vector3(0.0f, __instance.m_collStandHeight * 0.5f, 0.0f);
             }
 
-
-            if(endIndex != -1)
-            {
-                Debug.Log("Replacing " + codes[endIndex] + "  with - " + newInstruction);
-                codes[endIndex] = newInstruction;
-            } else
-            {
-                Debug.LogError("Failed to replace crouch height, no anchor found!");
-            }
-            return codes.AsEnumerable();
+            return false;
         }
     }
-    */
+
 }

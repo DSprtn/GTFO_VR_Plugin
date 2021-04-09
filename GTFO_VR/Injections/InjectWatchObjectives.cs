@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CellMenu;
-using GameData;
-using Globals;
-using GTFO_VR;
+﻿using GameData;
 using GTFO_VR.UI;
 using HarmonyLib;
 using LevelGeneration;
-using Player;
-using UnityEngine;
 
 
 namespace GTFO_VR_BepInEx.Core

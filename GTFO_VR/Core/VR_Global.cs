@@ -1,19 +1,15 @@
-﻿using GTFO_VR.Core;
+﻿using GTFO_VR.Core.PlayerBehaviours;
+using GTFO_VR.Core.UI;
+using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
-using GTFO_VR.Input;
-using GTFO_VR.Util;
 using GTFO_VR_BepInEx.Core;
-using Player;
-using SteamVR_Standalone_IL2CPP.Util;
 using System;
-using System.Text;
-using UnhollowerRuntimeLib;
 using UnityEngine;
 using Valve.VR;
 
 
 
-namespace GTFO_VR
+namespace GTFO_VR.Core
 {
     public class VR_Global : MonoBehaviour
     {
@@ -41,14 +37,15 @@ namespace GTFO_VR
             if (!instance)
             {
                 instance = this;
-            } else
+            }
+            else
             {
                 GTFO_VR_Plugin.log.LogError("Trying to create duplicate VRGlobal class");
                 return;
             }
             // Prevent SteamVR from adding a tracking script automatically. We handle this manually in HMD
             SteamVR_Camera.useHeadTracking = false;
-           
+
             FocusStateEvents.OnFocusStateChange += FocusChanged;
             Setup();
             SteamVR_Settings.instance.poseUpdateMode = SteamVR_UpdateModes.OnLateUpdate;
@@ -59,16 +56,16 @@ namespace GTFO_VR
 
         public static bool GetPlayerPointingAtPositionOnScreen(out Vector2 uv)
         {
-            if(Controllers.GetLocalPosition().magnitude < 0.01f)
+            if (Controllers.GetLocalPosition().magnitude < 0.01f)
             {
                 uv = Vector2.zero;
                 return false;
             }
-            if(overlay)
+            if (overlay)
             {
                 VR_UI_Overlay.IntersectionResults result = new VR_UI_Overlay.IntersectionResults();
 
-                if(overlay.ComputeIntersection(Controllers.GetLocalPosition(), Controllers.GetLocalAimForward(), ref result))
+                if (overlay.ComputeIntersection(Controllers.GetLocalPosition(), Controllers.GetLocalAimForward(), ref result))
                 {
                     uv = result.UVs;
                     return true;
@@ -82,7 +79,7 @@ namespace GTFO_VR
         {
             SteamVR.Initialize(false);
             WeaponArchetypeVRData.Setup();
-            gameObject.AddComponent<VRInput>();
+            gameObject.AddComponent<SteamVR_InputHandler>();
             gameObject.AddComponent<HMD>();
             gameObject.AddComponent<Controllers>();
             gameObject.AddComponent<VR_Keyboard>();
@@ -119,7 +116,8 @@ namespace GTFO_VR
                 HandleIngameFocus();
             }
 
-            if(state.Equals(eFocusState.MainMenu) || state.Equals(eFocusState.Map)) {
+            if (state.Equals(eFocusState.MainMenu) || state.Equals(eFocusState.Map))
+            {
                 HandleOutOfGameFocus();
             }
             ClearUIRenderTex();
@@ -127,7 +125,7 @@ namespace GTFO_VR
 
         private void HandleOutOfGameFocus()
         {
-            if(!overlay)
+            if (!overlay)
             {
                 return;
             }
@@ -138,17 +136,17 @@ namespace GTFO_VR
 
         private void HandleIngameFocus()
         {
-            if(!overlay)
+            if (!overlay)
             {
                 return;
             }
-            if(ingamePlayer == null)
+            if (ingamePlayer == null)
             {
                 GTFO_VR_Plugin.log.LogInfo("Creating VR Player...");
 
                 ingamePlayer = new GameObject("VR_Player").AddComponent<PlayerVR>();
             }
-           
+
             ToggleOverlay(false);
             TogglePlayerCam(true);
             ClusteredRendering.Current.OnResolutionChange(new Resolution());
@@ -156,14 +154,15 @@ namespace GTFO_VR
 
         void ToggleOverlay(bool toggle)
         {
-            if(!toggle)
+            if (!toggle)
             {
                 overlay.DestroyOverlay();
-            } else
+            }
+            else
             {
                 overlay.SetupOverlay();
             }
-            
+
             overlay.gameObject.SetActive(toggle);
             overlay.OrientateOverlay();
         }
@@ -178,7 +177,7 @@ namespace GTFO_VR
 
         void DisableUnneccessaryCams()
         {
-            if(PlayerVR.VRCamera && PlayerVR.VRCamera.head)
+            if (PlayerVR.VRCamera && PlayerVR.VRCamera.head)
             {
                 foreach (Camera cam in PlayerVR.VRCamera.transform.root.GetComponentsInChildren<Camera>())
                 {

@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CellMenu;
-using Globals;
-using GTFO_VR;
 using GTFO_VR.Core;
 using HarmonyLib;
-using Player;
 using UnityEngine;
-
+using Valve.VR;
 
 namespace GTFO_VR_BepInEx.Core
 {
@@ -26,15 +20,19 @@ namespace GTFO_VR_BepInEx.Core
         {
             if (VR_Settings.lightRenderMode.Equals(0))
             {
-                res.width = 1920;
-                res.height = 1080;
+                res = SteamVR_Camera.GetSceneResolution();
             } else 
             if (VR_Settings.lightRenderMode.Equals(1))
             {
-                res.width = 1024;
-                res.height = 768;
+                res.width = 1920;
+                res.height = 1080;
             } 
             else if(VR_Settings.lightRenderMode.Equals(2))
+            {
+                res.width = 1024;
+                res.height = 768;
+            }
+            else if (VR_Settings.lightRenderMode.Equals(3))
             {
                 res.width = 640;
                 res.height = 480;

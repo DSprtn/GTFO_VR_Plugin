@@ -1,13 +1,8 @@
-﻿using GTFO_VR.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GTFO_VR.Core.VR_Input;
 using UnityEngine;
 using Valve.VR;
 
-namespace GTFO_VR.Core
+namespace GTFO_VR.Core.PlayerBehaviours
 {
     /// <summary>
     /// Fades player's screen if he is within collision or trying to walk behind doors/walls in roomspace
@@ -15,27 +10,27 @@ namespace GTFO_VR.Core
     public static class CollisionFade
     {
 
-        static bool headInCollision;
-        static bool controllerHeadToHMDHeadBlocked;
+        static bool fpsCameraInCollision;
+        static bool playerAgentToHMDPositionBlocked;
 
         static bool wasFadedLastFrame;
 
         public static void HandleCameraInCollision()
         {
-            headInCollision = Physics.OverlapBox(HMD.GetWorldPosition() + (HMD.GetWorldForward() * 0.05f), new Vector3(0.03f, 0.03f, 0.03f), HMD.hmd.transform.rotation, LayerManager.MASK_TENTACLE_BLOCKERS).Length > 0;
+            fpsCameraInCollision = Physics.OverlapBox(HMD.GetWorldPosition() + HMD.GetWorldForward() * 0.05f, new Vector3(0.03f, 0.03f, 0.03f), HMD.hmd.transform.rotation, LayerManager.MASK_TENTACLE_BLOCKERS).Length > 0;
 
             Vector3 centerPlayerHeadPos = PlayerVR.fpsCamera.GetCamerposForPlayerPos(PlayerVR.playerController.SmoothPosition);
 
             if (Physics.Linecast(centerPlayerHeadPos, HMD.GetWorldPosition(), LayerManager.MASK_TENTACLE_BLOCKERS))
             {
-                controllerHeadToHMDHeadBlocked = true;
+                playerAgentToHMDPositionBlocked = true;
             }
             else
             {
-                controllerHeadToHMDHeadBlocked = false;
+                playerAgentToHMDPositionBlocked = false;
             }
 
-            if (controllerHeadToHMDHeadBlocked || headInCollision)
+            if (playerAgentToHMDPositionBlocked || fpsCameraInCollision)
             {
                 wasFadedLastFrame = true;
                 SteamVR_Fade.Start(Color.black, 0.2f, true);

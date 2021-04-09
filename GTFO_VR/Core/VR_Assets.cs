@@ -1,6 +1,4 @@
-﻿
-
-using GTFO_VR_BepInEx.Core;
+﻿using GTFO_VR_BepInEx.Core;
 using System;
 using UnityEngine;
 

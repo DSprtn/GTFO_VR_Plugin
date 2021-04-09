@@ -1,17 +1,14 @@
 ﻿using GTFO_VR.Core;
+using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Events;
-using GTFO_VR.Util;
 using GTFO_VR_BepInEx.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Valve.VR;
-using static GTFO_VR.Util.WeaponArchetypeVRData;
+using static GTFO_VR.Core.WeaponArchetypeVRData;
 
-namespace GTFO_VR.Input
+namespace GTFO_VR.Core.VR_Input
+
 {
     public class Controllers : MonoBehaviour
     {
@@ -47,7 +44,7 @@ namespace GTFO_VR.Input
 
         void Update()
         {
-            if(!VR_Settings.alwaysDoubleHanded && !FocusStateEvents.currentState.Equals(eFocusState.InElevator))
+            if (!VR_Settings.alwaysDoubleHanded && !FocusStateEvents.currentState.Equals(eFocusState.InElevator))
             {
                 HandleDoubleHandedChecks();
             }
@@ -59,7 +56,7 @@ namespace GTFO_VR.Input
             if (PlayerVR.LoadedAndInIngameView)
             {
 
-                VRWeaponData itemData = WeaponArchetypeVRData.GetVRWeaponData(ItemEquippableEvents.currentItem);
+                VRWeaponData itemData = GetVRWeaponData(ItemEquippableEvents.currentItem);
 
                 if (itemData.allowsDoubleHanded)
                 {
@@ -68,7 +65,7 @@ namespace GTFO_VR.Input
 
                     if (!aimingTwoHanded && !wasInDoubleHandPosLastFrame && isInDoubleHandPos)
                     {
-                        VRInput.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, GetDeviceFromType(offHandControllerType));
+                        SteamVR_InputHandler.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, GetDeviceFromType(offHandControllerType));
                     }
 
                     if (aimingTwoHanded)
@@ -76,7 +73,7 @@ namespace GTFO_VR.Input
                         aimingTwoHanded = !AreControllersOutsideOfDoubleHandedAimingRange();
                         if (wasAimingTwoHanded && !aimingTwoHanded)
                         {
-                            VRInput.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, GetDeviceFromType(offHandControllerType));
+                            SteamVR_InputHandler.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, GetDeviceFromType(offHandControllerType));
                         }
                     }
                     else
@@ -106,7 +103,7 @@ namespace GTFO_VR.Input
 
         private void CheckShouldDoubleHand(ItemEquippable item)
         {
-            VRWeaponData itemData = WeaponArchetypeVRData.GetVRWeaponData(item);
+            VRWeaponData itemData = GetVRWeaponData(item);
             if (itemData.allowsDoubleHanded)
             {
                 GTFO_VR_Plugin.log.LogDebug("Item allows double hand!");
@@ -115,7 +112,8 @@ namespace GTFO_VR.Input
                     GTFO_VR_Plugin.log.LogDebug("Always double hand is on!");
                     aimingTwoHanded = true;
                 }
-            } else
+            }
+            else
             {
                 aimingTwoHanded = false;
             }
@@ -200,7 +198,7 @@ namespace GTFO_VR.Input
             {
                 return HMD.hmd.transform.forward;
             }
-            return (mainController.transform.rotation * Vector3.forward);
+            return mainController.transform.rotation * Vector3.forward;
         }
 
         public static Vector3 GetLocalAimForward()
@@ -249,7 +247,7 @@ namespace GTFO_VR.Input
             return mainController.transform.position;
         }
 
-        public static Quaternion GetAimFromRot()
+        public static Quaternion GetRotationFromFiringPoint()
         {
             if (ItemEquippableEvents.IsCurrentItemShootableWeapon())
             {
@@ -269,7 +267,7 @@ namespace GTFO_VR.Input
                 return Quaternion.identity;
             }
 
-            if ((VR_Settings.twoHandedAimingEnabled || VR_Settings.alwaysDoubleHanded) && Controllers.aimingTwoHanded)
+            if ((VR_Settings.twoHandedAimingEnabled || VR_Settings.alwaysDoubleHanded) && aimingTwoHanded)
             {
                 return GetTwoHandedRotation();
             }

@@ -1,14 +1,10 @@
-﻿using GTFO_VR.Input;
+﻿using GTFO_VR.Core.VR_Input;
 using GTFO_VR_BepInEx.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Valve.VR;
 
-namespace GTFO_VR.Core
+namespace GTFO_VR.Core.PlayerBehaviours
 {
     public class Snapturn : MonoBehaviour
     {
@@ -45,7 +41,7 @@ namespace GTFO_VR.Core
                     SnapTurnFade(1f);
                     snapTurnRotation *= Quaternion.Euler(new Vector3(0, angle, 0f));
                     snapTurnTime = Time.time;
-                    
+
                     OnSnapTurn?.Invoke();
                     // Player origin updates in OnSnapTurn
                     OnAfterSnapTurn?.Invoke();

@@ -1,11 +1,5 @@
-﻿using Gear;
-using GTFO_VR;
-using GTFO_VR.Input;
-using HarmonyLib;
+﻿using HarmonyLib;
 using Player;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 

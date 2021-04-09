@@ -1,18 +1,14 @@
 ﻿using GTFO_VR.Core;
+using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
-using GTFO_VR.Input;
 using GTFO_VR.Util;
 using Player;
 using SteamVR_Standalone_IL2CPP.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using Valve.VR;
 using Mathf = SteamVR_Standalone_IL2CPP.Util.Mathf;
 
 namespace GTFO_VR.UI
@@ -68,7 +64,7 @@ namespace GTFO_VR.UI
 
         void Update()
         {
-            if (VRInput.GetActionDown(InputAction.Aim))
+            if (SteamVR_InputHandler.GetActionDown(InputAction.Aim))
             {
                 SwitchState();
             }
@@ -90,7 +86,7 @@ namespace GTFO_VR.UI
             {
                 objectiveDisplay.text = "WARDEN OBJECTIVE: \n \n " + mainObj + " \n \n " + subObj;
                 objectiveDisplay.ForceMeshUpdate(false);
-                VRInput.TriggerHapticPulse(0.01f, 1 / .025f, 0.2f, Controllers.GetDeviceFromType(Controllers.offHandControllerType));
+                SteamVR_InputHandler.TriggerHapticPulse(0.01f, 1 / .025f, 0.2f, Controllers.GetDeviceFromType(Controllers.offHandControllerType));
             }
         }
 
@@ -330,7 +326,7 @@ namespace GTFO_VR.UI
                 nextIndex = 0;
             }
             SwitchState((WatchState)nextIndex);
-            VRInput.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, Controllers.GetDeviceFromType(Controllers.offHandControllerType));
+            SteamVR_InputHandler.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, Controllers.GetDeviceFromType(Controllers.offHandControllerType));
         }
 
         void SwitchState(WatchState state)
