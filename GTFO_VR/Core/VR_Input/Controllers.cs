@@ -103,6 +103,10 @@ namespace GTFO_VR.Core.VR_Input
 
         private void CheckShouldDoubleHand(ItemEquippable item)
         {
+            if(!VR_Settings.twoHandedAimingEnabled)
+            {
+                return;
+            }
             VRWeaponData itemData = GetVRWeaponData(item);
             if (itemData.allowsDoubleHanded)
             {

@@ -43,16 +43,13 @@ namespace GTFO_VR.Core
                 GTFO_VR_Plugin.log.LogError("Trying to create duplicate VRGlobal class");
                 return;
             }
-            // Prevent SteamVR from adding a tracking script automatically. We handle this manually in HMD
+            // Prevent SteamVR from adding a tracking script automatically. We handle this manually in VR_Input.HMD
             SteamVR_Camera.useHeadTracking = false;
 
             FocusStateEvents.OnFocusStateChange += FocusChanged;
             Setup();
             SteamVR_Settings.instance.poseUpdateMode = SteamVR_UpdateModes.OnLateUpdate;
         }
-
-
-
 
         public static bool GetPlayerPointingAtPositionOnScreen(out Vector2 uv)
         {
@@ -171,20 +168,8 @@ namespace GTFO_VR.Core
         {
             PlayerVR.LoadedAndInIngameView = toggle;
             SteamVR_Render.pauseRendering = !toggle;
-            Invoke(nameof(VR_Global.DisableUnneccessaryCams), .1f);
-
         }
 
-        void DisableUnneccessaryCams()
-        {
-            if (PlayerVR.VRCamera && PlayerVR.VRCamera.head)
-            {
-                foreach (Camera cam in PlayerVR.VRCamera.transform.root.GetComponentsInChildren<Camera>())
-                {
-                    cam.enabled = false;
-                }
-            }
-        }
 
         void OnDestroy()
         {

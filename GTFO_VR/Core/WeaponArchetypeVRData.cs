@@ -44,7 +44,7 @@ namespace GTFO_VR.Core
             weaponArchetypes = new Dictionary<string, VRWeaponData>();
             weaponArchetypes.Add("Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false));
             weaponArchetypes.Add("DefaultDoubleHanded", new VRWeaponData(new Vector3(0f, 0f, -0.05f), true));
-            weaponArchetypes.Add("Melee", new VRWeaponData(new Vector3(0f, -.15f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false));
+            weaponArchetypes.Add("Melee", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false));
 
             weaponArchetypes.Add("Mine deployer", new VRWeaponData(new Vector3(0f, 0f, -.05f), false));
             weaponArchetypes.Add("Bio Tracker", new VRWeaponData(new Vector3(0f, 0f, -.05f), false));

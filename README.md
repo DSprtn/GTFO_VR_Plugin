@@ -7,19 +7,51 @@ E-mail any suggestions for new features or tweaks over to GTFOVRMod@gmail.com
 
 Grab the newest version from here! https://github.com/DSprtn/GTFO_VR_Plugin/releases
 
-Tutorial video for the installation: https://www.youtube.com/watch?v=sZPK1GfqxBE&feature=youtu.be (Thanks F4cepa1m!)
-
 Try to get used to the game in Non-VR mode first before using! 
 
 ## Installation: 
 
- 	1. Download and extract BepInEx into your GTFO game folder (SteamLibrary\steamapps\common\GTFO\) 
-	from https://github.com/BepInEx/BepInEx/releases
+
+	If you have an old Bepinex/GTFO_VR installation, delete it! Removing the bepinex folder should suffice.
 	
-	2. Launch the game once and close it
+ 	1. Download and extract BepInEx 6.0.0 into your GTFO game folder (SteamLibrary\steamapps\common\GTFO\)
+	from https://builds.bepis.io/projects/bepinex_be/350/BepInEx_UnityIL2CPP_x64_07a69cf_6.0.0-be.350.zip
 	
-	3. Download the latest version of the plugin from https://github.com/DSprtn/GTFO_VR_Plugin/releases and 
+	You can also find the GTFO game path by doing the following:
+	Right click GTFO in your Steam library, and go into Properties->Local Files->Browse
+	
+	2. Download the latest version of the GTFO_VR plugin from https://github.com/DSprtn/GTFO_VR_Plugin/releases (0.8.1 or later) and 
 	extract it into the same folder (SteamLibrary\steamapps\common\GTFO\)
+	
+	3. Download Unity libraries from https://github.com/LavaGang/MelonLoader/raw/master/BaseLibs/UnityDependencies/2019.4.1.zip
+	and extract them into Steamapps\Common\GTFO\Bepinex\unity-libs\
+	
+	The order of extracting the archives is important! It should be done in order of the steps.
+	
+	At this time your directories and files should look more or less like this:
+	
+	GTFO/
+	├── BepInEx/
+	│   ├── core/
+	│       ├── AssemblyUnhollower.dll
+	|       ├── etc.
+	│   ├── plugins/
+	│       ├── GTFO_VR.dll
+	│       ├── Newtonsoft.Json.dll
+	│       ├── openvr_api.dll
+	│       └── SteamVR_Standalone_IL2CPP.dll
+	│   ├── unhollowed/ - Delete this folder if you're having issues!
+	│   └── unity-libs/
+	│       ├── UnityEngine.AccessbilityModule.dll
+	│       ├── etc.
+	└── GTFO_DATA/
+	    ├── StreamingAssets/
+		├── AssetBundles
+		├── vrshaders
+		├── vrwatch
+		├── SteamVR_Standalone/
+		    ├── actions.json
+		    ├── etc.
 	
 	4. Make sure 'use desktop game theatre' is off in the properties of GTFO in the steam library 
 	(or in general steam settings)
@@ -35,11 +67,11 @@ Try to get used to the game in Non-VR mode first before using!
 	When in doubt, consult the video here https://www.youtube.com/watch?v=sZPK1GfqxBE&feature=youtu.be&t=4m14s
 	It is still mostly up to date.
 	
+	
 	To enable tracking or change the angle at which the weapons are being held you must set an action pose 
 	within the binding menu. Tip seems to be the most intuitive. Remember to set all required actions or the 
 	binding won't get saved!
 	
-
 	
 ## Usage notes:
 
@@ -48,7 +80,7 @@ Try to get used to the game in Non-VR mode first before using!
 	There are configurable options for:
 	-	Experimental performance tweaks 
 	-	Left handed mode 
-	-	No VR controller mode 
+	-	No VR controller mode
 	- 	IRL Crouching detection 
 	-	Two handed aiming (toggleable in-game based on the distance of your hands)
 	-	Always aiming two handed, ignoring hand distance
@@ -60,14 +92,18 @@ Try to get used to the game in Non-VR mode first before using!
 	-	VR mod on/off switch (I recommend just using the SteamVR check)
 
 	They can be found in a config file which is created after starting the game at least once with 
-	the VR mod installed. It can be found under "GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg"
+	the VR mod installed. It can be found under "GTFO\BepInEx\config\com.Spartan.GTFO_VR_Plugin.cfg"
 
 #### PERFORMANCE
 
-	Lower your render resolution in SteamVR and the quality of the in-game settings, GTFO VR is a BIG resource hog!
+	Lower your render resolution in SteamVR and also the quality of the in-game settings, GTFO VR is a BIG resource hog!
 	
 	If you don't mind small artifacting on lights in exchange for a bit of extra performance
-	set light rendering mode to '2' in GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg
+	set light rendering mode to '3' in GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg
+	
+	There is now also a setting to alternate rendering of lights and shadows per eye, per frame. This WILL
+	look janky as all hell if you move your head around fast but it will boost performance greatly. I would
+	only recommend using this if nothing else works to make the game run in VR for you.
 	
 #### MISC IN-GAME ACTIONS
 
@@ -77,18 +113,19 @@ Try to get used to the game in Non-VR mode first before using!
 	The watch can be toggled between inventory and objectives with the ToggleWatchMode action.
 	
 	The watch UI is as follows ---
-	The top 5 bars represent the inventory slots, with ammo percentages.
+	The top 5 bars represent the inventory slots, with ammo percentages (1 bar = 20%.)
 	Each bar is a mag of ammo, 20% of your tool ammo or a single use of a consumable item. 
-	On the bottom left there are bars for HP, infection and oxygen, they are each 20% and are not visible 
+	On the bottom left there are bars for HP, infection and oxygen, they are each 20% a bar and are not visible 
 	if they don't have to be at the moment. 
 	On the bottom right you can see the ammo in your current mag. Each block is a bullet.
+	There is a config setting to change the ammo to a number display.
 	
 	Remember to bind openmenu and openmap too! They work in-game correctly as you'd expect.
 	
-	Menu and map UI is controlled by the 'movement', 'crouch' (for re-orienting) and the 'fire' action.
+	Menu and map UI is controlled by the 'movement' action or pointing the controller. 
+	'Crouch' and 'aim' re-orient the overlay and the 'fire' action interacts with the buttons.
 	
 #### STEAM_VR DESKTOP 
-	
 	
 	If you'd like to use SteamVR desktop set the game to windowed mode (unless you have multiple monitors) 
 	If you 'tab out' with SteamVR desktop remember to tab back in (by clicking on the game icon in the taskbar) 
@@ -134,21 +171,24 @@ Try to get used to the game in Non-VR mode first before using!
 	Works in multiplayer, with others not having to have the mod!
 	
 	Full SteamVR_Input binding support, you can play with all VR controllers, provided they have enough buttons 
-	for all the actions in GTFO. All in-game actions are supported, except for 'undo' in the terminal!
+	for all the actions in GTFO. Most in-game actions are supported, if you're missing any let me know!
 	
 	Full VR controller based aiming (including fancy laserpointer)
 		
-	Fully customized VR UI
+	Customized user interface for VR
 	
 	Main menu, map UI and terminal working correctly in VR
 	
-	Support for single or double handed aiming
+	Support for single or double handed aiming, gun stocks
 	
 	Snap turn
 	
-	Loads of configurable options (more coming soon!)
+	Loads of configurable options (more coming soon and if you're missing any let me know!)
 	
 ## Known issues: 
+
+	The IL2CPP build hasn't been tested thoroughly yet so crashes may occur. If one does occur,
+	send me the output log from the path given below.
 	
 	Nothing left over here! If you do encounter a bug please send me the output log that can be found under 
 	AppData\LocalLow\10 Chambers Collective\GTFO\output_log.txt
@@ -157,4 +197,4 @@ Try to get used to the game in Non-VR mode first before using!
 
 E-mail any suggestions for new features or tweaks over to GTFOVRMod@gmail.com
 Open up tickets for any issues you find over here on github, 
-or if you're unfamiliar with it send them to the same e-mail.
+or if you're unfamiliar with Github just send me an e-mail.
