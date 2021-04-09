@@ -18,13 +18,14 @@ Try to get used to the game in Non-VR mode first before using!
 	from https://builds.bepis.io/projects/bepinex_be/350/BepInEx_UnityIL2CPP_x64_07a69cf_6.0.0-be.350.zip
 	
 	You can also find the GTFO game path by doing the following:
-	Right click GTFO in your Steam library, and go into Properties->Local Files->Browse
+	Right click GTFO in your Steam library, go into Properties->Local Files->Browse
 	
-	2. Download the latest version of the GTFO_VR plugin from https://github.com/DSprtn/GTFO_VR_Plugin/releases (0.8.1 or later) and 
-	extract it into the same folder (SteamLibrary\steamapps\common\GTFO\)
+	2. Download the latest version of the GTFO_VR plugin from https://github.com/DSprtn/GTFO_VR_Plugin/releases 
+	(0.8.1 or later) and extract it into the same folder (SteamLibrary\steamapps\common\GTFO\)
 	
-	3. Download Unity libraries from https://github.com/LavaGang/MelonLoader/raw/master/BaseLibs/UnityDependencies/2019.4.1.zip
-	and extract them into Steamapps\Common\GTFO\Bepinex\unity-libs\
+	3. Download and extract the following archive into Steamapps\Common\GTFO\Bepinex\unity-libs\ 
+	https://github.com/LavaGang/MelonLoader/raw/master/BaseLibs/UnityDependencies/2019.4.1.zip
+	
 	
 	The order of extracting the archives is important! It should be done in order of the steps.
 	
@@ -96,7 +97,8 @@ Try to get used to the game in Non-VR mode first before using!
 
 #### PERFORMANCE
 
-	Lower your render resolution in SteamVR and also the quality of the in-game settings, GTFO VR is a BIG resource hog!
+	Lower your render resolution in SteamVR and also the quality of the in-game settings. 
+	GTFO VR is a BIG resource hog!
 	
 	If you don't mind small artifacting on lights in exchange for a bit of extra performance
 	set light rendering mode to '3' in GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg
