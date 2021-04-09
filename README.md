@@ -97,7 +97,8 @@ Try to get used to the game in Non-VR mode first before using!
 
 #### PERFORMANCE
 
-	Lower your render resolution in SteamVR and also the quality of the in-game settings, GTFO VR is a BIG resource hog!
+	Lower your render resolution in SteamVR and also the quality of the in-game settings. 
+	GTFO VR is a BIG resource hog!
 	
 	If you don't mind small artifacting on lights in exchange for a bit of extra performance
 	set light rendering mode to '3' in GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg
