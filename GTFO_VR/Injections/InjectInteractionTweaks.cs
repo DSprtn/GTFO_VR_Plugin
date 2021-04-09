@@ -1,5 +1,7 @@
-﻿using GTFO_VR.Core.VR_Input;
+﻿using Gear;
+using GTFO_VR.Core.VR_Input;
 using HarmonyLib;
+using UnityEngine;
 
 namespace GTFO_VR_BepInEx.Core
 {
@@ -15,258 +17,109 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(GuiManager), "IsOnScreen")]
     class InjectDisableOnScreenCheck
     {
-        static bool Prefix()
+        static void Postfix(ref bool __result)
         {
-            return false;
+            __result = true;
         }
     }
 
-    // ToDO - Replace interaction transpilers
 
-    /*
-
-    [HarmonyPatch(typeof(MeleeWeaponFirstPerson), "CheckForAttackTargets")]
-    public static class InjectClosestPlayerNode_Patch
+    [HarmonyPatch(typeof(PlayerInteraction), nameof(PlayerInteraction.UpdateWorldInteractions))]
+    class InjectWorldInteractionsTweak
     {
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        static Vector3 cachedCamPos;
+        static void Prefix(PlayerInteraction __instance)
         {
-            bool foundReplace = false;
-            CodeInstruction target = new CodeInstruction(OpCodes.Ldc_R4, 0.0f);
-            foreach (var instruction in instructions)
-            {
-                CodeInstruction curr = instruction;
-                if (curr.ToString().Equals(target.ToString()))
-                {
-                    Debug.Log("Old instruction == " + curr);
-                    curr = new CodeInstruction(OpCodes.Ldc_R4, -1.0f);
-                    Debug.Log("New instruction == " + curr);
-                    foundReplace = true;
-                }
-                yield return curr;
-            }
-            if (!foundReplace)
-            {
-                Debug.LogError("Failed to replace dot check replacement, no anchor found!");
-            }
+            cachedCamPos = __instance.m_owner.m_camPos;
+            __instance.m_owner.m_camPos = HMD.GetVRInteractionFromPosition();
+        }
+
+        static void Postfix(PlayerInteraction __instance)
+        {
+            __instance.m_owner.m_camPos = cachedCamPos;
         }
     }
 
-
-    [HarmonyPatch(typeof(CarryItemEquippableFirstPerson), "UpdateInsertOrDropItem")]
-    public static class InjectDropInteractablesInteraction_Patch
+    [HarmonyPatch(typeof(ResourcePackFirstPerson), nameof(ResourcePackFirstPerson.UpdateInteraction))]
+    class InjectResourcePackInteractionTweak
     {
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+
+        static void Prefix(PlayerInteraction __instance)
         {
-            Debug.Log("Patching interactable dropping interaction...");
-            int endIndex = -1;
+            InjectFPSCameraForwardTweakForInteraction.useInteractionControllersForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
+        }
 
-            CodeInstruction getCameraForward = new CodeInstruction(OpCodes.Callvirt, typeof(FPSCamera).GetMethod("get_Forward"));
-
-            CodeInstruction getInteractFromPos = new CodeInstruction(OpCodes.Call, typeof(HMD).GetMethod(nameof(HMD.GetVRInteractionFromPosition)));
-
-            CodeInstruction getInteractDir = new CodeInstruction(OpCodes.Call, typeof(HMD).GetMethod(nameof(HMD.GetVRInteractionLookDir)));
-
-            Debug.Log("Listening for " + getCameraForward);
-
-
-            var codes = new List<CodeInstruction>(instructions);
-            for (int i = 0; i < codes.Count; i++)
-            {
-                if (codes[i].ToString().Equals(getCameraForward.ToString()))
-                {
-                    endIndex = i;
-                    break;
-                }
-            }
-
-
-            if (endIndex != -1)
-            {
-                Debug.Log("Replacing " + codes[endIndex] + "  with - " + getInteractDir);
-                codes[endIndex] = getInteractDir;
-                Debug.Log("Replacing " + codes[endIndex - 4] + "  with - " + getInteractFromPos);
-                codes[endIndex - 4] = getInteractFromPos;
-
-
-                Debug.Log("Removing " + codes[endIndex - 1]);
-                codes.RemoveAt(endIndex - 1);
-                Debug.Log("Removing " + codes[endIndex - 2]);
-                codes.RemoveAt(endIndex - 2);
-                Debug.Log("Removing " + codes[endIndex - 3]);
-                codes.RemoveAt(endIndex - 3);
-                Debug.Log("Removing " + codes[endIndex - 5]);
-                codes.RemoveAt(endIndex - 5);
-                Debug.Log("Removing " + codes[endIndex - 6]);
-                codes.RemoveAt(endIndex - 6);
-                Debug.Log("Removing " + codes[endIndex - 7]);
-                codes.RemoveAt(endIndex - 7);
-            }
-            else
-            {
-                Debug.LogError("Failed to replace interaction drop mechanics, no anchor found!");
-            }
-            return codes.AsEnumerable();
+        static void Postfix(PlayerInteraction __instance)
+        {
+            InjectFPSCameraForwardTweakForInteraction.useInteractionControllersForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
         }
     }
 
-    [HarmonyPatch(typeof(LockMelterFirstPerson), "UpdateApplyActionInput")]
-    public static class InjectLockMelterInteraction_Patch
+    [HarmonyPatch(typeof(LockMelterFirstPerson), nameof(LockMelterFirstPerson.UpdateApplyActionInput))]
+    class InjectLockMelterInteractionTweak
     {
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+
+        static void Prefix(PlayerInteraction __instance)
         {
-            Debug.Log("Patching lockMelter interaction...");
-            int endIndex = -1;
+            InjectFPSCameraForwardTweakForInteraction.useInteractionControllersForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
+        }
 
-            CodeInstruction getCameraForward = new CodeInstruction(OpCodes.Callvirt, typeof(FPSCamera).GetMethod("get_Forward"));
-
-            CodeInstruction getInteractFromPos = new CodeInstruction(OpCodes.Call, typeof(HMD).GetMethod(nameof(HMD.GetVRInteractionFromPosition)));
-
-            CodeInstruction getInteractDir = new CodeInstruction(OpCodes.Call, typeof(HMD).GetMethod(nameof(HMD.GetVRInteractionLookDir)));
-
-            Debug.Log("Listening for " + getCameraForward);
-
-
-            var codes = new List<CodeInstruction>(instructions);
-            for (int i = 0; i < codes.Count; i++)
-            {
-                if (codes[i].ToString().Equals(getCameraForward.ToString()))
-                {
-                    endIndex = i;
-                    break;
-                }
-            }
-
-
-            if (endIndex != -1)
-            {
-                Debug.Log("Replacing " + codes[endIndex] + "  with - " + getInteractDir);
-                codes[endIndex] = getInteractDir;
-                Debug.Log("Replacing " + codes[endIndex - 4] + "  with - " + getInteractFromPos);
-                codes[endIndex - 4] = getInteractFromPos;
-
-
-                Debug.Log("Removing " + codes[endIndex - 1]);
-                codes.RemoveAt(endIndex -1);
-                Debug.Log("Removing " + codes[endIndex - 2]);
-                codes.RemoveAt(endIndex - 2);
-                Debug.Log("Removing " + codes[endIndex - 3]);
-                codes.RemoveAt(endIndex - 3);
-                Debug.Log("Removing " + codes[endIndex - 5]);
-                codes.RemoveAt(endIndex - 5);
-                Debug.Log("Removing " + codes[endIndex - 6]);
-                codes.RemoveAt(endIndex - 6);
-                Debug.Log("Removing " + codes[endIndex - 7]);
-                codes.RemoveAt(endIndex - 7);
-            }
-            else
-            {
-                Debug.LogError("Failed to replace lockMelter interaction, no anchor found!");
-            }
-            return codes.AsEnumerable();
+        static void Postfix(PlayerInteraction __instance)
+        {
+            InjectFPSCameraForwardTweakForInteraction.useInteractionControllersForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
         }
     }
 
-    [HarmonyPatch(typeof(ResourcePackFirstPerson), "UpdateInteraction")]
-    public static class InjectResourcePackInteraction_Patch
+    [HarmonyPatch(typeof(CarryItemEquippableFirstPerson), nameof(CarryItemEquippableFirstPerson.UpdateInsertOrDropItem))]
+    class InjectCarryItemInteractionTweak
     {
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+
+        static void Prefix(PlayerInteraction __instance)
         {
-            Debug.Log("Patching resourcePack interaction...");
-            int endIndex = -1;
+            InjectFPSCameraForwardTweakForInteraction.useInteractionControllersForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
+        }
 
-            CodeInstruction getCameraForward = new CodeInstruction(OpCodes.Callvirt, typeof(FPSCamera).GetMethod("get_Forward"));
-
-            CodeInstruction getInteractFromPos = new CodeInstruction(OpCodes.Call, typeof(HMD).GetMethod(nameof(HMD.GetVRInteractionFromPosition)));
-
-            CodeInstruction getInteractDir = new CodeInstruction(OpCodes.Call, typeof(HMD).GetMethod(nameof(HMD.GetVRInteractionLookDir)));
-
-            Debug.Log("Listening for " + getCameraForward);
-
-
-            var codes = new List<CodeInstruction>(instructions);
-            for (int i = 0; i < codes.Count; i++)
-            {
-                if (codes[i].ToString().Equals(getCameraForward.ToString()))
-                {
-                    endIndex = i;
-                    break;
-                }
-            }
-
-
-            if (endIndex != -1)
-            {
-                Debug.Log("Replacing " + codes[endIndex] + "  with - " + getInteractDir);
-                codes[endIndex] = getInteractDir;
-                Debug.Log("Replacing " + codes[endIndex - 4] + "  with - " + getInteractFromPos);
-                codes[endIndex - 4] = getInteractFromPos;
-
-
-                Debug.Log("Removing " + codes[endIndex - 1]);
-                codes.RemoveAt(endIndex - 1);
-                Debug.Log("Removing " + codes[endIndex - 2]);
-                codes.RemoveAt(endIndex - 2);
-                Debug.Log("Removing " + codes[endIndex - 3]);
-                codes.RemoveAt(endIndex - 3);
-                Debug.Log("Removing " + codes[endIndex - 5]);
-                codes.RemoveAt(endIndex - 5);
-                Debug.Log("Removing " + codes[endIndex - 6]);
-                codes.RemoveAt(endIndex - 6);
-                Debug.Log("Removing " + codes[endIndex - 7]);
-                codes.RemoveAt(endIndex - 7);
-            }
-            else
-            {
-                Debug.LogError("Failed to replace resource pack interaction, no anchor found!");
-            }
-            return codes.AsEnumerable();
+        static void Postfix(PlayerInteraction __instance)
+        {
+            InjectFPSCameraForwardTweakForInteraction.useInteractionControllersForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
         }
     }
 
-    [HarmonyPatch(typeof(PlayerInteraction), "UpdateWorldInteractions")]
-    public static class InjectPlayerInteraction_Patch
+
+    [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.Forward))]
+    [HarmonyPatch(MethodType.Getter)]
+    class InjectFPSCameraForwardTweakForInteraction
     {
-        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        public static bool useInteractionControllersForward = false;
+
+        static void Postfix(PlayerInteraction __instance, ref Vector3 __result)
         {
-            Debug.Log("Patching playerInteraction pos");
-            int endIndex = -1;
-
-            CodeInstruction targetInstruction = new CodeInstruction(OpCodes.Ldfld, typeof(PlayerInteraction).GetField(nameof(PlayerInteraction.m_playerCam)));
-
-            CodeInstruction getInteractFromPos = new CodeInstruction(OpCodes.Call, typeof(HMD).GetMethod(nameof(HMD.GetVRInteractionFromPosition)));
-
-            //CodeInstruction getInteractDir = new CodeInstruction(OpCodes.Call, typeof(HMD).GetMethod(nameof(HMD.GetVRInteractionFromPosition)));
-
-            Debug.Log("Listening for " + targetInstruction);
-
-
-            var codes = new List<CodeInstruction>(instructions);
-            for (int i = 0; i < codes.Count; i++)
+            if(useInteractionControllersForward)
             {
-                if (codes[i].ToString().Equals(targetInstruction.ToString()) && codes[i + 1].opcode == OpCodes.Callvirt)
-                {
-                    endIndex = i;
-                    break;
-                }
-            }
-
-
-            if (endIndex != -1)
-            {
-                CodeInstruction replacePos = new CodeInstruction(OpCodes.Stloc_0);
-
-                Debug.Log("Inserting ... " + replacePos);
-                codes.Insert(endIndex + 4, replacePos);
-                Debug.Log("Inserting ... " + getInteractFromPos);
-                codes.Insert(endIndex + 4, getInteractFromPos);
-
-            }
-            else
-            {
-                Debug.LogError("Failed to replace playerInteraction pos, no anchor found!");
-            }
-            return codes.AsEnumerable();
+                __result = HMD.GetVRInteractionLookDir();
+            } 
         }
     }
-    */
+
+
+    [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.Position))]
+    [HarmonyPatch(MethodType.Getter)]
+    class InjectFPSCameraPositionTweakForInteraction
+    {
+        public static bool useInteractionControllersPosition = false;
+
+        static void Postfix(PlayerInteraction __instance, ref Vector3 __result)
+        {
+            if (useInteractionControllersPosition)
+            {
+                __result = HMD.GetVRInteractionFromPosition();
+            }
+        }
+    }
 }

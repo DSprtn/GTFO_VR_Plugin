@@ -34,7 +34,6 @@ namespace GTFO_VR_BepInEx.Core
             
         }
     }
-    //ToDO - Fix hacking tool rendering
     
     /// <summary>
     /// Makes the hacking tool render normally instead of in 2D
@@ -47,6 +46,7 @@ namespace GTFO_VR_BepInEx.Core
             Material material = part.m_renderer.sharedMaterial;
             material.DisableKeyword("ENABLE_FPS_RENDERING");
             material.DisableKeyword("FPS_RENDERING_ALLOWED");
+            PlayerAgent a;
         }
     }
     

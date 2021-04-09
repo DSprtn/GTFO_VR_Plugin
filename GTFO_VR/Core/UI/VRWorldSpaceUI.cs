@@ -236,7 +236,7 @@ namespace GTFO_VR.UI
         {
             if(FocusStateEvents.currentState.Equals(eFocusState.InElevator) && PlayerVR.fpsCamera)
             {
-                Vector3 flatForward = PlayerVR.fpsCamera.m_camera.transform.forward;
+                Vector3 flatForward = HMD.GetFlatForwardDirection();
                 flatForward.y = 0f;
                 Vector3 pos = PlayerVR.fpsCamera.m_camera.transform.position;
                 return pos + flatForward.normalized * 1.2f;
@@ -254,7 +254,7 @@ namespace GTFO_VR.UI
             {
                 return PlayerVR.fpsCamera.CameraRayPos + new Vector3(0, 0.05f, 0) - PlayerVR.fpsCamera.transform.forward * .1f;
             }
-            return PlayerOrigin.GetUnadjustedPosition() + HMD.GetFlatForwardDirection() * .7f + new Vector3(0, .75f, 0);
+            return PlayerOrigin.GetUnadjustedPosition() + HMD.GetFlatForwardDirection() * .7f + new Vector3(0, 1f, 0);
         }
 
         Vector3 GetStatusBarPosition()
