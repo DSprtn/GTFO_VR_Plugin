@@ -17,7 +17,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public static bool keyboardClosedThisFrame;
 
-
         void Awake()
         {
             SteamVR_Events.System(EVREventType.VREvent_KeyboardCharInput).Listen(OnKeyboardInput);
