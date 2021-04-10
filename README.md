@@ -11,8 +11,9 @@ Try to get used to the game in Non-VR mode first before using!
 
 ## Installation: 
 
-	Consult the installation video here if you're having trouble: 
-	https://www.youtube.com/watch?v=2lv2XepzFvA (Thanks Alabaster!)
+Consult the installation video here if you're having trouble: 
+https://www.youtube.com/watch?v=2lv2XepzFvA (Thanks Alabaster!)
+
 
 	If you have an old Bepinex/GTFO_VR installation, delete it! Removing the bepinex folder should suffice.
 	
