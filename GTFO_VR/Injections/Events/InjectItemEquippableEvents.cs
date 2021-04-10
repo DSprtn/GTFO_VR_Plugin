@@ -2,13 +2,13 @@
 using HarmonyLib;
 
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections.Events
 {
     /// <summary>
     /// Add event calls for item equips
     /// </summary>
 
-    [HarmonyPatch(typeof(ItemEquippable),"OnWield")]
+    [HarmonyPatch(typeof(ItemEquippable), nameof(ItemEquippable.OnWield))]
     class InjectItemEquippableEvents
     {
         static void Postfix(ItemEquippable __instance)

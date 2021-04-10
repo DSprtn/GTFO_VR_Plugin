@@ -3,9 +3,11 @@ using HarmonyLib;
 using UnityEngine;
 
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
-
+    /// <summary>
+    /// Makes weapons fire from the muzzle of the weapon instead of the camera.
+    /// </summary>
     [HarmonyPatch(typeof(BulletWeapon), nameof(BulletWeapon.Fire))]
     class InjectFireFromWeaponMuzzle
     {

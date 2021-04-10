@@ -6,7 +6,7 @@ using System.Text;
 using UnityEngine;
 
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
 
     // TODO - Design/Implement this

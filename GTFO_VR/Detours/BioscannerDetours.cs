@@ -10,6 +10,9 @@ using GTFO_VR.Core.VR_Input;
 namespace GTFO_VR.Detours
 {
 
+    /// <summary>
+    /// Patches the bioscanner so the scanning works off of the gun's position instead of the camera's.
+    /// </summary>
     public static class BioscannerDetours
     {
         public static Quaternion cachedControllerRotation = Quaternion.identity;

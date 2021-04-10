@@ -2,10 +2,13 @@
 using HarmonyLib;
 using System;
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
+    /// <summary>
+    /// Disables UI rendering while not in the map or main menu
+    /// </summary>
     [HarmonyPatch(typeof(UI_Core), nameof(UI_Core.RenderUI), new Type[0])]
-    class InjectToggleUIRendering
+    class InjectDisableUIRendering
     {
         static bool Prefix()
         {

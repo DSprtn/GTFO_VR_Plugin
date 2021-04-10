@@ -9,6 +9,10 @@ using UnityEngine;
 
 namespace GTFO_VR.Events
 {
+    /// <summary>
+    /// Add event calls for locomotion events
+    /// This currently only needs to describe the player entering the ladder but might be expanded later depending on the game's needs.
+    /// </summary>
     public static class PlayerLocomotionEvents
     {
 

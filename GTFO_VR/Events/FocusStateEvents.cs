@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace GTFO_VR.Events
 {
+    /// <summary>
+    /// Add event calls for focus state updates
+    /// Focus states describe the current 'focus' context of the game --- InTerminal, Elevator, MainMenu etc.
+    /// </summary>
     public static class FocusStateEvents
     {
 

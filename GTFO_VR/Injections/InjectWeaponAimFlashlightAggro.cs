@@ -5,12 +5,12 @@ using Player;
 using UnityEngine;
 
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
     /// <summary>
     /// Change detection to use weapon flashlight direction (when you're the host or playing solo)
     /// </summary>
-    [HarmonyPatch(typeof(PlayerAgent), "GetDetectionMod")]
+    [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.GetDetectionMod))]
     class InjectWeaponAimFlashlightAggro
     {
         static void Postfix(PlayerAgent __instance, Vector3 dir, float distance, ref float __result)

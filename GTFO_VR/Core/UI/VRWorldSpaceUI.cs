@@ -11,6 +11,9 @@ using Valve.VR;
 
 namespace GTFO_VR.UI
 {
+    /// <summary>
+    /// Responsible for patching all UI elements to 3D and positioning them correctly.
+    /// </summary>
     public class VRWorldSpaceUI : MonoBehaviour
     {
 
@@ -50,8 +53,6 @@ namespace GTFO_VR.UI
             interactionBar = interact;
             interactGUI = interaction;
         }
-
-
 
         public static void SetPlayerGUIRef(PlayerGuiLayer playerGUIRef, PUI_Compass compassRef, PUI_WardenIntel intelRef)
         {

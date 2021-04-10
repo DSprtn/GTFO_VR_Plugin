@@ -4,9 +4,11 @@ using UnityEngine;
 
 namespace GTFO_VR.Core.PlayerBehaviours
 {
+    /// <summary>
+    /// Responsible for managing the fancy weapon laserpointer.
+    /// </summary>
     public class LaserPointer : MonoBehaviour
     {
-
         public LaserPointer(IntPtr value)
         : base(value) { }
 

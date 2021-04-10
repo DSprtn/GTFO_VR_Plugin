@@ -10,6 +10,9 @@ using static GTFO_VR.Core.WeaponArchetypeVRData;
 namespace GTFO_VR.Core.VR_Input
 
 {
+    /// <summary>
+    /// Handles all VR controller related actions. Includes double handing weapons, interactions, transforms etc.
+    /// </summary>
     public class Controllers : MonoBehaviour
     {
         public Controllers(IntPtr value)
@@ -50,97 +53,6 @@ namespace GTFO_VR.Core.VR_Input
             }
         }
 
-        private void HandleDoubleHandedChecks()
-        {
-            bool isInDoubleHandPos = false;
-            if (PlayerVR.LoadedAndInIngameView)
-            {
-
-                VRWeaponData itemData = GetVRWeaponData(ItemEquippableEvents.currentItem);
-
-                if (itemData.allowsDoubleHanded)
-                {
-                    bool wasAimingTwoHanded = aimingTwoHanded;
-                    isInDoubleHandPos = AreControllersInDoubleHandedPosition();
-
-                    if (!aimingTwoHanded && !wasInDoubleHandPosLastFrame && isInDoubleHandPos)
-                    {
-                        SteamVR_InputHandler.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, GetDeviceFromType(offHandControllerType));
-                    }
-
-                    if (aimingTwoHanded)
-                    {
-                        aimingTwoHanded = !AreControllersOutsideOfDoubleHandedAimingRange();
-                        if (wasAimingTwoHanded && !aimingTwoHanded)
-                        {
-                            SteamVR_InputHandler.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, GetDeviceFromType(offHandControllerType));
-                        }
-                    }
-                    else
-                    {
-                        aimingTwoHanded = AreControllersInDoubleHandedPosition();
-                    }
-                }
-                else
-                {
-                    aimingTwoHanded = false;
-                }
-                wasInDoubleHandPosLastFrame = isInDoubleHandPos;
-            }
-        }
-
-
-
-        public static SteamVR_Input_Sources GetDeviceFromType(HandType type)
-        {
-            if (type.Equals(HandType.Left))
-            {
-                return SteamVR_Input_Sources.LeftHand;
-            }
-            return SteamVR_Input_Sources.RightHand;
-        }
-
-
-        private void CheckShouldDoubleHand(ItemEquippable item)
-        {
-            if(!VR_Settings.twoHandedAimingEnabled)
-            {
-                return;
-            }
-            VRWeaponData itemData = GetVRWeaponData(item);
-            if (itemData.allowsDoubleHanded)
-            {
-                GTFO_VR_Plugin.log.LogDebug("Item allows double hand!");
-                if (VR_Settings.alwaysDoubleHanded)
-                {
-                    GTFO_VR_Plugin.log.LogDebug("Always double hand is on!");
-                    aimingTwoHanded = true;
-                }
-            }
-            else
-            {
-                aimingTwoHanded = false;
-            }
-        }
-
-
-        bool AreControllersInDoubleHandedPosition()
-        {
-            if (Vector3.Distance(mainController.transform.position, offhandController.transform.position) < doubleHandStartDistance)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        bool AreControllersOutsideOfDoubleHandedAimingRange()
-        {
-            if (Vector3.Distance(mainController.transform.position, offhandController.transform.position) > doubleHandLeaveDistance)
-            {
-                return true;
-            }
-            return false;
-        }
 
         private void SetMainController()
         {
@@ -186,10 +98,94 @@ namespace GTFO_VR.Core.VR_Input
             return controller;
         }
 
-        // Used in bioscanner patch!
-        public static Vector3 GetMainHandTransformRight()
+        private void HandleDoubleHandedChecks()
         {
-            return mainController.transform.right;
+            bool isInDoubleHandPos = false;
+            if (PlayerVR.LoadedAndInIngameView)
+            {
+
+                VRWeaponData itemData = GetVRWeaponData(ItemEquippableEvents.currentItem);
+
+                if (itemData.allowsDoubleHanded)
+                {
+                    bool wasAimingTwoHanded = aimingTwoHanded;
+                    isInDoubleHandPos = AreControllersWithinDoubleHandStartDistance();
+
+                    if (!aimingTwoHanded && !wasInDoubleHandPosLastFrame && isInDoubleHandPos)
+                    {
+                        SteamVR_InputHandler.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, GetDeviceFromHandType(offHandControllerType));
+                    }
+
+                    if (aimingTwoHanded)
+                    {
+                        aimingTwoHanded = !AreControllersOutsideOfDoubleHandExitDistance();
+                        if (wasAimingTwoHanded && !aimingTwoHanded)
+                        {
+                            SteamVR_InputHandler.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, GetDeviceFromHandType(offHandControllerType));
+                        }
+                    }
+                    else
+                    {
+                        aimingTwoHanded = AreControllersWithinDoubleHandStartDistance();
+                    }
+                }
+                else
+                {
+                    aimingTwoHanded = false;
+                }
+                wasInDoubleHandPosLastFrame = isInDoubleHandPos;
+            }
+        }
+
+        public static SteamVR_Input_Sources GetDeviceFromHandType(HandType type)
+        {
+            if (type.Equals(HandType.Left))
+            {
+                return SteamVR_Input_Sources.LeftHand;
+            }
+            return SteamVR_Input_Sources.RightHand;
+        }
+
+
+        private void CheckShouldDoubleHand(ItemEquippable item)
+        {
+            if (!VR_Settings.twoHandedAimingEnabled)
+            {
+                return;
+            }
+            VRWeaponData itemData = GetVRWeaponData(item);
+            if (itemData.allowsDoubleHanded)
+            {
+                GTFO_VR_Plugin.log.LogDebug("Item allows double hand!");
+                if (VR_Settings.alwaysDoubleHanded)
+                {
+                    GTFO_VR_Plugin.log.LogDebug("Always double hand is on!");
+                    aimingTwoHanded = true;
+                }
+            }
+            else
+            {
+                aimingTwoHanded = false;
+            }
+        }
+
+
+        bool AreControllersWithinDoubleHandStartDistance()
+        {
+            if (Vector3.Distance(mainController.transform.position, offhandController.transform.position) < doubleHandStartDistance)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        bool AreControllersOutsideOfDoubleHandExitDistance()
+        {
+            if (Vector3.Distance(mainController.transform.position, offhandController.transform.position) > doubleHandLeaveDistance)
+            {
+                return true;
+            }
+            return false;
         }
 
         public static Vector3 GetAimForward()

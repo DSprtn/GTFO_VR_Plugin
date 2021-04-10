@@ -6,6 +6,9 @@ using Valve.VR;
 
 namespace GTFO_VR.Core.PlayerBehaviours
 {
+    /// <summary>
+    /// Responsible for the snapturn functionality.
+    /// </summary>
     public class Snapturn : MonoBehaviour
     {
 
@@ -60,7 +63,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             Vector3 deltaRot = Quaternion.LookRotation(rotation).eulerAngles;
             deltaRot.x = 0;
             deltaRot.z = 0;
-            deltaRot.y -= HMD.GetVRCameraEulerRotation().y;
+            deltaRot.y -= HMD.GetFPSCameraRelativeVRCameraEuler().y;
 
             snapTurnRotation *= Quaternion.Euler(deltaRot);
             SnapTurnFade(snapTurnFadeMult);

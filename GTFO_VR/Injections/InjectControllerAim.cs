@@ -5,13 +5,13 @@ using HarmonyLib;
 using Player;
 using UnityEngine;
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
 
     /// <summary>
     /// Makes the first person items follow the position and aim direction of the main controller(s) of the player
     /// </summary>
-    [HarmonyPatch(typeof(FirstPersonItemHolder), "Update")]
+    [HarmonyPatch(typeof(FirstPersonItemHolder), nameof(FirstPersonItemHolder.Update))]
     class InjectControllerAimAlign
     {
         static void Postfix()
@@ -23,19 +23,9 @@ namespace GTFO_VR_BepInEx.Core
         }
     }
 
-
-
-    [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateInfectionLocal))]
-    class InjectAimFlashlightFixBegin
-    {
-        static void Postfix()
-        {
-            InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
-            InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
-        }
-
-    }
-
+    /// <summary>
+    /// Patches the screen liquid system to use the VR camera's properties
+    /// </summary>
     [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateGoodNodeAndArea))]
     class InjectScreenLiquidFix
     {
@@ -45,6 +35,22 @@ namespace GTFO_VR_BepInEx.Core
             ScreenLiquidManager.cameraPosition = PlayerVR.VRCamera.transform.position;
         }
     }
+
+
+    /// <summary>
+    /// This is probably obsolete, TODO - test
+    /// </summary>
+    [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateInfectionLocal))]
+    class InjectAimFlashlightFixBegin
+    {
+        static void Postfix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
+        }
+    }
+
+
 
 
     [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateGlobalInput))]
@@ -61,51 +67,14 @@ namespace GTFO_VR_BepInEx.Core
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
         }
-
     }
 
-
-    [HarmonyPatch(typeof(SentryGunFirstPerson), nameof(SentryGunFirstPerson.CheckCanPlace))]
-    class InjectSentryGunPlacementFix
-    {
-        static void Prefix()
-        {
-            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = true;
-            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = true;
-        }
-
-        static void Postfix()
-        {
-            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = false;
-            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = false;
-        }
-
-    }
-
-
-    [HarmonyPatch(typeof(MineDeployerFirstPerson), nameof(MineDeployerFirstPerson.CheckCanPlace))]
-    class InjectMineDeployerPlacementFix
-    {
-        static void Prefix()
-        {
-            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = true;
-            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = true;
-        }
-
-        static void Postfix()
-        {
-            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = false;
-            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = false;
-        }
-    }
 
     /// <summary>
-    /// Changes most actions (placing, firing, throwing) to follow the controller forward instead of camera forward 
-    /// NOTE: Does not affect flashlight aggro
+    /// Changes interactions and throwing to use the VR camera.
     /// </summary>
-    /// 
 
-    [HarmonyPatch(typeof(FPSCamera), "UpdateCameraRay")]
+    [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.UpdateCameraRay))]
     class InjectForwardInteractions
     {
         static bool Prefix(FPSCamera __instance)
@@ -113,7 +82,7 @@ namespace GTFO_VR_BepInEx.Core
             bool vis = false;
             if (PlayerVR.VRPlayerIsSetup && VR_Settings.useVRControllers)
             {
-               
+
                 //Used for throwing weapons
                 __instance.CameraRayDir = HMD.GetVRInteractionLookDir();
 
@@ -138,11 +107,11 @@ namespace GTFO_VR_BepInEx.Core
                     __instance.CameraRayObject = null;
                     __instance.CameraRayDist = 0.0f;
                 }
-        }
-        GuiManager.CrosshairLayer.SetFriendlyTargetVisible(vis);
-        return false;
+            }
+            GuiManager.CrosshairLayer.SetFriendlyTargetVisible(vis);
+            return false;
         }
     }
 
-    
+
 }

@@ -15,6 +15,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         static bool wasFadedLastFrame;
 
+        /// <summary>
+        /// Check for collision between the player's ture position and VR camera position, and in a box at the player's VR camera position
+        /// </summary>
         public static void HandleCameraInCollision()
         {
             fpsCameraInCollision = Physics.OverlapBox(HMD.GetWorldPosition() + HMD.GetWorldForward() * 0.05f, new Vector3(0.03f, 0.03f, 0.03f), HMD.hmd.transform.rotation, LayerManager.MASK_TENTACLE_BLOCKERS).Length > 0;

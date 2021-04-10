@@ -11,6 +11,9 @@ using Valve.VR;
 
 namespace GTFO_VR.Core
 {
+    /// <summary>
+    /// Responsible for seting up all VR related classes and handling focus state changes.
+    /// </summary>
     public class VR_Global : MonoBehaviour
     {
 
@@ -29,8 +32,6 @@ namespace GTFO_VR.Core
 
         public static bool hackingToolRenderingOverriden;
 
-        public static Resolution VR_Resolution;
-
 
         void Awake()
         {
@@ -45,35 +46,16 @@ namespace GTFO_VR.Core
             }
             // Prevent SteamVR from adding a tracking script automatically. We handle this manually in VR_Input.HMD
             SteamVR_Camera.useHeadTracking = false;
+            SteamVR_Settings.instance.poseUpdateMode = SteamVR_UpdateModes.OnLateUpdate;
 
             FocusStateEvents.OnFocusStateChange += FocusChanged;
             Setup();
-            SteamVR_Settings.instance.poseUpdateMode = SteamVR_UpdateModes.OnLateUpdate;
-        }
-
-        public static bool GetPlayerPointingAtPositionOnScreen(out Vector2 uv)
-        {
-            if (Controllers.GetLocalPosition().magnitude < 0.01f)
-            {
-                uv = Vector2.zero;
-                return false;
-            }
-            if (overlay)
-            {
-                VR_UI_Overlay.IntersectionResults result = new VR_UI_Overlay.IntersectionResults();
-
-                if (overlay.ComputeIntersection(Controllers.GetLocalPosition(), Controllers.GetLocalAimForward(), ref result))
-                {
-                    uv = result.UVs;
-                    return true;
-                }
-            }
-            uv = Vector2.zero;
-            return false;
         }
 
         private void Setup()
         {
+            DontDestroyOnLoad(gameObject);
+
             SteamVR.Initialize(false);
             WeaponArchetypeVRData.Setup();
             gameObject.AddComponent<SteamVR_InputHandler>();
@@ -81,13 +63,8 @@ namespace GTFO_VR.Core
             gameObject.AddComponent<Controllers>();
             gameObject.AddComponent<VR_Keyboard>();
             gameObject.AddComponent<VR_Assets>();
-            VR_Resolution = new Resolution
-            {
-                height = (int)SteamVR.instance.sceneHeight,
-                width = (int)SteamVR.instance.sceneWidth
-            };
-            Invoke(nameof(VR_Global.SetupOverlay), .25f);
-            DontDestroyOnLoad(gameObject);
+            // Delay the overlay setup so we don't 'hitch' the player's camera while everything else loads.
+            Invoke(nameof(VR_Global.SetupOverlay), .5f);
         }
 
         void SetupOverlay()
@@ -97,6 +74,9 @@ namespace GTFO_VR.Core
             overlay = o.AddComponent<VR_UI_Overlay>();
         }
 
+        /// <summary>
+        /// Prevent reprojection when entering/exiting map or menu by clearing the associated UI render texture
+        /// </summary>
         public static void ClearUIRenderTex()
         {
 

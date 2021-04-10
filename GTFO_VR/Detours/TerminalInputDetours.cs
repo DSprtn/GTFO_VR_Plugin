@@ -7,6 +7,9 @@ using GTFO_VR.Core.PlayerBehaviours;
 
 namespace GTFO_VR.Detours
 {
+    /// <summary>
+    /// Patches the terminal input so it also works with the VR keyboard.
+    /// </summary>
     public static class TerminalInputDetours
     {
 

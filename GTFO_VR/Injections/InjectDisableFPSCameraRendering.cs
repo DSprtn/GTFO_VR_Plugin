@@ -9,7 +9,7 @@ using LevelGeneration;
 using UnityEngine;
 using Valve.VR;
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
     /// <summary>
     /// Remove command calls from FPSCamera and move them to PlayerVR instead to use them after poses have been updated for better reprojection and a smoother experience
@@ -21,7 +21,7 @@ namespace GTFO_VR_BepInEx.Core
     {
         static bool Prefix(FPSCamera __instance)
         {
-            
+
             if (__instance.m_owner == null)
             {
                 return false;

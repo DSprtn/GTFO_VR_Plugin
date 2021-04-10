@@ -7,6 +7,9 @@ using static SteamVR_Utils;
 
 namespace GTFO_VR.Core.UI
 {
+    /// <summary>
+    /// Responsible for managing the UI overlay for the main menu and map.
+    /// </summary>
     public class VR_UI_Overlay : MonoBehaviour
     {
         public VR_UI_Overlay(IntPtr value)
@@ -41,6 +44,27 @@ namespace GTFO_VR.Core.UI
         {
             SetupOverlay();
 
+        }
+
+        public static bool GetPlayerPointingAtPositionOnScreen(out Vector2 uv)
+        {
+            if (Controllers.GetLocalPosition().magnitude < 0.01f)
+            {
+                uv = Vector2.zero;
+                return false;
+            }
+            if (instance != null)
+            {
+                IntersectionResults result = new IntersectionResults();
+
+                if (instance.ComputeIntersection(Controllers.GetLocalPosition(), Controllers.GetLocalAimForward(), ref result))
+                {
+                    uv = result.UVs;
+                    return true;
+                }
+            }
+            uv = Vector2.zero;
+            return false;
         }
 
         void Update()
@@ -136,7 +160,7 @@ namespace GTFO_VR.Core.UI
         }
 
         // From SteamVR_LoadLevel
-        // Helper to create (or reuse if possible) each of our different overlay types.
+        // Helper to create (or reuse, if possible) each of our different overlay types.
         ulong GetOverlayHandle(string overlayName, Transform transform, float widthInMeters = 1.0f)
         {
             ulong handle = OpenVR.k_ulOverlayHandleInvalid;

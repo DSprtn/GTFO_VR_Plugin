@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace GTFO_VR.Core
 {
+    /// <summary>
+    /// Responsible for providing data for custom logic per wieldable weapon
+    /// </summary>
     public static class WeaponArchetypeVRData
     {
 
@@ -40,7 +43,7 @@ namespace GTFO_VR.Core
         public static void Setup()
         {
             ItemEquippableEvents.OnPlayerWieldItem += PlayerSwitchedWeapon;
-            // WeaponTransform (z forward, y up, x right)
+            // WeaponTransform (z+ forward, y+ up, x+ right)
             weaponArchetypes = new Dictionary<string, VRWeaponData>();
             weaponArchetypes.Add("Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false));
             weaponArchetypes.Add("DefaultDoubleHanded", new VRWeaponData(new Vector3(0f, 0f, -0.05f), true));

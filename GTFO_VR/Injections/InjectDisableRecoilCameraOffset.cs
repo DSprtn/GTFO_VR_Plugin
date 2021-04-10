@@ -1,9 +1,13 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
-    [HarmonyPatch(typeof(FPSCamera), "RotationUpdate")]
+    /// <summary>
+    /// Disables weapon recoil impacting the camera.
+    /// </summary>
+
+    [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.RotationUpdate))]
     class InjectDisableRecoilOnCameraApply
     {
         static void Prefix(FPSCamera __instance)
@@ -11,7 +15,8 @@ namespace GTFO_VR_BepInEx.Core
             __instance.m_recoilSystem.m_hasOverrideParentRotation = false;
         }
     }
-    [HarmonyPatch(typeof(FPS_RecoilSystem), "FPS_Update")]
+
+    [HarmonyPatch(typeof(FPS_RecoilSystem), nameof(FPS_RecoilSystem.FPS_Update))]
     class InjectDisableRecoilOnCamera
     {
         static void Postfix(FPS_RecoilSystem __instance)

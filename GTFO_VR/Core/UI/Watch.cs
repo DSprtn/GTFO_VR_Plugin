@@ -13,12 +13,17 @@ using Mathf = SteamVR_Standalone_IL2CPP.Util.Mathf;
 
 namespace GTFO_VR.UI
 {
+    /// <summary>
+    /// Handles all VR watch UI related functions
+    /// </summary>
+    
+    // ToDO - Refactor this into something more manageable, or not, if no new UI is planned.
+
     public class Watch : MonoBehaviour
     {
 
         public Watch(IntPtr value)
 : base(value) { }
-
 
         enum WatchState
         {
@@ -86,7 +91,7 @@ namespace GTFO_VR.UI
             {
                 objectiveDisplay.text = "WARDEN OBJECTIVE: \n \n " + mainObj + " \n \n " + subObj;
                 objectiveDisplay.ForceMeshUpdate(false);
-                SteamVR_InputHandler.TriggerHapticPulse(0.01f, 1 / .025f, 0.2f, Controllers.GetDeviceFromType(Controllers.offHandControllerType));
+                SteamVR_InputHandler.TriggerHapticPulse(0.01f, 1 / .025f, 0.2f, Controllers.GetDeviceFromHandType(Controllers.offHandControllerType));
             }
         }
 
@@ -213,7 +218,6 @@ namespace GTFO_VR.UI
                     BulletsInMag.maxValue = item.GetMaxClip();
                     BulletsInMag.currentValue = item.GetCurrentClip();
                     BulletsInMag.UpdateAmmoGridDivisions();
-                    //BulletsInMag.inventorySlot = item.ItemDataBlock.inventorySlot;
                 }
             }
             else
@@ -326,7 +330,7 @@ namespace GTFO_VR.UI
                 nextIndex = 0;
             }
             SwitchState((WatchState)nextIndex);
-            SteamVR_InputHandler.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, Controllers.GetDeviceFromType(Controllers.offHandControllerType));
+            SteamVR_InputHandler.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, Controllers.GetDeviceFromHandType(Controllers.offHandControllerType));
         }
 
         void SwitchState(WatchState state)

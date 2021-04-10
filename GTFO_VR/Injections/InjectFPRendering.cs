@@ -3,12 +3,12 @@ using Player;
 using UnityEngine;
 
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
     /// <summary>
     /// Makes most items render normally instead of 'flattened' to the screen
     /// </summary>
-    [HarmonyPatch(typeof(PlayerBackpackManager), "SetFPSRendering")]
+    [HarmonyPatch(typeof(PlayerBackpackManager), nameof(PlayerBackpackManager.SetFPSRendering))]
     class InjectRenderFirstPersonItemsForVR
     {
         static void Prefix(ref bool enable, GameObject go)
@@ -20,21 +20,21 @@ namespace GTFO_VR_BepInEx.Core
                 {
                     continue;
                 }
-                foreach(Material mat in m.sharedMaterials)
+                foreach (Material mat in m.sharedMaterials)
                 {
-                    if(mat != null)
+                    if (mat != null)
                     {
                         mat.DisableKeyword("ENABLE_FPS_RENDERING");
                         mat.DisableKeyword("FPS_RENDERING_ALLOWED");
                     }
 
                 }
-                
+
             }
-            
+
         }
     }
-    
+
     /// <summary>
     /// Makes the hacking tool render normally instead of in 2D
     /// </summary>
@@ -48,13 +48,13 @@ namespace GTFO_VR_BepInEx.Core
             material.DisableKeyword("FPS_RENDERING_ALLOWED");
         }
     }
-    
+
 
     /// <summary>
     /// Disables FPS arms rendering, it's really wonky in VR so it's better to not see it at all
     /// </summary>
 
-    [HarmonyPatch(typeof(FirstPersonItemHolder), "SetupFPSRig")]
+    [HarmonyPatch(typeof(FirstPersonItemHolder), nameof(FirstPersonItemHolder.SetupFPSRig))]
     class InjectDisableFPSArms
     {
         static void Postfix(FirstPersonItemHolder __instance)

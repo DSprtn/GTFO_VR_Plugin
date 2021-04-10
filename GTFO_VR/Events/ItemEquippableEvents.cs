@@ -8,6 +8,9 @@ using UnityEngine;
 
 namespace GTFO_VR.Events
 {
+    /// <summary>
+    /// Add event calls for the player changing weapons/equipment.
+    /// </summary>
     public static class ItemEquippableEvents
     {
 

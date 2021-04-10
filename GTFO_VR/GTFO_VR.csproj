@@ -52,7 +52,7 @@
     <Compile Include="Injections\Events\InjectInventoryAmmoUpdateEvent.cs" />
     <Compile Include="Injections\Events\InjectItemEquippableEvents.cs" />
     <Compile Include="Injections\Events\InjectLadderPLOCEvent.cs" />
-    <Compile Include="Injections\InjectAimCursor.cs" />
+    <Compile Include="Injections\InjectAimCursorWithVRControllerInOverlay.cs" />
     <Compile Include="Injections\InjectBioscannerFixes.cs" />
     <Compile Include="Injections\InjectClusteredRenderingResolutionTweak.cs" />
     <Compile Include="Injections\InjectControllerAim.cs" />
@@ -73,11 +73,10 @@
     <Compile Include="Injections\InjectNavMarkerWorldSpace.cs" />
     <Compile Include="Injections\InjectNoVRCamHIjack.cs" />
     <Compile Include="Injections\InjectPlayerAgentRef.cs" />
-    <Compile Include="Injections\InjectPlayerGUI.cs" />
-    <Compile Include="Injections\InjectRemoveCrosshair.cs" />
+    <Compile Include="Injections\InjectPlayerGUIRef.cs" />
     <Compile Include="Injections\InjectSkipButton.cs" />
     <Compile Include="Injections\InjectSmallerMarkers.cs" />
-    <Compile Include="Injections\InjectToggleUIRendering.cs" />
+    <Compile Include="Injections\InjectDisableUIRendering.cs" />
     <Compile Include="Injections\InjectVRHammer.cs" />
     <Compile Include="Injections\InjectVRStart.cs" />
     <Compile Include="Injections\InjectWatchObjectives.cs" />

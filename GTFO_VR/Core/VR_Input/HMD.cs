@@ -9,6 +9,9 @@ using Valve.VR;
 
 namespace GTFO_VR.Core.VR_Input
 {
+    /// <summary>
+    /// Handles all VR camera related functions, mostly look direction and positions
+    /// </summary>
     public class HMD : MonoBehaviour
     {
 
@@ -30,14 +33,19 @@ namespace GTFO_VR.Core.VR_Input
             tracking = hmd.AddComponent<SteamVR_TrackedObject>();
             tracking.index = SteamVR_TrackedObject.EIndex.Hmd;
 
-            UnityEngine.Object.DontDestroyOnLoad(hmd);
+            DontDestroyOnLoad(hmd);
         }
 
         public static void SetOrigin(Transform transform)
         {
-            HMD.hmd.transform.SetParent(transform);
+            hmd.transform.SetParent(transform);
         }
 
+        /// <summary>
+        /// Returns the camera's forward or the controller's or weapons' if the player is 
+        /// holding a weapon that has a flashlight (and by an extension a lasersight)
+        /// </summary>
+        /// <returns></returns>
         public static Vector3 GetVRInteractionLookDir()
         {
             if(ItemEquippableEvents.CurrentItemHasFlashlight())
@@ -48,6 +56,12 @@ namespace GTFO_VR.Core.VR_Input
                 return hmd.transform.forward;
             }
         }
+
+        /// <summary>
+        /// Returns the camera's position or the controller's or weapons' if the player is 
+        /// holding a weapon that has a flashlight (and by an extension a lasersight)
+        /// </summary>
+        /// <returns></returns>
 
         public static Vector3 GetVRInteractionFromPosition()
         {
@@ -92,7 +106,7 @@ namespace GTFO_VR.Core.VR_Input
             return hmd.transform.position;
         }
 
-        public static Vector3 GetVRCameraEulerRotation()
+        public static Vector3 GetFPSCameraRelativeVRCameraEuler()
         {
             Quaternion localRotation = hmd.transform.rotation;
 

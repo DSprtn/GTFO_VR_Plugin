@@ -1,28 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using CellMenu;
-using Globals;
-using GTFO_VR.Core;
+﻿using CellMenu;
+using GTFO_VR.Core.UI;
 using HarmonyLib;
-using Player;
 using UnityEngine;
 
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
     /// <summary>
-    /// Unlocks cursor so steamVR desktop can be used freely
+    /// Handles updating the cursor position based on the player's VR controllers within the overlay.
     /// </summary>
 
-    [HarmonyPatch(typeof(CM_PageBase),"UpdateCursorPosition")]
-    class InjectAimAtOverlay
+    [HarmonyPatch(typeof(CM_PageBase), nameof(CM_PageBase.UpdateCursorPosition))]
+    class InjectAimCursorWithVRControllerInOverlay
     {
         static void Prefix()
         {
             Vector2 newCursorPos = Vector2.zero;
-            if(VR_Global.GetPlayerPointingAtPositionOnScreen(out newCursorPos))
+            if (VR_UI_Overlay.GetPlayerPointingAtPositionOnScreen(out newCursorPos))
             {
                 Vector2 res = new Vector2(GuiManager.ScreenRes.width, GuiManager.ScreenRes.height);
                 newCursorPos -= new Vector2(0.5f, 0.5f);

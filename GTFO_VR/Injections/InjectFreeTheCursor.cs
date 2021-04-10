@@ -3,13 +3,13 @@ using HarmonyLib;
 using UnityEngine;
 
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
     /// <summary>
     /// Unlocks cursor so steamVR desktop can be used freely
     /// </summary>
 
-    [HarmonyPatch(typeof(InputMapper),"OnFocusStateChanged")]
+    [HarmonyPatch(typeof(InputMapper), nameof(InputMapper.OnFocusStateChanged))]
     class InjectFreeTheCursor
     {
         static void Postfix()
@@ -18,7 +18,7 @@ namespace GTFO_VR_BepInEx.Core
         }
     }
 
-    [HarmonyPatch(typeof(InputMapper), "CheckLockMouse")]
+    [HarmonyPatch(typeof(InputMapper), nameof(InputMapper.CheckLockMouse))]
     class InjectFreeTheCursorMouseCheck
     {
         static void Postfix()
@@ -27,7 +27,7 @@ namespace GTFO_VR_BepInEx.Core
         }
     }
 
-    [HarmonyPatch(typeof(CM_PageBase), "Update")]
+    [HarmonyPatch(typeof(CM_PageBase), nameof(CM_PageBase.Update))]
     class InjectFreeTheCursorMenu
     {
         static void Postfix()

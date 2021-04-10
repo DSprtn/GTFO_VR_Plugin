@@ -2,10 +2,10 @@
 using HarmonyLib;
 
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
 
-    [HarmonyPatch(typeof(InteractionGuiLayer), "Setup")]
+    [HarmonyPatch(typeof(InteractionGuiLayer), nameof(InteractionGuiLayer.Setup))]
     class InjectInteractionPromptRef
     {
         static void Postfix(InteractionGuiLayer __instance)

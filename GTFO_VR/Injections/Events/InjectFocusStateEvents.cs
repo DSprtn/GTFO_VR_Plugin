@@ -10,20 +10,21 @@ using Player;
 using UnityEngine;
 
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections.Events
 {
     /// <summary>
-    /// Add event calls for focus state
+    /// Inject event calls for focus state updates
+    /// Focus states describe the current 'focus' context of the game --- InTerminal, Elevator, MainMenu etc.
     /// </summary>
 
-    [HarmonyPatch(typeof(InputMapper),nameof(InputMapper.OnFocusStateChanged))]
+    [HarmonyPatch(typeof(InputMapper), nameof(InputMapper.OnFocusStateChanged))]
     class InjectFocusStateEvents
     {
         static void Prefix(eFocusState state)
         {
-            FocusStateEvents.FocusChanged(state);   
+            FocusStateEvents.FocusChanged(state);
         }
     }
 
-   
+
 }

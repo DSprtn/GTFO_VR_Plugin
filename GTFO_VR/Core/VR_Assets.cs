@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace GTFO_VR.Core
 {
+    /// <summary>
+    /// Responsible for loading VR specific assets, including but not limited to the vr watch and vr shaders.
+    /// </summary>
     public class VR_Assets : MonoBehaviour
     {
 
@@ -34,7 +37,7 @@ namespace GTFO_VR.Core
             textSphereClip = assetBundle.LoadAsset("assets/textmesh pro/resources/shaders/tmp_clipsphere.shader").Cast<Shader>();
             spriteSphereClip = assetBundle.LoadAsset("assets/spritenoztestandclip.shader").Cast<Shader>();
             textAlwaysRender = assetBundle.LoadAsset("assets/textmesh pro/resources/shaders/tmp_noztest.shader").Cast<Shader>();
-            //fade = assetBundle.LoadAsset<Shader>("assets/steamvr/resources/steamvr_fade.shader");
+
             if (!spriteAlwaysRender)
             {
                 GTFO_VR_Plugin.log.LogError("Could not find sprite shader!");
@@ -44,7 +47,6 @@ namespace GTFO_VR.Core
             {
                 GTFO_VR_Plugin.log.LogError("Could not find text noclip shader!");
             }
-            
         }
 
     }

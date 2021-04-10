@@ -17,6 +17,9 @@ using GTFO_VR.Core.UI;
 
 namespace GTFO_VR_BepInEx.Core
 {
+    /// <summary>
+    /// Main entry point of the mod. Responsible for managing the config and running all patches if the mod is enabled.
+    /// </summary>
     [BepInPlugin(GUID, MODNAME, VERSION)]
     public class GTFO_VR_Plugin : BasePlugin
     {
@@ -27,24 +30,7 @@ namespace GTFO_VR_BepInEx.Core
             GUID = "com." + AUTHOR + "." + MODNAME,
             VERSION = "0.8.1";
 
-        private ConfigEntry<bool> configEnableVR;
-        private ConfigEntry<bool> configToggleVRBySteamVR;
-        private ConfigEntry<bool> configUseControllers;
-        private ConfigEntry<bool> configIRLCrouch;
-        private ConfigEntry<bool> configUseLeftHand;
-        private ConfigEntry<int>  configLightResMode;
-        private ConfigEntry<bool> configAlternateEyeRendering;
-        private ConfigEntry<bool> configUseTwoHanded;
-        private ConfigEntry<bool> configAlwaysDoubleHanded;
-        private ConfigEntry<float> configSnapTurnAmount;
-        private ConfigEntry<bool> configSmoothSnapTurn;
-        private ConfigEntry<float> configWatchScaling;
-        private ConfigEntry<bool> configUseNumbersForAmmoDisplay;
-        private ConfigEntry<string> configWatchColorHex;
-        private ConfigEntry<float> configCrouchHeight;
-
         public static ManualLogSource log;
-
 
         public override void Load()
         {
@@ -55,10 +41,9 @@ namespace GTFO_VR_BepInEx.Core
 
             if (VR_Settings.enabled && SteamVRRunningCheck())
             {
-                SetupClassInjections();
+                SetupIL2CPPClassInjections();
                 TerminalInputDetours.HookAll();
                 BioscannerDetours.HookAll();
-                //PlayerSyncDetour.HookAll();
                 harmony.PatchAll();
             }
             else
@@ -67,9 +52,7 @@ namespace GTFO_VR_BepInEx.Core
             }
         }
 
-       
-
-        void SetupClassInjections()
+        void SetupIL2CPPClassInjections()
         {
             ClassInjector.RegisterTypeInIl2Cpp<VR_Assets>();
             ClassInjector.RegisterTypeInIl2Cpp<VR_Global>();
@@ -107,7 +90,21 @@ namespace GTFO_VR_BepInEx.Core
             return possibleVRProcesses.Count > 0;
         }
 
-
+        private ConfigEntry<bool> configEnableVR;
+        private ConfigEntry<bool> configToggleVRBySteamVR;
+        private ConfigEntry<bool> configUseControllers;
+        private ConfigEntry<bool> configIRLCrouch;
+        private ConfigEntry<bool> configUseLeftHand;
+        private ConfigEntry<int> configLightResMode;
+        private ConfigEntry<bool> configAlternateEyeRendering;
+        private ConfigEntry<bool> configUseTwoHanded;
+        private ConfigEntry<bool> configAlwaysDoubleHanded;
+        private ConfigEntry<float> configSnapTurnAmount;
+        private ConfigEntry<bool> configSmoothSnapTurn;
+        private ConfigEntry<float> configWatchScaling;
+        private ConfigEntry<bool> configUseNumbersForAmmoDisplay;
+        private ConfigEntry<string> configWatchColorHex;
+        private ConfigEntry<float> configCrouchHeight;
 
         private void SetupConfig()
         {

@@ -2,7 +2,7 @@
 using Player;
 using UnityEngine;
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
 
     /// <summary>

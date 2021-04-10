@@ -7,7 +7,11 @@ using System.Threading.Tasks;
 using UnityEngine;
 
 namespace GTFO_VR.Events
-{
+{    
+     /// <summary>
+     /// Add event calls for ammo updates
+     /// This is mainly used to update the VR watch UI.
+     /// </summary>
     public static class InventoryAmmoEvents
     {
 

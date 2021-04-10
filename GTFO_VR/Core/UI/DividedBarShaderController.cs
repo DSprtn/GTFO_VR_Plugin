@@ -5,6 +5,9 @@ using Player;
 
 namespace GTFO_VR.UI
 {
+    /// <summary>
+    /// Responsible for managing the fancy watch UI shaders.
+    /// </summary>
     class DividedBarShaderController : MonoBehaviour
     {
 

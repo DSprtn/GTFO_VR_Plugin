@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace GTFO_VR.Core
 {
+    /// <summary>
+    /// Responsible for serving as a middle-man to the config file.
+    /// </summary>
     public static class VR_Settings
     {
         public static bool crouchOnIRLCrouch = true;

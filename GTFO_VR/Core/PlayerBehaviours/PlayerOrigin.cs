@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace GTFO_VR.Core.PlayerBehaviours
 {
+    /// <summary>
+    /// Responsible for managing the player's position and rotation within the playspace and within GTFO's systems.
+    /// </summary>
     public class PlayerOrigin : MonoBehaviour
     {
         public PlayerOrigin(IntPtr value)

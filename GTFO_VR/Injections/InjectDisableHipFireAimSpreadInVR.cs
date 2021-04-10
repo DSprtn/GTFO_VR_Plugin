@@ -5,13 +5,14 @@ using GTFO_VR.Util;
 using HarmonyLib;
 
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
     /// <summary>
-    /// Handle weapon accuracy for double handed aiming/firing 'from the hip'
+    /// Handle weapon accuracy for double handed aiming/firing 'from the hip'. 
+    /// If a weapon is fired from the hip it will have greater spread unless double handed aiming is disabled.
     /// </summary>
 
-    [HarmonyPatch(typeof(BulletWeapon),"Fire")]
+    [HarmonyPatch(typeof(BulletWeapon), nameof(BulletWeapon.Fire))]
     class InjectAimSpreadInVR
     {
         static void Prefix(BulletWeapon __instance)

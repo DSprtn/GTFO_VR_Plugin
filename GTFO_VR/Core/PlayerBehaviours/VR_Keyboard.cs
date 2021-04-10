@@ -7,6 +7,9 @@ using Valve.VR;
 
 namespace GTFO_VR.Core.PlayerBehaviours
 {
+    /// <summary>
+    /// Responsible for managing VR keyboard input, shortcuts, appearing and disappearing.
+    /// </summary>
     public class VR_Keyboard : MonoBehaviour
     {
 

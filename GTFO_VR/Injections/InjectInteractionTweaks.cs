@@ -4,9 +4,13 @@ using HarmonyLib;
 using Player;
 using UnityEngine;
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
-    [HarmonyPatch(typeof(Interact_Timed), "EvaluateTimedInteraction")]
+    /// <summary>
+    /// Tweak interactions for picking up items, giving packs, hacking, placing mines, sentries etc.
+    /// </summary>
+
+    [HarmonyPatch(typeof(Interact_Timed), nameof(Interact_Timed.EvaluateTimedInteraction))]
     class InjectInteractionFromPos
     {
         static void Prefix(Interact_Timed __instance)
@@ -15,7 +19,7 @@ namespace GTFO_VR_BepInEx.Core
         }
     }
 
-    [HarmonyPatch(typeof(GuiManager), "IsOnScreen")]
+    [HarmonyPatch(typeof(GuiManager), nameof(GuiManager.IsOnScreen))]
     class InjectDisableOnScreenCheck
     {
         static void Postfix(ref bool __result)
@@ -38,6 +42,40 @@ namespace GTFO_VR_BepInEx.Core
         static void Postfix(PlayerInteraction __instance)
         {
             __instance.m_owner.m_camPos = cachedCamPos;
+        }
+    }
+
+    [HarmonyPatch(typeof(SentryGunFirstPerson), nameof(SentryGunFirstPerson.CheckCanPlace))]
+    class InjectSentryGunPlacementFix
+    {
+        static void Prefix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = true;
+        }
+
+        static void Postfix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = false;
+        }
+
+    }
+
+
+    [HarmonyPatch(typeof(MineDeployerFirstPerson), nameof(MineDeployerFirstPerson.CheckCanPlace))]
+    class InjectMineDeployerPlacementFix
+    {
+        static void Prefix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = true;
+        }
+
+        static void Postfix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = false;
         }
     }
 
@@ -119,12 +157,13 @@ namespace GTFO_VR_BepInEx.Core
 
         static void Postfix(PlayerInteraction __instance, ref Vector3 __result)
         {
-            if(useVRInteractionForward)
+            if (useVRInteractionForward)
             {
                 __result = HMD.GetVRInteractionLookDir();
             }
 
-            if(useVRControllerForward) {
+            if (useVRControllerForward)
+            {
                 __result = Controllers.GetAimForward();
             }
         }

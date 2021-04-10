@@ -1,7 +1,7 @@
 ﻿using GTFO_VR.Core.VR_Input;
 using HarmonyLib;
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Injections
 {
     /// <summary>
     /// Handles input for all VR peripherals supported by SteamVR
@@ -10,40 +10,40 @@ namespace GTFO_VR_BepInEx.Core
     /// </summary>
     /// 
 
-    [HarmonyPatch(typeof(InputMapper), "DoGetAxis")]
+    [HarmonyPatch(typeof(InputMapper), nameof(InputMapper.DoGetAxis))]
     class InjectInputAxis
     {
 
         static void Postfix(InputAction action, ref float __result)
         {
-                __result += SteamVR_InputHandler.GetAxis(action);
+            __result += SteamVR_InputHandler.GetAxis(action);
         }
     }
 
-    [HarmonyPatch(typeof(InputMapper), "DoGetButtonUp")]
+    [HarmonyPatch(typeof(InputMapper), nameof(InputMapper.DoGetButtonUp))]
     class InjectInputBooleanUp
     {
         static void Postfix(InputAction action, ref bool __result)
         {
-                __result = __result || SteamVR_InputHandler.GetActionUp(action);
+            __result = __result || SteamVR_InputHandler.GetActionUp(action);
         }
     }
 
-    [HarmonyPatch(typeof(InputMapper), "DoGetButtonDown")]
+    [HarmonyPatch(typeof(InputMapper), nameof(InputMapper.DoGetButtonDown))]
     class InjectInputBooleanDown
     {
         static void Postfix(InputAction action, ref bool __result)
         {
-                __result = __result || SteamVR_InputHandler.GetActionDown(action);
+            __result = __result || SteamVR_InputHandler.GetActionDown(action);
         }
     }
 
-    [HarmonyPatch(typeof(InputMapper), "DoGetButton")]
+    [HarmonyPatch(typeof(InputMapper), nameof(InputMapper.DoGetButton))]
     class InjectInputBoolean
     {
         static void Postfix(InputAction action, ref bool __result)
         {
-                __result = __result || SteamVR_InputHandler.GetAction(action);
+            __result = __result || SteamVR_InputHandler.GetAction(action);
         }
     }
 }
