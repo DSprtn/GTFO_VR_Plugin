@@ -356,7 +356,6 @@ namespace GTFO_VR.UI
             {
                 numberAmmoDisplay.gameObject.SetActive(toggle);
                 BulletsInMag.gameObject.SetActive(false);
-
                 
             } else
             {

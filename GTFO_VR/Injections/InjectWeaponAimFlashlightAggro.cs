@@ -8,18 +8,6 @@ using UnityEngine;
 namespace GTFO_VR_BepInEx.Core
 {
     /// <summary>
-    /// Change look dir to controller aim (when weapon has flashlight) for flashlight aggro consistency --- for other players and if you're not the host
-    /// </summary>
-    [HarmonyPatch(typeof(PlayerSync), "SendLocomotion")]
-    class InjectWeaponAimFlashlightAggroOnline
-    {
-        static void Prefix(ref Vector3 lookDir)
-        {
-            lookDir = HMD.GetVRInteractionLookDir();
-        }
-    }
-
-    /// <summary>
     /// Change detection to use weapon flashlight direction (when you're the host or playing solo)
     /// </summary>
     [HarmonyPatch(typeof(PlayerAgent), "GetDetectionMod")]

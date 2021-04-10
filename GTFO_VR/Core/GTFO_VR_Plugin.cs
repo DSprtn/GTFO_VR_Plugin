@@ -58,6 +58,7 @@ namespace GTFO_VR_BepInEx.Core
                 SetupClassInjections();
                 TerminalInputDetours.HookAll();
                 BioscannerDetours.HookAll();
+                //PlayerSyncDetour.HookAll();
                 harmony.PatchAll();
             }
             else
@@ -116,7 +117,7 @@ namespace GTFO_VR_BepInEx.Core
             configUseControllers = Config.Bind("Input", "Use VR Controllers?", true, "If true, will use VR controllers. You can play with a gamepad and head aiming if you set this to false");
             configIRLCrouch = Config.Bind("Input", "Crouch in-game when you crouch IRL?", true, "If true, when crouching down below a certain threshold IRL, the in-game character will also crouch");
             configUseLeftHand = Config.Bind("Input", "Use left hand as main hand?", false, "If true, all items will appear in the left hand");
-            configLightResMode = Config.Bind("Experimental performance tweaks", "Light render resolution tweak - the lower resolution the greater the performance gain!", 2, "0 = Native HMD resolution 1 = 1920x1080, 2 = 1024x768 (Seems to be no difference, big performance increase), \n 3=640x480 (some small artifacting on lights, great performance increase)");
+            configLightResMode = Config.Bind("Experimental performance tweaks", "Light render resolution tweak - the lower resolution the greater the performance gain!", 1, "0 = Native HMD resolution 1 = 1920x1080, 2 = 1024x768 (Small artifacting, big performance increase), \n 3=640x480 (medium artifacting on lights, great performance increase)");
             configUseTwoHanded = Config.Bind("Input", "Use both hands to aim?", true, "If true, two-handed weapons will be allowed to be aimed with both hands.");
             configAlwaysDoubleHanded = Config.Bind("Input", "Always use double handed aiming? (Where it applies)", false, "If true, double handed weapons will always use double handed aiming (RECOMMENDED FOR GUN STOCK USERS)");
             configSnapTurnAmount = Config.Bind("Input", "Snap turn angle", 60f, "The amount of degrees to turn on a snap turn (or turn per half a second if smooth turn is enabled)");

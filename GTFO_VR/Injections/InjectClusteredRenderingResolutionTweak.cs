@@ -10,9 +10,9 @@ namespace GTFO_VR_BepInEx.Core
     /// Experimental performance tweak - changes light rendering resolution (with none to little visual difference, but a pretty good performance increase!)
     /// This works because the VR resolution is incorrectly applied relative to the aspect/fov of the camera. TODO - Calculate correct aspect.
     /// </summary>
+    /// 
 
-    [HarmonyPatch(typeof(ClusteredRendering))]
-    [HarmonyPatch("OnResolutionChange")]
+    [HarmonyPatch(typeof(ClusteredRendering), nameof(ClusteredRendering.OnResolutionChange))]
     [HarmonyPatch(new Type[] { typeof(Resolution) })]
     class InjectClusteredRenderingResolutionTweak
     {

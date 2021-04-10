@@ -1,6 +1,7 @@
 ﻿using Gear;
 using GTFO_VR.Core.VR_Input;
 using HarmonyLib;
+using Player;
 using UnityEngine;
 
 namespace GTFO_VR_BepInEx.Core
@@ -40,19 +41,36 @@ namespace GTFO_VR_BepInEx.Core
         }
     }
 
+    [HarmonyPatch(typeof(PlayerLocomotion), nameof(PlayerLocomotion.FixedUpdate))]
+    class InjectFlashlightSyncAimTweak
+    {
+
+        static void Prefix(PlayerInteraction __instance)
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
+        }
+
+        static void Postfix(PlayerInteraction __instance)
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
+        }
+    }
+
     [HarmonyPatch(typeof(ResourcePackFirstPerson), nameof(ResourcePackFirstPerson.UpdateInteraction))]
     class InjectResourcePackInteractionTweak
     {
 
         static void Prefix(PlayerInteraction __instance)
         {
-            InjectFPSCameraForwardTweakForInteraction.useInteractionControllersForward = true;
+            InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
         static void Postfix(PlayerInteraction __instance)
         {
-            InjectFPSCameraForwardTweakForInteraction.useInteractionControllersForward = false;
+            InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
         }
     }
@@ -63,13 +81,13 @@ namespace GTFO_VR_BepInEx.Core
 
         static void Prefix(PlayerInteraction __instance)
         {
-            InjectFPSCameraForwardTweakForInteraction.useInteractionControllersForward = true;
+            InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
         static void Postfix(PlayerInteraction __instance)
         {
-            InjectFPSCameraForwardTweakForInteraction.useInteractionControllersForward = false;
+            InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
         }
     }
@@ -80,13 +98,13 @@ namespace GTFO_VR_BepInEx.Core
 
         static void Prefix(PlayerInteraction __instance)
         {
-            InjectFPSCameraForwardTweakForInteraction.useInteractionControllersForward = true;
+            InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
         static void Postfix(PlayerInteraction __instance)
         {
-            InjectFPSCameraForwardTweakForInteraction.useInteractionControllersForward = false;
+            InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
         }
     }
@@ -96,14 +114,19 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(MethodType.Getter)]
     class InjectFPSCameraForwardTweakForInteraction
     {
-        public static bool useInteractionControllersForward = false;
+        public static bool useVRInteractionForward = false;
+        public static bool useVRControllerForward = false;
 
         static void Postfix(PlayerInteraction __instance, ref Vector3 __result)
         {
-            if(useInteractionControllersForward)
+            if(useVRInteractionForward)
             {
                 __result = HMD.GetVRInteractionLookDir();
-            } 
+            }
+
+            if(useVRControllerForward) {
+                __result = Controllers.GetAimForward();
+            }
         }
     }
 
@@ -113,12 +136,16 @@ namespace GTFO_VR_BepInEx.Core
     class InjectFPSCameraPositionTweakForInteraction
     {
         public static bool useInteractionControllersPosition = false;
-
+        public static bool useControllerPosition = false;
         static void Postfix(PlayerInteraction __instance, ref Vector3 __result)
         {
             if (useInteractionControllersPosition)
             {
                 __result = HMD.GetVRInteractionFromPosition();
+            }
+            if (useControllerPosition)
+            {
+                __result = Controllers.GetAimForward();
             }
         }
     }

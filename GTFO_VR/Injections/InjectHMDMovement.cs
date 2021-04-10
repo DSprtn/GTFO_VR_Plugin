@@ -37,7 +37,6 @@ namespace GTFO_VR_BepInEx.Core
     [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.UpdatePosOffset))]
     class InjectHMDRotationPitchYaw
     {
-
         static void Postfix(FPSCamera __instance)
         {
             if (!PlayerVR.VRPlayerIsSetup)

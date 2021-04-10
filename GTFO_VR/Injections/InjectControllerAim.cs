@@ -2,6 +2,7 @@
 using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.VR_Input;
 using HarmonyLib;
+using Player;
 using UnityEngine;
 
 namespace GTFO_VR_BepInEx.Core
@@ -19,6 +20,82 @@ namespace GTFO_VR_BepInEx.Core
             {
                 PlayerVR.UpdateHeldItemPosition();
             }
+        }
+    }
+
+
+
+    [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateInfectionLocal))]
+    class InjectAimFlashlightFixBegin
+    {
+        static void Postfix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
+        }
+
+    }
+
+    [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateGoodNodeAndArea))]
+    class InjectScreenLiquidFix
+    {
+        static void Postfix(PlayerAgent __instance)
+        {
+            ScreenLiquidManager.cameraDir = PlayerVR.VRCamera.transform.forward;
+            ScreenLiquidManager.cameraPosition = PlayerVR.VRCamera.transform.position;
+        }
+    }
+
+
+    [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateGlobalInput))]
+    class InjectGlobalInteractionTweakFix
+    {
+        static void Prefix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
+        }
+
+        static void Postfix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
+        }
+
+    }
+
+
+    [HarmonyPatch(typeof(SentryGunFirstPerson), nameof(SentryGunFirstPerson.CheckCanPlace))]
+    class InjectSentryGunPlacementFix
+    {
+        static void Prefix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = true;
+        }
+
+        static void Postfix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = false;
+        }
+
+    }
+
+
+    [HarmonyPatch(typeof(MineDeployerFirstPerson), nameof(MineDeployerFirstPerson.CheckCanPlace))]
+    class InjectMineDeployerPlacementFix
+    {
+        static void Prefix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = true;
+        }
+
+        static void Postfix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = false;
         }
     }
 
