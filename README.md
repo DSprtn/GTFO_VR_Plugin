@@ -45,7 +45,7 @@ Try to get used to the game in Non-VR mode first before using!
 	│       ├── UnityEngine.AccessbilityModule.dll
 	│       ├── etc.
 	└── GTFO_DATA/
-	    ├── StreamingAssets/
+	    └── StreamingAssets/
 		├── AssetBundles
 		├── vrshaders
 		├── vrwatch
