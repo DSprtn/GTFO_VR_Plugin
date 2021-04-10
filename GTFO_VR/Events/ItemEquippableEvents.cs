@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GTFO_VR_BepInEx.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +21,9 @@ namespace GTFO_VR.Events
             if(OnPlayerWieldItem != null && item.Owner.IsLocallyOwned)
             {
                 currentItem = item;
-                Debug.Log("Item equip changed---");
-                Debug.Log(item.ArchetypeName);
-                Debug.Log(item.PublicName);
+                GTFO_VR_Plugin.log.LogDebug("Item equip changed---");
+                GTFO_VR_Plugin.log.LogDebug(item.ArchetypeName);
+                GTFO_VR_Plugin.log.LogDebug(item.PublicName);
                 OnPlayerWieldItem.Invoke(item);
                 
             }

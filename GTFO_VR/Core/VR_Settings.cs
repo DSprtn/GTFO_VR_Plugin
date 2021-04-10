@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GTFO_VR.Core.VR_Input;
 using UnityEngine;
 
 namespace GTFO_VR.Core
@@ -38,5 +34,12 @@ namespace GTFO_VR.Core
         public static bool useNumbersForAmmoDisplay = false;
 
         public static bool Render2DUI = false;
+
+        public static Color watchColor = Color.white;
+
+        public static float IRLCrouchBorder = 1.15f;
+
+        public static bool alternateLightRenderingPerEye = false;
+
     }
 }

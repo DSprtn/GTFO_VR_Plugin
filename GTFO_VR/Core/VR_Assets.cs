@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GTFO_VR_BepInEx.Core;
+using System;
 using UnityEngine;
 
 namespace GTFO_VR.Core
 {
     public class VR_Assets : MonoBehaviour
     {
+
+        public VR_Assets(IntPtr value)
+        : base(value) { }
+
+
         public static GameObject watchPrefab;
 
         public static Shader spriteAlwaysRender;
@@ -25,22 +27,22 @@ namespace GTFO_VR.Core
             AssetBundle assetBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/vrwatch");
             if (assetBundle == null)
             {
-                Debug.LogError("No assetbundle present!");
+                GTFO_VR_Plugin.log.LogError("No assetbundle present!");
             }
-            watchPrefab = assetBundle.LoadAsset<GameObject>("assets/p_vrwatch.prefab");
-            spriteAlwaysRender = assetBundle.LoadAsset<Shader>("assets/spritenoztest.shader");
-            textSphereClip = assetBundle.LoadAsset<Shader>("assets/textmesh pro/resources/shaders/tmp_clipsphere.shader");
-            spriteSphereClip = assetBundle.LoadAsset<Shader>("assets/spritenoztestandclip.shader");
-            textAlwaysRender = assetBundle.LoadAsset<Shader>("assets/textmesh pro/resources/shaders/tmp_noztest.shader");
+            watchPrefab = assetBundle.LoadAsset("assets/p_vrwatch.prefab").Cast<GameObject>();
+            spriteAlwaysRender = assetBundle.LoadAsset("assets/spritenoztest.shader").Cast<Shader>();
+            textSphereClip = assetBundle.LoadAsset("assets/textmesh pro/resources/shaders/tmp_clipsphere.shader").Cast<Shader>();
+            spriteSphereClip = assetBundle.LoadAsset("assets/spritenoztestandclip.shader").Cast<Shader>();
+            textAlwaysRender = assetBundle.LoadAsset("assets/textmesh pro/resources/shaders/tmp_noztest.shader").Cast<Shader>();
             //fade = assetBundle.LoadAsset<Shader>("assets/steamvr/resources/steamvr_fade.shader");
             if (!spriteAlwaysRender)
             {
-                Debug.LogError("Could not find sprite shader!");
+                GTFO_VR_Plugin.log.LogError("Could not find sprite shader!");
             }
 
             if(!textAlwaysRender)
             {
-                Debug.LogError("Could not find text noclip shader!");
+                GTFO_VR_Plugin.log.LogError("Could not find text noclip shader!");
             }
             
         }
