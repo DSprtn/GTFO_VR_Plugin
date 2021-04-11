@@ -2,10 +2,10 @@
 using UnhollowerBaseLib;
 using BepInEx.IL2CPP.Hook;
 using System.Runtime.InteropServices;
-using GTFO_VR_BepInEx.Core;
 using Gear;
 using UnityEngine;
 using GTFO_VR.Core.VR_Input;
+using GTFO_VR.Core;
 
 namespace GTFO_VR.Detours
 {

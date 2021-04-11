@@ -1,7 +1,5 @@
-﻿using GTFO_VR.Core;
-using GTFO_VR.Core.PlayerBehaviours;
+﻿using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Events;
-using GTFO_VR_BepInEx.Core;
 using System;
 using UnityEngine;
 using Valve.VR;

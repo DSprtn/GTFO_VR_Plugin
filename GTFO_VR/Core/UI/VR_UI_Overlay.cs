@@ -1,5 +1,4 @@
 ﻿using GTFO_VR.Core.VR_Input;
-using GTFO_VR_BepInEx.Core;
 using System;
 using UnityEngine;
 using Valve.VR;

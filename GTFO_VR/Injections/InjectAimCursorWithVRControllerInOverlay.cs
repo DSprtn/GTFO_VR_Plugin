@@ -13,12 +13,12 @@ namespace GTFO_VR.Injections
     [HarmonyPatch(typeof(CM_PageBase), nameof(CM_PageBase.UpdateCursorPosition))]
     class InjectAimCursorWithVRControllerInOverlay
     {
-        static void Prefix()
+        static void Prefix(CM_PageBase __instance)
         {
             Vector2 newCursorPos = Vector2.zero;
             if (VR_UI_Overlay.GetPlayerPointingAtPositionOnScreen(out newCursorPos))
             {
-                Vector2 res = new Vector2(GuiManager.ScreenRes.width, GuiManager.ScreenRes.height);
+                Vector2 res = __instance.m_screenResVec2;
                 newCursorPos -= new Vector2(0.5f, 0.5f);
                 newCursorPos.y *= -1f;
                 newCursorPos *= res;

@@ -1,5 +1,4 @@
 ﻿using GTFO_VR.Core.PlayerBehaviours;
-using GTFO_VR_BepInEx.Core;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

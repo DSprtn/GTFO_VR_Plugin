@@ -1,5 +1,4 @@
-﻿using GTFO_VR_BepInEx.Core;
-
+﻿using GTFO_VR.Core;
 using UnityEngine;
 
 namespace GTFO_VR.Util

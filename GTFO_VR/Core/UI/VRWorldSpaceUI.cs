@@ -3,7 +3,6 @@ using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
 using GTFO_VR.Util;
-using GTFO_VR_BepInEx.Core;
 using System;
 using TMPro;
 using UnityEngine;

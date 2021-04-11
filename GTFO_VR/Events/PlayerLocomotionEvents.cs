@@ -1,4 +1,4 @@
-﻿using GTFO_VR_BepInEx.Core;
+﻿using GTFO_VR.Core;
 using Player;
 using System;
 using System.Collections.Generic;

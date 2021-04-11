@@ -1,6 +1,6 @@
 ﻿using GameData;
+using GTFO_VR.Core;
 using GTFO_VR.UI;
-using GTFO_VR_BepInEx.Core;
 using HarmonyLib;
 using LevelGeneration;
 

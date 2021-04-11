@@ -39,7 +39,6 @@ namespace GTFO_VR.UI
 
         static TextMeshPro objectiveDisplay;
         Dictionary<InventorySlot, DividedBarShaderController> UIMappings = new Dictionary<InventorySlot, DividedBarShaderController>();
-
         DividedBarShaderController BulletsInMag;
         TextMeshPro numberAmmoDisplay;
 

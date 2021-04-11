@@ -3,7 +3,6 @@ using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
 using GTFO_VR.UI;
 using GTFO_VR.Util;
-using GTFO_VR_BepInEx.Core;
 using Player;
 using System;
 using UnityEngine;
@@ -16,7 +15,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
     /// <summary>
     /// Responsible for managing all GTFO references, VR component setups, all VR rendering,
     /// </summary>
-    
+
     // ToDo - Divide this up into multiple classes for all of the above functionalities.
 
     public class PlayerVR : MonoBehaviour
@@ -196,6 +195,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             origin.CenterPlayerToOrigin();
         }
 
+        // ToDO - Remove this and replace it with a pre/post FPS camera patch.
         public static float VRDetectionMod(Vector3 dir, float distance, float m_flashLightRange, float m_flashlight_spotAngle)
         {
             if (distance > m_flashLightRange)
@@ -350,6 +350,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             fpsCamera.m_camera.transform.parent.localRotation = Quaternion.Euler(HMD.GetFPSCameraRelativeVRCameraEuler());
         }
 
+        // Move this to origin?
+
         public static void UpdateHeldItemPosition()
         {
             if (!VR_Settings.useVRControllers)
@@ -372,6 +374,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
+        // ToDO - Move this to snapturn
         void HandleSnapturnInput()
         {
             if (SteamVR_InputHandler.GetSnapTurningLeft())

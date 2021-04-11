@@ -1,7 +1,6 @@
 ﻿using BepInEx;
 using HarmonyLib;
 using BepInEx.Configuration;
-using GTFO_VR.Core;
 using System.Diagnostics;
 using BepInEx.IL2CPP;
 using System.Collections.Generic;
@@ -15,7 +14,7 @@ using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Core.UI;
 
-namespace GTFO_VR_BepInEx.Core
+namespace GTFO_VR.Core
 {
     /// <summary>
     /// Main entry point of the mod. Responsible for managing the config and running all patches if the mod is enabled.
@@ -23,12 +22,11 @@ namespace GTFO_VR_BepInEx.Core
     [BepInPlugin(GUID, MODNAME, VERSION)]
     public class GTFO_VR_Plugin : BasePlugin
     {
-
         public const string
             MODNAME = "GTFO_VR_Plugin",
             AUTHOR = "Spartan",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "0.8.1";
+            VERSION = "0.8.1.1";
 
         public static ManualLogSource log;
 
@@ -72,7 +70,7 @@ namespace GTFO_VR_BepInEx.Core
 
         private bool SteamVRRunningCheck()
         {
-            if(!VR_Settings.toggleVRBySteamVRRunning)
+            if (!VR_Settings.toggleVRBySteamVRRunning)
             {
                 return true;
             }
@@ -83,7 +81,7 @@ namespace GTFO_VR_BepInEx.Core
             possibleVRProcesses.AddRange(Process.GetProcessesByName("vrcompositor"));
 
             log.LogDebug("VR processes found - " + possibleVRProcesses.Count);
-            foreach(Process p in possibleVRProcesses)
+            foreach (Process p in possibleVRProcesses)
             {
                 log.LogDebug(p.ToString());
             }

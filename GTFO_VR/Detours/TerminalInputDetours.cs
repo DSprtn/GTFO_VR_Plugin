@@ -2,8 +2,8 @@
 using UnhollowerBaseLib;
 using BepInEx.IL2CPP.Hook;
 using System.Runtime.InteropServices;
-using GTFO_VR_BepInEx.Core;
 using GTFO_VR.Core.PlayerBehaviours;
+using GTFO_VR.Core;
 
 namespace GTFO_VR.Detours
 {
