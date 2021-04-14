@@ -2,7 +2,6 @@
 {
     public enum TrackingType
     {
-        None,
         Rotation,
         PositionAndRotation
     }

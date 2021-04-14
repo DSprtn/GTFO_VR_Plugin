@@ -10,63 +10,59 @@ namespace GTFO_VR.Core.PlayerBehaviours
     /// </summary>
     public class Snapturn : MonoBehaviour
     {
+        public Snapturn(IntPtr value): base(value) { }
 
-        public Snapturn(IntPtr value)
-: base(value) { }
-
-
-        public Quaternion snapTurnRotation = Quaternion.identity;
-
-        float snapTurnTime = 0f;
-
-        float snapTurnDelay = 0.25f;
-
-        public static Vector3 offsetFromPlayerToHMD = Vector3.zero;
+        PlayerOrigin m_origin;
 
         public static event Action OnSnapTurn;
-        public static event Action OnAfterSnapTurn;
 
-        void Awake()
+        private float m_lastSnapTurnTime = 0f;
+
+        private float m_snapTurnDelay = 0.25f;
+
+        private void Awake()
         {
-            GTFO_VR_Plugin.log.LogInfo("Snapturn init");
+            Log.Info("Snapturn init");
         }
+
+        public void Setup(PlayerOrigin origin)
+        {
+            m_origin = origin;
+        }
+
         public void DoSnapTurn(float angle)
         {
-            if (VR_Settings.useSmoothTurn)
+            if (VRSettings.useSmoothTurn)
             {
-                snapTurnRotation *= Quaternion.Euler(new Vector3(0, angle * Time.deltaTime * 2f, 0f));
+                m_origin.RotatePlayer(Quaternion.Euler(new Vector3(0, angle * Time.deltaTime * 2f, 0f)));
             }
             else
             {
-                if (snapTurnTime + snapTurnDelay < Time.time)
+                if (m_lastSnapTurnTime + m_snapTurnDelay < Time.time)
                 {
-                    SnapTurnFade(1f);
-                    snapTurnRotation *= Quaternion.Euler(new Vector3(0, angle, 0f));
-                    snapTurnTime = Time.time;
-
+                    SnapTurnFade(.2f);
+                    m_origin.RotatePlayer(Quaternion.Euler(new Vector3(0, angle, 0f)));
+                    m_lastSnapTurnTime = Time.time;
                     OnSnapTurn?.Invoke();
-                    // Player origin updates in OnSnapTurn
-                    OnAfterSnapTurn?.Invoke();
                 }
             }
         }
 
-        private static void SnapTurnFade(float mult)
+        private static void SnapTurnFade(float duration)
         {
             SteamVR_Fade.Start(Color.black, 0f, true);
-            SteamVR_Fade.Start(Color.clear, 0.2f * mult, true);
+            SteamVR_Fade.Start(Color.clear, duration, true);
         }
 
-        public void DoSnapTurnTowards(Vector3 rotation, float snapTurnFadeMult)
+        public void DoSnapTurnTowards(Vector3 rotation, float fadeDuration)
         {
             Vector3 deltaRot = Quaternion.LookRotation(rotation).eulerAngles;
             deltaRot.x = 0;
             deltaRot.z = 0;
-            deltaRot.y -= HMD.GetFPSCameraRelativeVRCameraEuler().y;
-
-            snapTurnRotation *= Quaternion.Euler(deltaRot);
-            SnapTurnFade(snapTurnFadeMult);
+            deltaRot.y -= HMD.GetVRCameraEulerRelativeToFPSCameraParent().y;
+            m_origin.RotatePlayer(Quaternion.Euler(deltaRot));
+            SnapTurnFade(fadeDuration);
+            OnSnapTurn.Invoke();
         }
-
     }
 }

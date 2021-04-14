@@ -1,5 +1,4 @@
 ﻿using GTFO_VR.Core.PlayerBehaviours;
-using GTFO_VR.Core.VR_Input;
 using HarmonyLib;
 using Player;
 using UnityEngine;
@@ -15,7 +14,7 @@ namespace GTFO_VR.Injections
     {
         static void Postfix(PlayerAgent __instance, Vector3 dir, float distance, ref float __result)
         {
-            __result = PlayerVR.VRDetectionMod(dir, distance, __instance.Inventory.m_flashlight.range, __instance.Inventory.m_flashlight.spotAngle);
+            __result = VRDetectionModHack.VRDetectionMod(dir, distance, __instance.Inventory.m_flashlight.range, __instance.Inventory.m_flashlight.spotAngle);
         }
     }
 }

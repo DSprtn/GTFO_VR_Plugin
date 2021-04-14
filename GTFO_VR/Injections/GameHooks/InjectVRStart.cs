@@ -15,9 +15,9 @@ namespace GTFO_VR.Injections
     {
         static void Prefix(UI_Pass __instance)
         {
-            if (!VR_Global.VR_ENABLED)
+            if (!VRSystems.Current)
             {
-                new GameObject("VR_Globals").AddComponent<VR_Global>();
+                new GameObject("VR_Globals").AddComponent<VRSystems>();
                 VR_UI_Overlay.UI_ref = __instance;
             }
         }

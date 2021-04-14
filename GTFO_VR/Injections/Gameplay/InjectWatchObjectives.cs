@@ -22,8 +22,8 @@ namespace GTFO_VR.Injections
     bool visible = true,
     bool isAdditionalHelp = false)
         {
-            Watch.UpdateMainObjective(mainObjective);
-            GTFO_VR_Plugin.log.LogDebug($"Got new objective! - {mainObjective}");
+            Watch.Current?.UpdateMainObjective(mainObjective);
+            Log.Debug($"Got new objective! - {mainObjective}");
         }
     }
 
@@ -33,8 +33,8 @@ namespace GTFO_VR.Injections
     {
         static void Postfix(PUI_GameObjectives __instance)
         {
-            Watch.UpdateSubObjective(__instance.m_subObjective.text);
-            GTFO_VR_Plugin.log.LogDebug($"Got new subobjective! - {__instance.m_subObjective.text}");
+            Watch.Current?.UpdateSubObjective(__instance.m_subObjective.text);
+            Log.Debug($"Got new subobjective! - {__instance.m_subObjective.text}");
         }
     }
 }

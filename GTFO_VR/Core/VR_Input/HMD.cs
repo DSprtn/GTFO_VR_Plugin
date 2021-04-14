@@ -1,7 +1,4 @@
-﻿
-
-using GTFO_VR.Core;
-using GTFO_VR.Core.PlayerBehaviours;
+﻿using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Events;
 using System;
 using UnityEngine;
@@ -14,51 +11,57 @@ namespace GTFO_VR.Core.VR_Input
     /// </summary>
     public class HMD : MonoBehaviour
     {
-
         public HMD(IntPtr value)
 : base(value) { }
 
-        public static GameObject hmd;
+        public static GameObject Hmd;
 
-        SteamVR_TrackedObject tracking;
+        private SteamVR_TrackedObject m_deviceTracker;
 
-        void Awake()
+        private void Awake()
         {
             SetupHMDObject();
         }
 
         private void SetupHMDObject()
         {
-            hmd = new GameObject("HMD_ORIGIN");
-            tracking = hmd.AddComponent<SteamVR_TrackedObject>();
-            tracking.index = SteamVR_TrackedObject.EIndex.Hmd;
+            Hmd = new GameObject("HMD_ORIGIN");
+            m_deviceTracker = Hmd.AddComponent<SteamVR_TrackedObject>();
+            m_deviceTracker.index = SteamVR_TrackedObject.EIndex.Hmd;
 
-            DontDestroyOnLoad(hmd);
+            DontDestroyOnLoad(Hmd);
         }
 
         public static void SetOrigin(Transform transform)
         {
-            hmd.transform.SetParent(transform);
+            Hmd.transform.SetParent(transform);
+        }
+
+        internal static void OnOriginDestroyed()
+        {
+            Hmd.transform.SetParent(null);
+            DontDestroyOnLoad(Hmd);
         }
 
         /// <summary>
-        /// Returns the camera's forward or the controller's or weapons' if the player is 
+        /// Returns the camera's forward or the controller's or weapons' if the player is
         /// holding a weapon that has a flashlight (and by an extension a lasersight)
         /// </summary>
         /// <returns></returns>
         public static Vector3 GetVRInteractionLookDir()
         {
-            if(ItemEquippableEvents.CurrentItemHasFlashlight())
+            if (ItemEquippableEvents.CurrentItemHasFlashlight())
             {
                 return Controllers.GetAimForward();
-            } else
+            }
+            else
             {
-                return hmd.transform.forward;
+                return Hmd.transform.forward;
             }
         }
 
         /// <summary>
-        /// Returns the camera's position or the controller's or weapons' if the player is 
+        /// Returns the camera's position or the controller's or weapons' if the player is
         /// holding a weapon that has a flashlight (and by an extension a lasersight)
         /// </summary>
         /// <returns></returns>
@@ -71,56 +74,57 @@ namespace GTFO_VR.Core.VR_Input
             }
             else
             {
-                return hmd.transform.position;
+                return Hmd.transform.position;
             }
         }
 
         public static Vector3 GetWorldForward()
         {
-            return hmd.transform.forward;
+            return Hmd.transform.forward;
         }
 
         public static Vector3 GetFlatForwardDirection()
         {
-            Vector3 dir = hmd.transform.forward;
+            Vector3 dir = Hmd.transform.forward;
             dir.y = 0;
             return dir.normalized;
         }
 
         public static float GetPlayerHeight()
         {
-            if(!hmd)
+            if (!Hmd)
             {
                 return 1.8f;
             }
-            return hmd.transform.localPosition.y;
+            return Hmd.transform.localPosition.y;
         }
 
         public static Vector3 GetOffsetPosition(Vector3 playerPos)
         {
-            return hmd.transform.position;
+            return Hmd.transform.position;
         }
 
         public static Vector3 GetWorldPosition()
         {
-            return hmd.transform.position;
+            return Hmd.transform.position;
         }
 
-        public static Vector3 GetFPSCameraRelativeVRCameraEuler()
+
+        public static Vector3 GetVRCameraEulerRelativeToFPSCameraParent()
         {
-            Quaternion localRotation = hmd.transform.rotation;
+            Quaternion localRotation = Hmd.transform.rotation;
 
-
-            if(!PlayerVR.fpsCamera || FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
+            if (!VRPlayer.FpsCamera || FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 return localRotation.eulerAngles;
             }
 
             // Get local rotation for FPS Camera from world hmd rotation to keep using the game's systems and keep player rotation in multiplayer in sync
-            localRotation = Quaternion.Inverse(PlayerVR.fpsCamera.m_holder.transform.rotation) * localRotation;
+            localRotation = Quaternion.Inverse(VRPlayer.FpsCamera.m_holder.transform.rotation) * localRotation;
 
             return localRotation.eulerAngles;
         }
+
 
     }
 }

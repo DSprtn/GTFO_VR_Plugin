@@ -22,8 +22,6 @@ namespace GTFO_VR.Events
         {
             if(OnPlayerEnterLadder != null && owner.IsLocallyOwned)
             {
-                GTFO_VR_Plugin.log.LogDebug("Player entered ladder");
-                GTFO_VR_Plugin.log.LogDebug(owner.Locomotion.CurrentLadder);
                 OnPlayerEnterLadder.Invoke(owner.Locomotion.CurrentLadder);
             }
         }

@@ -14,25 +14,44 @@ namespace GTFO_VR.Core.PlayerBehaviours
         public PlayerOrigin(IntPtr value)
        : base(value) { }
 
+        public static event Action OnOriginShift;
 
-        public static GameObject origin;
+        private PlayerAgent m_agent;
 
-        public Snapturn snapTurn;
+        private Vector3 m_offsetFromPlayerToHMD = Vector3.zero;
 
-        public static Vector3 offsetFromPlayerToHMD = Vector3.zero;
+        Quaternion PlayerRotationOffset = Quaternion.identity;
 
-
-        void Awake()
+        private void Awake()
         {
-            GTFO_VR_Plugin.log.LogInfo("Origin created");
-            Snapturn.OnSnapTurn += UpdateOrigin;
+            Log.Info("Origin created");
         }
-        public void Setup(Snapturn snapturn)
+
+        public void Setup(PlayerAgent agent)
         {
-            snapTurn = snapturn;
+            m_agent = agent;
             FocusStateEvents.OnFocusStateChange += FocusStateChanged;
+            Snapturn.OnSnapTurn += HandleOriginShift;
             SetupOrigin();
             SetInitialSnapTurn();
+        }
+
+        private void SetupOrigin()
+        {
+            Controllers.SetOrigin(transform);
+            HMD.SetOrigin(transform);
+            DontDestroyOnLoad(gameObject);
+            Log.Info("Origin created and set");
+        }
+
+        private void Update()
+        {
+            UpdateOrigin();
+        }
+
+        private void LateUpdate()
+        {
+            UpdateOrigin();
         }
 
         private void FocusStateChanged(eFocusState newState)
@@ -48,39 +67,43 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
+        private void HandleOriginShift()
+        {
+            UpdateOrigin();
+            CenterPlayerToOrigin();
+            OnOriginShift?.Invoke();
+        }
+
+        public void RotatePlayer(Quaternion rotation)
+        {
+            PlayerRotationOffset *= rotation;
+        }
+
         private void SetInitialSnapTurn()
         {
-            offsetFromPlayerToHMD = Vector3.zero;
-            snapTurn.snapTurnRotation = Quaternion.Euler(new Vector3(0, -HMD.hmd.transform.localRotation.eulerAngles.y, 0f));
+            m_offsetFromPlayerToHMD = Vector3.zero;
+            PlayerRotationOffset = Quaternion.Euler(new Vector3(0, -HMD.Hmd.transform.localRotation.eulerAngles.y, 0f));
             UpdateOrigin();
         }
 
         public void UpdateOrigin()
         {
-            if (origin == null || PlayerVR.playerController == null)
+            if (m_agent.PlayerCharacterController == null)
             {
                 return;
             }
-            Vector3 newPosition = PlayerVR.playerController.SmoothPosition;
+            Vector3 newPosition = m_agent.PlayerCharacterController.SmoothPosition;
 
-            origin.transform.position = newPosition - offsetFromPlayerToHMD;
-            origin.transform.rotation = snapTurn.snapTurnRotation;
-            origin.transform.position -= CalculateCrouchOffset();
-
+            transform.position = newPosition - m_offsetFromPlayerToHMD;
+            transform.rotation = PlayerRotationOffset;
+            transform.position -= CalculateCrouchOffset();
         }
 
-        public static Vector3 GetUnadjustedPosition()
+        private Vector3 CalculateCrouchOffset()
         {
-            return PlayerVR.playerController.SmoothPosition;
-        }
-
-
-        Vector3 CalculateCrouchOffset()
-        {
-            if (PlayerVR.playerAgent && PlayerVR.playerAgent.Locomotion.m_currentStateEnum.Equals(PlayerLocomotion.PLOC_State.Crouch))
+            if (m_agent && m_agent.Locomotion.m_currentStateEnum.Equals(PlayerLocomotion.PLOC_State.Crouch))
             {
-
-                float goalCrouchHeight = VR_Settings.IRLCrouchBorder;
+                float goalCrouchHeight = VRSettings.IRLCrouchBorder;
 
                 float diff = Mathf.Max(0f, HMD.GetPlayerHeight() - goalCrouchHeight);
                 return new Vector3(0, diff, 0);
@@ -88,33 +111,22 @@ namespace GTFO_VR.Core.PlayerBehaviours
             return Vector3.zero;
         }
 
-
-        private void SetupOrigin()
-        {
-            if (origin)
-            {
-                return;
-            }
-            GTFO_VR_Plugin.log.LogInfo("Creating origin GO");
-            origin = new GameObject("Origin");
-            Controllers.SetOrigin(origin.transform);
-            HMD.SetOrigin(origin.transform);
-            DontDestroyOnLoad(origin);
-        }
-
         public void CenterPlayerToOrigin()
         {
-            Vector3 pos = HMD.hmd.transform.localPosition;
+            Vector3 pos = HMD.Hmd.transform.localPosition;
             pos.y = 0f;
-            pos = snapTurn.snapTurnRotation * pos;
-            offsetFromPlayerToHMD = pos;
+            pos = PlayerRotationOffset * pos;
+            m_offsetFromPlayerToHMD = pos;
 
-            GTFO_VR_Plugin.log.LogDebug("Centering player... new offset = " + offsetFromPlayerToHMD);
+            Log.Debug("Centering player... new offset = " + m_offsetFromPlayerToHMD.ToString());
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
+            Controllers.OnOriginDestroyed();
+            HMD.OnOriginDestroyed();
             FocusStateEvents.OnFocusStateChange -= FocusStateChanged;
+            Snapturn.OnSnapTurn += HandleOriginShift;
         }
     }
 }

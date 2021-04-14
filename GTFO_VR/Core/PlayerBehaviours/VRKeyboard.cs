@@ -10,17 +10,17 @@ namespace GTFO_VR.Core.PlayerBehaviours
     /// <summary>
     /// Responsible for managing VR keyboard input, shortcuts, appearing and disappearing.
     /// </summary>
-    public class VR_Keyboard : MonoBehaviour
+    public class VRKeyboard : MonoBehaviour
     {
+        public VRKeyboard(IntPtr value) : base(value)
+        {
+        }
 
-        public VR_Keyboard(IntPtr value)
-: base(value) { }
+        private static string CurrentFrameInput = "";
 
-        static string currentFrameInput = "";
+        public static bool KeyboardClosedThisFrame;
 
-        public static bool keyboardClosedThisFrame;
-
-        void Awake()
+        private void Awake()
         {
             SteamVR_Events.System(EVREventType.VREvent_KeyboardCharInput).Listen(OnKeyboardInput);
             SteamVR_Events.System(EVREventType.VREvent_KeyboardDone).Listen(OnKeyboardDone);
@@ -47,7 +47,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public void OnKeyboardDone(VREvent_t arg0)
         {
-            keyboardClosedThisFrame = true;
+            KeyboardClosedThisFrame = true;
         }
 
         private void OnKeyboardInput(VREvent_t ev)
@@ -59,34 +59,36 @@ namespace GTFO_VR.Core.PlayerBehaviours
             string input = Encoding.UTF8.GetString(inputBytes, 0, len);
             input = HandleSpecialConversionAndShortcuts(input);
 
-            currentFrameInput = input;
+            CurrentFrameInput = input;
         }
 
         public static string GetKeyboardInput()
         {
-            if (currentFrameInput == null)
+            if (CurrentFrameInput == null)
             {
                 return "";
             }
-            return currentFrameInput;
+            return CurrentFrameInput;
         }
 
         private static void OrientKeyboard()
         {
-            Quaternion Rot = Quaternion.Euler(Vector3.Project(HMD.hmd.transform.localRotation.eulerAngles, Vector3.up));
-            Vector3 Pos = HMD.hmd.transform.localPosition + Rot * Vector3.forward * 1f;
-            Pos.y = HMD.hmd.transform.localPosition.y + .5f;
+            Quaternion Rot = Quaternion.Euler(Vector3.Project(HMD.Hmd.transform.localRotation.eulerAngles, Vector3.up));
+            Vector3 Pos = HMD.Hmd.transform.localPosition + Rot * Vector3.forward * 1f;
+            Pos.y = HMD.Hmd.transform.localPosition.y + .5f;
             Rot = Quaternion.Euler(0f, Rot.eulerAngles.y, 0f);
             var t = new SteamVR_Utils.RigidTransform(Pos, Rot).ToHmdMatrix34();
             SteamVR.instance.overlay.SetKeyboardTransformAbsolute(ETrackingUniverseOrigin.TrackingUniverseStanding, ref t);
         }
 
-        void LateUpdate()
+        private void LateUpdate()
         {
-            currentFrameInput = "";
-            keyboardClosedThisFrame = false;
+            CurrentFrameInput = "";
+            KeyboardClosedThisFrame = false;
         }
 
+        // ToDo - Add external config for this?
+        // ToDO - Make better shortcuts, some kind of in-game UI?
         private string HandleSpecialConversionAndShortcuts(string input)
         {
             switch (input)
@@ -156,11 +158,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
             return input;
         }
 
-
-        void OnDestroy()
+        private void OnDestroy()
         {
             FocusStateEvents.OnFocusStateChange -= FocusStateChanged;
         }
-
     }
 }

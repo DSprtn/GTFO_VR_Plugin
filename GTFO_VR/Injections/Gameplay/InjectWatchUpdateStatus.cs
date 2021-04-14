@@ -14,7 +14,7 @@ namespace GTFO_VR.Injections
     {
         static void Postfix(float health)
         {
-            Watch.UpdateHealth(health);
+            Watch.Current?.UpdateHealth(health);
         }
     }
 
@@ -24,7 +24,7 @@ namespace GTFO_VR.Injections
     {
         static void Postfix(float val)
         {
-            Watch.UpdateAir(val);
+            Watch.Current?.UpdateAir(val);
         }
     }
 
@@ -33,7 +33,7 @@ namespace GTFO_VR.Injections
     {
         static void Postfix(float infection, float infectionHealthRel)
         {
-            Watch.UpdateInfection(infection);
+            Watch.Current?.UpdateInfection(infection);
         }
     }
 }

@@ -20,7 +20,7 @@ namespace GTFO_VR.Detours
 
         public unsafe static void HookAll()
         {
-            GTFO_VR_Plugin.log.LogInfo("Creating detours for bioscanner...");
+            Log.Info("Creating detours for bioscanner...");
 
             var tryGetTaggableEnemiesPointer = *(IntPtr*)(IntPtr)UnhollowerUtils
                    .GetIl2CppMethodInfoPointerFieldForGeneratedMethod(typeof(EnemyScanner).GetMethod(nameof(EnemyScanner.TryGetTaggableEnemies)))

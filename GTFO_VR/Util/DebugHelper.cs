@@ -15,7 +15,7 @@ namespace GTFO_VR.Util
             {
                 if (transform.parent == null)
                 {
-                    GTFO_VR_Plugin.log.LogDebug("RootObject ---\n");
+                    Log.Debug("RootObject ---\n");
                     LogTransformHierarchy(transform);
                 }
             }
@@ -23,7 +23,7 @@ namespace GTFO_VR.Util
 
         public static void LogPosRotData(Transform t)
         {
-            GTFO_VR_Plugin.log.LogDebug(t.name + ": " + "---" + GetTransformPositionAndRotationString(t));
+            Log.Debug(t.name + ": " + "---" + GetTransformPositionAndRotationString(t));
         }
         public static string GetTransformPositionAndRotationString(Transform t)
         {
@@ -32,7 +32,7 @@ namespace GTFO_VR.Util
 
         public static void LogTransformHierarchy(Transform t)
         {
-            GTFO_VR_Plugin.log.LogDebug(GetTransformData(t, 0));
+            Log.Debug(GetTransformData(t, 0));
         }
 
         static string GetCurrentTransformInfo(Transform t, int depth)

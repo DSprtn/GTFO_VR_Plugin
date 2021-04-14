@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace GTFO_VR.Injections
 {
+
+    /// <summary>
+    /// Get references to UI components we want to put into world space
+    /// </summary>
     [HarmonyPatch(typeof(PlayerGuiLayer), nameof(PlayerGuiLayer.Setup))]
     class InjectPlayerGUIRef
     {

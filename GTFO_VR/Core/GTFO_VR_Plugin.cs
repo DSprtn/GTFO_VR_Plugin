@@ -7,12 +7,11 @@ using System.Collections.Generic;
 using UnhollowerRuntimeLib;
 using GTFO_VR.UI;
 using Mathf = SteamVR_Standalone_IL2CPP.Util.Mathf;
-using BepInEx.Logging;
-using Logger = BepInEx.Logging.Logger;
 using GTFO_VR.Detours;
 using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Core.UI;
+using BepInEx.Logging;
 
 namespace GTFO_VR.Core
 {
@@ -28,49 +27,58 @@ namespace GTFO_VR.Core
             GUID = "com." + AUTHOR + "." + MODNAME,
             VERSION = "0.8.1.1";
 
-        public static ManualLogSource log;
+
+        public static GTFO_VR_Plugin Current;
 
         public override void Load()
         {
-            log = Logger.CreateLogSource(MODNAME);
-            log.LogInfo("Loading VR plugin...");
+            Current = this;
+            
+            Core.Log.Setup(Logger.CreateLogSource(MODNAME));
+            Core.Log.Info("Loading VR plugin...");
             SetupConfig();
             Harmony harmony = new Harmony("com.github.dsprtn.gtfovr");
 
-            if (VR_Settings.enabled && SteamVRRunningCheck())
+            if (VRSettings.enabled && SteamVRRunningCheck())
             {
-                SetupIL2CPPClassInjections();
-                TerminalInputDetours.HookAll();
-                BioscannerDetours.HookAll();
-                harmony.PatchAll();
+                InjectVR(harmony);
             }
             else
             {
-                log.LogWarning("VR launch aborted, VR is disabled or SteamVR is off!");
+                Log.LogWarning("VR launch aborted, VR is disabled or SteamVR is off!");
             }
+        }
+
+        private void InjectVR(Harmony harmony)
+        {
+            SetupIL2CPPClassInjections();
+            TerminalInputDetours.HookAll();
+            BioscannerDetours.HookAll();
+            harmony.PatchAll();
         }
 
         void SetupIL2CPPClassInjections()
         {
-            ClassInjector.RegisterTypeInIl2Cpp<VR_Assets>();
-            ClassInjector.RegisterTypeInIl2Cpp<VR_Global>();
+            ClassInjector.RegisterTypeInIl2Cpp<VRAssets>();
+            ClassInjector.RegisterTypeInIl2Cpp<VRSystems>();
+            ClassInjector.RegisterTypeInIl2Cpp<VRRendering>();
+            ClassInjector.RegisterTypeInIl2Cpp<CollisionFade>();
             ClassInjector.RegisterTypeInIl2Cpp<LaserPointer>();
             ClassInjector.RegisterTypeInIl2Cpp<PlayerOrigin>();
-            ClassInjector.RegisterTypeInIl2Cpp<PlayerVR>();
+            ClassInjector.RegisterTypeInIl2Cpp<VRPlayer>();
             ClassInjector.RegisterTypeInIl2Cpp<Snapturn>();
-            ClassInjector.RegisterTypeInIl2Cpp<VR_Keyboard>();
+            ClassInjector.RegisterTypeInIl2Cpp<VRKeyboard>();
             ClassInjector.RegisterTypeInIl2Cpp<DividedBarShaderController>();
             ClassInjector.RegisterTypeInIl2Cpp<VR_UI_Overlay>();
             ClassInjector.RegisterTypeInIl2Cpp<VRWorldSpaceUI>();
             ClassInjector.RegisterTypeInIl2Cpp<Watch>();
             ClassInjector.RegisterTypeInIl2Cpp<Controllers>();
             ClassInjector.RegisterTypeInIl2Cpp<HMD>();
-            ClassInjector.RegisterTypeInIl2Cpp<SteamVR_InputHandler>();
         }
 
         private bool SteamVRRunningCheck()
         {
-            if (!VR_Settings.toggleVRBySteamVRRunning)
+            if (!VRSettings.toggleVRBySteamVRRunning)
             {
                 return true;
             }
@@ -80,29 +88,29 @@ namespace GTFO_VR.Core
             possibleVRProcesses.AddRange(Process.GetProcessesByName("vrserver"));
             possibleVRProcesses.AddRange(Process.GetProcessesByName("vrcompositor"));
 
-            log.LogDebug("VR processes found - " + possibleVRProcesses.Count);
+            Core.Log.Debug("VR processes found - " + possibleVRProcesses.Count);
             foreach (Process p in possibleVRProcesses)
             {
-                log.LogDebug(p.ToString());
+                Core.Log.Debug(p.ToString());
             }
             return possibleVRProcesses.Count > 0;
         }
 
-        private ConfigEntry<bool> configEnableVR;
-        private ConfigEntry<bool> configToggleVRBySteamVR;
-        private ConfigEntry<bool> configUseControllers;
-        private ConfigEntry<bool> configIRLCrouch;
-        private ConfigEntry<bool> configUseLeftHand;
-        private ConfigEntry<int> configLightResMode;
-        private ConfigEntry<bool> configAlternateEyeRendering;
-        private ConfigEntry<bool> configUseTwoHanded;
-        private ConfigEntry<bool> configAlwaysDoubleHanded;
-        private ConfigEntry<float> configSnapTurnAmount;
-        private ConfigEntry<bool> configSmoothSnapTurn;
-        private ConfigEntry<float> configWatchScaling;
-        private ConfigEntry<bool> configUseNumbersForAmmoDisplay;
-        private ConfigEntry<string> configWatchColorHex;
-        private ConfigEntry<float> configCrouchHeight;
+        public ConfigEntry<bool> configEnableVR;
+        public ConfigEntry<bool> configToggleVRBySteamVR;
+        public ConfigEntry<bool> configUseControllers;
+        public ConfigEntry<bool> configIRLCrouch;
+        public ConfigEntry<bool> configUseLeftHand;
+        public ConfigEntry<int> configLightResMode;
+        public ConfigEntry<bool> configAlternateEyeRendering;
+        public ConfigEntry<bool> configUseTwoHanded;
+        public ConfigEntry<bool> configAlwaysDoubleHanded;
+        public ConfigEntry<float> configSnapTurnAmount;
+        public ConfigEntry<bool> configSmoothSnapTurn;
+        public ConfigEntry<float> configWatchScaling;
+        public ConfigEntry<bool> configUseNumbersForAmmoDisplay;
+        public ConfigEntry<string> configWatchColorHex;
+        public ConfigEntry<float> configCrouchHeight;
 
         private void SetupConfig()
         {
@@ -122,41 +130,42 @@ namespace GTFO_VR.Core
             configWatchColorHex = Config.Bind("Misc", "Hex color to use for watch", "#ffffff", "Google hexcolor and paste whatever color you want here");
             configCrouchHeight = Config.Bind("Input", "Crouch height in meters", 1.15f, "In-game character will be crouching if your head is lower than this height above the playspace (clamped to 1-1.35m)");
             configAlternateEyeRendering = Config.Bind("Experimental performance tweaks", "Alternate light and shadow rendering per frame per eye", false, "If true will alternate between eyes when drawing lights and shadows each frame, \n might look really janky so only use this if you absolutely want to play this in VR but don't have the rig for it!");
+            
+            
 
+            Core.Log.Debug("VR enabled?" + configEnableVR.Value);
+            Core.Log.Debug("Toggle VR by SteamVR running?" + configToggleVRBySteamVR.Value);
+            Core.Log.Debug("Use VR Controllers? : " + configUseControllers.Value);
+            Core.Log.Debug("Crouch on IRL crouch? : " + configIRLCrouch.Value);
+            Core.Log.Debug("Use left hand as main hand? : " + configUseLeftHand.Value);
+            Core.Log.Debug("Light resolution mode: " + configLightResMode.Value.ToString());
+            Core.Log.Debug("Use two handed aiming: " + configUseTwoHanded.Value);
+            Core.Log.Debug("Start with double handed aiming: " + configAlwaysDoubleHanded.Value);
+            Core.Log.Debug("Snapturn amount: " + configSnapTurnAmount.Value);
+            Core.Log.Debug("Use smooth turn?: " + configSmoothSnapTurn.Value);
+            Core.Log.Debug("Watch size multiplier: " + configWatchScaling.Value);
+            Core.Log.Debug("Use numbers for number display?: " + configUseNumbersForAmmoDisplay.Value);
+            Core.Log.Debug("Watch color - " + configWatchColorHex.Value);
+            Core.Log.Debug("Crouching height - " + configCrouchHeight.Value);
+            Core.Log.Debug("Alternate eye rendering? - " + configAlternateEyeRendering.Value);
 
-            log.LogDebug("VR enabled?" + configEnableVR.Value);
-            log.LogDebug("Toggle VR by SteamVR running?" + configToggleVRBySteamVR.Value);
-            log.LogDebug("Use VR Controllers? : " + configUseControllers.Value);
-            log.LogDebug("Crouch on IRL crouch? : " + configIRLCrouch.Value);
-            log.LogDebug("Use left hand as main hand? : " + configUseLeftHand.Value);
-            log.LogDebug("Light resolution mode: " + configLightResMode.Value.ToString());
-            log.LogDebug("Use two handed aiming: " + configUseTwoHanded.Value);
-            log.LogDebug("Start with double handed aiming: " + configAlwaysDoubleHanded.Value);
-            log.LogDebug("Snapturn amount: " + configSnapTurnAmount.Value);
-            log.LogDebug("Use smooth turn?: " + configSmoothSnapTurn.Value);
-            log.LogDebug("Watch size multiplier: " + configWatchScaling.Value);
-            log.LogDebug("Use numbers for number display?: " + configUseNumbersForAmmoDisplay.Value);
-            log.LogDebug("Watch color - " + configWatchColorHex.Value);
-            log.LogDebug("Crouching height - " + configCrouchHeight.Value);
-            log.LogDebug("Alternate eye rendering? - " + configAlternateEyeRendering.Value);
-
-            VR_Settings.useVRControllers = configUseControllers.Value;
-            VR_Settings.crouchOnIRLCrouch = configIRLCrouch.Value;
-            VR_Settings.lightRenderMode = configLightResMode.Value;
-            VR_Settings.twoHandedAimingEnabled = configUseTwoHanded.Value;
-            VR_Settings.alwaysDoubleHanded = configAlwaysDoubleHanded.Value;
-            VR_Settings.snapTurnAmount = configSnapTurnAmount.Value;
-            VR_Settings.useSmoothTurn = configSmoothSnapTurn.Value;
-            VR_Settings.watchScale = Mathf.Clamp(configWatchScaling.Value, 0.5f, 2f);
-            VR_Settings.toggleVRBySteamVRRunning = configToggleVRBySteamVR.Value;
-            VR_Settings.useNumbersForAmmoDisplay = configUseNumbersForAmmoDisplay.Value;
-            VR_Settings.watchColor = ColorExt.Hex(configWatchColorHex.Value);
-            VR_Settings.IRLCrouchBorder = Mathf.Clamp(configCrouchHeight.Value, 1f, 1.35f);
-            VR_Settings.alternateLightRenderingPerEye = configAlternateEyeRendering.Value;
+            VRSettings.useVRControllers = configUseControllers.Value;
+            VRSettings.crouchOnIRLCrouch = configIRLCrouch.Value;
+            VRSettings.lightRenderMode = configLightResMode.Value;
+            VRSettings.twoHandedAimingEnabled = configUseTwoHanded.Value;
+            VRSettings.alwaysDoubleHanded = configAlwaysDoubleHanded.Value;
+            VRSettings.snapTurnAmount = configSnapTurnAmount.Value;
+            VRSettings.useSmoothTurn = configSmoothSnapTurn.Value;
+            VRSettings.watchScale = Mathf.Clamp(configWatchScaling.Value, 0.5f, 2f);
+            VRSettings.toggleVRBySteamVRRunning = configToggleVRBySteamVR.Value;
+            VRSettings.useNumbersForAmmoDisplay = configUseNumbersForAmmoDisplay.Value;
+            VRSettings.watchColor = ColorExt.Hex(configWatchColorHex.Value);
+            VRSettings.IRLCrouchBorder = Mathf.Clamp(configCrouchHeight.Value, 1f, 1.35f);
+            VRSettings.alternateLightRenderingPerEye = configAlternateEyeRendering.Value;
 
             if (configUseLeftHand.Value)
             {
-                VR_Settings.mainHand = HandType.Left;
+                VRSettings.mainHand = HandType.Left;
             }
         }
 

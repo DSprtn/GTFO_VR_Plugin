@@ -2,6 +2,7 @@
 using GTFO_VR.Core.UI;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
+using Player;
 using System;
 using UnityEngine;
 using Valve.VR;
@@ -13,34 +14,30 @@ namespace GTFO_VR.Core
     /// <summary>
     /// Responsible for seting up all VR related classes and handling focus state changes.
     /// </summary>
-    public class VR_Global : MonoBehaviour
+    public class VRSystems : MonoBehaviour
     {
 
-        public VR_Global(IntPtr value)
+        public VRSystems(IntPtr value)
 : base(value) { }
 
-        public static VR_Global instance;
+        public static VRSystems Current;
+        static VR_UI_Overlay m_overlay;
 
-        public static bool VR_ENABLED;
+        VRPlayer m_player;
 
-        public static bool Overlay_Active = true;
-
-        static PlayerVR ingamePlayer;
-
-        static VR_UI_Overlay overlay;
-
-        public static bool hackingToolRenderingOverriden;
+        static FPSCamera m_currentFPSCameraRef;
+        static PlayerAgent m_currentPlayerAgentRef;
 
 
         void Awake()
         {
-            if (!instance)
+            if (!Current)
             {
-                instance = this;
+                Current = this;
             }
             else
             {
-                GTFO_VR_Plugin.log.LogError("Trying to create duplicate VRGlobal class");
+                Log.Error("Trying to create duplicate VRGlobal class");
                 return;
             }
             // Prevent SteamVR from adding a tracking script automatically. We handle this manually in VR_Input.HMD
@@ -57,20 +54,26 @@ namespace GTFO_VR.Core
 
             SteamVR.Initialize(false);
             WeaponArchetypeVRData.Setup();
-            gameObject.AddComponent<SteamVR_InputHandler>();
+            SteamVR_InputHandler.Setup();
             gameObject.AddComponent<HMD>();
             gameObject.AddComponent<Controllers>();
-            gameObject.AddComponent<VR_Keyboard>();
-            gameObject.AddComponent<VR_Assets>();
+            gameObject.AddComponent<VRKeyboard>();
+            gameObject.AddComponent<VRAssets>();
             // Delay the overlay setup so we don't 'hitch' the player's camera while everything else loads.
-            Invoke(nameof(VR_Global.SetupOverlay), .5f);
+            Invoke(nameof(VRSystems.SetupOverlay), .5f);
+        }
+
+        public static void OnPlayerSpawned(FPSCamera fpsCamera, PlayerAgent playerAgent)
+        {
+            m_currentFPSCameraRef = fpsCamera;
+            m_currentPlayerAgentRef = playerAgent;
         }
 
         void SetupOverlay()
         {
             GameObject o = new GameObject("Overlay");
             DontDestroyOnLoad(o);
-            overlay = o.AddComponent<VR_UI_Overlay>();
+            m_overlay = o.AddComponent<VR_UI_Overlay>();
         }
 
         /// <summary>
@@ -89,6 +92,11 @@ namespace GTFO_VR.Core
         {
             if (state.Equals(eFocusState.FPS) || state.Equals(eFocusState.InElevator))
             {
+                if(m_player == null && m_currentFPSCameraRef != null && m_currentPlayerAgentRef != null)
+                {
+                    m_player = m_currentFPSCameraRef.gameObject.AddComponent<VRPlayer>();
+                    m_player.Setup(m_currentFPSCameraRef, m_currentPlayerAgentRef);
+                }
                 HandleIngameFocus();
             }
 
@@ -101,26 +109,20 @@ namespace GTFO_VR.Core
 
         private void HandleOutOfGameFocus()
         {
-            if (!overlay)
+            if (!m_overlay)
             {
                 return;
             }
-
+            Log.Debug("Focus change - Enabling overlay/Disabling player");
             ToggleOverlay(true);
             TogglePlayerCam(false);
         }
 
         private void HandleIngameFocus()
         {
-            if (!overlay)
+            if (!m_overlay)
             {
                 return;
-            }
-            if (ingamePlayer == null)
-            {
-                GTFO_VR_Plugin.log.LogInfo("Creating VR Player...");
-
-                ingamePlayer = new GameObject("VR_Player").AddComponent<PlayerVR>();
             }
 
             ToggleOverlay(false);
@@ -132,23 +134,21 @@ namespace GTFO_VR.Core
         {
             if (!toggle)
             {
-                overlay.DestroyOverlay();
+                m_overlay.DestroyOverlay();
             }
             else
             {
-                overlay.SetupOverlay();
+                m_overlay.SetupOverlay();
             }
 
-            overlay.gameObject.SetActive(toggle);
-            overlay.OrientateOverlay();
+            m_overlay.gameObject.SetActive(toggle);
+            m_overlay.OrientateOverlay();
         }
 
         void TogglePlayerCam(bool toggle)
         {
-            PlayerVR.LoadedAndInIngameView = toggle;
             SteamVR_Render.pauseRendering = !toggle;
         }
-
 
         void OnDestroy()
         {

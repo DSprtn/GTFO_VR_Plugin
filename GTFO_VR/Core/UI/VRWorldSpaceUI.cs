@@ -15,34 +15,34 @@ namespace GTFO_VR.UI
     /// </summary>
     public class VRWorldSpaceUI : MonoBehaviour
     {
-
         public VRWorldSpaceUI(IntPtr value)
 : base(value) { }
+
+        public static InteractionGuiLayer interactGUI;
+        public static PlayerGuiLayer playerGUI;
 
         public static PUI_InteractionPrompt statusBar;
         public static PUI_InteractionPrompt interactionBar;
         public static PUI_Compass compass;
         public static PUI_WardenIntel intel;
 
-        GameObject statusBarHolder;
-        GameObject interactionBarHolder;
-        GameObject compassHolder;
-        GameObject intelHolder;
-
-        public static InteractionGuiLayer interactGUI;
-        public static PlayerGuiLayer playerGUI;
+        private GameObject m_statusBarHolder;
+        private GameObject m_interactionBarHolder;
+        private GameObject m_compassHolder;
+        private GameObject m_intelHolder;
 
         // Compass will not be visible after this distance from the center of its rect
-        float compassCullDistance = 1.2f;
+        private float compassCullDistance = 1.2f;
 
-        void Awake()
+        private void Awake()
         {
             SteamVR_Events.NewPosesApplied.Listen(OnNewPoses);
-            Snapturn.OnAfterSnapTurn += PlayerUsedSnapturn;
+            PlayerOrigin.OnOriginShift += SnapUIToPlayerView;
         }
 
         private void OnNewPoses()
         {
+            
             UpdateWorldSpaceUI();
         }
 
@@ -60,117 +60,46 @@ namespace GTFO_VR.UI
             playerGUI = playerGUIRef;
         }
 
-        void Start()
+        private void Start()
         {
-
-            GTFO_VR_Plugin.log.LogInfo("Creating status and interaction prompt VR UI");
-            statusBarHolder = new GameObject("VR_StatusUI");
-            interactionBarHolder = new GameObject("VR_InteractionUI");
-            compassHolder = new GameObject("CompassHolder");
-            intelHolder = new GameObject("IntelHolder");
-            
+            Log.Info("Creating status and interaction prompt VR UI");
+            m_statusBarHolder = new GameObject("VR_StatusUI");
+            m_interactionBarHolder = new GameObject("VR_InteractionUI");
+            m_compassHolder = new GameObject("CompassHolder");
+            m_intelHolder = new GameObject("IntelHolder");
             Invoke(nameof(VRWorldSpaceUI.Setup), 1f);
-
         }
 
-        void Setup()
+        private void Setup()
         {
-            SetupElement(statusBar.transform, statusBarHolder.transform, 0.0018f);
-            SetupElement(interactionBar.transform, interactionBarHolder.transform, 0.0018f);
-            SetupElement(compass.transform, compassHolder.transform, 0.0036f, false);
-            SetupElement(intel.transform, intelHolder.transform, 0.0018f);
+            SetupElement(statusBar.transform, m_statusBarHolder.transform, 0.0018f);
+            SetupElement(interactionBar.transform, m_interactionBarHolder.transform, 0.0018f);
+            SetupElement(compass.transform, m_compassHolder.transform, 0.0036f, false);
+            SetupElement(intel.transform, m_intelHolder.transform, 0.0018f);
 
-            SetTextShader(compass.transform, VR_Assets.textSphereClip);
-            SetSpriteRendererShader(compass.transform, VR_Assets.spriteSphereClip);
+            SetTextShader(compass.transform, VRAssets.TextSphereClip);
+            SetSpriteRendererShader(compass.transform, VRAssets.SpriteSphereClip);
 
-            intelHolder.SetActive(true);
+            m_intelHolder.SetActive(true);
 
             Utils.FindDeepChild(interactionBar.transform, "Timer BG").gameObject.SetActive(false);
             CenterRect(intel.transform);
             CenterRect(compass.transform);
         }
-        
 
-        static void CenterRect(Transform t)
+        private void SnapUIToPlayerView()
         {
-            RectTransformComp rect = t.GetComponent<RectTransformComp>();
-            rect.SetAnchor(GuiAnchor.MidCenter);
-            rect.transform.localPosition = Vector3.zero;
-        }
-
-        static void SetupElement(Transform ui, Transform holder, float scale, bool replaceShaders = true)
-        {
-            ui.SetParent(holder);
-            SetTransformHierarchyLayer(ui);
-            if(replaceShaders)
+            if (m_statusBarHolder)
             {
-                SetSpriteRendererShader(ui);
-                SetTextShader(ui);
+                m_statusBarHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
             }
-
-            ui.transform.localScale = Vector3.one * scale;
-            ui.transform.localPosition = Vector3.zero;
-            ui.transform.localRotation = Quaternion.identity;
-        }
-
-        static void SetTextShader(Transform ui)
-        {
-            foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>(true))
+            if (m_intelHolder)
             {
-                p.GetComponent<MeshRenderer>().material.shader = VR_Assets.textAlwaysRender;
+                m_intelHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
             }
         }
 
-        static void SetSpriteRendererShader(Transform ui)
-        {
-            foreach (SpriteRenderer s in ui.GetComponentsInChildren<SpriteRenderer>(true))
-            {
-                s.material.shader = VR_Assets.spriteAlwaysRender;
-            }
-        }
-
-        static void SetSpriteRendererShader(Transform ui, Shader shader)
-        {
-            foreach (SpriteRenderer s in ui.GetComponentsInChildren<SpriteRenderer>(true))
-            {
-                s.material.shader = shader;
-            }
-        }
-
-        static void SetTextShader(Transform ui, Shader shader)
-        {
-            foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>(true))
-            {
-                p.GetComponent<MeshRenderer>().material.shader = shader;
-            }
-        }
-
-        static void SetTransformHierarchyLayer(Transform transform)
-        {
-            foreach (RectTransform t in transform.GetComponentsInChildren<RectTransform>(true))
-            {
-                t.gameObject.layer = LayerManager.LAYER_FIRST_PERSON_ITEM;
-            }
-
-            foreach(Transform t in transform.GetComponentsInChildren<Transform>(true))
-            {
-                t.gameObject.layer = LayerManager.LAYER_FIRST_PERSON_ITEM;
-            }
-        }
-
-        void PlayerUsedSnapturn()
-        {
-            if(statusBarHolder)
-            {
-                statusBarHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
-            }
-            if(intelHolder)
-            {
-                intelHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
-            }
-        }
-
-        void UpdateWorldSpaceUI()
+        private void UpdateWorldSpaceUI()
         {
             UpdateInteraction();
             UpdateStatus();
@@ -178,98 +107,57 @@ namespace GTFO_VR.UI
             UpdateIntel();
         }
 
-        void UpdateIntel()
+        private void UpdateIntel()
         {
-            intelHolder.transform.position = GetIntelPosition();
-            
-            if(FocusStateEvents.currentState.Equals(eFocusState.InElevator))
+            m_intelHolder.transform.position = GetIntelPosition();
+
+            if (FocusStateEvents.currentState.Equals(eFocusState.InElevator))
             {
-                Vector3 flatForward = (intelHolder.transform.position - PlayerVR.fpsCamera.transform.position).normalized;
+                Vector3 flatForward = (m_intelHolder.transform.position - VRPlayer.FpsCamera.transform.position).normalized;
                 flatForward.y = 0;
-                intelHolder.transform.rotation = Quaternion.LookRotation(flatForward.normalized);
-            } else
-            {
-                intelHolder.transform.rotation = LerpUIRot(intelHolder.transform);
+                m_intelHolder.transform.rotation = Quaternion.LookRotation(flatForward.normalized);
             }
-            
-        }
-
-        void UpdateStatus()
-        {
-            statusBarHolder.SetActive(interactGUI.IsVisible() && interactGUI.MessageVisible);
-            if (statusBarHolder.activeSelf)
+            else
             {
-                statusBarHolder.transform.position = GetStatusBarPosition();
-                statusBarHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
+                m_intelHolder.transform.rotation = LerpUIRot(m_intelHolder.transform);
             }
         }
 
-        void UpdateInteraction()
+        private void UpdateStatus()
         {
-            interactionBarHolder.SetActive(interactGUI.IsVisible() && interactGUI.InteractPromptVisible);
-            if (interactionBarHolder.activeSelf)
+            m_statusBarHolder.SetActive(interactGUI.IsVisible() && interactGUI.MessageVisible);
+            if (m_statusBarHolder.activeSelf)
             {
-                interactionBarHolder.transform.position = GetInteractionPromptPosition();
-                interactionBarHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection()); 
+                m_statusBarHolder.transform.position = GetStatusBarPosition();
+                m_statusBarHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
             }
         }
 
-        void UpdateCompass()
+        private void UpdateInteraction()
         {
-            compassHolder.SetActive(playerGUI.IsVisible());
-            if(compassHolder.activeSelf)
+            m_interactionBarHolder.SetActive(interactGUI.IsVisible() && interactGUI.InteractPromptVisible);
+            if (m_interactionBarHolder.activeSelf)
             {
-                compassHolder.transform.position = GetCompassPosition();
-                compassHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
+                m_interactionBarHolder.transform.position = GetInteractionPromptPosition();
+                m_interactionBarHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
+            }
+        }
+
+        private void UpdateCompass()
+        {
+            m_compassHolder.SetActive(playerGUI.IsVisible());
+            if (m_compassHolder.activeSelf)
+            {
+                m_compassHolder.transform.position = GetCompassPosition();
+                m_compassHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
             }
             UpdateCompassCull();
         }
 
-        void UpdateCompassCull()
+        private void UpdateCompassCull()
         {
-            Vector3 compassPos = compassHolder.transform.position;
+            Vector3 compassPos = m_compassHolder.transform.position;
             Shader.SetGlobalColor("_ClippingSphere", new Color(compassPos.x, compassPos.y, compassPos.z, compassCullDistance));
-        }
-
-
-        Vector3 GetIntelPosition()
-        {
-            if(FocusStateEvents.currentState.Equals(eFocusState.InElevator) && PlayerVR.fpsCamera)
-            {
-                Vector3 flatForward = PlayerVR.fpsCamera.m_camera.transform.forward;
-                flatForward.y = 0f;
-                Vector3 pos = PlayerVR.fpsCamera.m_camera.transform.position;
-                return pos + flatForward.normalized * 1.2f;
-            }
-            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.75f;
-        }
-        Vector3 GetCompassPosition()
-        {
-            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.45f + new Vector3(0, 2.15f, 0);
-        }
-        
-        Vector3 GetInteractionPromptPosition()
-        {
-            if (ShouldUsePointerPosition())
-            {
-                return PlayerVR.fpsCamera.CameraRayPos + new Vector3(0, 0.05f, 0) - PlayerVR.fpsCamera.transform.forward * .1f;
-            }
-            return PlayerOrigin.GetUnadjustedPosition() + HMD.GetFlatForwardDirection() * .7f + new Vector3(0, 1f, 0);
-        }
-
-        Vector3 GetStatusBarPosition()
-        {
-            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.75f + new Vector3(0, 1.5f, 0);
-        }
-
-        Quaternion LerpUIRot(Transform t)
-        {
-            return Quaternion.Lerp(t.rotation, Quaternion.LookRotation(HMD.GetFlatForwardDirection()), Time.deltaTime * 5f);
-        }
-
-        static bool ShouldUsePointerPosition()
-        {
-            return PlayerVR.fpsCamera.CameraRayObject && Vector3.Distance(HMD.GetVRInteractionFromPosition(), PlayerVR.fpsCamera.CameraRayPos) < 1.2f;
         }
 
         public static void PrepareNavMarker(NavMarker n)
@@ -290,7 +178,6 @@ namespace GTFO_VR.UI
 
         internal static void UpdateAllNavMarkers(Il2CppSystem.Collections.Generic.List<NavMarker> m_markersActive)
         {
-
             float tempScale = 1f;
             bool inElevator = FocusStateManager.CurrentState.Equals(eFocusState.InElevator);
 
@@ -304,12 +191,9 @@ namespace GTFO_VR.UI
 
                 if (n != null && n.m_trackingObj != null)
                 {
-
                     n.transform.position = n.m_trackingObj.transform.position;
 
-
                     float dotToCamera = Vector3.Dot((n.m_trackingObj.transform.position - HMD.GetWorldPosition()).normalized, HMD.GetWorldForward());
-
 
                     if (dotToCamera < 0)
                     {
@@ -331,13 +215,11 @@ namespace GTFO_VR.UI
                         {
                             if (n.m_currentState != NavMarkerState.InFocus)
                             {
-
                                 n.SetState(NavMarkerState.InFocus);
                             }
                         }
                         else if (n.m_currentState != NavMarkerState.Visible)
                         {
-
                             n.SetState(NavMarkerState.Visible);
                         }
                         n.SetDistance(distanceToCamera);
@@ -347,18 +229,144 @@ namespace GTFO_VR.UI
                         tempScale = 1 + Mathf.Clamp(distanceToCamera / 25f, 0, 2.4f);
 
                         n.transform.localScale = n.m_initScale * tempScale;
-
                     }
                 }
             }
         }
 
-        void OnDestroy()
+        private Vector3 GetIntelPosition()
         {
+            if (FocusStateEvents.currentState.Equals(eFocusState.InElevator) && VRPlayer.FpsCamera)
+            {
+                Vector3 flatForward = VRPlayer.FpsCamera.m_camera.transform.forward;
+                flatForward.y = 0f;
+                Vector3 pos = VRPlayer.FpsCamera.m_camera.transform.position;
+                return pos + flatForward.normalized * 1.2f;
+            }
+            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.75f;
+        }
+
+        private Vector3 GetCompassPosition()
+        {
+            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.45f + new Vector3(0, 2.15f, 0);
+        }
+
+        private Vector3 GetInteractionPromptPosition()
+        {
+            if (ShouldUsePointerPosition())
+            {
+                return VRPlayer.FpsCamera.CameraRayPos + new Vector3(0, 0.05f, 0) - VRPlayer.FpsCamera.transform.forward * .1f;
+            }
+
+            return VRPlayer.PlayerAgent.PlayerCharacterController.SmoothPosition + HMD.GetFlatForwardDirection() * .7f + new Vector3(0, 1f, 0);
+        }
+
+        private Vector3 GetStatusBarPosition()
+        {
+            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.75f + new Vector3(0, 1.5f, 0);
+        }
+
+        private Quaternion LerpUIRot(Transform t)
+        {
+            return Quaternion.Lerp(t.rotation, Quaternion.LookRotation(HMD.GetFlatForwardDirection()), Time.deltaTime * 5f);
+        }
+
+        private static bool ShouldUsePointerPosition()
+        {
+            return VRPlayer.FpsCamera.CameraRayObject && Vector3.Distance(HMD.GetVRInteractionFromPosition(), VRPlayer.FpsCamera.CameraRayPos) < 1.2f;
+        }
+
+        private static void CenterRect(Transform t)
+        {
+            RectTransformComp rect = t.GetComponent<RectTransformComp>();
+            rect.SetAnchor(GuiAnchor.MidCenter);
+            rect.transform.localPosition = Vector3.zero;
+        }
+
+        private static void SetupElement(Transform ui, Transform holder, float scale, bool replaceShaders = true)
+        {
+            ui.SetParent(holder);
+            SetTransformHierarchyLayer(ui);
+            if (replaceShaders)
+            {
+                SetSpriteRendererShader(ui);
+                SetTextShader(ui);
+            }
+
+            ui.transform.localScale = Vector3.one * scale;
+            ui.transform.localPosition = Vector3.zero;
+            ui.transform.localRotation = Quaternion.identity;
+        }
+
+        private static void SetTextShader(Transform ui)
+        {
+            foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>(true))
+            {
+                p.GetComponent<MeshRenderer>().material.shader = VRAssets.TextAlwaysRender;
+            }
+        }
+
+        private static void SetSpriteRendererShader(Transform ui)
+        {
+            foreach (SpriteRenderer s in ui.GetComponentsInChildren<SpriteRenderer>(true))
+            {
+                s.material.shader = VRAssets.SpriteAlwaysRender;
+            }
+        }
+
+        private static void SetSpriteRendererShader(Transform ui, Shader shader)
+        {
+            foreach (SpriteRenderer s in ui.GetComponentsInChildren<SpriteRenderer>(true))
+            {
+                s.material.shader = shader;
+            }
+        }
+
+        private static void SetTextShader(Transform ui, Shader shader)
+        {
+            foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>(true))
+            {
+                p.GetComponent<MeshRenderer>().material.shader = shader;
+            }
+        }
+
+        private static void SetTransformHierarchyLayer(Transform transform)
+        {
+            foreach (RectTransform t in transform.GetComponentsInChildren<RectTransform>(true))
+            {
+                t.gameObject.layer = LayerManager.LAYER_FIRST_PERSON_ITEM;
+            }
+
+            foreach (Transform t in transform.GetComponentsInChildren<Transform>(true))
+            {
+                t.gameObject.layer = LayerManager.LAYER_FIRST_PERSON_ITEM;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (m_statusBarHolder != null)
+            {
+                m_statusBarHolder.transform.DetachChildren();
+                Destroy(m_statusBarHolder);
+            }
+            if (m_interactionBarHolder != null)
+            {
+                m_interactionBarHolder.transform.DetachChildren();
+                Destroy(m_interactionBarHolder);
+            }
+            if (m_compassHolder != null)
+            {
+                m_compassHolder.transform.DetachChildren();
+                Destroy(m_compassHolder);
+            }
+            if (m_intelHolder != null)
+            {
+                m_intelHolder.transform.DetachChildren();
+                Destroy(m_intelHolder);
+            }
             SteamVR_Events.NewPosesApplied.Remove(OnNewPoses);
-            Snapturn.OnAfterSnapTurn -= PlayerUsedSnapturn;
+            PlayerOrigin.OnOriginShift -= SnapUIToPlayerView;
         }
     }
 }
-
-

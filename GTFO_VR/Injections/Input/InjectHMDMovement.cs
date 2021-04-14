@@ -20,14 +20,9 @@ namespace GTFO_VR.Injections
 
         static void Prefix(FPSCamera __instance)
         {
-            if (!PlayerVR.VRPlayerIsSetup)
-            {
-                return;
-            }
-            Vector3 euler = HMD.GetFPSCameraRelativeVRCameraEuler();
+            Vector3 euler = HMD.GetVRCameraEulerRelativeToFPSCameraParent();
             __instance.m_pitch = euler.x;
             __instance.m_yaw = euler.y;
-
         }
     }
 
@@ -40,45 +35,33 @@ namespace GTFO_VR.Injections
     {
         static void Postfix(FPSCamera __instance)
         {
-            if (!PlayerVR.VRPlayerIsSetup)
-            {
-                return;
-            }
-
+            
             // Repeat position inject or the transforms will get out of sync (Unity transform handling mumbo jumbo ensues, frame later or frame behind tracking)
-            if (VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
+            if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 __instance.Position = HMD.GetWorldPosition();
             }
 
-            if (VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) || VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.Rotation))
-            {
-                Vector3 euler = HMD.GetFPSCameraRelativeVRCameraEuler();
-                __instance.m_pitch = euler.x;
-                __instance.m_yaw = euler.y;
-            }
+            Vector3 euler = HMD.GetVRCameraEulerRelativeToFPSCameraParent();
+            __instance.m_pitch = euler.x;
+            __instance.m_yaw = euler.y;
         }
     }
 
-    // Roll is patched in a separate method because it does not exist as a field within FPSCamera
-    // Since nothing else is done with the roll of the m_camera anywhere we can just set it and forget it
+
     [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.RotationUpdate))]
     class InjectHMDRotationRoll
     {
 
         static void Postfix(FPSCamera __instance)
         {
-            if (!PlayerVR.VRPlayerIsSetup)
-            {
-                return;
-            }
-            if (VR_Settings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
+            if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 __instance.Position = HMD.GetWorldPosition();
             }
 
             Vector3 euler = __instance.m_camera.transform.parent.localEulerAngles;
-            euler.z = HMD.GetFPSCameraRelativeVRCameraEuler().z;
+            euler.z = HMD.GetVRCameraEulerRelativeToFPSCameraParent().z;
             __instance.m_camera.transform.parent.localRotation = Quaternion.Euler(euler);
             __instance.UpdateFlatTransform();
         }

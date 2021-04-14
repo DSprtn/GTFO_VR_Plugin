@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.Core.PlayerBehaviours;
+using GTFO_VR.Events;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,89 +10,79 @@ namespace GTFO_VR.Core.VR_Input
     /// <summary>
     /// Handles binding and getting VR input into GTFO's input systems
     /// </summary>
-    public class SteamVR_InputHandler : MonoBehaviour
+    public static class SteamVR_InputHandler
     {
-        public SteamVR_InputHandler(IntPtr value)
-: base(value) { }
-
-        private static SteamVR_InputHandler instance;
 
         public static bool Initialized;
 
         public static SteamVR_Action_Vibration hapticAction;
 
-        private SteamVR_Action_Boolean snapLeftAction;
+        private static SteamVR_Action_Boolean m_snapLeftAction;
 
-        private SteamVR_Action_Boolean snapRightAction;
+        private static SteamVR_Action_Boolean m_snapRightAction;
 
-        private SteamVR_Action_Boolean shootAction;
+        private static SteamVR_Action_Boolean m_shootAction;
 
-        private SteamVR_Action_Boolean toggleWatchAction;
+        private static SteamVR_Action_Boolean m_toggleWatchAction;
 
-        private SteamVR_Action_Vector2 movementAxisAction;
+        private static SteamVR_Action_Vector2 m_movementAxisAction;
 
-        private SteamVR_Action_Boolean sprintAction;
+        private static SteamVR_Action_Boolean m_sprintAction;
 
-        private SteamVR_Action_Boolean weaponSwitchLeftAction;
+        private static SteamVR_Action_Boolean m_weaponSwitchLeftAction;
 
-        private SteamVR_Action_Boolean weaponSwitchRightAction;
+        private static SteamVR_Action_Boolean m_weaponSwitchRightAction;
 
-        private SteamVR_Action_Boolean reloadAction;
+        private static SteamVR_Action_Boolean m_reloadAction;
 
-        private SteamVR_Action_Boolean flashlightAction;
+        private static SteamVR_Action_Boolean m_flashlightAction;
 
-        private SteamVR_Action_Boolean jumpAction;
+        private static SteamVR_Action_Boolean m_jumpAction;
 
-        private SteamVR_Action_Boolean interactAction;
+        private static SteamVR_Action_Boolean m_interactAction;
 
-        private SteamVR_Action_Boolean crouchAction;
+        private static SteamVR_Action_Boolean m_crouchAction;
 
-        private SteamVR_Action_Boolean openMenuAction;
+        private static SteamVR_Action_Boolean m_openMenuAction;
 
-        private SteamVR_Action_Boolean openMapAction;
+        private static SteamVR_Action_Boolean m_openMapAction;
 
-        private SteamVR_Action_Boolean pingAction;
+        private static SteamVR_Action_Boolean m_pingAction;
 
         //private SteamVR_Action_Boolean pushToTalkAction;
 
         private static Dictionary<InputAction, SteamVR_Action_Boolean> boolActions;
 
-
-
-        public void Start()
+        public static void Setup()
         {
-            if (instance != null)
-            {
-                GTFO_VR_Plugin.log.LogError("Trying to create duplicate VR_Input class! -- Don't!");
-                return;
-            }
-            instance = this;
-           
             InitializeActionMapping();
             Initialized = true;
-            GTFO_VR_Plugin.log.LogInfo("Input initialized");
+            Log.Info("Input initialized");
         }
-
 
         public static void TriggerHapticPulse(float duration, float frequency, float amplitude, SteamVR_Input_Sources controller)
         {
+            if (!Initialized)
+            {
+                return;
+            }
             hapticAction.Execute(0.0f, duration, frequency, amplitude, controller);
         }
 
         public static bool GetActionDown(InputAction action)
         {
-            if (!SteamVR_InputHandler.Initialized)
+            if (!Initialized)
             {
                 return false;
             }
-            
-            SteamVR_Action_Boolean boolActionMapping = SteamVR_InputHandler.instance.GetBoolActionMapping(action);
+
+            SteamVR_Action_Boolean boolActionMapping = GetBoolActionMapping(action);
             if (IsIRLCrouchValid(action))
             {
-                return (boolActionMapping != null && boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any)) || HMD.hmd.transform.localPosition.y < VR_Settings.IRLCrouchBorder;
+                return (boolActionMapping != null && boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any)) || HMD.Hmd.transform.localPosition.y < VRSettings.IRLCrouchBorder;
             }
 
-            if(action.Equals(InputAction.TerminalExit) && VR_Keyboard.keyboardClosedThisFrame)
+            if (action.Equals(InputAction.TerminalExit) && VRKeyboard.KeyboardClosedThisFrame)
             {
                 return true;
             }
@@ -100,15 +91,15 @@ namespace GTFO_VR.Core.VR_Input
 
         public static bool GetAction(InputAction action)
         {
-            if (!SteamVR_InputHandler.Initialized)
+            if (!Initialized)
             {
                 return false;
             }
-           
-            SteamVR_Action_Boolean boolActionMapping = SteamVR_InputHandler.instance.GetBoolActionMapping(action);
+
+            SteamVR_Action_Boolean boolActionMapping = SteamVR_InputHandler.GetBoolActionMapping(action);
             if (IsIRLCrouchValid(action))
             {
-                return (boolActionMapping != null && boolActionMapping.GetState(SteamVR_Input_Sources.Any)) || HMD.hmd.transform.localPosition.y < VR_Settings.IRLCrouchBorder;
+                return (boolActionMapping != null && boolActionMapping.GetState(SteamVR_Input_Sources.Any)) || HMD.Hmd.transform.localPosition.y < VRSettings.IRLCrouchBorder;
             }
             return boolActionMapping != null && boolActionMapping.GetState(SteamVR_Input_Sources.Any);
         }
@@ -119,39 +110,40 @@ namespace GTFO_VR.Core.VR_Input
             {
                 return false;
             }
-            
-            SteamVR_Action_Boolean boolActionMapping = instance.GetBoolActionMapping(action);
+
+            SteamVR_Action_Boolean boolActionMapping = GetBoolActionMapping(action);
             if (IsIRLCrouchValid(action))
             {
-              return boolActionMapping != null && !boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any) || !boolActionMapping.GetState(SteamVR_Input_Sources.Any) && (boolActionMapping.GetStateUp(SteamVR_Input_Sources.Any) || (HMD.hmd.transform.localPosition.y > VR_Settings.IRLCrouchBorder));
+                return boolActionMapping != null && !boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any) || !boolActionMapping.GetState(SteamVR_Input_Sources.Any) && (boolActionMapping.GetStateUp(SteamVR_Input_Sources.Any) || (HMD.Hmd.transform.localPosition.y > VRSettings.IRLCrouchBorder));
             }
             return boolActionMapping != null && boolActionMapping.GetStateUp(SteamVR_Input_Sources.Any);
         }
 
-        static bool IsIRLCrouchValid(InputAction action)
+        private static bool IsIRLCrouchValid(InputAction action)
         {
-            return action.Equals(InputAction.Crouch) && PlayerVR.LoadedAndInIngameView && VR_Settings.crouchOnIRLCrouch;
+            return action.Equals(InputAction.Crouch) && VRSettings.crouchOnIRLCrouch && FocusStateEvents.currentState != eFocusState.MainMenu;
         }
 
         public static float GetAxis(InputAction action)
         {
-            if (!SteamVR_InputHandler.Initialized)
+            if (!Initialized)
             {
                 return 0f;
             }
-            return SteamVR_InputHandler.instance.GetAxisValue(action);
+            return SteamVR_InputHandler.GetAxisValue(action);
         }
 
         public static bool GetSnapTurningLeft()
         {
-            if(SteamVR_InputHandler.Initialized)
+            if (Initialized)
             {
-                if(VR_Settings.useSmoothTurn)
+                if (VRSettings.useSmoothTurn)
                 {
-                    return SteamVR_InputHandler.instance.snapLeftAction.GetState(SteamVR_Input_Sources.Any);
-                } else
+                    return SteamVR_InputHandler.m_snapLeftAction.GetState(SteamVR_Input_Sources.Any);
+                }
+                else
                 {
-                    return SteamVR_InputHandler.instance.snapLeftAction.GetStateDown(SteamVR_Input_Sources.Any);
+                    return SteamVR_InputHandler.m_snapLeftAction.GetStateDown(SteamVR_Input_Sources.Any);
                 }
             }
             return false;
@@ -159,66 +151,65 @@ namespace GTFO_VR.Core.VR_Input
 
         public static bool GetSnapTurningRight()
         {
-            if (SteamVR_InputHandler.Initialized)
+            if (Initialized)
             {
-                if (VR_Settings.useSmoothTurn)
+                if (VRSettings.useSmoothTurn)
                 {
-                    return SteamVR_InputHandler.instance.snapRightAction.GetState(SteamVR_Input_Sources.Any);
+                    return SteamVR_InputHandler.m_snapRightAction.GetState(SteamVR_Input_Sources.Any);
                 }
                 else
                 {
-                    return SteamVR_InputHandler.instance.snapRightAction.GetStateDown(SteamVR_Input_Sources.Any);
+                    return SteamVR_InputHandler.m_snapRightAction.GetStateDown(SteamVR_Input_Sources.Any);
                 }
             }
             return false;
         }
 
-        private void InitializeActionMapping()
+        private static void InitializeActionMapping()
         {
             hapticAction = SteamVR_Input.GetAction<SteamVR_Action_Vibration>("Haptic", false);
-            weaponSwitchLeftAction = SteamVR_Input.GetBooleanAction("WeaponSwitchLeft", false);
-            weaponSwitchRightAction = SteamVR_Input.GetBooleanAction("WeaponSwitchRight", false);
-            reloadAction = SteamVR_Input.GetBooleanAction("Reload", false);
-            flashlightAction = SteamVR_Input.GetBooleanAction("ToggleFlashlight", false);
-            snapLeftAction = SteamVR_Input.GetBooleanAction("SnapTurnLeft", false);
-            snapRightAction = SteamVR_Input.GetBooleanAction("SnapTurnRight", false);
-            shootAction = SteamVR_Input.GetBooleanAction("Shoot", false);
-            toggleWatchAction = SteamVR_Input.GetBooleanAction("ToggleWatchMode", false);
-            movementAxisAction = SteamVR_Input.GetVector2Action("Movement", false);
-            interactAction = SteamVR_Input.GetBooleanAction("interact", false);
-            crouchAction = SteamVR_Input.GetBooleanAction("Crouch", false);
-            sprintAction = SteamVR_Input.GetBooleanAction("Sprint", false);
-            jumpAction = SteamVR_Input.GetBooleanAction("Jump", false);
-            openMapAction = SteamVR_Input.GetBooleanAction("OpenMap", false);
-            openMenuAction = SteamVR_Input.GetBooleanAction("OpenMenu", false);
-            pingAction = SteamVR_Input.GetBooleanAction("Ping", false);
+            m_weaponSwitchLeftAction = SteamVR_Input.GetBooleanAction("WeaponSwitchLeft", false);
+            m_weaponSwitchRightAction = SteamVR_Input.GetBooleanAction("WeaponSwitchRight", false);
+            m_reloadAction = SteamVR_Input.GetBooleanAction("Reload", false);
+            m_flashlightAction = SteamVR_Input.GetBooleanAction("ToggleFlashlight", false);
+            m_snapLeftAction = SteamVR_Input.GetBooleanAction("SnapTurnLeft", false);
+            m_snapRightAction = SteamVR_Input.GetBooleanAction("SnapTurnRight", false);
+            m_shootAction = SteamVR_Input.GetBooleanAction("Shoot", false);
+            m_toggleWatchAction = SteamVR_Input.GetBooleanAction("ToggleWatchMode", false);
+            m_movementAxisAction = SteamVR_Input.GetVector2Action("Movement", false);
+            m_interactAction = SteamVR_Input.GetBooleanAction("interact", false);
+            m_crouchAction = SteamVR_Input.GetBooleanAction("Crouch", false);
+            m_sprintAction = SteamVR_Input.GetBooleanAction("Sprint", false);
+            m_jumpAction = SteamVR_Input.GetBooleanAction("Jump", false);
+            m_openMapAction = SteamVR_Input.GetBooleanAction("OpenMap", false);
+            m_openMenuAction = SteamVR_Input.GetBooleanAction("OpenMenu", false);
+            m_pingAction = SteamVR_Input.GetBooleanAction("Ping", false);
             //pushToTalkAction = SteamVR_Input.GetBooleanAction("PushToTalk", false);
-
 
             boolActions = new Dictionary<InputAction, SteamVR_Action_Boolean>
             {
-                { InputAction.Jump, jumpAction },
-                { InputAction.Use, interactAction },
-                { InputAction.Aim, toggleWatchAction },
-                { InputAction.Fire, shootAction },
-                { InputAction.Run, sprintAction },
-                { InputAction.Crouch, crouchAction },
-                { InputAction.Reload, reloadAction },
+                { InputAction.Jump, m_jumpAction },
+                { InputAction.Use, m_interactAction },
+                { InputAction.Aim, m_toggleWatchAction },
+                { InputAction.Fire, m_shootAction },
+                { InputAction.Run, m_sprintAction },
+                { InputAction.Crouch, m_crouchAction },
+                { InputAction.Reload, m_reloadAction },
                 //{ InputAction.VoiceChatPushToTalk, pushToTalkAction},
-                { InputAction.NavMarkerPing, pingAction },
-                { InputAction.TerminalUp, weaponSwitchLeftAction },
-                { InputAction.TerminalDown, weaponSwitchRightAction },
-                { InputAction.TerminalExit, reloadAction },
-                { InputAction.MenuClick, shootAction },
+                { InputAction.NavMarkerPing, m_pingAction },
+                { InputAction.TerminalUp, m_weaponSwitchLeftAction },
+                { InputAction.TerminalDown, m_weaponSwitchRightAction },
+                { InputAction.TerminalExit, m_reloadAction },
+                { InputAction.MenuClick, m_shootAction },
                 //{ InputAction.MenuClickAlternate, interactAction },
-                { InputAction.MenuExit, reloadAction },
-                { InputAction.MenuToggle, openMenuAction },
-                { InputAction.ToggleMap, openMapAction },
-                { InputAction.Flashlight, flashlightAction }
+                { InputAction.MenuExit, m_reloadAction },
+                { InputAction.MenuToggle, m_openMenuAction },
+                { InputAction.ToggleMap, m_openMapAction },
+                { InputAction.Flashlight, m_flashlightAction }
             };
         }
 
-        private SteamVR_Action_Boolean GetBoolActionMapping(InputAction action)
+        private static SteamVR_Action_Boolean GetBoolActionMapping(InputAction action)
         {
             if (boolActions.ContainsKey(action))
             {
@@ -227,37 +218,38 @@ namespace GTFO_VR.Core.VR_Input
             return null;
         }
 
-        private float GetAxisValue(InputAction action)
+        private static float GetAxisValue(InputAction action)
         {
             if (InputAction.ScrollItems.Equals(action))
             {
-                if (instance.weaponSwitchLeftAction.GetStateDown(SteamVR_Input_Sources.Any))
+                if (m_weaponSwitchLeftAction.GetStateDown(SteamVR_Input_Sources.Any))
                 {
                     return -1f;
                 }
-                if (weaponSwitchRightAction.GetStateDown(SteamVR_Input_Sources.Any))
+                if (m_weaponSwitchRightAction.GetStateDown(SteamVR_Input_Sources.Any))
                 {
                     return 1f;
                 }
                 return 0f;
-            } else if (InputAction.MenuScroll.Equals(action))
+            }
+            else if (InputAction.MenuScroll.Equals(action))
             {
-                if (instance.weaponSwitchLeftAction.GetStateDown(SteamVR_Input_Sources.Any))
+                if (m_weaponSwitchLeftAction.GetStateDown(SteamVR_Input_Sources.Any))
                 {
                     return 1f;
                 }
-                if (weaponSwitchRightAction.GetStateDown(SteamVR_Input_Sources.Any))
+                if (m_weaponSwitchRightAction.GetStateDown(SteamVR_Input_Sources.Any))
                 {
                     return -1f;
                 }
             }
-            else if(InputAction.MapZoom.Equals(action))
+            else if (InputAction.MapZoom.Equals(action))
             {
-                if (instance.weaponSwitchLeftAction.GetState(SteamVR_Input_Sources.Any))
+                if (m_weaponSwitchLeftAction.GetState(SteamVR_Input_Sources.Any))
                 {
                     return -1f * Time.deltaTime;
                 }
-                if (weaponSwitchRightAction.GetState(SteamVR_Input_Sources.Any))
+                if (m_weaponSwitchRightAction.GetState(SteamVR_Input_Sources.Any))
                 {
                     return 1f * Time.deltaTime;
                 }
@@ -266,35 +258,32 @@ namespace GTFO_VR.Core.VR_Input
             {
                 if (InputAction.MoveHorizontal.Equals(action) || InputAction.GamepadLookHorizontal.Equals(action))
                 {
-                    if(FocusStateManager.CurrentState.Equals(eFocusState.MainMenu))
+                    if (FocusStateManager.CurrentState.Equals(eFocusState.MainMenu))
                     {
-                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x / 10f;
+                        return m_movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x / 10f;
                     }
 
-                    if(FocusStateManager.CurrentState.Equals(eFocusState.Map))
+                    if (FocusStateManager.CurrentState.Equals(eFocusState.Map))
                     {
-                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x / 2f;
+                        return m_movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x / 2f;
                     }
-                    return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x;
-                    
+                    return m_movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x;
                 }
                 if (InputAction.MoveVertical.Equals(action) || InputAction.GamepadLookVertical.Equals(action))
                 {
                     if (FocusStateManager.CurrentState.Equals(eFocusState.MainMenu))
                     {
-                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y / 10f;
+                        return m_movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y / 10f;
                     }
 
                     if (FocusStateManager.CurrentState.Equals(eFocusState.Map))
                     {
-                        return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y / 2f;
+                        return m_movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y / 2f;
                     }
-                    return movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y;
+                    return m_movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y;
                 }
             }
             return 0f;
         }
-
     }
-
 }

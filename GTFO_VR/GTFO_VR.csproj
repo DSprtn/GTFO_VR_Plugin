@@ -37,14 +37,17 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Core\Log.cs" />
     <Compile Include="Core\PlayerBehaviours\ColisionFade.cs" />
+    <Compile Include="Core\PlayerBehaviours\VRDetectionModHack.cs" />
+    <Compile Include="Core\PlayerBehaviours\VRRendering.cs" />
     <Compile Include="Detours\BioscannerDetours.cs" />
     <Compile Include="Detours\TerminalInputDetours.cs" />
     <Compile Include="Core\PlayerBehaviours\PlayerOrigin.cs" />
     <Compile Include="Core\PlayerBehaviours\Snapturn.cs" />
-    <Compile Include="Core\VR_Settings.cs" />
-    <Compile Include="Core\VR_Assets.cs" />
-    <Compile Include="Core\PlayerBehaviours\VR_Keyboard.cs" />
+    <Compile Include="Core\VRSettings.cs" />
+    <Compile Include="Core\VRAssets.cs" />
+    <Compile Include="Core\PlayerBehaviours\VRKeyboard.cs" />
     <Compile Include="Events\FocusStateEvents.cs" />
     <Compile Include="Events\InventoryAmmoEvents.cs" />
     <Compile Include="Events\PlayerLocomotionEvents.cs" />
@@ -68,7 +71,6 @@
     <Compile Include="Injections\InjectInput.cs" />
     <Compile Include="Injections\InjectInteractionPromptRef.cs" />
     <Compile Include="Injections\InjectInteractionTweaks.cs" />
-    <Compile Include="Injections\InjectLightRenderCommandRef.cs" />
     <Compile Include="Injections\InjectMeleeIgnoreCameraDir.cs" />
     <Compile Include="Injections\InjectNavMarkerWorldSpace.cs" />
     <Compile Include="Injections\InjectNoVRCamHIjack.cs" />
@@ -97,8 +99,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\VR_Input\TrackingType.cs" />
     <Compile Include="Core\UI\VR_UI_Overlay.cs" />
-    <Compile Include="Core\VR_Global.cs" />
-    <Compile Include="Core\PlayerBehaviours\PlayerVR.cs" />
+    <Compile Include="Core\VRSystems.cs" />
+    <Compile Include="Core\PlayerBehaviours\VRPlayer.cs" />
     <Compile Include="Core\VR_Input\SteamVR_InputHandler.cs" />
   </ItemGroup>
   <ItemGroup>

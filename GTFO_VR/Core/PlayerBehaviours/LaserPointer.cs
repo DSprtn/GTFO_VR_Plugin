@@ -9,22 +9,20 @@ namespace GTFO_VR.Core.PlayerBehaviours
     /// </summary>
     public class LaserPointer : MonoBehaviour
     {
-        public LaserPointer(IntPtr value)
-        : base(value) { }
+        public LaserPointer(IntPtr value) : base(value)
+        {
+        }
 
+        public Color Color = ColorExt.OrangeBright();
+        private GameObject m_pointer;
+        private GameObject m_dot;
+        private float m_thickness = 1f / 400f;
 
-        public float thickness = 1f / 400f;
+        private Vector3 m_dotScale = new Vector3(0.04f, 0.01f, 0.016f);
 
-        public Color color = ColorExt.OrangeBright();
-        public GameObject pointer;
-        public GameObject dot;
+        private bool m_setup = false;
 
-        public Vector3 dotScale = new Vector3(0.04f, 0.01f, 0.016f);
-        public float dotMultiplierByDistance = 2.5f;
-
-        bool setup = false;
-
-        void Awake()
+        private void Awake()
         {
             ItemEquippableEvents.OnPlayerWieldItem += PlayerChangedItem;
         }
@@ -49,24 +47,22 @@ namespace GTFO_VR.Core.PlayerBehaviours
             if (bHit && hit.distance < 100f)
             {
                 dist = hit.distance;
-                dot.transform.rotation = Quaternion.LookRotation(pointer.transform.up);
-                dot.transform.position = hit.point;
-                dot.transform.localScale = Vector3.Lerp(dotScale, dotScale * 3f, dist / 51f);
+                m_dot.transform.rotation = Quaternion.LookRotation(m_pointer.transform.up);
+                m_dot.transform.position = hit.point;
+                m_dot.transform.localScale = Vector3.Lerp(m_dotScale, m_dotScale * 3f, dist / 51f);
             }
             else
             {
-                dot.SetActive(false);
+                m_dot.SetActive(false);
             }
 
-            pointer.transform.localScale = new Vector3(thickness, thickness, dist);
-            pointer.transform.localPosition = new Vector3(0f, 0f, dist / 2f);
-
+            m_pointer.transform.localScale = new Vector3(m_thickness, m_thickness, dist);
+            m_pointer.transform.localPosition = new Vector3(0f, 0f, dist / 2f);
         }
-
 
         public void PlayerChangedItem(ItemEquippable item)
         {
-            if (!setup)
+            if (!m_setup)
             {
                 return;
             }
@@ -81,50 +77,51 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
-        void TogglePointer(bool toggle)
+        private void TogglePointer(bool toggle)
         {
-            pointer.SetActive(toggle);
-            dot.SetActive(toggle);
+            m_pointer.SetActive(toggle);
+            m_dot.SetActive(toggle);
         }
 
-        void SetHolderTransform(Transform t)
+        private void SetHolderTransform(Transform t)
         {
             transform.SetParent(t);
             transform.localPosition = Vector3.zero;
             transform.localRotation = Quaternion.identity;
 
-            pointer.transform.localScale = new Vector3(thickness, thickness, 100f);
-            pointer.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
-            dot.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
-            pointer.transform.localRotation = Quaternion.identity;
-            dot.transform.localRotation = Quaternion.identity;
-            dot.transform.localScale = dotScale;
+            m_pointer.transform.localScale = new Vector3(m_thickness, m_thickness, 100f);
+            m_pointer.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
+            m_dot.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
+            m_pointer.transform.localRotation = Quaternion.identity;
+            m_dot.transform.localRotation = Quaternion.identity;
+            m_dot.transform.localScale = m_dotScale;
         }
+
         private void CreatePointerObjects()
         {
-            pointer = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            dot = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            dot.transform.localScale = dotScale;
-            dot.transform.SetParent(transform);
-            dot.GetComponent<Collider>().enabled = false;
-            pointer.GetComponent<Collider>().enabled = false;
+            m_pointer = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            m_dot = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            m_dot.transform.localScale = m_dotScale;
+            m_dot.transform.SetParent(transform);
+            m_dot.GetComponent<Collider>().enabled = false;
+            m_pointer.GetComponent<Collider>().enabled = false;
 
-            pointer.transform.parent = transform;
-            pointer.transform.localScale = new Vector3(thickness, thickness, 100f);
-            pointer.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
-            dot.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
-            pointer.transform.localRotation = Quaternion.identity;
-            dot.transform.localRotation = Quaternion.identity;
+            m_pointer.transform.parent = transform;
+            m_pointer.transform.localScale = new Vector3(m_thickness, m_thickness, 100f);
+            m_pointer.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
+            m_dot.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
+            m_pointer.transform.localRotation = Quaternion.identity;
+            m_dot.transform.localRotation = Quaternion.identity;
             Material material = new Material(Shader.Find("Unlit/Color"));
-            material.SetColor("_Color", color);
-            pointer.GetComponent<MeshRenderer>().material = material;
-            dot.GetComponent<MeshRenderer>().material = material;
-            setup = true;
+            material.SetColor("_Color", Color);
+            m_pointer.GetComponent<MeshRenderer>().material = material;
+            m_dot.GetComponent<MeshRenderer>().material = material;
+            m_setup = true;
 
             TogglePointer(false);
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             ItemEquippableEvents.OnPlayerWieldItem -= PlayerChangedItem;
         }

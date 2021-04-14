@@ -1,41 +1,41 @@
-﻿using System;
+﻿using GTFO_VR.Util;
+using System;
 using UnityEngine;
-using GTFO_VR.Util;
-using Player;
 
 namespace GTFO_VR.UI
 {
     /// <summary>
     /// Responsible for managing the fancy watch UI shaders.
     /// </summary>
-    class DividedBarShaderController : MonoBehaviour
+    internal class DividedBarShaderController : MonoBehaviour
     {
-
         public DividedBarShaderController(IntPtr value)
 : base(value) { }
 
-        Material barGrid;
+        public static Color NormalColor = new Color(0.83f, 1f, 0.964f);
+        public static Color SelectedColor = new Color(1f, 0.5f, 0f);
 
-        public static Color normalColor = new Color(0.83f, 1f, 0.964f);
-        public static Color selectedColor = new Color(1f, 0.5f, 0f);
+        private Material m_barGrid;
 
-        void Awake()
+       
+
+        private void Awake()
         {
             renderer = GetComponent<MeshRenderer>();
-            barGrid = renderer.material;
-           
-            SetColor(normalColor);
+            m_barGrid = renderer.material;
+
+            SetColor(NormalColor);
             UpdateShaderVals(5, 2);
         }
 
         public int maxValue = 10;
         public int currentValue = 0;
 
-        const string vertProperty = "_DivisionsVertical";
-        const string horizProperty = "_DivisionsHorizontal";
-        const string fillProperty = "_Fill";
+        private const string vertProperty = "_DivisionsVertical";
+        private const string horizProperty = "_DivisionsHorizontal";
+        private const string fillProperty = "_Fill";
 
-        MeshRenderer renderer;
+        private MeshRenderer renderer;
 
         public void ToggleRendering(bool toggle)
         {
@@ -44,15 +44,14 @@ namespace GTFO_VR.UI
 
         public void UpdateShaderVals(int verticalDivisions, int horizontalDivisions)
         {
-                barGrid.SetFloat(fillProperty, GetFill());
-                barGrid.SetInt(vertProperty, verticalDivisions);
-                barGrid.SetInt(horizProperty, horizontalDivisions);
+            m_barGrid.SetFloat(fillProperty, GetFill());
+            m_barGrid.SetInt(vertProperty, verticalDivisions);
+            m_barGrid.SetInt(horizProperty, horizontalDivisions);
         }
-
 
         public void UpdatePackOrConsumableDivisions()
         {
-            if(maxValue == 0)
+            if (maxValue == 0)
             {
                 return;
             }
@@ -61,9 +60,9 @@ namespace GTFO_VR.UI
 
         public void UpdateWeaponMagDivisions(float ammoInClip, float maxAmmo)
         {
-            int numMags = Mathf.Max(1,Mathf.RoundToInt(maxAmmo / ammoInClip));
+            int numMags = Mathf.Max(1, Mathf.RoundToInt(maxAmmo / ammoInClip));
 
-            UpdateShaderVals(numMags,1);
+            UpdateShaderVals(numMags, 1);
         }
 
         public void UpdateAmmoGridDivisions()
@@ -84,15 +83,13 @@ namespace GTFO_VR.UI
                     horizDivisions /= 5;
                     vertDivisions *= 5;
                 }
-
-
             }
             UpdateShaderVals(vertDivisions, horizDivisions);
         }
 
-        float GetFill()
+        private float GetFill()
         {
-            if(currentValue == 0)
+            if (currentValue == 0)
             {
                 return 0;
             }
@@ -101,21 +98,22 @@ namespace GTFO_VR.UI
 
         public void SetFill(float fill)
         {
-            barGrid.SetFloat("_Fill", fill);
+            m_barGrid.SetFloat("_Fill", fill);
         }
 
         public void SetColor(Color color)
         {
-            barGrid.SetColor("_Color", color);
+            m_barGrid.SetColor("_Color", color);
         }
 
         public void SetSelected()
         {
-            SetColor(selectedColor);
+            SetColor(SelectedColor);
         }
+
         public void SetUnselected()
         {
-            SetColor(normalColor);
+            SetColor(NormalColor);
         }
 
         public void UpdateCurrentAmmo(int ammoLeft)

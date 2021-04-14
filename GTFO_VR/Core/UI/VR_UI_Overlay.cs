@@ -18,17 +18,18 @@ namespace GTFO_VR.Core.UI
 
         public static bool Overlay_Active = true;
 
-        private ulong overlayHandle = OpenVR.k_ulOverlayHandleInvalid;
-
         public static UI_Pass UI_ref;
 
-        RigidTransform current;
+        private ulong m_overlayHandle = OpenVR.k_ulOverlayHandleInvalid;
 
-        void Awake()
+        private RigidTransform m_currentRigidTransform;
+
+        private void Awake()
         {
+            Log.Info("VR_UI_Overlay created...");
             if (instance)
             {
-                GTFO_VR_Plugin.log.LogError("Duplicate UI overlay handler!");
+                Log.Error("Duplicate UI overlay handler!");
                 return;
             }
             instance = this;
@@ -42,7 +43,6 @@ namespace GTFO_VR.Core.UI
         private void Setup()
         {
             SetupOverlay();
-
         }
 
         public static bool GetPlayerPointingAtPositionOnScreen(out Vector2 uv)
@@ -66,9 +66,9 @@ namespace GTFO_VR.Core.UI
             return false;
         }
 
-        void Update()
+        private void Update()
         {
-            if (overlayHandle != OpenVR.k_ulOverlayHandleInvalid)
+            if (m_overlayHandle != OpenVR.k_ulOverlayHandleInvalid)
             {
                 var texture = new Texture_t
                 {
@@ -76,10 +76,11 @@ namespace GTFO_VR.Core.UI
                     eType = SteamVR.instance.textureType,
                     eColorSpace = EColorSpace.Auto
                 };
-                OpenVR.Overlay.SetOverlayTexture(overlayHandle, ref texture);
+                OpenVR.Overlay.SetOverlayTexture(m_overlayHandle, ref texture);
 
                 if (SteamVR_InputHandler.GetActionDown(InputAction.Crouch) || SteamVR_InputHandler.GetActionDown(InputAction.Aim))
                 {
+                    Log.Debug("Reorientating overlay by input...");
                     OrientateOverlay();
                 }
             }
@@ -109,7 +110,7 @@ namespace GTFO_VR.Core.UI
             input.vDirection.v2 = -direction.z;
 
             var output = new VROverlayIntersectionResults_t();
-            if (!overlay.ComputeOverlayIntersection(overlayHandle, ref input, ref output))
+            if (!overlay.ComputeOverlayIntersection(m_overlayHandle, ref input, ref output))
                 return false;
 
             results.point = new Vector3(output.vPoint.v0, output.vPoint.v1, -output.vPoint.v2);
@@ -121,46 +122,45 @@ namespace GTFO_VR.Core.UI
 
         public void OrientateOverlay()
         {
-            GTFO_VR_Plugin.log.LogDebug("Orienting overlay...");
-            Quaternion rot = Quaternion.Euler(Vector3.Project(HMD.hmd.transform.localRotation.eulerAngles, Vector3.up));
-            transform.position = HMD.hmd.transform.localPosition + rot * Vector3.forward * 2.2f;
+            Log.Debug("Orienting overlay...");
+            Quaternion rot = Quaternion.Euler(Vector3.Project(HMD.Hmd.transform.localRotation.eulerAngles, Vector3.up));
+            transform.position = HMD.Hmd.transform.localPosition + rot * Vector3.forward * 2.2f;
             Vector3 Pos = transform.position;
-            Pos.y = HMD.hmd.transform.localPosition.y;
-
+            Pos.y = HMD.Hmd.transform.localPosition.y;
 
             transform.rotation = Quaternion.Euler(0f, rot.eulerAngles.y, 0f);
             transform.position = Pos;
-            current = new RigidTransform(transform);
-            var t = current.ToHmdMatrix34();
-            OpenVR.Overlay.SetOverlayTransformAbsolute(overlayHandle, SteamVR.settings.trackingSpace, ref t);
+            m_currentRigidTransform = new RigidTransform(transform);
+            var t = m_currentRigidTransform.ToHmdMatrix34();
+            OpenVR.Overlay.SetOverlayTransformAbsolute(m_overlayHandle, SteamVR.settings.trackingSpace, ref t);
         }
 
         public void SetupOverlay()
         {
             CVROverlay overlay = OpenVR.Overlay;
-            if (overlay != null && overlayHandle == OpenVR.k_ulOverlayHandleInvalid)
+            if (overlay != null && m_overlayHandle == OpenVR.k_ulOverlayHandleInvalid)
             {
-                overlayHandle = GetOverlayHandle("GTFO_Menu", transform, 5f);
+                m_overlayHandle = GetOverlayHandle("GTFO_Menu", transform, 5f);
             }
         }
 
         public void DestroyOverlay()
         {
-            if (overlayHandle != OpenVR.k_ulOverlayHandleInvalid)
+            if (m_overlayHandle != OpenVR.k_ulOverlayHandleInvalid)
             {
                 var overlay = OpenVR.Overlay;
                 if (overlay != null)
                 {
-                    overlay.DestroyOverlay(overlayHandle);
+                    overlay.DestroyOverlay(m_overlayHandle);
                 }
 
-                overlayHandle = OpenVR.k_ulOverlayHandleInvalid;
+                m_overlayHandle = OpenVR.k_ulOverlayHandleInvalid;
             }
         }
 
         // From SteamVR_LoadLevel
         // Helper to create (or reuse, if possible) each of our different overlay types.
-        ulong GetOverlayHandle(string overlayName, Transform transform, float widthInMeters = 1.0f)
+        private ulong GetOverlayHandle(string overlayName, Transform transform, float widthInMeters = 1.0f)
         {
             ulong handle = OpenVR.k_ulOverlayHandleInvalid;
 
@@ -184,7 +184,6 @@ namespace GTFO_VR.Core.UI
                 //overlay.SetOverlayInputMethod(handle, VROverlayInputMethod.Mouse);
                 //overlay.SetOverlayFlag(handle, VROverlayFlags.MakeOverlaysInteractiveIfVisible, true);
 
-
                 // D3D textures are upside-down in Unity to match OpenGL.
                 if (SteamVR.instance.textureType == ETextureType.DirectX)
                 {
@@ -198,16 +197,13 @@ namespace GTFO_VR.Core.UI
                     overlay.SetOverlayTextureBounds(handle, ref textureBounds);
                 }
 
-
-                current = new RigidTransform(transform);
-                var t = current.ToHmdMatrix34();
+                m_currentRigidTransform = new RigidTransform(transform);
+                var t = m_currentRigidTransform.ToHmdMatrix34();
 
                 overlay.SetOverlayTransformAbsolute(handle, SteamVR.settings.trackingSpace, ref t);
             }
 
             return handle;
         }
-
-
     }
 }

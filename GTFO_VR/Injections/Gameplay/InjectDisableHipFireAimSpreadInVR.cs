@@ -17,7 +17,7 @@ namespace GTFO_VR.Injections
     {
         static void Prefix(BulletWeapon __instance)
         {
-            if (PlayerVR.VRPlayerIsSetup && VR_Settings.useVRControllers)
+            if (VRSettings.useVRControllers)
             {
                 if (Utils.IsFiringFromADS())
                 {

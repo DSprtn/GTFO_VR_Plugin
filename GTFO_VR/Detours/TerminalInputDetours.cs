@@ -15,7 +15,7 @@ namespace GTFO_VR.Detours
 
         public static void HookAll()
         {
-            GTFO_VR_Plugin.log.LogInfo($"Patching all native functions...");
+            Log.Info($"Patching all native functions...");
 
             FastNativeDetour.CreateAndApply(IL2CPP.il2cpp_resolve_icall("UnityEngine.Input::" + "get_inputString"),
                 OurGetInputString, out originalInputStringGetter, CallingConvention.Cdecl);
@@ -27,13 +27,13 @@ namespace GTFO_VR.Detours
         private unsafe static IntPtr OurGetInputString()
         {
             string input = IL2CPP.Il2CppStringToManaged(originalInputStringGetter());
-            IntPtr vr_input = IL2CPP.ManagedStringToIl2Cpp(VR_Keyboard.GetKeyboardInput() + input);
+            IntPtr vr_input = IL2CPP.ManagedStringToIl2Cpp(VRKeyboard.GetKeyboardInput() + input);
             return vr_input;
         }
 
         private unsafe static bool OurGetAnyInput()
         {
-            bool vr_input = VR_Keyboard.GetKeyboardInput() != "";
+            bool vr_input = VRKeyboard.GetKeyboardInput() != "";
             return vr_input || originalAnyInputDownGetter();
         }
 

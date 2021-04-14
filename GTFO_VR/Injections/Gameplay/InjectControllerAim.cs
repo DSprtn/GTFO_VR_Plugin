@@ -16,10 +16,7 @@ namespace GTFO_VR.Injections
     {
         static void Postfix()
         {
-            if (PlayerVR.VRPlayerIsSetup)
-            {
-                PlayerVR.UpdateHeldItemPosition();
-            }
+            VRPlayer.UpdateHeldItemTransform();
         }
     }
 
@@ -31,8 +28,8 @@ namespace GTFO_VR.Injections
     {
         static void Postfix(PlayerAgent __instance)
         {
-            ScreenLiquidManager.cameraDir = PlayerVR.VRCamera.transform.forward;
-            ScreenLiquidManager.cameraPosition = PlayerVR.VRCamera.transform.position;
+            ScreenLiquidManager.cameraDir = __instance.FPSCamera.transform.forward;
+            ScreenLiquidManager.cameraPosition = __instance.FPSCamera.transform.position;
         }
     }
 
@@ -49,9 +46,6 @@ namespace GTFO_VR.Injections
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
     }
-
-
-
 
     [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateGlobalInput))]
     class InjectGlobalInteractionTweakFix
@@ -71,7 +65,7 @@ namespace GTFO_VR.Injections
 
 
     /// <summary>
-    /// Changes interactions and throwing to use the VR camera.
+    /// Changes interactions and throwing to use the VR camera ray.
     /// </summary>
 
     [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.UpdateCameraRay))]
@@ -80,7 +74,7 @@ namespace GTFO_VR.Injections
         static bool Prefix(FPSCamera __instance)
         {
             bool vis = false;
-            if (PlayerVR.VRPlayerIsSetup && VR_Settings.useVRControllers)
+            if (VRSettings.useVRControllers)
             {
 
                 //Used for throwing weapons

@@ -36,5 +36,4 @@ namespace GTFO_VR.Injections
         }
     }
 
-
 }

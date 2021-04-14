@@ -31,7 +31,7 @@ namespace GTFO_VR.Injections
         {
             if (__instance.m_distance)
             {
-                __instance.m_distance.GetComponent<MeshRenderer>().material.shader = VR_Assets.textAlwaysRender;
+                __instance.m_distance.GetComponent<MeshRenderer>().material.shader = VRAssets.TextAlwaysRender;
             }
         }
     }

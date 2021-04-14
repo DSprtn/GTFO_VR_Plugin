@@ -30,7 +30,7 @@ namespace GTFO_VR.Util
 
         public static bool IsFiringFromADS()
         {
-            return !VR_Settings.twoHandedAimingEnabled || (Controllers.aimingTwoHanded || !WeaponArchetypeVRData.GetVRWeaponData(ItemEquippableEvents.currentItem).allowsDoubleHanded);
+            return !VRSettings.twoHandedAimingEnabled || (Controllers.aimingTwoHanded || !WeaponArchetypeVRData.GetVRWeaponData(ItemEquippableEvents.currentItem).allowsDoubleHanded);
         }
 
         public static bool CheckEnemyOverlap(Vector3 position, float radius)

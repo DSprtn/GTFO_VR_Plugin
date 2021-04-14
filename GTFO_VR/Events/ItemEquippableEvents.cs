@@ -24,9 +24,9 @@ namespace GTFO_VR.Events
             if(OnPlayerWieldItem != null && item.Owner.IsLocallyOwned)
             {
                 currentItem = item;
-                GTFO_VR_Plugin.log.LogDebug("Item equip changed---");
-                GTFO_VR_Plugin.log.LogDebug(item.ArchetypeName);
-                GTFO_VR_Plugin.log.LogDebug(item.PublicName);
+                Log.Debug("Item equip changed---");
+                Log.Debug(item.ArchetypeName);
+                Log.Debug(item.PublicName);
                 OnPlayerWieldItem.Invoke(item);
                 
             }
