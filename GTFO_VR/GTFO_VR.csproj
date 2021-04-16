@@ -105,9 +105,6 @@
     <Compile Include="Core\VR_Input\SteamVR_InputHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\0Harmony.dll</HintPath>
       <Private>False</Private>

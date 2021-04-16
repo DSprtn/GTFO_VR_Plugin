@@ -124,6 +124,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 ClusteredRendering.Current.m_camera.transform.rotation = m_fpsCamera.m_camera.transform.rotation;
 
                 // This is a small hack to compensate for high FOVs and view distances in clustered rendering in the elevator
+                // Not setting this results in buggy lighting in the elevator.
                 if (FocusStateEvents.currentState == eFocusState.InElevator)
                 {
                     ClusteredRendering.Current.m_camera.nearClipPlane = 0.075f;

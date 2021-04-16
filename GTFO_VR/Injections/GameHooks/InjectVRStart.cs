@@ -8,11 +8,12 @@ namespace GTFO_VR.Injections.GameHooks
     /// Injection point for all things VR
     /// </summary>
     /// 
-    [HarmonyPatch(typeof(GuiManager), nameof(GuiManager.OnResolutionChange))]
+    [HarmonyPatch(typeof(GuiManager), nameof(GuiManager.Setup))]
     internal class InjectVRStart
     {
-        private static void Postfix()
+        private static void Postfix(GuiManager __instance)
         {
+            __instance.m_resolutionCheckActive = false;
             if (!VRSystems.Current)
             {
                 new GameObject("VR_Globals").AddComponent<VRSystems>();

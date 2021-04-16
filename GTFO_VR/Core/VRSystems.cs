@@ -57,7 +57,6 @@ namespace GTFO_VR.Core
             gameObject.AddComponent<VRAssets>();
             // Delay the overlay setup so we don't 'hitch' the player's camera while everything else loads.
             Invoke(nameof(VRSystems.SetupOverlay), .5f);
-            GuiManager.Current.OnResolutionChange(new Resolution());
         }
 
         public static void OnPlayerSpawned(FPSCamera fpsCamera, PlayerAgent playerAgent)
