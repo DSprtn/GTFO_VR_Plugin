@@ -14,7 +14,7 @@ namespace GTFO_VR.Core.UI
         public VR_UI_Overlay(IntPtr value)
 : base(value) { }
 
-        public static VR_UI_Overlay instance;
+        public static VR_UI_Overlay Current;
 
         public static bool Overlay_Active = true;
 
@@ -27,12 +27,12 @@ namespace GTFO_VR.Core.UI
         private void Awake()
         {
             Log.Info("VR_UI_Overlay created...");
-            if (instance)
+            if (Current)
             {
                 Log.Error("Duplicate UI overlay handler!");
                 return;
             }
-            instance = this;
+            Current = this;
 
             Setup();
             OrientateOverlay();
@@ -45,18 +45,18 @@ namespace GTFO_VR.Core.UI
             SetupOverlay();
         }
 
-        public static bool GetPlayerPointingAtPositionOnScreen(out Vector2 uv)
+        public bool GetPlayerPointingAtPositionOnScreen(out Vector2 uv)
         {
             if (Controllers.GetLocalPosition().magnitude < 0.01f)
             {
                 uv = Vector2.zero;
                 return false;
             }
-            if (instance != null)
+            if (Current != null)
             {
                 IntersectionResults result = new IntersectionResults();
 
-                if (instance.ComputeIntersection(Controllers.GetLocalPosition(), Controllers.GetLocalAimForward(), ref result))
+                if (Current.ComputeIntersection(Controllers.GetLocalPosition(), Controllers.GetLocalAimForward(), ref result))
                 {
                     uv = result.UVs;
                     return true;
@@ -124,7 +124,7 @@ namespace GTFO_VR.Core.UI
         {
             Log.Debug("Orienting overlay...");
             Quaternion rot = Quaternion.Euler(Vector3.Project(HMD.Hmd.transform.localRotation.eulerAngles, Vector3.up));
-            transform.position = HMD.Hmd.transform.localPosition + rot * Vector3.forward * 2.2f;
+            transform.position = HMD.Hmd.transform.localPosition + rot * Vector3.forward * 2.3f;
             Vector3 Pos = transform.position;
             Pos.y = HMD.Hmd.transform.localPosition.y;
 
