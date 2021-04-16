@@ -194,9 +194,7 @@ Try to get used to the game in Non-VR mode first before using!
 ## Known issues: 
 
 	The IL2CPP build hasn't been tested thoroughly yet so crashes may occur. If one does occur,
-	send me the output log from the path given below.
-	
-	Nothing left over here! If you do encounter a bug please send me the output log that can be found under 
+	send me the output log from the path given below:
 	AppData\LocalLow\10 Chambers Collective\GTFO\output_log.txt
 
 ## Want to contribute?
