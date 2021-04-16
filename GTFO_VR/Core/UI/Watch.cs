@@ -104,9 +104,10 @@ namespace GTFO_VR.UI
                 if (infection < 0.01f)
                 {
                     m_infectionDisplay.ToggleRendering(false);
-                } else
+                } else if(m_currentState == WatchState.Inventory)
                 {
                     m_infectionDisplay.ToggleRendering(true);
+                    m_infectionDisplay.UpdateFill((int) (infection * 100f));
                     m_infectionDisplay.SetFill(infection);
                     m_infectionDisplay.SetColor(Color.Lerp(m_normalInfectionCol, m_normalInfectionCol * 1.6f, infection));
                 }
@@ -117,7 +118,7 @@ namespace GTFO_VR.UI
         {
             if (m_healthDisplay)
             {
-                m_healthDisplay.SetFill(health);
+                m_healthDisplay.UpdateFill((int)(health * 100f));
                 m_healthDisplay.SetColor(Color.Lerp(m_normalHealthCol, m_normalHealthCol * 1.8f, 1 - health));
             }
         }
@@ -126,9 +127,10 @@ namespace GTFO_VR.UI
         {
             if (m_oxygenDisplay)
             {
-                if (val < .95f)
+                if (val < .95f && m_currentState == WatchState.Inventory)
                 {
                     m_oxygenDisplay.SetFill(val);
+                    m_oxygenDisplay.UpdateFill((int)(val * 100f));
                     m_oxygenDisplay.ToggleRendering(true);
 
                     if (val < 0.5)
@@ -176,8 +178,8 @@ namespace GTFO_VR.UI
             m_inventoryToAmmoDisplayMapping.TryGetValue(item.Slot, out DividedBarShaderController bar);
             if (bar)
             {
-                bar.maxValue = item.BulletsMaxCap;
-                bar.currentValue = (int)(bar.maxValue * item.RelInPack) + clipLeft;
+                bar.MaxValue = item.BulletsMaxCap;
+                bar.CurrentValue = (int)(bar.MaxValue * item.RelInPack) + clipLeft;
                 bar.SetFill(item.RelInPack);
 
                 if (item.Slot.Equals(InventorySlot.GearStandard) || item.Slot.Equals(InventorySlot.GearSpecial))
@@ -203,7 +205,7 @@ namespace GTFO_VR.UI
                     m_numberBulletsInMagDisplay.ForceMeshUpdate(false);
                 } else
                 {
-                    m_bulletsInMagDisplay.maxValue = Mathf.Max(item.BulletClipSize, 1);
+                    m_bulletsInMagDisplay.MaxValue = Mathf.Max(item.BulletClipSize, 1);
                     m_bulletsInMagDisplay.UpdateCurrentAmmo(clipLeft);
                     m_bulletsInMagDisplay.UpdateAmmoGridDivisions();
                 }
@@ -217,8 +219,8 @@ namespace GTFO_VR.UI
             {
                 if (!VRSettings.useNumbersForAmmoDisplay)
                 {
-                    m_bulletsInMagDisplay.maxValue = item.GetMaxClip();
-                    m_bulletsInMagDisplay.currentValue = item.GetCurrentClip();
+                    m_bulletsInMagDisplay.MaxValue = item.GetMaxClip();
+                    m_bulletsInMagDisplay.CurrentValue = item.GetCurrentClip();
                     m_bulletsInMagDisplay.UpdateAmmoGridDivisions();
                 }
             }
@@ -226,7 +228,7 @@ namespace GTFO_VR.UI
             {
                 if (!VRSettings.useNumbersForAmmoDisplay)
                 {
-                    m_bulletsInMagDisplay.currentValue = 0;
+                    m_bulletsInMagDisplay.CurrentValue = 0;
                     m_bulletsInMagDisplay.UpdateShaderVals(1, 1);
                 } else
                 {
@@ -239,7 +241,7 @@ namespace GTFO_VR.UI
 
         private void Setup()
         {
-            m_inventoryMeshes = Utils.FindDeepChild(transform, "Inventory_UI").GetComponentsInChildren<MeshRenderer>();
+            m_inventoryMeshes = transform.FindDeepChild("Inventory_UI").GetComponentsInChildren<MeshRenderer>();
 
             SetupTransform();
             SetupObjectiveDisplay();
@@ -263,7 +265,7 @@ namespace GTFO_VR.UI
 
         private void SetupObjectiveDisplay()
         {
-            GameObject objectiveParent = Utils.FindDeepChild(transform, "WardenObjective").gameObject;
+            GameObject objectiveParent = transform.FindDeepChild("WardenObjective").gameObject;
 
             RectTransform watchObjectiveTransform = objectiveParent.GetComponent<RectTransform>();
             m_objectiveDisplay = objectiveParent.AddComponent<TextMeshPro>();
@@ -283,18 +285,18 @@ namespace GTFO_VR.UI
 
         private void SetupInventoryLinkData()
         {
-            m_inventoryToAmmoDisplayMapping.Add(InventorySlot.GearStandard, Utils.FindDeepChild(transform, "MainWeapon").gameObject.AddComponent<DividedBarShaderController>());
-            m_inventoryToAmmoDisplayMapping.Add(InventorySlot.GearSpecial, Utils.FindDeepChild(transform, "SubWeapon").gameObject.AddComponent<DividedBarShaderController>());
-            m_inventoryToAmmoDisplayMapping.Add(InventorySlot.GearClass, Utils.FindDeepChild(transform, "Tool").gameObject.AddComponent<DividedBarShaderController>());
-            m_inventoryToAmmoDisplayMapping.Add(InventorySlot.ResourcePack, Utils.FindDeepChild(transform, "Pack").gameObject.AddComponent<DividedBarShaderController>());
-            m_inventoryToAmmoDisplayMapping.Add(InventorySlot.Consumable, Utils.FindDeepChild(transform, "Consumable").gameObject.AddComponent<DividedBarShaderController>());
+            m_inventoryToAmmoDisplayMapping.Add(InventorySlot.GearStandard, transform.FindDeepChild("MainWeapon").gameObject.AddComponent<DividedBarShaderController>());
+            m_inventoryToAmmoDisplayMapping.Add(InventorySlot.GearSpecial, transform.FindDeepChild("SubWeapon").gameObject.AddComponent<DividedBarShaderController>());
+            m_inventoryToAmmoDisplayMapping.Add(InventorySlot.GearClass, transform.FindDeepChild("Tool").gameObject.AddComponent<DividedBarShaderController>());
+            m_inventoryToAmmoDisplayMapping.Add(InventorySlot.ResourcePack, transform.FindDeepChild("Pack").gameObject.AddComponent<DividedBarShaderController>());
+            m_inventoryToAmmoDisplayMapping.Add(InventorySlot.Consumable, transform.FindDeepChild("Consumable").gameObject.AddComponent<DividedBarShaderController>());
             m_inventoryToAmmoDisplayMapping.Add(InventorySlot.ConsumableHeavy, m_inventoryToAmmoDisplayMapping[InventorySlot.Consumable]);
 
-            m_healthDisplay = Utils.FindDeepChild(transform, "HP").gameObject.AddComponent<DividedBarShaderController>();
-            m_oxygenDisplay = Utils.FindDeepChild(transform, "Air").gameObject.AddComponent<DividedBarShaderController>();
-            m_infectionDisplay = Utils.FindDeepChild(transform, "Infection").gameObject.AddComponent<DividedBarShaderController>();
+            m_healthDisplay = transform.FindDeepChild("HP").gameObject.AddComponent<DividedBarShaderController>();
+            m_oxygenDisplay = transform.FindDeepChild("Air").gameObject.AddComponent<DividedBarShaderController>();
+            m_infectionDisplay = transform.FindDeepChild("Infection").gameObject.AddComponent<DividedBarShaderController>();
 
-            m_numberBulletsInMagDisplay = Utils.FindDeepChild(transform, "NumberedAmmo").gameObject.AddComponent<TextMeshPro>();
+            m_numberBulletsInMagDisplay = transform.FindDeepChild("NumberedAmmo").gameObject.AddComponent<TextMeshPro>();
 
             m_numberBulletsInMagDisplay.lineSpacing = -30f;
 
@@ -304,7 +306,7 @@ namespace GTFO_VR.UI
             m_numberBulletsInMagDisplay.fontStyle = FontStyles.Bold;
             m_numberBulletsInMagDisplay.richText = true;
             m_numberBulletsInMagDisplay.color = DividedBarShaderController.NormalColor;
-            m_bulletsInMagDisplay = Utils.FindDeepChild(transform, "Ammo").gameObject.AddComponent<DividedBarShaderController>();
+            m_bulletsInMagDisplay = transform.FindDeepChild("Ammo").gameObject.AddComponent<DividedBarShaderController>();
         }
 
         private void SetInitialPlayerStatusValues()
@@ -313,20 +315,20 @@ namespace GTFO_VR.UI
             m_infectionDisplay.SetColor(m_normalInfectionCol);
             m_oxygenDisplay.SetColor(m_normalOxygenCol);
 
-            m_healthDisplay.maxValue = 100;
-            m_healthDisplay.currentValue = 100;
+            m_healthDisplay.MaxValue = 100;
+            m_healthDisplay.CurrentValue = 100;
 
-            m_oxygenDisplay.maxValue = 100;
-            m_oxygenDisplay.currentValue = 100;
+            m_oxygenDisplay.MaxValue = 100;
+            m_oxygenDisplay.CurrentValue = 100;
 
-            m_infectionDisplay.maxValue = 100;
-            m_infectionDisplay.currentValue = 0;
+            m_infectionDisplay.MaxValue = 100;
+            m_infectionDisplay.CurrentValue = 0;
 
             m_healthDisplay.UpdateShaderVals(5, 2);
             m_infectionDisplay.UpdateShaderVals(5, 2);
             m_oxygenDisplay.UpdateShaderVals(5, 2);
 
-            UpdateAir(1f);
+            UpdateAir(100f);
         }
         public void SwitchState()
         {
@@ -343,6 +345,7 @@ namespace GTFO_VR.UI
 
         void SwitchState(WatchState state)
         {
+            m_currentState = state;
             switch (state)
             {
                 case (WatchState.Inventory):
@@ -355,7 +358,6 @@ namespace GTFO_VR.UI
                     ToggleObjectiveRendering(true);
                     break;
             }
-            m_currentState = state;
         }
         void ToggleInventoryRendering(bool toggle)
         {
@@ -375,9 +377,9 @@ namespace GTFO_VR.UI
                 m_bulletsInMagDisplay.gameObject.SetActive(toggle);
             }
             m_numberBulletsInMagDisplay.ForceMeshUpdate();
-            //Force update to possibly disable those bars depending on oxygen level/infection level
-            UpdateAir(m_oxygenDisplay.currentValue);
-            UpdateInfection(m_infectionDisplay.currentValue);
+            //Force update to possibly disable/enable those bars depending on oxygen level/infection level
+            UpdateAir(m_oxygenDisplay.CurrentValue / 100f);
+            UpdateInfection(m_infectionDisplay.CurrentValue / 100f);
         }
 
         void ToggleObjectiveRendering(bool toggle)
@@ -390,10 +392,6 @@ namespace GTFO_VR.UI
         {
             ItemEquippableEvents.OnPlayerWieldItem -= ItemSwitched;
             InventoryAmmoEvents.OnInventoryAmmoUpdate -= AmmoUpdate;
-            m_objectiveDisplay = null;
-            m_healthDisplay = null;
-            m_infectionDisplay = null;
-            m_oxygenDisplay = null;
         }
     }
 }
