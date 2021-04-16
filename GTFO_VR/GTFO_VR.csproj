@@ -79,6 +79,7 @@
     <Compile Include="Injections\Gameplay\InjectNoVRCamHIjack.cs" />
     <Compile Include="Injections\GameHooks\InjectPlayerAgentRef.cs" />
     <Compile Include="Injections\Input\InjectSkipButton.cs" />
+    <Compile Include="Injections\UI\InjectRemoveCrosshair.cs" />
     <Compile Include="Injections\UI\InjectSmallerMarkers.cs" />
     <Compile Include="Injections\Rendering\InjectDisableUIRendering.cs" />
     <Compile Include="Injections\Gameplay\InjectVRHammer.cs" />
