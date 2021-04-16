@@ -25,6 +25,7 @@ namespace GTFO_VR.Core
         public static Shader SpriteSphereClip;
 
 
+        // GameObjects loaded from bundles can get wiped on load, so we sometimes need to reload them
         public static GameObject GetWatchPrefab()
         {
             if(WatchPrefab)

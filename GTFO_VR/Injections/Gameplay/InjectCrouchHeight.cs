@@ -2,16 +2,15 @@
 using Player;
 using UnityEngine;
 
-namespace GTFO_VR.Injections
+namespace GTFO_VR.Injections.Gameplay
 {
-
     /// <summary>
     /// Makes the first person items follow the position and aim direction of the main controller(s) of the player
     /// </summary>
     [HarmonyPatch(typeof(PlayerCharacterController), nameof(PlayerCharacterController.SetColliderCrouched))]
-    class InjectCrouchPopFix
+    internal class InjectCrouchPopFix
     {
-        static bool Prefix(PlayerCharacterController __instance, bool crouched)
+        private static bool Prefix(PlayerCharacterController __instance, bool crouched)
         {
             if (__instance.m_characterController == null || __instance.m_owner == null || __instance.m_owner.IsBeingDespawned)
                 return false;
@@ -29,5 +28,4 @@ namespace GTFO_VR.Injections
             return false;
         }
     }
-
 }

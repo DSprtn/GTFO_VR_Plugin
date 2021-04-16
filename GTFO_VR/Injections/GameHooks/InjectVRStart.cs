@@ -1,24 +1,21 @@
 ﻿using GTFO_VR.Core;
-using GTFO_VR.Core.UI;
 using HarmonyLib;
 using UnityEngine;
 
-
-namespace GTFO_VR.Injections
+namespace GTFO_VR.Injections.GameHooks
 {
     /// <summary>
-    /// Entry point for loading and initiating all things VR
+    /// Injection point for all things VR
     /// </summary>
-
-    [HarmonyPatch(typeof(UI_Pass), nameof(UI_Pass.Awake))]
-    class InjectVRStart
+    /// 
+    [HarmonyPatch(typeof(GuiManager), nameof(GuiManager.OnResolutionChange))]
+    internal class InjectVRStart
     {
-        static void Prefix(UI_Pass __instance)
+        private static void Postfix()
         {
             if (!VRSystems.Current)
             {
                 new GameObject("VR_Globals").AddComponent<VRSystems>();
-                VR_UI_Overlay.UI_ref = __instance;
             }
         }
     }

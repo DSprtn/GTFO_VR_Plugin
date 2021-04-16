@@ -16,7 +16,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         public Color Color = ColorExt.OrangeBright();
         private GameObject m_pointer;
         private GameObject m_dot;
-        private float m_thickness = 1f / 400f;
+        private readonly float m_thickness = 1f / 400f;
 
         private Vector3 m_dotScale = new Vector3(0.04f, 0.01f, 0.016f);
 
@@ -41,8 +41,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             float dist = 50f;
 
             Ray raycast = new Ray(transform.parent.position, transform.parent.forward);
-            RaycastHit hit;
-            bool bHit = Physics.Raycast(raycast, out hit, 51f, LayerManager.MASK_BULLETWEAPON_RAY, QueryTriggerInteraction.Ignore);
+            bool bHit = Physics.Raycast(raycast, out RaycastHit hit, 51f, LayerManager.MASK_BULLETWEAPON_RAY, QueryTriggerInteraction.Ignore);
 
             if (bHit && hit.distance < 100f)
             {

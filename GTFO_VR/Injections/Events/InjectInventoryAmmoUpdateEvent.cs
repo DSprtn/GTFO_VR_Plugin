@@ -9,9 +9,9 @@ namespace GTFO_VR.Injections.Events
     /// </summary>
 
     [HarmonyPatch(typeof(PlayerAmmoStorage), nameof(PlayerAmmoStorage.UpdateSlotAmmoUI), new[] { typeof(InventorySlotAmmo), typeof(int) })]
-    class InjectInventoryAmmoUpdateEvent
+    internal class InjectInventoryAmmoUpdateEvent
     {
-        static void Postfix(PlayerAmmoStorage __instance, InventorySlotAmmo ammo, int clip)
+        private static void Postfix(PlayerAmmoStorage __instance, InventorySlotAmmo ammo, int clip)
         {
             if (__instance.m_playerBackpack.IsLocal)
             {

@@ -33,7 +33,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             FocusStateEvents.OnFocusStateChange += FocusStateChanged;
             Snapturn.OnSnapTurn += HandleOriginShift;
             SetupOrigin();
-            SetInitialSnapTurn();
+            SetInitialRotationOffset();
         }
 
         private void SetupOrigin()
@@ -63,7 +63,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             if (newState.Equals(eFocusState.InElevator))
             {
-                SetInitialSnapTurn();
+                SetInitialRotationOffset();
             }
         }
 
@@ -79,7 +79,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerRotationOffset *= rotation;
         }
 
-        private void SetInitialSnapTurn()
+        private void SetInitialRotationOffset()
         {
             m_offsetFromPlayerToHMD = Vector3.zero;
             PlayerRotationOffset = Quaternion.Euler(new Vector3(0, -HMD.Hmd.transform.localRotation.eulerAngles.y, 0f));

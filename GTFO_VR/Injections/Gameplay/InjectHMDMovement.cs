@@ -1,24 +1,21 @@
 ﻿using GTFO_VR.Core;
-using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.VR_Input;
 using HarmonyLib;
 using UnityEngine;
 
 /// <summary>
 /// Patch methods responsible for handling camera rotation and position and sync them to the HMD input
-/// Note: This does sync correctly in multiplayer because we use (more or less) the same pathways as mouse and gamepad input. 
+/// Note: This does sync correctly in multiplayer because we use (more or less) the same pathways as mouse and gamepad input.
 /// The exception being lookDir while holding a weapon with a flashlight, which needs to be synced differently.
 /// </summary>
 
-namespace GTFO_VR.Injections
+namespace GTFO_VR.Injections.Gameplay
 {
-
     // Patch position as raw HMD pos + player body position offset, everything is kept in world coords where possible
     [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.RotationUpdate))]
-    class InjectHMDPosition
+    internal class InjectHMDPosition
     {
-
-        static void Prefix(FPSCamera __instance)
+        private static void Prefix(FPSCamera __instance)
         {
             Vector3 euler = HMD.GetVRCameraEulerRelativeToFPSCameraParent();
             __instance.m_pitch = euler.x;
@@ -26,16 +23,14 @@ namespace GTFO_VR.Injections
         }
     }
 
-
     // We inject pitch and yaw rotation data into the same method where mouse and gamepad input is being handled
-    // This way lookDirection gets synced correctly to other players in multiplayer 
+    // This way lookDirection gets synced correctly to other players in multiplayer
 
     [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.UpdatePosOffset))]
-    class InjectHMDRotationPitchYaw
+    internal class InjectHMDRotationPitchYaw
     {
-        static void Postfix(FPSCamera __instance)
+        private static void Postfix(FPSCamera __instance)
         {
-            
             // Repeat position inject or the transforms will get out of sync (Unity transform handling mumbo jumbo ensues, frame later or frame behind tracking)
             if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
@@ -48,12 +43,10 @@ namespace GTFO_VR.Injections
         }
     }
 
-
     [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.RotationUpdate))]
-    class InjectHMDRotationRoll
+    internal class InjectHMDRotationRoll
     {
-
-        static void Postfix(FPSCamera __instance)
+        private static void Postfix(FPSCamera __instance)
         {
             if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {

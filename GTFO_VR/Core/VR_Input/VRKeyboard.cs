@@ -1,11 +1,10 @@
-﻿using GTFO_VR.Core.VR_Input;
-using GTFO_VR.Events;
+﻿using GTFO_VR.Events;
 using System;
 using System.Text;
 using UnityEngine;
 using Valve.VR;
 
-namespace GTFO_VR.Core.PlayerBehaviours
+namespace GTFO_VR.Core.VR_Input
 {
     /// <summary>
     /// Responsible for managing VR keyboard input, shortcuts, appearing and disappearing.

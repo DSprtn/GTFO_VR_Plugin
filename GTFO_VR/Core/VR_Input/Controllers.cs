@@ -39,7 +39,6 @@ namespace GTFO_VR.Core.VR_Input
             SetupControllers();
             SetMainController();
             ItemEquippableEvents.OnPlayerWieldItem += CheckShouldDoubleHand;
-            
         }
 
         private void Update()
@@ -99,6 +98,10 @@ namespace GTFO_VR.Core.VR_Input
             }
         }
 
+        public static bool IsFiringFromADS()
+        {
+            return !VRSettings.twoHandedAimingEnabled || (aimingTwoHanded || !GetVRWeaponData(ItemEquippableEvents.currentItem).allowsDoubleHanded);
+        }
 
         private GameObject SetupController(SteamVR_Input_Sources source)
         {
@@ -146,7 +149,6 @@ namespace GTFO_VR.Core.VR_Input
                 m_wasInDoubleHandPosLastFrame = isInDoubleHandPos;
             }
         }
-
 
         public static SteamVR_Input_Sources GetDeviceFromHandType(HandType type)
         {

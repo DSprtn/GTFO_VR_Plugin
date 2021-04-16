@@ -5,42 +5,27 @@ using HarmonyLib;
 using Player;
 using UnityEngine;
 
-namespace GTFO_VR.Injections
+namespace GTFO_VR.Injections.Gameplay
 {
-
     /// <summary>
     /// Makes the first person items follow the position and aim direction of the main controller(s) of the player
     /// </summary>
     [HarmonyPatch(typeof(FirstPersonItemHolder), nameof(FirstPersonItemHolder.Update))]
-    class InjectControllerAimAlign
+    internal class InjectControllerAimAlign
     {
-        static void Postfix()
+        private static void Postfix()
         {
             VRPlayer.UpdateHeldItemTransform();
         }
     }
 
     /// <summary>
-    /// Patches the screen liquid system to use the VR camera's properties
-    /// </summary>
-    [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateGoodNodeAndArea))]
-    class InjectScreenLiquidFix
-    {
-        static void Postfix(PlayerAgent __instance)
-        {
-            ScreenLiquidManager.cameraDir = __instance.FPSCamera.transform.forward;
-            ScreenLiquidManager.cameraPosition = __instance.FPSCamera.transform.position;
-        }
-    }
-
-
-    /// <summary>
     /// This is probably obsolete, TODO - test
     /// </summary>
     [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateInfectionLocal))]
-    class InjectAimFlashlightFixBegin
+    internal class InjectAimFlashlightFixBegin
     {
-        static void Postfix()
+        private static void Postfix()
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
@@ -48,35 +33,33 @@ namespace GTFO_VR.Injections
     }
 
     [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateGlobalInput))]
-    class InjectGlobalInteractionTweakFix
+    internal class InjectGlobalInteractionTweakFix
     {
-        static void Prefix()
+        private static void Prefix()
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
-        static void Postfix()
+        private static void Postfix()
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
         }
     }
 
-
     /// <summary>
     /// Changes interactions and throwing to use the VR camera ray.
     /// </summary>
 
     [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.UpdateCameraRay))]
-    class InjectForwardInteractions
+    internal class InjectForwardInteractions
     {
-        static bool Prefix(FPSCamera __instance)
+        private static bool Prefix(FPSCamera __instance)
         {
             bool vis = false;
             if (VRSettings.useVRControllers)
             {
-
                 //Used for throwing weapons
                 __instance.CameraRayDir = HMD.GetVRInteractionLookDir();
 
@@ -106,6 +89,4 @@ namespace GTFO_VR.Injections
             return false;
         }
     }
-
-
 }

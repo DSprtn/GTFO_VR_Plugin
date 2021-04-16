@@ -32,9 +32,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
             FpsCamera = camera;
             PlayerAgent = agent;
-            PlayerLocomotionEvents.OnPlayerEnterLadder += PlayerEnteredLadder;
-            SteamVR_Events.NewPosesApplied.Listen(new Action(OnNewPoses));
-            ClusteredRendering.Current.OnResolutionChange(new Resolution());
 
             m_origin = new GameObject("Origin").AddComponent<PlayerOrigin>();
             m_origin.Setup(PlayerAgent);
@@ -58,6 +55,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
             Vector3 watchScale = new Vector3(1.25f, 1.25f, 1.25f);
             watchScale *= VRSettings.watchScale;
             m_watch.transform.localScale = watchScale;
+
+            PlayerLocomotionEvents.OnPlayerEnterLadder += PlayerEnteredLadder;
+            SteamVR_Events.NewPosesApplied.Listen(new Action(OnNewPoses));
+            ClusteredRendering.Current.OnResolutionChange(new Resolution());
         }
 
         private void Update()
@@ -113,7 +114,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 heldItem.transform.position = Controllers.GetControllerPosition() + WeaponArchetypeVRData.CalculateGripOffset();
                 Vector3 recoilRot = heldItem.GetRecoilRotOffset();
 
-                if (!Utils.IsFiringFromADS())
+                if (!Controllers.IsFiringFromADS())
                 {
                     recoilRot.x *= 2f;
                 }

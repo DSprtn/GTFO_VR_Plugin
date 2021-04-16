@@ -10,7 +10,7 @@ namespace GTFO_VR.Core
     public static class WeaponArchetypeVRData
     {
 
-        static VRWeaponData current;
+        static VRWeaponData m_current;
 
         public struct VRWeaponData
         {
@@ -37,68 +37,69 @@ namespace GTFO_VR.Core
 
         public static VRWeaponData GetVRWeaponData(ItemEquippable item)
         {
-            return current;
+            return m_current;
         }
 
         public static void Setup()
         {
             ItemEquippableEvents.OnPlayerWieldItem += PlayerSwitchedWeapon;
             // WeaponTransform (z+ forward, y+ up, x+ right)
-            weaponArchetypes = new Dictionary<string, VRWeaponData>();
-            weaponArchetypes.Add("Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false));
-            weaponArchetypes.Add("DefaultDoubleHanded", new VRWeaponData(new Vector3(0f, 0f, -0.05f), true));
-            weaponArchetypes.Add("Melee", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false));
+            weaponArchetypes = new Dictionary<string, VRWeaponData>
+            {
+                { "Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
+                { "DefaultDoubleHanded", new VRWeaponData(new Vector3(0f, 0f, -0.05f), true) },
+                { "Melee", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
 
-            weaponArchetypes.Add("Mine deployer", new VRWeaponData(new Vector3(0f, 0f, -.05f), false));
-            weaponArchetypes.Add("Bio Tracker", new VRWeaponData(new Vector3(0f, 0f, -.05f), false));
+                { "Mine deployer", new VRWeaponData(new Vector3(0f, 0f, -.05f), false) },
+                { "Bio Tracker", new VRWeaponData(new Vector3(0f, 0f, -.05f), false) },
 
-            weaponArchetypes.Add("Pistol", new VRWeaponData(new Vector3(0f, 0f, 0f), false));
-            weaponArchetypes.Add("Revolver", new VRWeaponData(new Vector3(0f, -.01f, 0f), false));
-            weaponArchetypes.Add("HEL Revolver", new VRWeaponData(new Vector3(.0f, 0f, 0f), false));
-            weaponArchetypes.Add("Autorevolver", new VRWeaponData(new Vector3(.0f, 0f, 0f), false));
-            weaponArchetypes.Add("Machinepistol", new VRWeaponData(new Vector3(.0f, 0f, 0f), false));
+                { "Pistol", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
+                { "Revolver", new VRWeaponData(new Vector3(0f, -.01f, 0f), false) },
+                { "HEL Revolver", new VRWeaponData(new Vector3(.0f, 0f, 0f), false) },
+                { "Autorevolver", new VRWeaponData(new Vector3(.0f, 0f, 0f), false) },
+                { "Machinepistol", new VRWeaponData(new Vector3(.0f, 0f, 0f), false) },
 
-            weaponArchetypes.Add("Shotgun", new VRWeaponData(new Vector3(0f, 0f, -.05f), true));
-            weaponArchetypes.Add("Combat Shotgun", new VRWeaponData(new Vector3(0f, 0f, 0f), true));
-            weaponArchetypes.Add("Choke Mod Shotgun", new VRWeaponData(new Vector3(0f, 0f, 0f), true));
+                { "Shotgun", new VRWeaponData(new Vector3(0f, 0f, -.05f), true) },
+                { "Combat Shotgun", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
+                { "Choke Mod Shotgun", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
 
 
-            weaponArchetypes.Add("Carbine", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
-            weaponArchetypes.Add("SMG", new VRWeaponData(new Vector3(0f, 0f, -.15f), true));
+                { "Carbine", new VRWeaponData(new Vector3(.0f, 0f, 0f), true) },
+                { "SMG", new VRWeaponData(new Vector3(0f, 0f, -.15f), true) },
 
-            weaponArchetypes.Add("Sniper", new VRWeaponData(new Vector3(0f, 0f, -.05f), true));
-            weaponArchetypes.Add("DMR", new VRWeaponData(new Vector3(0f, 0f, -.05f), true));
-            weaponArchetypes.Add("Long gun", new VRWeaponData(new Vector3(0f, 0f, -.05f), true));
-            weaponArchetypes.Add("HEL Gun", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
+                { "Sniper", new VRWeaponData(new Vector3(0f, 0f, -.05f), true) },
+                { "DMR", new VRWeaponData(new Vector3(0f, 0f, -.05f), true) },
+                { "Long gun", new VRWeaponData(new Vector3(0f, 0f, -.05f), true) },
+                { "HEL Gun", new VRWeaponData(new Vector3(.0f, 0f, 0f), true) },
 
-            weaponArchetypes.Add("Assault Rifle", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
-            weaponArchetypes.Add("Burst Rifle", new VRWeaponData(new Vector3(0f, 0f, 0f), true));
-            weaponArchetypes.Add("Bullpup Rifle", new VRWeaponData(new Vector3(.0f, 0f, -.08f), true));
-            weaponArchetypes.Add("Rifle", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
-            weaponArchetypes.Add("HEL Rifle", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
+                { "Assault Rifle", new VRWeaponData(new Vector3(.0f, 0f, 0f), true) },
+                { "Burst Rifle", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
+                { "Bullpup Rifle", new VRWeaponData(new Vector3(.0f, 0f, -.08f), true) },
+                { "Rifle", new VRWeaponData(new Vector3(.0f, 0f, 0f), true) },
+                { "HEL Rifle", new VRWeaponData(new Vector3(.0f, 0f, 0f), true) },
 
-            weaponArchetypes.Add("Machinegun", new VRWeaponData(new Vector3(0f, 0f, -.07f), true));
-            weaponArchetypes.Add("Burst Cannon", new VRWeaponData(new Vector3(.0f, 0f, 0f), true));
+                { "Machinegun", new VRWeaponData(new Vector3(0f, 0f, -.07f), true) },
+                { "Burst Cannon", new VRWeaponData(new Vector3(.0f, 0f, 0f), true) }
+            };
 
-            current = weaponArchetypes["Default"];
+            m_current = weaponArchetypes["Default"];
         }
 
         private static void PlayerSwitchedWeapon(ItemEquippable item)
         {
-            VRWeaponData data;
-            if (weaponArchetypes.TryGetValue(item.ArchetypeName, out data))
+            if (weaponArchetypes.TryGetValue(item.ArchetypeName, out VRWeaponData data))
             {
-                current = data;
+                m_current = data;
             }
             else
             {
                 if (item.ItemDataBlock.inventorySlot.Equals(Player.InventorySlot.GearStandard) || item.ItemDataBlock.inventorySlot.Equals(Player.InventorySlot.GearSpecial))
                 {
-                    current = weaponArchetypes["DefaultDoubleHanded"];
+                    m_current = weaponArchetypes["DefaultDoubleHanded"];
                 }
                 else
                 {
-                    current = weaponArchetypes["Default"];
+                    m_current = weaponArchetypes["Default"];
                 }
             }
             CalculateGripOffset();
@@ -107,7 +108,7 @@ namespace GTFO_VR.Core
         public static Vector3 CalculateGripOffset()
         {
             Transform itemEquip = ItemEquippableEvents.currentItem.transform;
-            return itemEquip.position - itemEquip.TransformPoint(current.transformToVRGrip);
+            return itemEquip.position - itemEquip.TransformPoint(m_current.transformToVRGrip);
         }
 
     }

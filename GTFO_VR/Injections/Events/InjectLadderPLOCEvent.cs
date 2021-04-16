@@ -1,6 +1,5 @@
 ﻿using GTFO_VR.Events;
 using HarmonyLib;
-using Player;
 
 namespace GTFO_VR.Injections.Events
 {
@@ -9,9 +8,9 @@ namespace GTFO_VR.Injections.Events
     /// </summary>
 
     [HarmonyPatch(typeof(PLOC_ClimbLadder), nameof(PLOC_ClimbLadder.Enter))]
-    class InjectLadderPLOCEvent
+    internal class InjectLadderPLOCEvent
     {
-        static void Postfix(PLOC_ClimbLadder __instance)
+        private static void Postfix(PLOC_ClimbLadder __instance)
         {
             PlayerLocomotionEvents.LadderEntered(__instance.m_owner);
         }

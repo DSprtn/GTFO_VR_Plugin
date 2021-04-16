@@ -2,15 +2,15 @@
 using HarmonyLib;
 using System;
 
-namespace GTFO_VR.Injections
+namespace GTFO_VR.Injections.Rendering
 {
     /// <summary>
     /// Disables UI rendering while not in the map or main menu
     /// </summary>
     [HarmonyPatch(typeof(UI_Core), nameof(UI_Core.RenderUI), new Type[0])]
-    class InjectDisableUIRendering
+    internal class InjectDisableUIRendering
     {
-        static bool Prefix()
+        private static bool Prefix()
         {
             if (!VRSettings.Render2DUI && !FocusStateManager.CurrentState.Equals(eFocusState.Map) && !FocusStateManager.CurrentState.Equals(eFocusState.MainMenu))
             {

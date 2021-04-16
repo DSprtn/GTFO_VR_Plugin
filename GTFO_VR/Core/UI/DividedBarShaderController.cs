@@ -15,47 +15,44 @@ namespace GTFO_VR.UI
         public static Color NormalColor = new Color(0.83f, 1f, 0.964f);
         public static Color SelectedColor = new Color(1f, 0.5f, 0f);
 
+        public int MaxValue = 10;
+        public int CurrentValue = 0;
+
+        private MeshRenderer m_renderer;
         private Material m_barGrid;
 
-       
+        private const string SHADERPROP_VERTICAL_DIVISIONS = "_DivisionsVertical";
+        private const string SHADERPROP_HORIZONTAL_DIVISIONS = "_DivisionsHorizontal";
+        private const string SHADERPROP_FILL = "_Fill";
 
         private void Awake()
         {
-            renderer = GetComponent<MeshRenderer>();
-            m_barGrid = renderer.material;
+            m_renderer = GetComponent<MeshRenderer>();
+            m_barGrid = m_renderer.material;
 
             SetColor(NormalColor);
             UpdateShaderVals(5, 2);
         }
 
-        public int maxValue = 10;
-        public int currentValue = 0;
-
-        private const string vertProperty = "_DivisionsVertical";
-        private const string horizProperty = "_DivisionsHorizontal";
-        private const string fillProperty = "_Fill";
-
-        private MeshRenderer renderer;
-
         public void ToggleRendering(bool toggle)
         {
-            renderer.enabled = toggle;
+            m_renderer.enabled = toggle;
         }
 
         public void UpdateShaderVals(int verticalDivisions, int horizontalDivisions)
         {
-            m_barGrid.SetFloat(fillProperty, GetFill());
-            m_barGrid.SetInt(vertProperty, verticalDivisions);
-            m_barGrid.SetInt(horizProperty, horizontalDivisions);
+            m_barGrid.SetFloat(SHADERPROP_FILL, GetFill());
+            m_barGrid.SetInt(SHADERPROP_VERTICAL_DIVISIONS, verticalDivisions);
+            m_barGrid.SetInt(SHADERPROP_HORIZONTAL_DIVISIONS, horizontalDivisions);
         }
 
         public void UpdatePackOrConsumableDivisions()
         {
-            if (maxValue == 0)
+            if (MaxValue == 0)
             {
                 return;
             }
-            UpdateShaderVals(maxValue, 1);
+            UpdateShaderVals(MaxValue, 1);
         }
 
         public void UpdateWeaponMagDivisions(float ammoInClip, float maxAmmo)
@@ -67,11 +64,11 @@ namespace GTFO_VR.UI
 
         public void UpdateAmmoGridDivisions()
         {
-            int horizDivisions = Utils.LargestDivisor(maxValue);
+            int horizDivisions = LargestVisuallyAppealingDivisor(MaxValue);
 
-            int vertDivisions = maxValue / horizDivisions;
+            int vertDivisions = MaxValue / horizDivisions;
 
-            if (maxValue > 10)
+            if (MaxValue > 10)
             {
                 if (horizDivisions % 2 == 0)
                 {
@@ -87,13 +84,21 @@ namespace GTFO_VR.UI
             UpdateShaderVals(vertDivisions, horizDivisions);
         }
 
+        public void UpdateFill(int current)
+        {
+            if (current > MaxValue)
+                    current = MaxValue;
+            CurrentValue = current;
+            SetFill(GetFill());
+        }
+
         private float GetFill()
         {
-            if (currentValue == 0)
+            if (CurrentValue == 0)
             {
                 return 0;
             }
-            return (float)currentValue / (float)maxValue;
+            return (float)CurrentValue / (float)MaxValue;
         }
 
         public void SetFill(float fill)
@@ -118,7 +123,7 @@ namespace GTFO_VR.UI
 
         public void UpdateCurrentAmmo(int ammoLeft)
         {
-            currentValue = ammoLeft;
+            CurrentValue = ammoLeft;
             SetFill(GetFill());
         }
 
@@ -126,5 +131,23 @@ namespace GTFO_VR.UI
         {
             UpdateShaderVals(maxAmmo / maxClipAmmo, 2);
         }
+
+        public static int LargestVisuallyAppealingDivisor(int n)
+        {
+            if (n % 2 == 0)
+            {
+                return n / 2;
+            }
+            int sqrtn = (int)Math.Sqrt(n);
+            for (int i = 3; i <= sqrtn; i += 2)
+            {
+                if (n % i == 0)
+                {
+                    return n / i;
+                }
+            }
+            return 1;
+        }
+
     }
 }

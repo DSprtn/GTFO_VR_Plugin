@@ -1,27 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Emit;
-using GTFO_VR;
-using HarmonyLib;
-using LevelGeneration;
+﻿using HarmonyLib;
 using UnityEngine;
-using Valve.VR;
 
-namespace GTFO_VR.Injections
+namespace GTFO_VR.Injections.Rendering
 {
     /// <summary>
     /// Remove command calls from FPSCamera and move them to PlayerVR instead to use them after poses have been updated for better reprojection and a smoother experience
     /// </summary>
-	/// 
+	///
 
     [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.LateUpdate))]
-    class InjectDisableFPSCameraRendering
+    internal class InjectDisableFPSCameraRendering
     {
-        static bool Prefix(FPSCamera __instance)
+        private static bool Prefix(FPSCamera __instance)
         {
-
             if (__instance.m_owner == null)
             {
                 return false;

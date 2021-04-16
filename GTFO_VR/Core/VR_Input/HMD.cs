@@ -99,11 +99,6 @@ namespace GTFO_VR.Core.VR_Input
             return Hmd.transform.localPosition.y;
         }
 
-        public static Vector3 GetOffsetPosition(Vector3 playerPos)
-        {
-            return Hmd.transform.position;
-        }
-
         public static Vector3 GetWorldPosition()
         {
             return Hmd.transform.position;

@@ -7,8 +7,6 @@ using System;
 using UnityEngine;
 using Valve.VR;
 
-
-
 namespace GTFO_VR.Core
 {
     /// <summary>
@@ -16,30 +14,26 @@ namespace GTFO_VR.Core
     /// </summary>
     public class VRSystems : MonoBehaviour
     {
-
         public VRSystems(IntPtr value)
 : base(value) { }
 
         public static VRSystems Current;
-        static VR_UI_Overlay m_overlay;
+        private static VR_UI_Overlay m_overlay;
 
-        VRPlayer m_player;
+        private VRPlayer m_player;
 
-        static FPSCamera m_currentFPSCameraRef;
-        static PlayerAgent m_currentPlayerAgentRef;
+        private static FPSCamera m_currentFPSCameraRef;
+        private static PlayerAgent m_currentPlayerAgentRef;
 
-
-        void Awake()
+        private void Awake()
         {
-            if (!Current)
+            if (Current)
             {
-                Current = this;
-            }
-            else
-            {
-                Log.Error("Trying to create duplicate VRGlobal class");
+                Log.Error("Trying to create duplicate VRSystems class!");
                 return;
             }
+            Current = this;
+
             // Prevent SteamVR from adding a tracking script automatically. We handle this manually in VR_Input.HMD
             SteamVR_Camera.useHeadTracking = false;
             SteamVR_Settings.instance.poseUpdateMode = SteamVR_UpdateModes.OnLateUpdate;
@@ -53,6 +47,8 @@ namespace GTFO_VR.Core
             DontDestroyOnLoad(gameObject);
 
             SteamVR.Initialize(false);
+            var res = SteamVR_Camera.GetSceneResolution();
+            Log.Info($"SteamVR Setup - HMD Res: {res.width}x{res.height}");
             WeaponArchetypeVRData.Setup();
             SteamVR_InputHandler.Setup();
             gameObject.AddComponent<HMD>();
@@ -61,6 +57,7 @@ namespace GTFO_VR.Core
             gameObject.AddComponent<VRAssets>();
             // Delay the overlay setup so we don't 'hitch' the player's camera while everything else loads.
             Invoke(nameof(VRSystems.SetupOverlay), .5f);
+            GuiManager.Current.OnResolutionChange(new Resolution());
         }
 
         public static void OnPlayerSpawned(FPSCamera fpsCamera, PlayerAgent playerAgent)
@@ -69,7 +66,7 @@ namespace GTFO_VR.Core
             m_currentPlayerAgentRef = playerAgent;
         }
 
-        void SetupOverlay()
+        private void SetupOverlay()
         {
             GameObject o = new GameObject("Overlay");
             DontDestroyOnLoad(o);
@@ -81,7 +78,6 @@ namespace GTFO_VR.Core
         /// </summary>
         public static void ClearUIRenderTex()
         {
-
             RenderTexture rt = RenderTexture.active;
             RenderTexture.active = UI_Core.UIPassHUD.Camera.targetTexture;
             GL.Clear(true, true, Color.clear);
@@ -92,11 +88,6 @@ namespace GTFO_VR.Core
         {
             if (state.Equals(eFocusState.FPS) || state.Equals(eFocusState.InElevator))
             {
-                if(m_player == null && m_currentFPSCameraRef != null && m_currentPlayerAgentRef != null)
-                {
-                    m_player = m_currentFPSCameraRef.gameObject.AddComponent<VRPlayer>();
-                    m_player.Setup(m_currentFPSCameraRef, m_currentPlayerAgentRef);
-                }
                 HandleIngameFocus();
             }
 
@@ -124,13 +115,34 @@ namespace GTFO_VR.Core
             {
                 return;
             }
+        
+            if (m_player == null)
+            {
+                AppendVRComponents();
+            }
 
             ToggleOverlay(false);
             TogglePlayerCam(true);
-            ClusteredRendering.Current.OnResolutionChange(new Resolution());
         }
 
-        void ToggleOverlay(bool toggle)
+        private void AppendVRComponents()
+        {
+            
+            if (m_currentFPSCameraRef == null)
+            {
+                Log.Error("Tried to spawn player but FPS camera ref was null!");
+            }
+
+            if (m_currentPlayerAgentRef == null)
+            {
+                Log.Error("Tried to spawn player but playeragent ref was null!");
+            }
+            m_player = m_currentFPSCameraRef.gameObject.AddComponent<VRPlayer>();
+            m_player.Setup(m_currentFPSCameraRef, m_currentPlayerAgentRef);
+            
+        }
+
+        private void ToggleOverlay(bool toggle)
         {
             if (!toggle)
             {
@@ -145,12 +157,12 @@ namespace GTFO_VR.Core
             m_overlay.OrientateOverlay();
         }
 
-        void TogglePlayerCam(bool toggle)
+        private void TogglePlayerCam(bool toggle)
         {
             SteamVR_Render.pauseRendering = !toggle;
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             FocusStateEvents.OnFocusStateChange -= FocusChanged;
         }

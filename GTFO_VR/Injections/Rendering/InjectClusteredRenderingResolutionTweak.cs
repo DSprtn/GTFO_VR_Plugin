@@ -1,43 +1,40 @@
-﻿using System;
-using GTFO_VR.Core;
+﻿using GTFO_VR.Core;
 using HarmonyLib;
+using System;
 using UnityEngine;
 using Valve.VR;
 
-namespace GTFO_VR.Injections
+namespace GTFO_VR.Injections.Rendering
 {
     /// <summary>
     /// Experimental performance tweak - changes light rendering resolution (with none to little visual difference, but a pretty good performance increase!)
     /// </summary>
-    /// 
-
+    ///
 
     [HarmonyPatch(typeof(ClusteredRendering), nameof(ClusteredRendering.OnResolutionChange))]
     [HarmonyPatch(new Type[] { typeof(Resolution) })]
-    class InjectClusteredRenderingResolutionTweak
+    internal class InjectClusteredRenderingResolutionTweak
     {
-        static void Prefix(ref Resolution res)
+        private static void Prefix(ref Resolution res)
         {
-            if (VRSettings.lightRenderMode.Equals(0))
-            {
-                res = SteamVR_Camera.GetSceneResolution();
-            }
-            else
+            Resolution HMDRes = SteamVR_Camera.GetSceneResolution();
             if (VRSettings.lightRenderMode.Equals(1))
             {
-                res.width = 1920;
-                res.height = 1080;
+                HMDRes.width = Mathf.FloorToInt(HMDRes.width * .75f);
+                HMDRes.height = Mathf.FloorToInt(HMDRes.height * .75f);
             }
             else if (VRSettings.lightRenderMode.Equals(2))
             {
-                res.width = 1024;
-                res.height = 768;
+                HMDRes.width = Mathf.FloorToInt(HMDRes.width * .6f);
+                HMDRes.height = Mathf.FloorToInt(HMDRes.height * .6f);
             }
             else if (VRSettings.lightRenderMode.Equals(3))
             {
-                res.width = 640;
-                res.height = 480;
+                HMDRes.width =  Mathf.FloorToInt(HMDRes.width * .3f);
+                HMDRes.height = Mathf.FloorToInt(HMDRes.height * .3f);
             }
+            res.width = HMDRes.width;
+            res.height = HMDRes.height;
         }
     }
 }

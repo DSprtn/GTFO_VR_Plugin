@@ -1,7 +1,6 @@
 ﻿using GTFO_VR.Events;
 using HarmonyLib;
 
-
 namespace GTFO_VR.Injections.Events
 {
     /// <summary>
@@ -9,9 +8,9 @@ namespace GTFO_VR.Injections.Events
     /// </summary>
 
     [HarmonyPatch(typeof(ItemEquippable), nameof(ItemEquippable.OnWield))]
-    class InjectItemEquippableEvents
+    internal class InjectItemEquippableEvents
     {
-        static void Postfix(ItemEquippable __instance)
+        private static void Postfix(ItemEquippable __instance)
         {
             ItemEquippableEvents.ItemEquipped(__instance);
         }

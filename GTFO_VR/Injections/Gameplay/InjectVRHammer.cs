@@ -1,14 +1,5 @@
-﻿using Gear;
-using HarmonyLib;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
-
-
-namespace GTFO_VR.Injections
+﻿namespace GTFO_VR.Injections
 {
-
     // TODO - Design/Implement this
     /*
     /// <summary>
@@ -23,15 +14,12 @@ namespace GTFO_VR.Injections
         }
     }
     /*
-    /// <summary>
-    /// Do not play any animations
-    /// </summary>
+
     [HarmonyPatch(typeof(MWS_ChargeUp), "Update")]
     static class InjectVRHammerChargup
     {
         static MeleeWeaponFirstPerson weapon;
 
-        
         static void Postfix(MWS_ChargeUp __instance)
         {
             if (GTFO_VR.Util.Utils.CheckEnemyOverlap(__instance.AttackData.m_damageRef.position, .3f))
@@ -39,9 +27,6 @@ namespace GTFO_VR.Injections
                  AccessTools.FieldRefAccess<MWS_Base, MeleeWeaponFirstPerson>((MWS_Base)__instance, "m_weapon").ChangeState(eMeleeWeaponState.AttackChargeReleaseRight);
             }
         }
-
-        
     }
     */
-
 }

@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using CellMenu;
-using Globals;
-using GTFO_VR;
-using GTFO_VR.Events;
+﻿using GTFO_VR.Events;
 using HarmonyLib;
-using Player;
-using UnityEngine;
-
 
 namespace GTFO_VR.Injections.Events
 {
@@ -18,13 +9,11 @@ namespace GTFO_VR.Injections.Events
     /// </summary>
 
     [HarmonyPatch(typeof(InputMapper), nameof(InputMapper.OnFocusStateChanged))]
-    class InjectFocusStateEvents
+    internal class InjectFocusStateEvents
     {
-        static void Prefix(eFocusState state)
+        private static void Prefix(eFocusState state)
         {
             FocusStateEvents.FocusChanged(state);
         }
     }
-
-
 }

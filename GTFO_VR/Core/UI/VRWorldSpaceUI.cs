@@ -32,7 +32,7 @@ namespace GTFO_VR.UI
         private GameObject m_intelHolder;
 
         // Compass will not be visible after this distance from the center of its rect
-        private float compassCullDistance = 1.2f;
+        private float m_compassCullDistance = 1.2f;
 
         private void Awake()
         {
@@ -82,7 +82,7 @@ namespace GTFO_VR.UI
 
             m_intelHolder.SetActive(true);
 
-            Utils.FindDeepChild(interactionBar.transform, "Timer BG").gameObject.SetActive(false);
+            interactionBar.transform.FindDeepChild("Timer BG").gameObject.SetActive(false);
             CenterRect(intel.transform);
             CenterRect(compass.transform);
         }
@@ -157,7 +157,7 @@ namespace GTFO_VR.UI
         private void UpdateCompassCull()
         {
             Vector3 compassPos = m_compassHolder.transform.position;
-            Shader.SetGlobalColor("_ClippingSphere", new Color(compassPos.x, compassPos.y, compassPos.z, compassCullDistance));
+            Shader.SetGlobalColor("_ClippingSphere", new Color(compassPos.x, compassPos.y, compassPos.z, m_compassCullDistance));
         }
 
         public static void PrepareNavMarker(NavMarker n)
@@ -173,64 +173,6 @@ namespace GTFO_VR.UI
             {
                 n.transform.position = n.m_trackingObj.transform.position;
                 n.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
-            }
-        }
-
-        internal static void UpdateAllNavMarkers(Il2CppSystem.Collections.Generic.List<NavMarker> m_markersActive)
-        {
-            float tempScale = 1f;
-            bool inElevator = FocusStateManager.CurrentState.Equals(eFocusState.InElevator);
-
-            foreach (NavMarker n in m_markersActive)
-            {
-                if (inElevator && n)
-                {
-                    n.transform.localScale = Vector3.zero;
-                    return;
-                }
-
-                if (n != null && n.m_trackingObj != null)
-                {
-                    n.transform.position = n.m_trackingObj.transform.position;
-
-                    float dotToCamera = Vector3.Dot((n.m_trackingObj.transform.position - HMD.GetWorldPosition()).normalized, HMD.GetWorldForward());
-
-                    if (dotToCamera < 0)
-                    {
-                        n.SetState(NavMarkerState.Inactive);
-                    }
-                    else
-                    {
-                        float distanceToCamera = Vector3.Distance(n.m_trackingObj.transform.position, HMD.GetWorldPosition());
-                        Vector3 hmdToTrackObj = (n.m_trackingObj.transform.position - HMD.GetWorldPosition()).normalized;
-                        Quaternion rotToCamera = Quaternion.LookRotation(hmdToTrackObj.normalized);
-                        n.transform.rotation = rotToCamera;
-
-                        if (distanceToCamera > 60)
-                        {
-                            n.transform.position = HMD.GetWorldPosition() + hmdToTrackObj * 60f;
-                        }
-
-                        if (dotToCamera > 0.94f)
-                        {
-                            if (n.m_currentState != NavMarkerState.InFocus)
-                            {
-                                n.SetState(NavMarkerState.InFocus);
-                            }
-                        }
-                        else if (n.m_currentState != NavMarkerState.Visible)
-                        {
-                            n.SetState(NavMarkerState.Visible);
-                        }
-                        n.SetDistance(distanceToCamera);
-
-                        // Scale up to camera culling distance
-                        // If nav marker is beyond that it will place itself back to 60m away
-                        tempScale = 1 + Mathf.Clamp(distanceToCamera / 25f, 0, 2.4f);
-
-                        n.transform.localScale = n.m_initScale * tempScale;
-                    }
-                }
             }
         }
 

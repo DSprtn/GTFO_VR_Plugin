@@ -39,7 +39,6 @@
   <ItemGroup>
     <Compile Include="Core\Log.cs" />
     <Compile Include="Core\PlayerBehaviours\ColisionFade.cs" />
-    <Compile Include="Core\PlayerBehaviours\VRDetectionModHack.cs" />
     <Compile Include="Core\PlayerBehaviours\VRRendering.cs" />
     <Compile Include="Detours\BioscannerDetours.cs" />
     <Compile Include="Detours\TerminalInputDetours.cs" />
@@ -47,7 +46,7 @@
     <Compile Include="Core\PlayerBehaviours\Snapturn.cs" />
     <Compile Include="Core\VRSettings.cs" />
     <Compile Include="Core\VRAssets.cs" />
-    <Compile Include="Core\PlayerBehaviours\VRKeyboard.cs" />
+    <Compile Include="Core\VR_Input\VRKeyboard.cs" />
     <Compile Include="Events\FocusStateEvents.cs" />
     <Compile Include="Events\InventoryAmmoEvents.cs" />
     <Compile Include="Events\PlayerLocomotionEvents.cs" />
@@ -55,45 +54,47 @@
     <Compile Include="Injections\Events\InjectInventoryAmmoUpdateEvent.cs" />
     <Compile Include="Injections\Events\InjectItemEquippableEvents.cs" />
     <Compile Include="Injections\Events\InjectLadderPLOCEvent.cs" />
-    <Compile Include="Injections\InjectAimCursorWithVRControllerInOverlay.cs" />
-    <Compile Include="Injections\InjectBioscannerFixes.cs" />
-    <Compile Include="Injections\InjectClusteredRenderingResolutionTweak.cs" />
-    <Compile Include="Injections\InjectControllerAim.cs" />
-    <Compile Include="Injections\InjectCrouchHeight.cs" />
-    <Compile Include="Injections\InjectDisableButtonPromptOnInteract.cs" />
-    <Compile Include="Injections\InjectDisableFPSCameraRendering.cs" />
-    <Compile Include="Injections\InjectDisableHipFireAimSpreadInVR.cs" />
-    <Compile Include="Injections\InjectDisableRecoilCameraOffset.cs" />
-    <Compile Include="Injections\InjectFireFromMuzzle.cs" />
-    <Compile Include="Injections\InjectFPRendering.cs" />
-    <Compile Include="Injections\InjectFreeTheCursor.cs" />
-    <Compile Include="Injections\InjectHMDMovement.cs" />
-    <Compile Include="Injections\InjectInput.cs" />
-    <Compile Include="Injections\InjectInteractionPromptRef.cs" />
-    <Compile Include="Injections\InjectInteractionTweaks.cs" />
-    <Compile Include="Injections\InjectMeleeIgnoreCameraDir.cs" />
-    <Compile Include="Injections\InjectNavMarkerWorldSpace.cs" />
-    <Compile Include="Injections\InjectNoVRCamHIjack.cs" />
-    <Compile Include="Injections\InjectPlayerAgentRef.cs" />
-    <Compile Include="Injections\InjectPlayerGUIRef.cs" />
-    <Compile Include="Injections\InjectSkipButton.cs" />
-    <Compile Include="Injections\InjectSmallerMarkers.cs" />
-    <Compile Include="Injections\InjectDisableUIRendering.cs" />
-    <Compile Include="Injections\InjectVRHammer.cs" />
-    <Compile Include="Injections\InjectVRStart.cs" />
-    <Compile Include="Injections\InjectWatchObjectives.cs" />
-    <Compile Include="Injections\InjectWatchUpdateStatus.cs" />
-    <Compile Include="Injections\InjectWeaponAimFlashlightAggro.cs" />
+    <Compile Include="Injections\GameHooks\InjectPlayerGUIRef.cs" />
+    <Compile Include="Injections\GameHooks\InjectVRStart.cs" />
+    <Compile Include="Injections\Input\InjectAimCursorWithVRControllerInOverlay.cs" />
+    <Compile Include="Injections\Gameplay\InjectBioscannerFixes.cs" />
+    <Compile Include="Injections\Rendering\InjectClusteredRenderingResolutionTweak.cs" />
+    <Compile Include="Injections\Gameplay\InjectControllerAim.cs" />
+    <Compile Include="Injections\Gameplay\InjectCrouchHeight.cs" />
+    <Compile Include="Injections\Rendering\InjectForceVRResolution.cs" />
+    <Compile Include="Injections\Rendering\InjectScreenLiquidVRTweak.cs" />
+    <Compile Include="Injections\UI\InjectDisableButtonPromptOnInteract.cs" />
+    <Compile Include="Injections\Rendering\InjectDisableFPSCameraRendering.cs" />
+    <Compile Include="Injections\Gameplay\InjectDisableHipFireAimSpreadInVR.cs" />
+    <Compile Include="Injections\Gameplay\InjectDisableRecoilCameraOffset.cs" />
+    <Compile Include="Injections\Gameplay\InjectFireFromMuzzle.cs" />
+    <Compile Include="Injections\Rendering\InjectFPRendering.cs" />
+    <Compile Include="Injections\Input\InjectFreeTheCursor.cs" />
+    <Compile Include="Injections\Gameplay\InjectHMDMovement.cs" />
+    <Compile Include="Injections\Input\InjectInput.cs" />
+    <Compile Include="Injections\GameHooks\InjectInteractionPromptRef.cs" />
+    <Compile Include="Injections\Gameplay\InjectSemanticInteractionTweaks.cs" />
+    <Compile Include="Injections\Gameplay\InjectMeleeIgnoreCameraDir.cs" />
+    <Compile Include="Injections\UI\InjectNavMarkerWorldSpace.cs" />
+    <Compile Include="Injections\Gameplay\InjectNoVRCamHIjack.cs" />
+    <Compile Include="Injections\GameHooks\InjectPlayerAgentRef.cs" />
+    <Compile Include="Injections\Input\InjectSkipButton.cs" />
+    <Compile Include="Injections\UI\InjectSmallerMarkers.cs" />
+    <Compile Include="Injections\Rendering\InjectDisableUIRendering.cs" />
+    <Compile Include="Injections\Gameplay\InjectVRHammer.cs" />
+    <Compile Include="Injections\GameHooks\InjectVRUIRef.cs" />
+    <Compile Include="Injections\UI\InjectWatchObjectives.cs" />
+    <Compile Include="Injections\UI\InjectWatchUpdateStatus.cs" />
+    <Compile Include="Injections\Gameplay\InjectWeaponAimFlashlightAggro.cs" />
     <Compile Include="Core\GTFO_VR_Plugin.cs" />
     <Compile Include="Core\UI\DividedBarShaderController.cs" />
     <Compile Include="Core\UI\Watch.cs" />
     <Compile Include="Core\UI\VRWorldSpaceUI.cs" />
     <Compile Include="Core\VR_Input\HandType.cs" />
-    <Compile Include="Util\Utils.cs" />
+    <Compile Include="Util\ExtensionMethods.cs" />
     <Compile Include="Core\WeaponArchetypeVRData.cs" />
     <Compile Include="Core\VR_Input\Controllers.cs" />
     <Compile Include="Core\VR_Input\HMD.cs" />
-    <Compile Include="Util\DebugHelper.cs" />
     <Compile Include="Events\ItemEquippableEvents.cs" />
     <Compile Include="Core\PlayerBehaviours\LaserPointer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -465,6 +466,7 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetPath)" "S:/_VS_BUILDS" /E /Y</PostBuildEvent>

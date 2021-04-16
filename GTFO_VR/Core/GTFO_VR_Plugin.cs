@@ -1,17 +1,17 @@
 ﻿using BepInEx;
-using HarmonyLib;
 using BepInEx.Configuration;
-using System.Diagnostics;
 using BepInEx.IL2CPP;
-using System.Collections.Generic;
-using UnhollowerRuntimeLib;
-using GTFO_VR.UI;
-using Mathf = SteamVR_Standalone_IL2CPP.Util.Mathf;
-using GTFO_VR.Detours;
-using GTFO_VR.Core.PlayerBehaviours;
-using GTFO_VR.Core.VR_Input;
-using GTFO_VR.Core.UI;
 using BepInEx.Logging;
+using GTFO_VR.Core.PlayerBehaviours;
+using GTFO_VR.Core.UI;
+using GTFO_VR.Core.VR_Input;
+using GTFO_VR.Detours;
+using GTFO_VR.UI;
+using HarmonyLib;
+using System.Collections.Generic;
+using System.Diagnostics;
+using UnhollowerRuntimeLib;
+using Mathf = SteamVR_Standalone_IL2CPP.Util.Mathf;
 
 namespace GTFO_VR.Core
 {
@@ -27,21 +27,19 @@ namespace GTFO_VR.Core
             GUID = "com." + AUTHOR + "." + MODNAME,
             VERSION = "0.8.1.1";
 
-
         public static GTFO_VR_Plugin Current;
 
         public override void Load()
         {
             Current = this;
-            
+
             Core.Log.Setup(Logger.CreateLogSource(MODNAME));
             Core.Log.Info("Loading VR plugin...");
             SetupConfig();
-            Harmony harmony = new Harmony("com.github.dsprtn.gtfovr");
 
-            if (VRSettings.enabled && SteamVRRunningCheck())
+            if (VRSettings.VREnabled && SteamVRRunningCheck())
             {
-                InjectVR(harmony);
+                InjectVR();
             }
             else
             {
@@ -49,15 +47,16 @@ namespace GTFO_VR.Core
             }
         }
 
-        private void InjectVR(Harmony harmony)
+        private void InjectVR()
         {
+            Harmony harmony = new Harmony("com.github.dsprtn.gtfovr");
             SetupIL2CPPClassInjections();
             TerminalInputDetours.HookAll();
             BioscannerDetours.HookAll();
             harmony.PatchAll();
         }
 
-        void SetupIL2CPPClassInjections()
+        private void SetupIL2CPPClassInjections()
         {
             ClassInjector.RegisterTypeInIl2Cpp<VRAssets>();
             ClassInjector.RegisterTypeInIl2Cpp<VRSystems>();
@@ -116,11 +115,16 @@ namespace GTFO_VR.Core
         {
             configEnableVR = Config.Bind("Startup", "Run VR plugin?", true, "If true, game will start in VR");
             configToggleVRBySteamVR = Config.Bind("Startup", "Start in pancake if SteamVR is off?", true, "If true, will start the game in pancake mode if SteamVR is not detected");
-
             configUseControllers = Config.Bind("Input", "Use VR Controllers?", true, "If true, will use VR controllers. You can play with a gamepad and head aiming if you set this to false");
             configIRLCrouch = Config.Bind("Input", "Crouch in-game when you crouch IRL?", true, "If true, when crouching down below a certain threshold IRL, the in-game character will also crouch");
             configUseLeftHand = Config.Bind("Input", "Use left hand as main hand?", false, "If true, all items will appear in the left hand");
-            configLightResMode = Config.Bind("Experimental performance tweaks", "Light render resolution tweak - the lower resolution the greater the performance gain!", 1, "0 = Native HMD resolution 1 = 1920x1080, 2 = 1024x768 (Small artifacting, big performance increase), \n 3=640x480 (medium artifacting on lights, great performance increase)");
+
+            configLightResMode = Config.Bind("Experimental performance tweaks", "Light/fog render resolution tweak - the lower the resolution the greater the performance gain!", 1, 
+                "0 = Native HMD resolution, looks great but requires a beastly PC" +
+                "\n1 = 75% resolution (light shimmering on fog, performance increase)" +
+                "\n2 = 60% resolution (Medium shimmering, small light artifacts, big performance increase)" +
+                "\n3 = 30% resolution (Medium artifacting on lights and fog, great performance increase)");
+
             configUseTwoHanded = Config.Bind("Input", "Use both hands to aim?", true, "If true, two-handed weapons will be allowed to be aimed with both hands.");
             configAlwaysDoubleHanded = Config.Bind("Input", "Always use double handed aiming? (Where it applies)", false, "If true, double handed weapons will always use double handed aiming (RECOMMENDED FOR GUN STOCK USERS)");
             configSnapTurnAmount = Config.Bind("Input", "Snap turn angle", 60f, "The amount of degrees to turn on a snap turn (or turn per half a second if smooth turn is enabled)");
@@ -128,10 +132,8 @@ namespace GTFO_VR.Core
             configWatchScaling = Config.Bind("Misc", "Watch scale multiplier", 1.00f, "Size of the watch in-game will be multiplied by this value down to half of its default size or up to double (0.5 or 2.0)");
             configUseNumbersForAmmoDisplay = Config.Bind("Misc", "Use numbers for ammo display?", false, "If true, current ammo and max ammo will be displayed as numbers on the watch");
             configWatchColorHex = Config.Bind("Misc", "Hex color to use for watch", "#ffffff", "Google hexcolor and paste whatever color you want here");
-            configCrouchHeight = Config.Bind("Input", "Crouch height in meters", 1.15f, "In-game character will be crouching if your head is lower than this height above the playspace (clamped to 1-1.35m)");
+            configCrouchHeight = Config.Bind("Input", "Crouch height in meters", 1.15f, "In-game character will be crouching if your head is lower than this height above the playspace (clamped to 1-1.45m)");
             configAlternateEyeRendering = Config.Bind("Experimental performance tweaks", "Alternate light and shadow rendering per frame per eye", false, "If true will alternate between eyes when drawing lights and shadows each frame, \n might look really janky so only use this if you absolutely want to play this in VR but don't have the rig for it!");
-            
-            
 
             Core.Log.Debug("VR enabled?" + configEnableVR.Value);
             Core.Log.Debug("Toggle VR by SteamVR running?" + configToggleVRBySteamVR.Value);
@@ -160,7 +162,7 @@ namespace GTFO_VR.Core
             VRSettings.toggleVRBySteamVRRunning = configToggleVRBySteamVR.Value;
             VRSettings.useNumbersForAmmoDisplay = configUseNumbersForAmmoDisplay.Value;
             VRSettings.watchColor = ColorExt.Hex(configWatchColorHex.Value);
-            VRSettings.IRLCrouchBorder = Mathf.Clamp(configCrouchHeight.Value, 1f, 1.35f);
+            VRSettings.IRLCrouchBorder = Mathf.Clamp(configCrouchHeight.Value, 1f, 1.45f);
             VRSettings.alternateLightRenderingPerEye = configAlternateEyeRendering.Value;
 
             if (configUseLeftHand.Value)
@@ -168,6 +170,5 @@ namespace GTFO_VR.Core
                 VRSettings.mainHand = HandType.Left;
             }
         }
-
     }
 }

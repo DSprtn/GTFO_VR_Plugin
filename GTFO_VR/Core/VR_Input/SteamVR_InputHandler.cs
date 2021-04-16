@@ -1,6 +1,4 @@
-﻿using GTFO_VR.Core.PlayerBehaviours;
-using GTFO_VR.Events;
-using System;
+﻿using GTFO_VR.Events;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
@@ -12,7 +10,6 @@ namespace GTFO_VR.Core.VR_Input
     /// </summary>
     public static class SteamVR_InputHandler
     {
-
         public static bool Initialized;
 
         public static SteamVR_Action_Vibration hapticAction;

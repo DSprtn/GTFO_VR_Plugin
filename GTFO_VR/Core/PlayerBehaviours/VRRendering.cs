@@ -20,10 +20,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private void Awake()
         {
             m_fpsCamera = GetComponent<FPSCamera>();
-            SteamVR_Render.eyePreRenderCallback += PrepareEyeRender;
+            SteamVR_Render.eyePreRenderCallback += PrepareFrameForEye;
         }
 
-        private void PrepareEyeRender(EVREye eye)
+        private void PrepareFrameForEye(EVREye eye)
         {
             if (Time.frameCount % 2 == 0)
             {
@@ -117,6 +117,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 ClusteredRendering.Current.m_lightBufferCamera.transform.position = m_fpsCamera.m_camera.transform.position;
                 ClusteredRendering.Current.m_lightBufferCamera.transform.rotation = m_fpsCamera.m_camera.transform.rotation;
 
+
                 ClusteredRendering.Current.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
                 ClusteredRendering.Current.m_camera.aspect = SteamVR.instance.aspect;
                 ClusteredRendering.Current.m_camera.transform.position = m_fpsCamera.m_camera.transform.position;
@@ -138,7 +139,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
-            SteamVR_Render.eyePreRenderCallback -= PrepareEyeRender;
+            SteamVR_Render.eyePreRenderCallback -= PrepareFrameForEye;
         }
     }
 }

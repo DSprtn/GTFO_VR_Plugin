@@ -32,7 +32,7 @@ namespace GTFO_VR.Core
 
         public static bool toggleVRBySteamVRRunning = true;
 
-        public static bool enabled = true;
+        public static bool VREnabled = true;
 
         public static bool useNumbersForAmmoDisplay = false;
 

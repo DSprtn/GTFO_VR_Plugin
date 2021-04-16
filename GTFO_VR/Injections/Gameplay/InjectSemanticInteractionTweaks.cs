@@ -4,75 +4,74 @@ using HarmonyLib;
 using Player;
 using UnityEngine;
 
-namespace GTFO_VR.Injections
+namespace GTFO_VR.Injections.Gameplay
 {
     /// <summary>
-    /// Tweak interactions for picking up items, giving packs, hacking, placing mines, sentries etc.
+    /// Tweak interactions for picking up items, giving packs, hacking, placing mines, sentries, etc. 
+    /// by using either the camera or controller position for interaction depending on the context.
     /// </summary>
 
     [HarmonyPatch(typeof(Interact_Timed), nameof(Interact_Timed.EvaluateTimedInteraction))]
-    class InjectInteractionFromPos
+    internal class InjectInteractionFromPos
     {
-        static void Prefix(Interact_Timed __instance)
+        private static void Prefix(Interact_Timed __instance)
         {
             __instance.m_triggerStartAgentWorldPos = HMD.GetVRInteractionFromPosition();
         }
     }
 
     [HarmonyPatch(typeof(GuiManager), nameof(GuiManager.IsOnScreen))]
-    class InjectDisableOnScreenCheck
+    internal class InjectDisableOnScreenCheck
     {
-        static void Postfix(ref bool __result)
+        private static void Postfix(ref bool __result)
         {
             __result = true;
         }
     }
 
-
     [HarmonyPatch(typeof(PlayerInteraction), nameof(PlayerInteraction.UpdateWorldInteractions))]
-    class InjectWorldInteractionsTweak
+    internal class InjectWorldInteractionsTweak
     {
-        static Vector3 cachedCamPos;
-        static void Prefix(PlayerInteraction __instance)
+        private static Vector3 cachedCamPos;
+
+        private static void Prefix(PlayerInteraction __instance)
         {
             cachedCamPos = __instance.m_owner.m_camPos;
             __instance.m_owner.m_camPos = HMD.GetVRInteractionFromPosition();
         }
 
-        static void Postfix(PlayerInteraction __instance)
+        private static void Postfix(PlayerInteraction __instance)
         {
             __instance.m_owner.m_camPos = cachedCamPos;
         }
     }
 
     [HarmonyPatch(typeof(SentryGunFirstPerson), nameof(SentryGunFirstPerson.CheckCanPlace))]
-    class InjectSentryGunPlacementFix
+    internal class InjectSentryGunPlacementFix
     {
-        static void Prefix()
+        private static void Prefix()
         {
             InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = true;
             InjectFPSCameraPositionTweakForInteraction.useControllerPosition = true;
         }
 
-        static void Postfix()
+        private static void Postfix()
         {
             InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = false;
             InjectFPSCameraPositionTweakForInteraction.useControllerPosition = false;
         }
-
     }
 
-
     [HarmonyPatch(typeof(MineDeployerFirstPerson), nameof(MineDeployerFirstPerson.CheckCanPlace))]
-    class InjectMineDeployerPlacementFix
+    internal class InjectMineDeployerPlacementFix
     {
-        static void Prefix()
+        private static void Prefix()
         {
             InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = true;
             InjectFPSCameraPositionTweakForInteraction.useControllerPosition = true;
         }
 
-        static void Postfix()
+        private static void Postfix()
         {
             InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = false;
             InjectFPSCameraPositionTweakForInteraction.useControllerPosition = false;
@@ -80,16 +79,15 @@ namespace GTFO_VR.Injections
     }
 
     [HarmonyPatch(typeof(PlayerLocomotion), nameof(PlayerLocomotion.FixedUpdate))]
-    class InjectFlashlightSyncAimTweak
+    internal class InjectFlashlightSyncAimTweak
     {
-
-        static void Prefix(PlayerInteraction __instance)
+        private static void Prefix(PlayerInteraction __instance)
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
-        static void Postfix(PlayerInteraction __instance)
+        private static void Postfix(PlayerInteraction __instance)
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
@@ -97,16 +95,15 @@ namespace GTFO_VR.Injections
     }
 
     [HarmonyPatch(typeof(ResourcePackFirstPerson), nameof(ResourcePackFirstPerson.UpdateInteraction))]
-    class InjectResourcePackInteractionTweak
+    internal class InjectResourcePackInteractionTweak
     {
-
-        static void Prefix(PlayerInteraction __instance)
+        private static void Prefix(PlayerInteraction __instance)
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
-        static void Postfix(PlayerInteraction __instance)
+        private static void Postfix(PlayerInteraction __instance)
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
@@ -114,16 +111,15 @@ namespace GTFO_VR.Injections
     }
 
     [HarmonyPatch(typeof(LockMelterFirstPerson), nameof(LockMelterFirstPerson.UpdateApplyActionInput))]
-    class InjectLockMelterInteractionTweak
+    internal class InjectLockMelterInteractionTweak
     {
-
-        static void Prefix(PlayerInteraction __instance)
+        private static void Prefix(PlayerInteraction __instance)
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
-        static void Postfix(PlayerInteraction __instance)
+        private static void Postfix(PlayerInteraction __instance)
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
@@ -131,31 +127,29 @@ namespace GTFO_VR.Injections
     }
 
     [HarmonyPatch(typeof(CarryItemEquippableFirstPerson), nameof(CarryItemEquippableFirstPerson.UpdateInsertOrDropItem))]
-    class InjectCarryItemInteractionTweak
+    internal class InjectCarryItemInteractionTweak
     {
-
-        static void Prefix(PlayerInteraction __instance)
+        private static void Prefix(PlayerInteraction __instance)
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
-        static void Postfix(PlayerInteraction __instance)
+        private static void Postfix(PlayerInteraction __instance)
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
         }
     }
 
-
     [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.Forward))]
     [HarmonyPatch(MethodType.Getter)]
-    class InjectFPSCameraForwardTweakForInteraction
+    internal class InjectFPSCameraForwardTweakForInteraction
     {
         public static bool useVRInteractionForward = false;
         public static bool useVRControllerForward = false;
 
-        static void Postfix(PlayerInteraction __instance, ref Vector3 __result)
+        private static void Postfix(PlayerInteraction __instance, ref Vector3 __result)
         {
             if (useVRInteractionForward)
             {
@@ -169,14 +163,14 @@ namespace GTFO_VR.Injections
         }
     }
 
-
     [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.Position))]
     [HarmonyPatch(MethodType.Getter)]
-    class InjectFPSCameraPositionTweakForInteraction
+    internal class InjectFPSCameraPositionTweakForInteraction
     {
         public static bool useInteractionControllersPosition = false;
         public static bool useControllerPosition = false;
-        static void Postfix(PlayerInteraction __instance, ref Vector3 __result)
+
+        private static void Postfix(PlayerInteraction __instance, ref Vector3 __result)
         {
             if (useInteractionControllersPosition)
             {

@@ -4,18 +4,16 @@ using GTFO_VR.UI;
 using HarmonyLib;
 using LevelGeneration;
 
-
-namespace GTFO_VR.Injections
+namespace GTFO_VR.Injections.UI
 {
     /// <summary>
     /// Replicate new objectives on the VR watch
     /// </summary>
 
-
     [HarmonyPatch(typeof(PlayerGuiLayer), nameof(PlayerGuiLayer.UpdateObjectives))]
-    class InjectWatchObjectives
+    internal class InjectWatchObjectives
     {
-        static void Postfix(LG_LayerType layer,
+        private static void Postfix(LG_LayerType layer,
     string mainObjective,
     WardenObjectiveDataBlock data,
     eWardenSubObjectiveStatus sub,
@@ -27,11 +25,10 @@ namespace GTFO_VR.Injections
         }
     }
 
-
     [HarmonyPatch(typeof(PUI_GameObjectives), nameof(PUI_GameObjectives.SetSubObjective))]
-    class InjectWatchSubObjectives
+    internal class InjectWatchSubObjectives
     {
-        static void Postfix(PUI_GameObjectives __instance)
+        private static void Postfix(PUI_GameObjectives __instance)
         {
             Watch.Current?.UpdateSubObjective(__instance.m_subObjective.text);
             Log.Debug($"Got new subobjective! - {__instance.m_subObjective.text}");
