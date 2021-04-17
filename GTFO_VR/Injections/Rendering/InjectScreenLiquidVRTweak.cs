@@ -15,4 +15,5 @@ namespace GTFO_VR.Injections.Rendering
             ScreenLiquidManager.cameraPosition = __instance.FPSCamera.transform.position;
         }
     }
+
 }

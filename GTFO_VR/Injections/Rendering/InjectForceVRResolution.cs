@@ -23,14 +23,11 @@ namespace GTFO_VR.Injections.Rendering
             {
                 return;
             }
-            Log.Info("Updating global resolution to HMD res...");
-            Resolution hmdResolution = SteamVR_Camera.GetSceneResolution();
-            // We calcuate an optimal 16:9 resolution to use with the HMD resolution because that's the best aspect for the UI rendering
-            Resolution closest16to9Res = hmdResolution;
-            closest16to9Res.height = closest16to9Res.width / 16 * 9;
-
-            res.width = closest16to9Res.width;
-            res.height = closest16to9Res.height;
+            Log.Info("Updating global resolution to 16:9 HMD res...");
+            // We use a scaled 16:9 resolution because that's the best aspect for rendering the UI of GTFO
+            Resolution scaledHMDRes = SteamVR_Camera.GetResolutionForAspect(16, 9);
+            res.width = scaledHMDRes.width;
+            res.height = scaledHMDRes.height;
         }
     }
 
@@ -44,15 +41,27 @@ namespace GTFO_VR.Injections.Rendering
                 return;
             }
             Log.Info("Updating menu page resolution to HMD res...");
-            Resolution hmdResolution = SteamVR_Camera.GetSceneResolution();
-
-            // We calcuate an optimal 16:9 resolution to use with the HMD resolution because that's the best aspect for the UI rendering
-            Resolution closest16to9Res = hmdResolution;
-            closest16to9Res.height = closest16to9Res.width / 16 * 9;
-
-            GuiManager.ScreenRes = closest16to9Res;
+            Resolution scaledHMDResolution = SteamVR_Camera.GetResolutionForAspect(16, 9);
+            GuiManager.ScreenRes = scaledHMDResolution;
             GuiManager.ScreenCenter = new Vector2(GuiManager.ScreenRes.width / 2, GuiManager.ScreenRes.height / 2);
             __instance.CalcSafeArea();
         }
     }
+
+
+    /// <summary>
+    /// Patches the screen liquid system to use the proper VR aspect
+    /// </summary>
+    [HarmonyPatch(typeof(GlassLiquidSystem), nameof(GlassLiquidSystem.OnResolutionChange))]
+    internal class InjectScreenLiquidResolutionTweak
+    {
+        private static void Prefix(ref Resolution res)
+        {
+           // We use the unscaled resolution for screen liquid effects to prevent the effects from being scaled or going off-screen
+           Resolution scaledHMDRes = SteamVR_Camera.GetResolutionForAspect(16, 9);
+           res.width = scaledHMDRes.width;
+           res.height = scaledHMDRes.height;
+        }
+    }
+
 }
