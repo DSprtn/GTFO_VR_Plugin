@@ -15,14 +15,9 @@
       "skeleton": "/skeleton/hand/right"
     },
     {
-      "name": "/actions/default/in/Squeeze",
-      "type": "vector1",
-      "requirement": "optional"
-    },
-    {
-      "name": "/actions/default/in/HeadsetOnHead",
+      "name": "/actions/default/in/PushToTalk",
       "type": "boolean",
-      "requirement": "optional"
+      "requirement": "suggested"
     },
     {
       "name": "/actions/default/in/SnapTurnLeft",

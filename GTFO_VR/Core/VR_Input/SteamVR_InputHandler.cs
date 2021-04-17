@@ -46,7 +46,7 @@ namespace GTFO_VR.Core.VR_Input
 
         private static SteamVR_Action_Boolean m_pingAction;
 
-        //private SteamVR_Action_Boolean pushToTalkAction;
+        private static SteamVR_Action_Boolean m_pushToTalkAction;
 
         private static Dictionary<InputAction, SteamVR_Action_Boolean> boolActions;
 
@@ -181,7 +181,8 @@ namespace GTFO_VR.Core.VR_Input
             m_openMapAction = SteamVR_Input.GetBooleanAction("OpenMap", false);
             m_openMenuAction = SteamVR_Input.GetBooleanAction("OpenMenu", false);
             m_pingAction = SteamVR_Input.GetBooleanAction("Ping", false);
-            //pushToTalkAction = SteamVR_Input.GetBooleanAction("PushToTalk", false);
+            m_pushToTalkAction = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/PushToTalk");
+
 
             boolActions = new Dictionary<InputAction, SteamVR_Action_Boolean>
             {
@@ -192,7 +193,7 @@ namespace GTFO_VR.Core.VR_Input
                 { InputAction.Run, m_sprintAction },
                 { InputAction.Crouch, m_crouchAction },
                 { InputAction.Reload, m_reloadAction },
-                //{ InputAction.VoiceChatPushToTalk, pushToTalkAction},
+                { InputAction.VoiceChatPushToTalk, m_pushToTalkAction},
                 { InputAction.NavMarkerPing, m_pingAction },
                 { InputAction.TerminalUp, m_weaponSwitchLeftAction },
                 { InputAction.TerminalDown, m_weaponSwitchRightAction },

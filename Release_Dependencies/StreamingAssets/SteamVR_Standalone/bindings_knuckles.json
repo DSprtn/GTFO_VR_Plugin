@@ -160,6 +160,9 @@
                   }
                },
                "mode" : "grab",
+               "parameters" : {
+                  "value_hold_threshold" : "1.2"
+               },
                "path" : "/user/hand/left/input/grip"
             },
             {
@@ -169,9 +172,6 @@
                   },
                   "double" : {
                      "output" : "/actions/default/in/ping"
-                  },
-                  "held" : {
-                     "output" : "/actions/default/in/aim"
                   }
                },
                "mode" : "button",
@@ -206,6 +206,15 @@
                },
                "mode" : "button",
                "path" : "/user/hand/left/input/a"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/pushtotalk"
+                  }
+               },
+               "mode" : "toggle_button",
+               "path" : "/user/hand/left/input/trackpad"
             }
          ]
       },
@@ -220,7 +229,7 @@
    "category" : "steamvr_input",
    "controller_type" : "knuckles",
    "description" : "",
-   "name" : "Shared binding from Spartan",
+   "name" : "Saved GTFO VR configuration for Index Controller",
    "options" : {},
    "simulated_actions" : []
 }
