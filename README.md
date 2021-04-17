@@ -87,8 +87,8 @@ Try to get used to the game in Non-VR mode first before using!
 	-	Left handed mode 
 	-	No VR controller mode
 	- 	IRL Crouching detection 
-	-	Two handed aiming (toggleable in-game based on the distance of your hands)
-	-	Always aiming two handed, ignoring hand distance
+	-	Two handed aiming enable/disable (normally toggled by offhand proximity to gun grip)
+	-	Always aiming two handed
 	- 	Snap turn amount
 	-	Smooth snap turning
 	-	UI Watch scale
@@ -105,7 +105,7 @@ Try to get used to the game in Non-VR mode first before using!
 	GTFO VR is a BIG resource hog!
 	
 	If you don't mind small artifacting on lights in exchange for a bit of extra performance
-	set light rendering mode to '3' in GTFO\BepInEx\config\com.github.dsprtn.gtfovr.cfg
+	set light rendering mode to '2' or '3' in GTFO\BepInEx\config\com.Spartan.GTFO_VR_Plugin.cfg
 	
 	There is now also a setting to alternate rendering of lights and shadows per eye, per frame. This WILL
 	look janky as all hell if you move your head around fast but it will boost performance greatly. I would
@@ -113,8 +113,9 @@ Try to get used to the game in Non-VR mode first before using!
 	
 #### MISC IN-GAME ACTIONS
 
-	Double handed aiming is triggered by proximity. Bring your hands together on a double handed weapon 
-	and you will enable it. Bring them far apart and it will switch back. 
+	Double handed aiming is triggered by proximity of your offhand (the hand without a weapon.) 
+	Bring your offhand to the gun's grip as you would IRL and you will enable it. 
+	Bring your offhand far enough apart and you will disable it.
 	
 	The watch can be toggled between inventory and objectives with the ToggleWatchMode action.
 	
