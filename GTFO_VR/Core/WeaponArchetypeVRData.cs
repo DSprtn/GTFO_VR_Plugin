@@ -14,20 +14,20 @@ namespace GTFO_VR.Core
 
         public struct VRWeaponData
         {
-            public Vector3 transformToVRGrip;
+            public Vector3 positonOffset;
             public bool allowsDoubleHanded;
             public Quaternion rotationOffset;
 
             public VRWeaponData(Vector3 transformToGrip, bool doubleHandedAim)
             {
-                transformToVRGrip = transformToGrip;
+                positonOffset = transformToGrip;
                 allowsDoubleHanded = doubleHandedAim;
                 rotationOffset = Quaternion.identity;
             }
 
-            public VRWeaponData(Vector3 transformToGrip, Quaternion rotationOffset, bool doubleHandedAim)
+            public VRWeaponData(Vector3 posToGripOffset, Quaternion rotationOffset, bool doubleHandedAim)
             {
-                transformToVRGrip = transformToGrip;
+                positonOffset = posToGripOffset;
                 allowsDoubleHanded = doubleHandedAim;
                 this.rotationOffset = rotationOffset;
             }
@@ -37,6 +37,7 @@ namespace GTFO_VR.Core
 
         public static VRWeaponData GetVRWeaponData(ItemEquippable item)
         {
+             
             return m_current;
         }
 
@@ -57,6 +58,7 @@ namespace GTFO_VR.Core
                 { "Revolver", new VRWeaponData(new Vector3(0f, -.01f, 0f), false) },
                 { "HEL Revolver", new VRWeaponData(new Vector3(.0f, 0f, 0f), false) },
                 { "Autorevolver", new VRWeaponData(new Vector3(.0f, 0f, 0f), false) },
+                { "Autopistol", new VRWeaponData(new Vector3(.0f, 0f, 0f), false) },
                 { "Machinepistol", new VRWeaponData(new Vector3(.0f, 0f, 0f), false) },
 
                 { "Shotgun", new VRWeaponData(new Vector3(0f, 0f, -.05f), true) },
@@ -108,7 +110,7 @@ namespace GTFO_VR.Core
         public static Vector3 CalculateGripOffset()
         {
             Transform itemEquip = ItemEquippableEvents.currentItem.transform;
-            return itemEquip.position - itemEquip.TransformPoint(m_current.transformToVRGrip);
+            return itemEquip.position - itemEquip.TransformPoint(m_current.positonOffset);
         }
 
     }
