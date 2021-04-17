@@ -114,9 +114,16 @@ namespace GTFO_VR.Core
             {
                 return;
             }
-        
-            if (m_player == null)
+
+            try
             {
+                if(!m_player)
+                {
+                    AppendVRComponents();
+                }
+            } catch(UnhollowerBaseLib.ObjectCollectedException e)
+            {
+                m_player = null;
                 AppendVRComponents();
             }
 
