@@ -28,9 +28,9 @@ namespace GTFO_VR.Core.VR_Input
 
         public static bool aimingTwoHanded;
 
-        private float m_doubleHandStartDistance = .14f;
+        private float m_doubleHandStartDistance = .08f;
 
-        private float m_doubleHandLeaveDistance = .60f;
+        private float m_doubleHandLeaveDistance = .55f;
 
         private bool m_wasInDoubleHandPosLastFrame = false;
 
@@ -183,20 +183,33 @@ namespace GTFO_VR.Core.VR_Input
 
         private bool AreControllersWithinDoubleHandStartDistance()
         {
-            if (Vector3.Distance(mainController.transform.position, offhandController.transform.position) < m_doubleHandStartDistance)
+            if(ItemEquippableEvents.IsCurrentItemShootableWeapon())
             {
-                return true;
+                ItemEquippable currentHeldItem = ItemEquippableEvents.currentItem;
+                if (currentHeldItem.LeftHandGripTrans)
+                {
+                    return Vector3.Distance(offhandController.transform.position, ItemEquippableEvents.GetCorrectedGripPosition()) < m_doubleHandStartDistance;
+                }
             }
-            return false;
+
+            return Vector3.Distance(mainController.transform.position, offhandController.transform.position) < m_doubleHandStartDistance;
         }
 
         private bool AreControllersOutsideOfDoubleHandExitDistance()
         {
-            if (Vector3.Distance(mainController.transform.position, offhandController.transform.position) > m_doubleHandLeaveDistance)
+            if (ItemEquippableEvents.IsCurrentItemShootableWeapon())
             {
-                return true;
+                ItemEquippable currentHeldItem = ItemEquippableEvents.currentItem;
+                if(currentHeldItem.IsReloading)
+                {
+                    return false;
+                }
+                if (currentHeldItem.LeftHandGripTrans)
+                {
+                    return Vector3.Distance(offhandController.transform.position, ItemEquippableEvents.GetCorrectedGripPosition()) > m_doubleHandLeaveDistance;
+                }
             }
-            return false;
+            return (Vector3.Distance(mainController.transform.position, offhandController.transform.position) > m_doubleHandLeaveDistance);
         }
 
         public static Vector3 GetAimForward()
@@ -224,25 +237,12 @@ namespace GTFO_VR.Core.VR_Input
 
         public static Vector3 GetTwoHandedAimForward()
         {
-            float currentItemYOffset = 0f;
-            Vector3 offhandPos = offhandController.transform.position;
-            offhandPos.y += currentItemYOffset;
-            return (offhandPos - mainController.transform.position).normalized;
-        }
-
-        public static Vector3 GetTwoHandedTransformUp()
-        {
-            return (mainController.transform.up + offhandController.transform.up) / 2;
+            return (offhandController.transform.position - mainController.transform.position).normalized;
         }
 
         public static Quaternion GetTwoHandedRotation()
         {
-            return Quaternion.LookRotation(GetTwoHandedAimForward());
-        }
-
-        public static Vector3 GetTwoHandedPos()
-        {
-            return (mainController.transform.position + offhandController.transform.position) / 2;
+            return Quaternion.LookRotation(GetTwoHandedAimForward(), mainController.transform.up);
         }
 
         public static Vector3 GetAimFromPos()

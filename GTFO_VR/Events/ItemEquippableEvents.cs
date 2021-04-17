@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.Core;
+using UnityEngine;
 
 namespace GTFO_VR.Events
 {
@@ -22,6 +23,11 @@ namespace GTFO_VR.Events
                 Log.Debug(item.ArchetypeName);
                 Log.Debug(item.PublicName);
                 OnPlayerWieldItem.Invoke(item);
+
+                if(currentItem.LeftHandGripTrans)
+                {
+                    Log.Debug($"Distance from left hand align to origin = {Vector3.Distance(currentItem.LeftHandGripTrans.position, currentItem.transform.position)}");
+                }
             }
         }
 
@@ -33,6 +39,18 @@ namespace GTFO_VR.Events
         public static bool CurrentItemHasFlashlight()
         {
             return currentItem != null && currentItem.HasFlashlight;
+        }
+
+        public static Vector3 GetCorrectedGripPosition()
+        {
+            if(!currentItem || !currentItem.LeftHandGripTrans || !currentItem.MuzzleAlign)
+            {
+                Log.Warning("Trying to get grip position for null item, null grip or null muzzle!");
+                return Vector3.zero;
+            }
+            Vector3 offsetToGrip = currentItem.LeftHandGripTrans.position - currentItem.transform.position;
+            Vector3 normalToMuzzle = (currentItem.MuzzleAlign.transform.position - currentItem.transform.position).normalized;
+            return currentItem.transform.position + Vector3.Project(offsetToGrip, normalToMuzzle);
         }
     }
 }
