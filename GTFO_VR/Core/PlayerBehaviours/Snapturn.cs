@@ -35,6 +35,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
             if (VRSettings.useSmoothTurn)
             {
                 m_origin.RotatePlayer(Quaternion.Euler(new Vector3(0, angle * Time.deltaTime * 2f, 0f)));
+                if(VRSettings.recenterOnSmoothTurn)
+                {
+                    OnSnapTurn?.Invoke();
+                }
             }
             else
             {

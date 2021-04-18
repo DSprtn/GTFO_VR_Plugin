@@ -117,8 +117,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             pos.y = 0f;
             pos = PlayerRotationOffset * pos;
             m_offsetFromPlayerToHMD = pos;
-
-            Log.Debug("Centering player... new offset = " + m_offsetFromPlayerToHMD.ToString());
         }
 
         private void OnDestroy()

@@ -40,9 +40,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             gameObject.AddComponent<VRWorldSpaceUI>();
 
-            GameObject laserPointer = new GameObject("LaserPointer");
-            m_pointer = laserPointer.AddComponent<LaserPointer>();
-            m_pointer.Color = ColorExt.OrangeBright();
+
+            if(VRSettings.useLaserPointer)
+            {
+                GameObject laserPointer = new GameObject("LaserPointer");
+                m_pointer = laserPointer.AddComponent<LaserPointer>();
+                m_pointer.Color = ColorExt.OrangeBright();
+            }
 
             m_fade = FpsCamera.gameObject.AddComponent<CollisionFade>();
             m_fade.Setup(PlayerAgent);

@@ -110,6 +110,8 @@ namespace GTFO_VR.Core
         public ConfigEntry<bool> configUseNumbersForAmmoDisplay;
         public ConfigEntry<string> configWatchColorHex;
         public ConfigEntry<float> configCrouchHeight;
+        public ConfigEntry<bool> configRecenterPlayspaceDuringSmoothTurn;
+        public ConfigEntry<bool> configUseLaserPointerOnWeapons;
 
         private void SetupConfig()
         {
@@ -129,11 +131,15 @@ namespace GTFO_VR.Core
             configAlwaysDoubleHanded = Config.Bind("Input", "Always use double handed aiming? (Where it applies)", false, "If true, double handed weapons will always use double handed aiming (RECOMMENDED FOR GUN STOCK USERS)");
             configSnapTurnAmount = Config.Bind("Input", "Snap turn angle", 60f, "The amount of degrees to turn on a snap turn (or turn per half a second if smooth turn is enabled)");
             configSmoothSnapTurn = Config.Bind("Input", "Use smooth turning?", false, "If true, will use smooth turn instead of snap turn");
+            configRecenterPlayspaceDuringSmoothTurn = Config.Bind("Input", "Recenter playspace on smoothturn?", true, "If true, will recenter the player collision during turning. \n Might result in a little bit of teleporting on the first frame you use smoothturn, but otherwise collisions will get out of sync.");
             configWatchScaling = Config.Bind("Misc", "Watch scale multiplier", 1.00f, "Size of the watch in-game will be multiplied by this value down to half of its default size or up to double (0.5 or 2.0)");
             configUseNumbersForAmmoDisplay = Config.Bind("Misc", "Use numbers for ammo display?", false, "If true, current ammo and max ammo will be displayed as numbers on the watch");
             configWatchColorHex = Config.Bind("Misc", "Hex color to use for watch", "#ffffff", "Google hexcolor and paste whatever color you want here");
             configCrouchHeight = Config.Bind("Input", "Crouch height in meters", 1.15f, "In-game character will be crouching if your head is lower than this height above the playspace (clamped to 1-1.45m)");
             configAlternateEyeRendering = Config.Bind("Experimental performance tweaks", "Alternate light and shadow rendering per frame per eye", false, "If true will alternate between eyes when drawing lights and shadows each frame, \n might look really janky so only use this if you absolutely want to play this in VR but don't have the rig for it!");
+
+            configUseLaserPointerOnWeapons = Config.Bind("Misc", "Use laser pointer on weapons?", true, "If true, all weapons will have a laser pointer.");
+
 
             Core.Log.Debug("VR enabled?" + configEnableVR.Value);
             Core.Log.Debug("Toggle VR by SteamVR running?" + configToggleVRBySteamVR.Value);
@@ -145,11 +151,13 @@ namespace GTFO_VR.Core
             Core.Log.Debug("Start with double handed aiming: " + configAlwaysDoubleHanded.Value);
             Core.Log.Debug("Snapturn amount: " + configSnapTurnAmount.Value);
             Core.Log.Debug("Use smooth turn?: " + configSmoothSnapTurn.Value);
+            Core.Log.Debug("Recenter playspace on smooth turn?: " + configRecenterPlayspaceDuringSmoothTurn.Value);
             Core.Log.Debug("Watch size multiplier: " + configWatchScaling.Value);
             Core.Log.Debug("Use numbers for number display?: " + configUseNumbersForAmmoDisplay.Value);
             Core.Log.Debug("Watch color - " + configWatchColorHex.Value);
             Core.Log.Debug("Crouching height - " + configCrouchHeight.Value);
             Core.Log.Debug("Alternate eye rendering? - " + configAlternateEyeRendering.Value);
+            Core.Log.Debug("Laserpointer on? " + configUseLaserPointerOnWeapons.Value);
 
             VRSettings.useVRControllers = configUseControllers.Value;
             VRSettings.crouchOnIRLCrouch = configIRLCrouch.Value;
@@ -158,12 +166,14 @@ namespace GTFO_VR.Core
             VRSettings.alwaysDoubleHanded = configAlwaysDoubleHanded.Value;
             VRSettings.snapTurnAmount = configSnapTurnAmount.Value;
             VRSettings.useSmoothTurn = configSmoothSnapTurn.Value;
+            VRSettings.recenterOnSmoothTurn = configRecenterPlayspaceDuringSmoothTurn.Value;
             VRSettings.watchScale = Mathf.Clamp(configWatchScaling.Value, 0.5f, 2f);
             VRSettings.toggleVRBySteamVRRunning = configToggleVRBySteamVR.Value;
             VRSettings.useNumbersForAmmoDisplay = configUseNumbersForAmmoDisplay.Value;
             VRSettings.watchColor = ColorExt.Hex(configWatchColorHex.Value);
             VRSettings.IRLCrouchBorder = Mathf.Clamp(configCrouchHeight.Value, 1f, 1.45f);
             VRSettings.alternateLightRenderingPerEye = configAlternateEyeRendering.Value;
+            VRSettings.useLaserPointer = configUseLaserPointerOnWeapons.Value;
 
             if (configUseLeftHand.Value)
             {

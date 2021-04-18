@@ -44,5 +44,8 @@ namespace GTFO_VR.Core
 
         public static bool alternateLightRenderingPerEye = false;
 
+        public static bool recenterOnSmoothTurn = true;
+
+        public static bool useLaserPointer = true;
     }
 }
