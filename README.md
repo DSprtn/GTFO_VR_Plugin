@@ -89,11 +89,9 @@ Try to get used to the game in Non-VR mode first before using!
 	- 	IRL Crouching - Toggle, height tweak
 	-	Laser pointer - Toggle, color
 	-	Two handed aiming - Toggle, always on
-	- 	Snap turn amount
-	-	Smooth snap turning - Toggle, playspace recentering
+	- 	Snap turn - Amount, smooth turn, playspace recentering
 	-	Watch - Scale, color, number display for ammo
-	- 	Toggle for SteamVR check (so you can play the game without VR without removing anything!) 
-	-	VR mod on/off switch (I recommend just using the SteamVR check)
+	- 	VR Mod loading - SteamVR running check, global toggle
 
 	They can be found in a config file which is created after starting the game at least once with 
 	the VR mod installed. It can be found under "GTFO\BepInEx\config\com.Spartan.GTFO_VR_Plugin.cfg"
@@ -110,26 +108,31 @@ Try to get used to the game in Non-VR mode first before using!
 	look janky as all hell if you move your head around fast but it will boost performance greatly. I would
 	only recommend using this if nothing else works to make the game run in VR for you.
 	
-#### MISC IN-GAME ACTIONS
+### MISC IN-GAME ACTIONS
 
-	Double handed aiming is triggered by proximity of your offhand (the hand without a weapon.) 
-	Bring your offhand to the gun's grip as you would IRL and you will enable it. 
+#### AIMING
+
+	Double handed aiming is triggered by the proximity of your offhand (the one without a weapon) to
+	the weapon grip. Bring your offhand to the gun's grip as you would IRL and you will enable it. 
 	Bring your offhand far enough apart and you will disable it.
+	
+#### WATCH
 	
 	The watch can be toggled between inventory and objectives with the ToggleWatchMode action.
 	
 	The watch UI is as follows ---
-	The top 5 bars represent the inventory slots, with ammo percentages (1 bar = 20%.)
+	
+	The top 5 bars represent each of the inventory slots.
 	Each bar is a mag of ammo, 20% of your tool ammo or a single use of a consumable item. 
-	On the bottom left there are bars for HP, infection and oxygen, they are each 20% a bar and are not visible 
-	if they don't have to be at the moment. 
+	
+	On the bottom left there are bars for HP, and infection. Infection is invisible until you're
+	actually infected.
+	
 	On the bottom right you can see the ammo in your current mag. Each block is a bullet.
 	There is a config setting to change the ammo to a number display.
 	
-	Remember to bind openmenu and openmap too! They work in-game correctly as you'd expect.
-	
 	Menu and map UI is controlled by the 'movement' action or pointing the controller. 
-	'Crouch' and 'aim' re-orient the overlay and the 'fire' action interacts with the buttons.
+	'Crouch' and 'ToggleWatchMode' re-orient the overlay and the 'fire' action interacts with the buttons.
 	
 #### STEAM_VR DESKTOP 
 	
