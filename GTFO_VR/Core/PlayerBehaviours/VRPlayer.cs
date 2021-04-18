@@ -45,7 +45,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 GameObject laserPointer = new GameObject("LaserPointer");
                 m_pointer = laserPointer.AddComponent<LaserPointer>();
-                m_pointer.Color = ColorExt.OrangeBright();
             }
 
             m_fade = FpsCamera.gameObject.AddComponent<CollisionFade>();

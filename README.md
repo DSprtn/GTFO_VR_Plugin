@@ -86,13 +86,12 @@ Try to get used to the game in Non-VR mode first before using!
 	-	Experimental performance tweaks 
 	-	Left handed mode 
 	-	No VR controller mode
-	- 	IRL Crouching detection 
-	-	Two handed aiming enable/disable (normally toggled by offhand proximity to gun grip)
-	-	Always aiming two handed
+	- 	IRL Crouching - Toggle, height tweak
+	-	Laser pointer - Toggle, color
+	-	Two handed aiming - Toggle, always on
 	- 	Snap turn amount
-	-	Smooth snap turning
-	-	UI Watch scale
-	-	Number display for ammo
+	-	Smooth snap turning - Toggle, playspace recentering
+	-	Watch - Scale, color, number display for ammo
 	- 	Toggle for SteamVR check (so you can play the game without VR without removing anything!) 
 	-	VR mod on/off switch (I recommend just using the SteamVR check)
 

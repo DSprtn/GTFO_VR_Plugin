@@ -40,6 +40,8 @@ namespace GTFO_VR.Core
 
         public static Color watchColor = Color.white;
 
+        public static Color laserPointerColor = ColorExt.OrangeBright();
+
         public static float IRLCrouchBorder = 1.15f;
 
         public static bool alternateLightRenderingPerEye = false;

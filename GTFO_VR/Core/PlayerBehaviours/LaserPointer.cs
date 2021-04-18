@@ -13,7 +13,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
         }
 
-        public Color Color = ColorExt.OrangeBright();
         private GameObject m_pointer;
         private GameObject m_dot;
         private readonly float m_thickness = 1f / 400f;
@@ -112,7 +111,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_pointer.transform.localRotation = Quaternion.identity;
             m_dot.transform.localRotation = Quaternion.identity;
             Material material = new Material(Shader.Find("Unlit/Color"));
-            material.SetColor("_Color", Color);
+            material.SetColor("_Color", VRSettings.laserPointerColor);
             m_pointer.GetComponent<MeshRenderer>().material = material;
             m_dot.GetComponent<MeshRenderer>().material = material;
             m_setup = true;
