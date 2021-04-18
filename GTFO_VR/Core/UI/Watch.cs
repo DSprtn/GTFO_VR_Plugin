@@ -66,7 +66,8 @@ namespace GTFO_VR.UI
 
         void Start()
         {
-            transform.GetChild(0).GetComponent<MeshRenderer>().material.color = VRSettings.watchColor;
+            transform.FindDeepChild("STRAP_LP").GetComponent<MeshRenderer>().material.color = VRSettings.watchColor;
+            transform.FindDeepChild("WATCH_LP").GetComponent<MeshRenderer>().material.color = VRSettings.watchColor;
         }
 
         void Update()
@@ -274,7 +275,7 @@ namespace GTFO_VR.UI
             m_objectiveDisplay.fontSizeMin = 18;
             m_objectiveDisplay.fontSizeMax = 36;
             m_objectiveDisplay.alignment = TextAlignmentOptions.Center;
-            MelonCoroutines.Start(SetRectSize(watchObjectiveTransform, new Vector2(42, 34f)));
+            MelonCoroutines.Start(SetRectSize(watchObjectiveTransform, new Vector2(34, 43f)));
         }
 
         IEnumerator SetRectSize(RectTransform t, Vector2 size)
@@ -301,7 +302,7 @@ namespace GTFO_VR.UI
             m_numberBulletsInMagDisplay.lineSpacing = -30f;
 
             m_numberBulletsInMagDisplay.alignment = TextAlignmentOptions.Center;
-            m_numberBulletsInMagDisplay.fontSize = 92f;
+            m_numberBulletsInMagDisplay.fontSize = 80f;
             m_numberBulletsInMagDisplay.enableWordWrapping = false;
             m_numberBulletsInMagDisplay.fontStyle = FontStyles.Bold;
             m_numberBulletsInMagDisplay.richText = true;
