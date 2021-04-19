@@ -70,10 +70,83 @@ namespace GTFO_VR.Core.PlayerBehaviours
             GlueGunEvents.OnPressureUpdate += GlueGunPressureHaptics;
         }
 
+        private void Update()
+        {
+            HandleSnapturnInput();
+        }
+
+        private void OnNewPoses()
+        {
+            if (!FpsCamera || !m_origin)
+            {
+                return;
+            }
+
+            m_origin.UpdateOrigin();
+            UpdateVRCameraTransform(FpsCamera);
+            UpdateHeldItemTransform();
+        }
+
+        private void HandleSnapturnInput()
+        {
+            if (SteamVR_InputHandler.GetSnapTurningLeft())
+            {
+                m_snapTurn.DoSnapTurn(-VRSettings.snapTurnAmount);
+            }
+
+            if (SteamVR_InputHandler.GetSnapTurningRight())
+            {
+                m_snapTurn.DoSnapTurn(VRSettings.snapTurnAmount);
+            }
+        }
+
+        public static void UpdateVRCameraTransform(FPSCamera fpsCamera)
+        {
+            if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation))
+            {
+                if (!FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
+                {
+                    fpsCamera.transform.position = HMD.GetWorldPosition();
+                }
+            }
+            fpsCamera.m_camera.transform.parent.localRotation = Quaternion.Euler(HMD.GetVRCameraEulerRelativeToFPSCameraParent());
+        }
+
+        public static void UpdateHeldItemTransform()
+        {
+            if (!VRSettings.useVRControllers)
+                return;
+
+            ItemEquippable heldItem = PlayerAgent.FPItemHolder.WieldedItem;
+            if (heldItem != null)
+            {
+                heldItem.transform.position = Controllers.GetControllerPosition() + WeaponArchetypeVRData.CalculateGripOffset();
+                Vector3 recoilRot = heldItem.GetRecoilRotOffset();
+
+                if (!Controllers.IsFiringFromADS())
+                {
+                    recoilRot.x *= 2f;
+                }
+                heldItem.transform.rotation = Controllers.GetControllerAimRotation();
+                heldItem.transform.localRotation *= Quaternion.Euler(recoilRot) * WeaponArchetypeVRData.GetVRWeaponData(heldItem).rotationOffset;
+                heldItem.transform.position += Controllers.GetControllerAimRotation() * heldItem.GetRecoilPosOffset();
+            }
+        }
+
+        private void PlayerEnteredLadder(LG_Ladder ladder)
+        {
+            m_snapTurn.DoSnapTurnTowards(Quaternion.LookRotation(ladder.transform.forward).eulerAngles, 2f);
+        }
+
+
         private float lastGlueGunVibrateTime;
 
         private void GlueGunPressureHaptics(float pressure)
         {
+            if (!VRSettings.useHapticForShooting)
+            {
+                return;
+            }
             if (pressure > 0.05f && Time.time > lastGlueGunVibrateTime)
             {
                 //hapticDelay = Mathf.Lerp(baseHapticDelay, baseHapticDelay / 2f, strength);
@@ -154,74 +227,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
                     Mathf.Lerp(0.1f, 1f, dmg),
                     Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
             }
-        }
-
-        private void Update()
-        {
-            HandleSnapturnInput();
-        }
-
-        private void OnNewPoses()
-        {
-            if (!FpsCamera || !m_origin)
-            {
-                return;
-            }
-
-            m_origin.UpdateOrigin();
-            UpdateVRCameraTransform(FpsCamera);
-            UpdateHeldItemTransform();
-        }
-
-        private void HandleSnapturnInput()
-        {
-            if (SteamVR_InputHandler.GetSnapTurningLeft())
-            {
-                m_snapTurn.DoSnapTurn(-VRSettings.snapTurnAmount);
-            }
-
-            if (SteamVR_InputHandler.GetSnapTurningRight())
-            {
-                m_snapTurn.DoSnapTurn(VRSettings.snapTurnAmount);
-            }
-        }
-
-        public static void UpdateVRCameraTransform(FPSCamera fpsCamera)
-        {
-            if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation))
-            {
-                if (!FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
-                {
-                    fpsCamera.transform.position = HMD.GetWorldPosition();
-                }
-            }
-            fpsCamera.m_camera.transform.parent.localRotation = Quaternion.Euler(HMD.GetVRCameraEulerRelativeToFPSCameraParent());
-        }
-
-        public static void UpdateHeldItemTransform()
-        {
-            if (!VRSettings.useVRControllers)
-                return;
-
-            ItemEquippable heldItem = PlayerAgent.FPItemHolder.WieldedItem;
-            if (heldItem != null)
-            {
-                heldItem.transform.position = Controllers.GetControllerPosition() + WeaponArchetypeVRData.CalculateGripOffset();
-                Vector3 recoilRot = heldItem.GetRecoilRotOffset();
-
-                if (!Controllers.IsFiringFromADS())
-                {
-                    recoilRot.x *= 2f;
-                }
-                heldItem.transform.rotation = Controllers.GetControllerAimRotation();
-                heldItem.transform.localRotation *= Quaternion.Euler(recoilRot) * WeaponArchetypeVRData.GetVRWeaponData(heldItem).rotationOffset;
-                heldItem.transform.position += Controllers.GetControllerAimRotation() * heldItem.GetRecoilPosOffset();
-            }
-        }
-
-        private void PlayerEnteredLadder(LG_Ladder ladder)
-        {
-            m_snapTurn.DoSnapTurnTowards(Quaternion.LookRotation(ladder.transform.forward).eulerAngles, 2f);
         }
 
         private void OnDestroy()
