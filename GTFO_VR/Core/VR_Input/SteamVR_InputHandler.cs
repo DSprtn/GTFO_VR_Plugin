@@ -57,6 +57,17 @@ namespace GTFO_VR.Core.VR_Input
             Log.Info("Input initialized");
         }
 
+        public static void TriggerHapticPulse(ushort microSecondsDuration, SteamVR_Input_Sources controller)
+        {
+            float seconds = (float)microSecondsDuration / 1000000f;
+            hapticAction.Execute(0, seconds, 1f / seconds, 1, controller);
+        }
+
+        public static void TriggerHapticPulse(float seconds, SteamVR_Input_Sources controller)
+        {
+            hapticAction.Execute(0, seconds, 1f / seconds, 1, controller);
+        }
+
         public static void TriggerHapticPulse(float duration, float frequency, float amplitude, SteamVR_Input_Sources controller)
         {
             if (!Initialized)

@@ -86,9 +86,10 @@ Try to get used to the game in Non-VR mode first before using!
 	-	Experimental performance tweaks 
 	-	Left handed mode 
 	-	No VR controller mode
+	- 	Shooting haptics - Toggle, strength
 	- 	IRL Crouching - Toggle, height tweak
 	-	Laser pointer - Toggle, color
-	-	Two handed aiming - Toggle, always on
+	-	Two handed aiming - Toggle, always on mode
 	- 	Snap turn - Amount, smooth turn, playspace recentering
 	-	Watch - Scale, color, number display for ammo
 	- 	VR Mod loading - SteamVR running check, global toggle
@@ -190,6 +191,8 @@ Try to get used to the game in Non-VR mode first before using!
 	
 	Support for single or double handed aiming, gun stocks
 	
+	Haptics
+	
 	Snap turn
 	
 	Loads of configurable options (more coming soon and if you're missing any let me know!)
@@ -199,6 +202,16 @@ Try to get used to the game in Non-VR mode first before using!
 	The IL2CPP build hasn't been tested thoroughly yet so crashes may occur. If one does occur,
 	send me the output log from the path given below:
 	AppData\LocalLow\10 Chambers Collective\GTFO\output_log.txt
+	
+## Contributors:
+
+	The mod wouldn't have been made as good as it is without contributions from: 
+	Knah: For being the driving force behind il2cpp modding and providing lots of help.
+	MrKerag: For providing an awesome custom made in-game watch model.
+	Peelz: For providing both coding and mental help during the il2cpp times.
+	The modding community of GTFO, for helping dissect the game's systems.
+	And most of all, all of the mod's players, for all the valuable feedback!
+
 
 ## Want to contribute?
 

@@ -24,7 +24,7 @@ namespace GTFO_VR.Core
             MODNAME = "GTFO_VR_Plugin",
             AUTHOR = "Spartan",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "0.8.1.1";
+            VERSION = "0.8.2.1";
 
         public static GTFO_VR_Plugin Current;
 
@@ -111,7 +111,9 @@ namespace GTFO_VR.Core
         public ConfigEntry<float> configCrouchHeight;
         public ConfigEntry<bool> configRecenterPlayspaceDuringSmoothTurn;
         public ConfigEntry<bool> configUseLaserPointerOnWeapons;
+        public ConfigEntry<bool> configUseHapticsForShooting;
         public ConfigEntry<string> configLaserPointerColorHex;
+        public ConfigEntry<float> configShootingHapticsStrength;
 
         private void SetupConfig()
         {
@@ -141,6 +143,8 @@ namespace GTFO_VR.Core
             configUseLaserPointerOnWeapons = Config.Bind("Misc", "Use laser pointer on weapons?", true, "If true, all weapons will have a laser pointer.");
 
             configLaserPointerColorHex = Config.Bind("Misc", "Hex color to use for laster pointer", "#eb8078", "Google hexcolor and paste whatever color you want here.");
+            configUseHapticsForShooting = Config.Bind("Misc", "Use haptics for shooting?", true, "If true, haptics effect will trigger when shooting weapons.");
+            configShootingHapticsStrength = Config.Bind("Misc", "Shooting haptic strength", .75f, "The strength of haptic feedback while shooting. (0.0 to 1.0)");
 
             Core.Log.Debug("VR enabled?" + configEnableVR.Value);
             Core.Log.Debug("Toggle VR by SteamVR running?" + configToggleVRBySteamVR.Value);
@@ -160,6 +164,8 @@ namespace GTFO_VR.Core
             Core.Log.Debug("Crouching height - " + configCrouchHeight.Value);
             Core.Log.Debug("Alternate eye rendering? - " + configAlternateEyeRendering.Value);
             Core.Log.Debug("Laserpointer on? " + configUseLaserPointerOnWeapons.Value);
+            Core.Log.Debug("Haptics when shooting? " + configUseHapticsForShooting.Value);
+            Core.Log.Debug("Haptics strength - " + configShootingHapticsStrength.Value);
 
             VRSettings.useVRControllers = configUseControllers.Value;
             VRSettings.crouchOnIRLCrouch = configIRLCrouch.Value;
@@ -175,6 +181,8 @@ namespace GTFO_VR.Core
             VRSettings.IRLCrouchBorder = Mathf.Clamp(configCrouchHeight.Value, 1f, 1.45f);
             VRSettings.alternateLightRenderingPerEye = configAlternateEyeRendering.Value;
             VRSettings.useLaserPointer = configUseLaserPointerOnWeapons.Value;
+            VRSettings.useHapticForShooting = configUseHapticsForShooting.Value;
+            VRSettings.shootingHapticsStrength = configShootingHapticsStrength.Value;
 
             Util.ExtensionMethods.Hex(configWatchColorHex.Value, ref VRSettings.watchColor);
             Util.ExtensionMethods.Hex(configLaserPointerColorHex.Value, ref VRSettings.laserPointerColor);

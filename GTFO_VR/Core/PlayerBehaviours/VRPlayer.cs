@@ -40,8 +40,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             gameObject.AddComponent<VRWorldSpaceUI>();
 
-
-            if(VRSettings.useLaserPointer)
+            if (VRSettings.useLaserPointer)
             {
                 GameObject laserPointer = new GameObject("LaserPointer");
                 m_pointer = laserPointer.AddComponent<LaserPointer>();
@@ -61,7 +60,66 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             PlayerLocomotionEvents.OnPlayerEnterLadder += PlayerEnteredLadder;
             SteamVR_Events.NewPosesApplied.Listen(new Action(OnNewPoses));
+            PlayerReceivedDamageEvents.OnPlayerTakeDamage += ReceiveDamage;
+            PlayerFireWeaponEvents.OnPlayerFireWeapon += WeaponFired;
             ClusteredRendering.Current.OnResolutionChange(new Resolution());
+        }
+
+        private void WeaponFired(Weapon weapon)
+        {
+            if (!VRSettings.useHapticForShooting)
+            {
+                return;
+            }
+            // Remap -1,1 to 0,1
+            float intensity = Mathf.Pow( Mathf.Max(1 / Mathf.Abs(weapon.RecoilData.horizontalScale.Max), 1 / Mathf.Abs(weapon.RecoilData.verticalScale.Max)), 2);
+
+            Log.Debug($"Shot intensity = {intensity}");
+
+            float duration = 0.03f;
+            float frequency = 40f;
+
+ 
+            intensity = intensity.RemapClamped(0, 7, 0.10f, VRSettings.shootingHapticsStrength);
+
+            Log.Debug($"Shot intensity remapped = {intensity}");
+
+            if (Controllers.aimingTwoHanded)
+            {
+                intensity *= .5f;
+                intensity = Mathf.Max(intensity, 0.075f);
+                SteamVR_InputHandler.TriggerHapticPulse(Mathf.Lerp(duration, duration * 1.5f, intensity),
+                    Mathf.Lerp(frequency, frequency * 1.5f, intensity),
+                    intensity,
+                    Controllers.GetDeviceFromHandType(Controllers.offHandControllerType));
+            }
+
+            SteamVR_InputHandler.TriggerHapticPulse(
+                Mathf.Lerp(duration, duration * 1.5f, intensity),
+                Mathf.Lerp(frequency, frequency * 1.5f, intensity),
+                intensity,
+                Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
+        }
+
+        private void ReceiveDamage(float dmg, Vector3 direction)
+        {
+            if (dmg > .5)
+            {
+                dmg = dmg.RemapClamped(0, 10f, 0, .75f);
+
+                float duration = 0.08f;
+                float frequency = 55f;
+
+                SteamVR_InputHandler.TriggerHapticPulse(Mathf.Lerp(duration, duration * 2.5f, dmg),
+                    Mathf.Lerp(frequency, frequency * 1.3f, dmg),
+                    Mathf.Lerp(0.5f, 1f, dmg),
+                    Controllers.GetDeviceFromHandType(Controllers.offHandControllerType));
+
+                SteamVR_InputHandler.TriggerHapticPulse(Mathf.Lerp(duration, duration * 2.5f, dmg),
+                    Mathf.Lerp(frequency, frequency * 1.3f, dmg),
+                    Mathf.Lerp(0.1f, 1f, dmg),
+                    Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
+            }
         }
 
         private void Update()
@@ -135,9 +193,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private void OnDestroy()
         {
             PlayerLocomotionEvents.OnPlayerEnterLadder -= PlayerEnteredLadder;
+            PlayerReceivedDamageEvents.OnPlayerTakeDamage -= ReceiveDamage;
+            PlayerFireWeaponEvents.OnPlayerFireWeapon -= WeaponFired;
             SteamVR_Events.NewPosesApplied.Remove(OnNewPoses);
 
-            if(m_origin)
+            if (m_origin)
             {
                 Destroy(m_origin.gameObject);
             }
