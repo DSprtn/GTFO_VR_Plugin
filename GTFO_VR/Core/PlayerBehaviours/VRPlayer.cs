@@ -60,29 +60,63 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             PlayerLocomotionEvents.OnPlayerEnterLadder += PlayerEnteredLadder;
             SteamVR_Events.NewPosesApplied.Listen(new Action(OnNewPoses));
-            PlayerReceivedDamageEvents.OnPlayerTakeDamage += ReceiveDamage;
-            PlayerFireWeaponEvents.OnPlayerFireWeapon += WeaponFired;
+
             ClusteredRendering.Current.OnResolutionChange(new Resolution());
+
+            PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
+            PlayerFireWeaponEvents.OnPlayerFireWeapon += PlayWeaponFireHaptics;
+            PlayerReloadEvents.OnPlayerReloaded += PlayWeaponReloadHaptics;
+
+            GlueGunEvents.OnPressureUpdate += GlueGunPressureHaptics;
         }
 
-        private void WeaponFired(Weapon weapon)
+        private float lastGlueGunVibrateTime;
+
+        private void GlueGunPressureHaptics(float pressure)
+        {
+            if (pressure > 0.05f && Time.time > lastGlueGunVibrateTime)
+            {
+                //hapticDelay = Mathf.Lerp(baseHapticDelay, baseHapticDelay / 2f, strength);
+                float intensity = pressure;
+                float duration = 0.1f;
+                float frequency = Mathf.Lerp(20, 35, pressure);
+
+                SteamVR_InputHandler.TriggerHapticPulse(
+              Mathf.Lerp(duration, duration * 1.5f, intensity),
+              Mathf.Lerp(frequency, frequency * 1.5f, intensity),
+              intensity,
+              Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
+
+                lastGlueGunVibrateTime = Time.time + .1f;
+            }
+        }
+
+        private void PlayWeaponReloadHaptics()
+        {
+            float duration = 0.03f;
+            float frequency = 40f;
+            float intensity = .5f;
+
+            SteamVR_InputHandler.TriggerHapticPulse(
+               Mathf.Lerp(duration, duration * 1.5f, intensity),
+               Mathf.Lerp(frequency, frequency * 1.5f, intensity),
+               intensity,
+               Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
+        }
+
+        private void PlayWeaponFireHaptics(Weapon weapon)
         {
             if (!VRSettings.useHapticForShooting)
             {
                 return;
             }
             // Remap -1,1 to 0,1
-            float intensity = Mathf.Pow( Mathf.Max(1 / Mathf.Abs(weapon.RecoilData.horizontalScale.Max), 1 / Mathf.Abs(weapon.RecoilData.verticalScale.Max)), 2);
-
-            Log.Debug($"Shot intensity = {intensity}");
+            float intensity = Mathf.Pow(Mathf.Max(1 / Mathf.Abs(weapon.RecoilData.horizontalScale.Max), 1 / Mathf.Abs(weapon.RecoilData.verticalScale.Max)), 2);
 
             float duration = 0.03f;
             float frequency = 40f;
 
- 
-            intensity = intensity.RemapClamped(0, 7, 0.10f, VRSettings.shootingHapticsStrength);
-
-            Log.Debug($"Shot intensity remapped = {intensity}");
+            intensity = intensity.RemapClamped(0, 8, 0.10f, VRSettings.shootingHapticsStrength);
 
             if (Controllers.aimingTwoHanded)
             {
@@ -101,7 +135,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
         }
 
-        private void ReceiveDamage(float dmg, Vector3 direction)
+        private void PlayReceiveDamageHaptics(float dmg, Vector3 direction)
         {
             if (dmg > .5)
             {
@@ -193,9 +227,12 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private void OnDestroy()
         {
             PlayerLocomotionEvents.OnPlayerEnterLadder -= PlayerEnteredLadder;
-            PlayerReceivedDamageEvents.OnPlayerTakeDamage -= ReceiveDamage;
-            PlayerFireWeaponEvents.OnPlayerFireWeapon -= WeaponFired;
+            PlayerReceivedDamageEvents.OnPlayerTakeDamage -= PlayReceiveDamageHaptics;
+            PlayerFireWeaponEvents.OnPlayerFireWeapon -= PlayWeaponFireHaptics;
+            PlayerReloadEvents.OnPlayerReloaded -= PlayWeaponReloadHaptics;
             SteamVR_Events.NewPosesApplied.Remove(OnNewPoses);
+
+            GlueGunEvents.OnPressureUpdate -= GlueGunPressureHaptics;
 
             if (m_origin)
             {

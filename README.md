@@ -180,11 +180,11 @@ Try to get used to the game in Non-VR mode first before using!
 ## Features:
 	Works in multiplayer, with others not having to have the mod!
 	
-	Full SteamVR_Input binding support, you can play with all VR controllers, provided they have enough buttons 
+	Full SteamVR input binding support, you can play with all VR controllers, provided they have enough buttons 
 	for all the actions in GTFO. Most in-game actions are supported, if you're missing any let me know!
 	
 	Full VR controller based aiming (including fancy laserpointer)
-		
+	
 	Customized user interface for VR
 	
 	Main menu, map UI and terminal working correctly in VR
@@ -203,15 +203,6 @@ Try to get used to the game in Non-VR mode first before using!
 	send me the output log from the path given below:
 	AppData\LocalLow\10 Chambers Collective\GTFO\output_log.txt
 	
-## Contributors:
-
-	The mod wouldn't have been made as good as it is without contributions from: 
-	Knah: For being the driving force behind il2cpp modding and providing lots of help.
-	MrKerag: For providing an awesome custom made in-game watch model.
-	Peelz: For providing both coding and mental help during the il2cpp times.
-	The modding community of GTFO, for helping dissect the game's systems.
-	And most of all, all of the mod's players, for all the valuable feedback!
-
 
 ## Want to contribute?
 
