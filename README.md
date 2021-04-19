@@ -86,9 +86,10 @@ Try to get used to the game in Non-VR mode first before using!
 	-	Experimental performance tweaks 
 	-	Left handed mode 
 	-	No VR controller mode
+	- 	Shooting haptics - Toggle, strength
 	- 	IRL Crouching - Toggle, height tweak
 	-	Laser pointer - Toggle, color
-	-	Two handed aiming - Toggle, always on
+	-	Two handed aiming - Toggle, always on mode
 	- 	Snap turn - Amount, smooth turn, playspace recentering
 	-	Watch - Scale, color, number display for ammo
 	- 	VR Mod loading - SteamVR running check, global toggle
@@ -179,16 +180,18 @@ Try to get used to the game in Non-VR mode first before using!
 ## Features:
 	Works in multiplayer, with others not having to have the mod!
 	
-	Full SteamVR_Input binding support, you can play with all VR controllers, provided they have enough buttons 
+	Full SteamVR input binding support, you can play with all VR controllers, provided they have enough buttons 
 	for all the actions in GTFO. Most in-game actions are supported, if you're missing any let me know!
 	
 	Full VR controller based aiming (including fancy laserpointer)
-		
+	
 	Customized user interface for VR
 	
 	Main menu, map UI and terminal working correctly in VR
 	
 	Support for single or double handed aiming, gun stocks
+	
+	Haptics
 	
 	Snap turn
 	
@@ -199,6 +202,7 @@ Try to get used to the game in Non-VR mode first before using!
 	The IL2CPP build hasn't been tested thoroughly yet so crashes may occur. If one does occur,
 	send me the output log from the path given below:
 	AppData\LocalLow\10 Chambers Collective\GTFO\output_log.txt
+	
 
 ## Want to contribute?
 

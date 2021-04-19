@@ -49,5 +49,9 @@ namespace GTFO_VR.Core
         public static bool recenterOnSmoothTurn = true;
 
         public static bool useLaserPointer = true;
+
+        public static bool useHapticForShooting = true;
+
+        public static float shootingHapticsStrength = .75f;
     }
 }

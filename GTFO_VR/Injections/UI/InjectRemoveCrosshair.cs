@@ -20,4 +20,29 @@ namespace GTFO_VR_BepInEx.Core
             GuiManager.CrosshairLayer.SetVisible(false);
         }
     }
+
+    /// <summary>
+    /// Disable chargeup coroutines because they throw annoying errors
+    /// </summary>
+    [HarmonyPatch(typeof(CrosshairGuiLayer), nameof(CrosshairGuiLayer.TriggerChargeUpBlink))]
+    class InjectRemoveCrosshairChargeupCoroutineErrors
+    {
+        static bool Prefix()
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Disable chargeup coroutines because they throw annoying errors
+    /// </summary>
+    [HarmonyPatch(typeof(CrosshairGuiLayer), nameof(CrosshairGuiLayer.TriggerBlink))]
+    class InjectRemoveCrosshairChargeupCoroutineErrorTwo
+    {
+        static bool Prefix()
+        {
+            return false;
+        }
+    }
+
 }

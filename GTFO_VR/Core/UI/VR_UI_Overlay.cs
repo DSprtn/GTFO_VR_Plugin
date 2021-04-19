@@ -80,7 +80,6 @@ namespace GTFO_VR.Core.UI
 
                 if (SteamVR_InputHandler.GetActionDown(InputAction.Crouch) || SteamVR_InputHandler.GetActionDown(InputAction.Aim))
                 {
-                    Log.Debug("Reorientating overlay by input...");
                     OrientateOverlay();
                 }
             }

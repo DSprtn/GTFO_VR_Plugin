@@ -50,9 +50,17 @@
     <Compile Include="Events\FocusStateEvents.cs" />
     <Compile Include="Events\InventoryAmmoEvents.cs" />
     <Compile Include="Events\PlayerLocomotionEvents.cs" />
+    <Compile Include="Events\PlayerReloadEvents.cs" />
+    <Compile Include="Events\GlueGunEvents.cs" />
+    <Compile Include="Events\WeaponRecoilEvents.cs" />
+    <Compile Include="Events\PlayerReceivedDamageEvents.cs" />
     <Compile Include="Injections\Events\InjectFocusStateEvents.cs" />
     <Compile Include="Injections\Events\InjectInventoryAmmoUpdateEvent.cs" />
     <Compile Include="Injections\Events\InjectItemEquippableEvents.cs" />
+    <Compile Include="Injections\Events\InjectPlayerReloadEvents.cs" />
+    <Compile Include="Injections\Events\InjectGlueGunEvents.cs" />
+    <Compile Include="Injections\Events\InjectPlayerWeaponFireEvents.cs" />
+    <Compile Include="Injections\Events\InjectPlayerDamageEvents.cs" />
     <Compile Include="Injections\Events\InjectLadderPLOCEvent.cs" />
     <Compile Include="Injections\GameHooks\InjectPlayerGUIRef.cs" />
     <Compile Include="Injections\GameHooks\InjectVRStart.cs" />
