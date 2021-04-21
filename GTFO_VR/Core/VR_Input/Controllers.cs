@@ -109,6 +109,7 @@ namespace GTFO_VR.Core.VR_Input
             SteamVR_Behaviour_Pose steamVR_Behaviour_Pose = controller.AddComponent<SteamVR_Behaviour_Pose>();
             steamVR_Behaviour_Pose.inputSource = source;
             steamVR_Behaviour_Pose.broadcastDeviceChanges = true;
+            steamVR_Behaviour_Pose.rotationOffset = Quaternion.Euler(VRSettings.globalWeaponRotationOffset, 0, 0);
             return controller;
         }
 

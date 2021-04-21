@@ -53,5 +53,7 @@ namespace GTFO_VR.Core
         public static bool useHapticForShooting = true;
 
         public static float shootingHapticsStrength = .75f;
+
+        public static float globalWeaponRotationOffset = 0f;
     }
 }

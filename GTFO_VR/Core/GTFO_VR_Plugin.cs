@@ -114,6 +114,7 @@ namespace GTFO_VR.Core
         public ConfigEntry<bool> configUseHapticsForShooting;
         public ConfigEntry<string> configLaserPointerColorHex;
         public ConfigEntry<float> configShootingHapticsStrength;
+        public ConfigEntry<float> configWeaponRotationOffset;
 
         private void SetupConfig()
         {
@@ -145,6 +146,7 @@ namespace GTFO_VR.Core
             configLaserPointerColorHex = Config.Bind("Misc", "Hex color to use for laster pointer", "#eb8078", "Google hexcolor and paste whatever color you want here.");
             configUseHapticsForShooting = Config.Bind("Misc", "Use haptics for shooting?", true, "If true, haptics effect will trigger when shooting weapons.");
             configShootingHapticsStrength = Config.Bind("Misc", "Shooting haptic strength", .75f, "The strength of haptic feedback while shooting. (0.0 to 1.0)");
+            configWeaponRotationOffset = Config.Bind("Misc", "Weapon rotation offset", 12f, "Change this to rotate all weapons forward by the given amount of degrees (-45,45) --- \n'12' seems to work really well for the Quest and Index with the 'tip' action pose");
 
             Core.Log.Debug("VR enabled?" + configEnableVR.Value);
             Core.Log.Debug("Toggle VR by SteamVR running?" + configToggleVRBySteamVR.Value);
@@ -166,6 +168,7 @@ namespace GTFO_VR.Core
             Core.Log.Debug("Laserpointer on? " + configUseLaserPointerOnWeapons.Value);
             Core.Log.Debug("Haptics when shooting? " + configUseHapticsForShooting.Value);
             Core.Log.Debug("Haptics strength - " + configShootingHapticsStrength.Value);
+            Core.Log.Debug("Weapon rotation offset - " + configWeaponRotationOffset.Value);
 
             VRSettings.useVRControllers = configUseControllers.Value;
             VRSettings.crouchOnIRLCrouch = configIRLCrouch.Value;
@@ -183,6 +186,7 @@ namespace GTFO_VR.Core
             VRSettings.useLaserPointer = configUseLaserPointerOnWeapons.Value;
             VRSettings.useHapticForShooting = configUseHapticsForShooting.Value;
             VRSettings.shootingHapticsStrength = configShootingHapticsStrength.Value;
+            VRSettings.globalWeaponRotationOffset = Mathf.Clamp(configWeaponRotationOffset.Value, -45, 45);
 
             Util.ExtensionMethods.Hex(configWatchColorHex.Value, ref VRSettings.watchColor);
             Util.ExtensionMethods.Hex(configLaserPointerColorHex.Value, ref VRSettings.laserPointerColor);

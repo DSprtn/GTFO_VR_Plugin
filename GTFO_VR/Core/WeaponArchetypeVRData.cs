@@ -49,7 +49,7 @@ namespace GTFO_VR.Core
             {
                 { "Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
                 { "DefaultDoubleHanded", new VRWeaponData(new Vector3(0f, 0f, -0.05f), true) },
-                { "Melee", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "Melee", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f - VRSettings.globalWeaponRotationOffset, 0, 0)), false) },
 
                 { "Mine deployer", new VRWeaponData(new Vector3(0f, 0f, -.05f), false) },
                 { "Bio Tracker", new VRWeaponData(new Vector3(0f, 0f, -.05f), false) },
