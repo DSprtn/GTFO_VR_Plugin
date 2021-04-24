@@ -129,7 +129,7 @@ namespace GTFO_VR.Core.VR_Input
 
         private static bool IsIRLCrouchValid(InputAction action)
         {
-            return action.Equals(InputAction.Crouch) && VRSettings.crouchOnIRLCrouch && FocusStateEvents.currentState != eFocusState.MainMenu;
+            return action.Equals(InputAction.Crouch) && VRSettings.crouchOnIRLCrouch && FocusStateEvents.currentState == eFocusState.FPS;
         }
 
         public static float GetAxis(InputAction action)
