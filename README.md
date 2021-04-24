@@ -119,6 +119,10 @@ Try to get used to the game in Non-VR mode first before using!
 	The watch can be toggled between inventory and objectives with the ToggleWatchMode action.
 	
 	The watch UI is as follows ---
+	
+![image](https://user-images.githubusercontent.com/11588107/115968696-661fa180-a539-11eb-9c2b-9c988bc89a60.png)
+
+	
 	The top 5 bars represent the inventory slots, with ammo percentages (1 bar = 20%.)
 	Each bar is a mag of ammo, 20% of your tool ammo or a single use of a consumable item. 
 	On the bottom left there are bars for HP, infection and oxygen, they are each 20% a bar and are not visible 
