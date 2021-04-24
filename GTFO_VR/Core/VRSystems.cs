@@ -61,8 +61,17 @@ namespace GTFO_VR.Core
 
         public static void OnPlayerSpawned(FPSCamera fpsCamera, PlayerAgent playerAgent)
         {
+            Log.Info("Player and fpscamera have been spawned, references have been set...");
             m_currentFPSCameraRef = fpsCamera;
             m_currentPlayerAgentRef = playerAgent;
+
+            // Normally we add VR components after the player has been spawned
+            // If a player rejoins he is destroyed in the elevator and respawned, so we need to check if this happens and add VR components if needed
+            if(FocusStateEvents.IsInGame())
+            {
+                Log.Debug("Player spawned while an in-game state was active");
+                VRSystems.Current.HandleIngameFocus();
+            }
         }
 
         private void SetupOverlay()
@@ -133,16 +142,13 @@ namespace GTFO_VR.Core
 
         private void AppendVRComponents()
         {
-            
-            if (m_currentFPSCameraRef == null)
+            if (m_currentFPSCameraRef == null || m_currentPlayerAgentRef == null)
             {
-                Log.Error("Tried to spawn player but FPS camera ref was null!");
+                Log.Warning("Tried to spawn player but FPS camera or playeragent ref was null, this should never happen! Falling back to FindObjectOfType");
+                m_currentFPSCameraRef = FindObjectOfType<FPSCamera>();
+                m_currentPlayerAgentRef = m_currentFPSCameraRef.m_owner;
             }
 
-            if (m_currentPlayerAgentRef == null)
-            {
-                Log.Error("Tried to spawn player but playeragent ref was null!");
-            }
             m_player = m_currentFPSCameraRef.gameObject.AddComponent<VRPlayer>();
             m_player.Setup(m_currentFPSCameraRef, m_currentPlayerAgentRef);
             
