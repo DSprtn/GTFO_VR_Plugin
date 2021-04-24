@@ -34,6 +34,7 @@ namespace GTFO_VR.Core.VR_Input
 
         private bool m_wasInDoubleHandPosLastFrame = false;
 
+
         private void Awake()
         {
             SetupControllers();

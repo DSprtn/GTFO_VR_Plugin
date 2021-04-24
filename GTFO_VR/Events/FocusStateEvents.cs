@@ -1,4 +1,6 @@
-﻿namespace GTFO_VR.Events
+﻿using GTFO_VR.Core;
+
+namespace GTFO_VR.Events
 {
     /// <summary>
     /// Add event calls for focus state updates
@@ -18,15 +20,16 @@
         {
             if (OnFocusStateChange != null)
             {
+                Log.Debug($"Switching to state {state}");
                 currentState = state;
                 OnFocusStateChange.Invoke(state);
                 lastState = state;
             }
         }
 
-        public static bool IsInGameState(eFocusState state)
+        public static bool IsInGame()
         {
-            if (state.Equals(eFocusState.FPS) || state.Equals(eFocusState.InElevator))
+            if (currentState.Equals(eFocusState.FPS) || currentState.Equals(eFocusState.InElevator))
             {
                 return true;
             }

@@ -20,8 +20,6 @@ namespace GTFO_VR.Core
 
         public static bool twoHandedAimingEnabled = true;
 
-        public static bool disableCompass = true;
-
         public static bool alwaysDoubleHanded = false;
 
         public static float snapTurnAmount = 90f;

@@ -34,12 +34,6 @@ namespace GTFO_VR.UI
         // Compass will not be visible after this distance from the center of its rect
         private float m_compassCullDistance = 1.2f;
 
-        private void Awake()
-        {
-            SteamVR_Events.NewPosesApplied.Listen(OnNewPoses);
-            PlayerOrigin.OnOriginShift += SnapUIToPlayerView;
-        }
-
         private void OnNewPoses()
         {
             
@@ -85,6 +79,9 @@ namespace GTFO_VR.UI
             interactionBar.transform.FindDeepChild("Timer BG").gameObject.SetActive(false);
             CenterRect(intel.transform);
             CenterRect(compass.transform);
+
+            SteamVR_Events.NewPosesApplied.Listen(OnNewPoses);
+            PlayerOrigin.OnOriginShift += SnapUIToPlayerView;
         }
 
         private void SnapUIToPlayerView()
@@ -125,6 +122,11 @@ namespace GTFO_VR.UI
 
         private void UpdateStatus()
         {
+            if (m_statusBarHolder == null)
+            {
+                Log.Error("m_statusBarHolder bar was null!");
+                return;
+            }
             m_statusBarHolder.SetActive(interactGUI.IsVisible() && interactGUI.MessageVisible);
             if (m_statusBarHolder.activeSelf)
             {
@@ -135,6 +137,11 @@ namespace GTFO_VR.UI
 
         private void UpdateInteraction()
         {
+            if(m_interactionBarHolder == null)
+            {
+                Log.Error("m_interactionBarHolder was null!");
+                return;
+            }
             m_interactionBarHolder.SetActive(interactGUI.IsVisible() && interactGUI.InteractPromptVisible);
             if (m_interactionBarHolder.activeSelf)
             {
@@ -145,6 +152,11 @@ namespace GTFO_VR.UI
 
         private void UpdateCompass()
         {
+            if (m_compassHolder == null)
+            {
+                Log.Error("m_compassHolder bar was null!");
+                return;
+            }
             m_compassHolder.SetActive(playerGUI.IsVisible());
             if (m_compassHolder.activeSelf)
             {

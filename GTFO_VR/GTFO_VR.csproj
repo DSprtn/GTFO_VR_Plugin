@@ -37,8 +37,10 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Core\VRConfig.cs" />
     <Compile Include="Core\Log.cs" />
     <Compile Include="Core\PlayerBehaviours\ColisionFade.cs" />
+    <Compile Include="Core\PlayerBehaviours\Haptics.cs" />
     <Compile Include="Core\PlayerBehaviours\VRRendering.cs" />
     <Compile Include="Detours\BioscannerDetours.cs" />
     <Compile Include="Detours\TerminalInputDetours.cs" />
