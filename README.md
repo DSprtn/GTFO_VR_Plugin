@@ -126,7 +126,7 @@ Try to get used to the game in Non-VR mode first before using!
 	
 	The inventory watch UI is as follows ---
 	
-	![image](https://user-images.githubusercontent.com/11588107/115968678-47210f80-a539-11eb-9551-e7c274c28f34.png)
+![image](https://user-images.githubusercontent.com/11588107/115968678-47210f80-a539-11eb-9551-e7c274c28f34.png)
 
 	
 	The top 5 bars represent each of the inventory slots.
