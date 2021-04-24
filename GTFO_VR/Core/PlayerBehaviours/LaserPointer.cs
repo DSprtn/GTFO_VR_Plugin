@@ -31,7 +31,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             CreatePointerObjects();
         }
 
-        private void LateUpdate()
+        private void FixedUpdate()
         {
             if (transform.parent == null)
             {

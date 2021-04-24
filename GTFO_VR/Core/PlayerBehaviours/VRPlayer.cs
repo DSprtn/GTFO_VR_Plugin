@@ -107,6 +107,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 }
             }
             fpsCamera.m_camera.transform.parent.localRotation = Quaternion.Euler(HMD.GetVRCameraEulerRelativeToFPSCameraParent());
+            fpsCamera.UpdateCameraRay();
         }
 
         public static void UpdateHeldItemTransform()
