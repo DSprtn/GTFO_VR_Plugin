@@ -83,7 +83,7 @@ Try to get used to the game in Non-VR mode first before using!
 #### CONFIGURATION 
 	
 	There are configurable options for:
-	-	Experimental performance tweaks 
+	-	Rendering tweaks - Post-processing and other performance tweaks/hacks
 	-	Left handed mode 
 	-	No VR controller mode
 	- 	Shooting haptics - Toggle, strength
@@ -101,6 +101,9 @@ Try to get used to the game in Non-VR mode first before using!
 
 	Lower your render resolution in SteamVR and also the quality of the in-game settings. 
 	GTFO VR is a BIG resource hog!
+	
+	You can disable post processing effects like bloom or eye adaptation in the config to 
+	gain a good bit of performance.
 	
 	If you don't mind small artifacting on lights in exchange for a bit of extra performance
 	set light rendering mode to '2' or '3' in GTFO\BepInEx\config\com.Spartan.GTFO_VR_Plugin.cfg

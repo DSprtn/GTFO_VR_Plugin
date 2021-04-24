@@ -1,6 +1,7 @@
 ﻿using GTFO_VR.Events;
 using System;
 using UnityEngine;
+using UnityEngine.PostProcessing;
 using Valve.VR;
 
 namespace GTFO_VR.Core.PlayerBehaviours
@@ -21,6 +22,15 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
             m_fpsCamera = GetComponent<FPSCamera>();
             SteamVR_Render.eyePreRenderCallback += PrepareFrameForEye;
+            PostProcessEvents.OnPostProcessEventsEnabled += SetPostProcessConfigSettings;
+        }
+
+        private void SetPostProcessConfigSettings(PostProcessingBehaviour postProcess)
+        {
+            postProcess.m_Bloom.model.enabled = VRSettings.useBloomPostProcess;
+            postProcess.m_Vignette.model.enabled = VRSettings.useVignettePostProcess;
+            postProcess.m_EyeAdaptation.model.enabled = VRSettings.useEyeAdaptionPostProcess;
+            Log.Debug("Postprocess changes applied...");
         }
 
         private void PrepareFrameForEye(EVREye eye)
@@ -140,6 +150,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
+            PostProcessEvents.OnPostProcessEventsEnabled -= SetPostProcessConfigSettings;
             SteamVR_Render.eyePreRenderCallback -= PrepareFrameForEye;
         }
     }

@@ -28,6 +28,10 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<float> configShootingHapticsStrength;
         internal static ConfigEntry<float> configWeaponRotationOffset;
 
+        internal static ConfigEntry<bool> configPostVignette;
+        internal static ConfigEntry<bool> configPostBloom;
+        internal static ConfigEntry<bool> configPostEyeAdaptation;
+
         internal static void SetupConfig(ConfigFile file)
         {
             configEnableVR = file.Bind("Startup", "Run VR plugin?", true, "If true, game will start in VR");
@@ -43,23 +47,30 @@ namespace GTFO_VR.Core
             configSmoothSnapTurn = file.Bind("Input", "Use smooth turning?", false, "If true, will use smooth turn instead of snap turn");
             configRecenterPlayspaceDuringSmoothTurn = file.Bind("Input", "Recenter playspace on smoothturn?", true, "If true, will recenter the player collision and playspace during turning. \nMight result in a little bit of teleporting on the first frame you use smoothturn, but will keep collisions in sync better.");
 
-            configLightResMode = file.Bind("Experimental performance tweaks", "Light/fog render resolution tweak - the lower the resolution the greater the performance gain!", 1,
+
+            configPostVignette = file.Bind("Rendering - PostProcessing", "Use vignette effect? (Darkened edges of screen)", false, "If false, will disable the vignette effect in-game.");
+            configPostBloom = file.Bind("Rendering - PostProcessing", "Use bloom effect? (Glow on bright lights)", true, "If false, will disable the bloom effect in-game. PERFORMANCE BOOST! ");
+            configPostEyeAdaptation = file.Bind("Rendering - PostProcessing", "Use eye adaptation? (Simulate the way a human eye adapts to light changes)", true, "If false, will disable eye adaptation. !Gives a pretty nice performance boost! ");
+
+            configLightResMode = file.Bind("Rendering - Experimental", "Light/fog render resolution tweak - the lower the resolution the greater the performance gain!", 1,
                 "0 = Native HMD resolution, looks great but requires a beastly PC" +
                 "\n1 = 75% resolution (light shimmering on fog, performance increase)" +
                 "\n2 = 60% resolution (Medium shimmering, small light artifacts, big performance increase)" +
                 "\n3 = 30% resolution (Medium artifacting on lights and fog, great performance increase)");
 
-            configAlternateEyeRendering = file.Bind("Experimental performance tweaks", "Alternate light and shadow rendering per frame per eye", false, "If true will alternate between eyes when drawing lights and shadows each frame, \n might look really janky so only use this if you absolutely want to play this in VR but don't have the rig for it!");
+            configAlternateEyeRendering = file.Bind("Rendering - Experimental", "Alternate light and shadow rendering per frame per eye", false, "If true will alternate between eyes when drawing lights and shadows each frame, \n might look really janky so only use this if you absolutely want to play this in VR but don't have the rig for it!");
 
-            configWatchScaling = file.Bind("Misc", "Watch scale multiplier", 1.00f, "Size of the watch in-game will be multiplied by this value down to half of its default size or up to double (0.5 or 2.0)");
-            configUseNumbersForAmmoDisplay = file.Bind("Misc", "Use numbers for ammo display?", false, "If true, current ammo and max ammo will be displayed as numbers on the watch");
-            configWatchColorHex = file.Bind("Misc", "Hex color to use for watch", "#ffffff", "Google hexcolor and paste whatever color you want here");
+            configWatchScaling = file.Bind("Watch", "Watch scale multiplier", 1.00f, "Size of the watch in-game will be multiplied by this value down to half of its default size or up to double (0.5 or 2.0)");
+            configUseNumbersForAmmoDisplay = file.Bind("Watch", "Use numbers for ammo display?", false, "If true, current ammo and max ammo will be displayed as numbers on the watch");
+            configWatchColorHex = file.Bind("Watch", "Hex color to use for watch", "#ffffff", "Google hexcolor and paste whatever color you want here");
 
-            configUseLaserPointerOnWeapons = file.Bind("Misc", "Use laser pointer on weapons?", true, "If true, all weapons will have a laser pointer.");
-            configLaserPointerColorHex = file.Bind("Misc", "Hex color to use for laster pointer", "#eb8078", "Google hexcolor and paste whatever color you want here.");
-            configUseHapticsForShooting = file.Bind("Misc", "Use haptics for shooting?", true, "If true, haptics effect will trigger when shooting weapons.");
-            configShootingHapticsStrength = file.Bind("Misc", "Shooting haptic strength", .75f, "The strength of haptic feedback while shooting. (0.0 to 1.0)");
-            configWeaponRotationOffset = file.Bind("Misc", "Weapon rotation offset", 12f, "Change this to rotate all weapons forward by the given amount of degrees (-45,45) --- \n'12' seems to work really well for the Quest and Index with the 'tip' action pose");
+            configUseLaserPointerOnWeapons = file.Bind("Laser pointer", "Use laser pointer on weapons?", true, "If true, all weapons will have a laser pointer.");
+            configLaserPointerColorHex = file.Bind("Laser pointer", "Hex color to use for laster pointer", "#eb8078", "Google hexcolor and paste whatever color you want here.");
+            configUseHapticsForShooting = file.Bind("Haptics", "Use haptics for shooting?", true, "If true, haptics effect will trigger when shooting weapons.");
+            configShootingHapticsStrength = file.Bind("Haptics", "Shooting haptic strength", .75f, "The strength of haptic feedback while shooting. (0.0 to 1.0)");
+            configWeaponRotationOffset = file.Bind("Misc", "Weapon forward rotation offset in degrees", 12f, "Change this to rotate all weapons forward by the given amount of degrees (-45,45) --- \n'12' seems to work really well for the Quest and Index with the 'tip' action pose");
+
+
 
             Log.Debug("VR enabled?" + configEnableVR.Value);
             Log.Debug("Toggle VR by SteamVR running?" + configToggleVRBySteamVR.Value);
@@ -83,6 +94,11 @@ namespace GTFO_VR.Core
             Log.Debug("Haptics strength - " + configShootingHapticsStrength.Value);
             Log.Debug("Weapon rotation offset - " + configWeaponRotationOffset.Value);
 
+
+            Log.Debug("Use eye adaptation? " + configPostEyeAdaptation.Value);
+            Log.Debug("Use vignette? " + configPostVignette.Value);
+            Log.Debug("Use bloom? " + configPostBloom.Value);
+
             VRSettings.useVRControllers = configUseControllers.Value;
             VRSettings.crouchOnIRLCrouch = configIRLCrouch.Value;
             VRSettings.lightRenderMode = configLightResMode.Value;
@@ -100,6 +116,10 @@ namespace GTFO_VR.Core
             VRSettings.useHapticForShooting = configUseHapticsForShooting.Value;
             VRSettings.shootingHapticsStrength = configShootingHapticsStrength.Value;
             VRSettings.globalWeaponRotationOffset = Mathf.Clamp(configWeaponRotationOffset.Value, -45, 45);
+
+            VRSettings.useBloomPostProcess = configPostBloom.Value;
+            VRSettings.useEyeAdaptionPostProcess = configPostEyeAdaptation.Value;
+            VRSettings.useVignettePostProcess = configPostVignette.Value;
 
             Util.ExtensionMethods.Hex(configWatchColorHex.Value, ref VRSettings.watchColor);
             Util.ExtensionMethods.Hex(configLaserPointerColorHex.Value, ref VRSettings.laserPointerColor);

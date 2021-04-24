@@ -53,5 +53,8 @@ namespace GTFO_VR.Core
         public static float shootingHapticsStrength = .75f;
 
         public static float globalWeaponRotationOffset = 0f;
+        internal static bool useBloomPostProcess;
+        internal static bool useVignettePostProcess;
+        internal static bool useEyeAdaptionPostProcess;
     }
 }
