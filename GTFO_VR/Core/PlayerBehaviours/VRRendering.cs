@@ -1,4 +1,5 @@
-﻿using GTFO_VR.Events;
+﻿using GTFO_VR.Core.VR_Input;
+using GTFO_VR.Events;
 using System;
 using UnityEngine;
 using UnityEngine.PostProcessing;
@@ -22,15 +23,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
             m_fpsCamera = GetComponent<FPSCamera>();
             SteamVR_Render.eyePreRenderCallback += PrepareFrameForEye;
-            PostProcessEvents.OnPostProcessEventsEnabled += SetPostProcessConfigSettings;
-        }
-
-        private void SetPostProcessConfigSettings(PostProcessingBehaviour postProcess)
-        {
-            postProcess.m_Bloom.model.enabled = VRSettings.useBloomPostProcess;
-            postProcess.m_Vignette.model.enabled = VRSettings.useVignettePostProcess;
-            postProcess.m_EyeAdaptation.model.enabled = VRSettings.useEyeAdaptionPostProcess;
-            Log.Debug("Postprocess changes applied...");
         }
 
         private void PrepareFrameForEye(EVREye eye)
@@ -45,6 +37,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
 
             DoUglyCameraHack();
+
+            FixHeadAttachedFlashlightPos();
 
             m_fpsCamera.m_cullingCamera.RunVisibilityOnPreCull();
             m_fpsCamera.m_preRenderCmds.Clear();
@@ -63,6 +57,15 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
 
             PrepareFrame();
+        }
+
+        private void FixHeadAttachedFlashlightPos()
+        {
+            if(!ItemEquippableEvents.CurrentItemHasFlashlight())
+            {
+                Transform flashlight = m_fpsCamera.m_owner.Inventory.m_flashlight.transform;
+                flashlight.position = HMD.Hmd.transform.TransformPoint(m_fpsCamera.m_owner.Inventory.m_flashlightCameraOffset + new Vector3(0,0,-.1f));
+            }
         }
 
         private void PrepareFrame()
@@ -150,7 +153,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
-            PostProcessEvents.OnPostProcessEventsEnabled -= SetPostProcessConfigSettings;
             SteamVR_Render.eyePreRenderCallback -= PrepareFrameForEye;
         }
     }
