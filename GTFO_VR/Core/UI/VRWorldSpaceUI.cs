@@ -36,7 +36,6 @@ namespace GTFO_VR.UI
 
         private void OnNewPoses()
         {
-            
             UpdateWorldSpaceUI();
         }
 

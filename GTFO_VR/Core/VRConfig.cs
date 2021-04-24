@@ -34,6 +34,7 @@ namespace GTFO_VR.Core
 
         internal static void SetupConfig(ConfigFile file)
         {
+            
             configEnableVR = file.Bind("Startup", "Run VR plugin?", true, "If true, game will start in VR");
             configToggleVRBySteamVR = file.Bind("Startup", "Start in pancake if SteamVR is off?", true, "If true, will start the game in pancake mode if SteamVR is not detected");
 
@@ -49,14 +50,14 @@ namespace GTFO_VR.Core
 
 
             configPostVignette = file.Bind("Rendering - PostProcessing", "Use vignette effect? (Darkened edges of screen)", false, "If false, will disable the vignette effect in-game.");
-            configPostBloom = file.Bind("Rendering - PostProcessing", "Use bloom effect? (Glow on bright lights)", true, "If false, will disable the bloom effect in-game. PERFORMANCE BOOST! ");
-            configPostEyeAdaptation = file.Bind("Rendering - PostProcessing", "Use eye adaptation? (Simulate the way a human eye adapts to light changes)", true, "If false, will disable eye adaptation. !Gives a pretty nice performance boost! ");
+            configPostBloom = file.Bind("Rendering - PostProcessing", "Use bloom effect? (Glow on bright lights)", true, "If false, will disable the bloom effect in-game. Gives a nice performance boost if it's disabled! ");
+            configPostEyeAdaptation = file.Bind("Rendering - PostProcessing", "Use eye adaptation? (Simulate the way a human eye adapts to light changes)", true, "If false, will disable eye adaptation. Gives a nice performance boost if it's disabled!");
 
             configLightResMode = file.Bind("Rendering - Experimental", "Light/fog render resolution tweak - the lower the resolution the greater the performance gain!", 1,
                 "0 = Native HMD resolution, looks great but requires a beastly PC" +
-                "\n1 = 75% resolution (light shimmering on fog, performance increase)" +
+                "\n1 = 75% resolution (Almost unnoticeable light shimmering on fog, good performance increase)" +
                 "\n2 = 60% resolution (Medium shimmering, small light artifacts, big performance increase)" +
-                "\n3 = 30% resolution (Medium artifacting on lights and fog, great performance increase)");
+                "\n3 = 30% resolution (Small artifacting on lights/shadows, shimmering on fog, great performance increase)");
 
             configAlternateEyeRendering = file.Bind("Rendering - Experimental", "Alternate light and shadow rendering per frame per eye", false, "If true will alternate between eyes when drawing lights and shadows each frame, \n might look really janky so only use this if you absolutely want to play this in VR but don't have the rig for it!");
 

@@ -49,7 +49,6 @@
     <Compile Include="Core\VRSettings.cs" />
     <Compile Include="Core\VRAssets.cs" />
     <Compile Include="Core\VR_Input\VRKeyboard.cs" />
-    <Compile Include="Events\PostProcessEvents.cs" />
     <Compile Include="Events\FocusStateEvents.cs" />
     <Compile Include="Events\InventoryAmmoEvents.cs" />
     <Compile Include="Events\PlayerLocomotionEvents.cs" />
@@ -67,7 +66,7 @@
     <Compile Include="Injections\Events\InjectLadderPLOCEvent.cs" />
     <Compile Include="Injections\GameHooks\InjectPlayerGUIRef.cs" />
     <Compile Include="Injections\GameHooks\InjectVRStart.cs" />
-    <Compile Include="Injections\GameHooks\InjectPostProcessEvents.cs" />
+    <Compile Include="Injections\Rendering\InjectPostProcessTweaks.cs" />
     <Compile Include="Injections\Input\InjectAimCursorWithVRControllerInOverlay.cs" />
     <Compile Include="Injections\Gameplay\InjectBioscannerFixes.cs" />
     <Compile Include="Injections\Rendering\InjectClusteredRenderingResolutionTweak.cs" />
