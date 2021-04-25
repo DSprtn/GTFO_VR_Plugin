@@ -22,8 +22,6 @@ Try to get used to the game in Non-VR mode first before using!
  	1. Download and extract BepInEx 6.0.0 into your GTFO game folder (SteamLibrary\steamapps\common\GTFO\)
 	from https://builds.bepis.io/projects/bepinex_be/350/BepInEx_UnityIL2CPP_x64_07a69cf_6.0.0-be.350.zip
 	
-	NOTE: This file is also available in the latest release because the bepinex servers are currently down!
-	
 	You can also find the GTFO game path by doing the following:
 	Right click GTFO in your Steam library, go into Properties->Local Files->Browse
 	
