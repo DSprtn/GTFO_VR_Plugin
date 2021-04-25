@@ -54,7 +54,7 @@ namespace GTFO_VR.Core
 
         public static float globalWeaponRotationOffset = 0f;
 
-        internal static bool useBloomPostProcess = true;
+        internal static bool useBloomPostProcess = false;
 
         internal static bool useVignettePostProcess = false;
 

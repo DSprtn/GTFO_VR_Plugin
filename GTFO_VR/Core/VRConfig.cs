@@ -50,8 +50,8 @@ namespace GTFO_VR.Core
 
 
             configPostVignette = file.Bind("Rendering - PostProcessing", "Use vignette effect? (Darkened edges of screen)", false, "If false, will disable the vignette effect in-game.");
-            configPostBloom = file.Bind("Rendering - PostProcessing", "Use bloom effect? (Glow on bright lights)", true, "If false, will disable the bloom effect in-game. Gives a nice performance boost if it's disabled! ");
-            configPostEyeAdaptation = file.Bind("Rendering - PostProcessing", "Use eye adaptation? (Simulate the way a human eye adapts to light changes)", true, "If false, will disable eye adaptation. Gives a nice performance boost if it's disabled!");
+            configPostBloom = file.Bind("Rendering - PostProcessing", "Use bloom effect? (Glow on bright lights)", false, "If false, will disable the bloom effect in-game. Gives a VERY nice performance boost if it's disabled! (1.5-2.0 ms!) ");
+            configPostEyeAdaptation = file.Bind("Rendering - PostProcessing", "Use eye adaptation? (Simulate the way a human eye adapts to light changes)", true, "If false, will disable eye adaptation. Gives a very slight performance boost if disabled (0.1-0.2ms.) Will make dark areas much darker though!");
 
             configLightResMode = file.Bind("Rendering - Experimental", "Light/fog render resolution tweak - the lower the resolution the greater the performance gain!", 1,
                 "0 = Native HMD resolution, looks great but requires a beastly PC" +

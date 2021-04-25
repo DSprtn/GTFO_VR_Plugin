@@ -1,5 +1,4 @@
 ﻿using BepInEx;
-using BepInEx.Configuration;
 using BepInEx.IL2CPP;
 using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.UI;
@@ -10,7 +9,6 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnhollowerRuntimeLib;
-using Mathf = SteamVR_Standalone_IL2CPP.Util.Mathf;
 
 namespace GTFO_VR.Core
 {
@@ -24,14 +22,10 @@ namespace GTFO_VR.Core
             MODNAME = "GTFO_VR_Plugin",
             AUTHOR = "Spartan",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "0.8.4.1";
-
-        public static GTFO_VR_Plugin Current;
+            VERSION = "0.8.5.0";
 
         public override void Load()
         {
-            Current = this;
-
             Core.Log.Setup(BepInEx.Logging.Logger.CreateLogSource(MODNAME));
             Core.Log.Info("Loading VR plugin...");
 
@@ -49,10 +43,11 @@ namespace GTFO_VR.Core
 
         private void InjectVR()
         {
-            Harmony harmony = new Harmony("com.github.dsprtn.gtfovr");
             SetupIL2CPPClassInjections();
             TerminalInputDetours.HookAll();
             BioscannerDetours.HookAll();
+
+            Harmony harmony = new Harmony("com.github.dsprtn.gtfovr");
             harmony.PatchAll();
         }
 
@@ -95,6 +90,5 @@ namespace GTFO_VR.Core
             }
             return possibleVRProcesses.Count > 0;
         }
-
     }
 }
