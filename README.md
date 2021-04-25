@@ -105,7 +105,7 @@ Try to get used to the game in Non-VR mode first before using!
 	You can disable post processing effects like bloom or eye adaptation in the config to 
 	gain a good bit of performance.
 	
-	If you don't mind small artifacting on lights in exchange for a bit of extra performance
+	If you don't mind small artifacting on lights and fog in exchange for a bit of extra performance
 	set light rendering mode to '2' or '3' in GTFO\BepInEx\config\com.Spartan.GTFO_VR_Plugin.cfg
 	
 	There is now also a setting to alternate rendering of lights and shadows per eye, per frame. This WILL
@@ -118,13 +118,16 @@ Try to get used to the game in Non-VR mode first before using!
 
 	Double handed aiming is triggered by the proximity of your offhand (the one without a weapon) to
 	the weapon grip. Bring your offhand to the gun's grip as you would IRL and you will enable it. 
-	Bring your offhand far enough apart and you will disable it.
+	Bring your offhand far enough away and you will disable it.
 	
 #### WATCH
 	
 	The watch can be toggled between inventory and objectives with the ToggleWatchMode action.
 	
-	The watch UI is as follows ---
+	The inventory watch UI is as follows ---
+	
+![image](https://user-images.githubusercontent.com/11588107/115968678-47210f80-a539-11eb-9551-e7c274c28f34.png)
+
 	
 	The top 5 bars represent each of the inventory slots.
 	Each bar is a mag of ammo, 20% of your tool ammo or a single use of a consumable item. 
