@@ -22,7 +22,7 @@ namespace GTFO_VR.Core
             MODNAME = "GTFO_VR_Plugin",
             AUTHOR = "Spartan",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "0.8.5.0";
+            VERSION = "0.9.0.0";
 
         public override void Load()
         {
@@ -46,6 +46,7 @@ namespace GTFO_VR.Core
             SetupIL2CPPClassInjections();
             TerminalInputDetours.HookAll();
             BioscannerDetours.HookAll();
+            HammerAttackCheckDetour.HookAll();
 
             Harmony harmony = new Harmony("com.github.dsprtn.gtfovr");
             harmony.PatchAll();
@@ -68,6 +69,7 @@ namespace GTFO_VR.Core
             ClassInjector.RegisterTypeInIl2Cpp<Haptics>();
             ClassInjector.RegisterTypeInIl2Cpp<Snapturn>();
             ClassInjector.RegisterTypeInIl2Cpp<Watch>();
+            ClassInjector.RegisterTypeInIl2Cpp<VRHammer>();
             ClassInjector.RegisterTypeInIl2Cpp<DividedBarShaderController>();
         }
 

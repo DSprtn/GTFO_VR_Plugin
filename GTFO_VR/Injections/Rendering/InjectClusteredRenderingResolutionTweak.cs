@@ -25,8 +25,8 @@ namespace GTFO_VR.Injections.Rendering
             }
             else if (VRSettings.lightRenderMode.Equals(2))
             {
-                HMDRes.width = Mathf.FloorToInt(HMDRes.width * .6f);
-                HMDRes.height = Mathf.FloorToInt(HMDRes.height * .6f);
+                HMDRes.width = Mathf.FloorToInt(HMDRes.width * .5f);
+                HMDRes.height = Mathf.FloorToInt(HMDRes.height * .5f);
             }
             else if (VRSettings.lightRenderMode.Equals(3))
             {

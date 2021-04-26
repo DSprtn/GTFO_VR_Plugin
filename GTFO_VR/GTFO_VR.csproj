@@ -37,12 +37,14 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Core\PlayerBehaviours\VRHammer.cs" />
     <Compile Include="Core\VRConfig.cs" />
     <Compile Include="Core\Log.cs" />
     <Compile Include="Core\PlayerBehaviours\ColisionFade.cs" />
     <Compile Include="Core\PlayerBehaviours\Haptics.cs" />
     <Compile Include="Core\PlayerBehaviours\VRRendering.cs" />
     <Compile Include="Detours\BioscannerDetours.cs" />
+    <Compile Include="Detours\HammerAttackCheckDetour.cs" />
     <Compile Include="Detours\TerminalInputDetours.cs" />
     <Compile Include="Core\PlayerBehaviours\PlayerOrigin.cs" />
     <Compile Include="Core\PlayerBehaviours\Snapturn.cs" />
@@ -54,11 +56,13 @@
     <Compile Include="Events\PlayerLocomotionEvents.cs" />
     <Compile Include="Events\PlayerReloadEvents.cs" />
     <Compile Include="Events\GlueGunEvents.cs" />
+    <Compile Include="Events\HammerEvents.cs" />
     <Compile Include="Events\WeaponRecoilEvents.cs" />
     <Compile Include="Events\PlayerReceivedDamageEvents.cs" />
     <Compile Include="Injections\Events\InjectFocusStateEvents.cs" />
     <Compile Include="Injections\Events\InjectInventoryAmmoUpdateEvent.cs" />
     <Compile Include="Injections\Events\InjectItemEquippableEvents.cs" />
+    <Compile Include="Injections\Events\InjectHammerChargeEvents.cs" />
     <Compile Include="Injections\Events\InjectPlayerReloadEvents.cs" />
     <Compile Include="Injections\Events\InjectGlueGunEvents.cs" />
     <Compile Include="Injections\Events\InjectPlayerWeaponFireEvents.cs" />

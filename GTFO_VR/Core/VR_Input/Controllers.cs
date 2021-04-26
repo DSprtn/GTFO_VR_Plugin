@@ -26,6 +26,8 @@ namespace GTFO_VR.Core.VR_Input
 
         private static GameObject RightController;
 
+        public static SteamVR_Behaviour_Pose mainControllerPose;
+
         public static bool aimingTwoHanded;
 
         private float m_doubleHandStartDistance = .08f;
@@ -66,6 +68,7 @@ namespace GTFO_VR.Core.VR_Input
                 mainControllerType = HandType.Left;
                 offHandControllerType = HandType.Right;
             }
+            mainControllerPose = mainController.GetComponent<SteamVR_Behaviour_Pose>();
         }
 
         private void SetupControllers()

@@ -12,8 +12,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
         }
 
-        private float lastGlueGunVibrateTime;
-        private float glueGunVibrationDelay = 0.1f;
+        private float lastVibrateTime;
+        private float vibrationDelay = 0.1f;
 
         public void Setup()
         {
@@ -21,9 +21,50 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerFireWeaponEvents.OnPlayerFireWeapon += PlayWeaponFireHaptics;
             PlayerReloadEvents.OnPlayerReloaded += PlayWeaponReloadHaptics;
             GlueGunEvents.OnPressureUpdate += GlueGunPressureHaptics;
+            HammerEvents.OnHammerCharging += HammerCharging;
+            HammerEvents.OnHammerSmack += HammerSmack;
         }
 
+        private void HammerSmack(float dmg)
+        {
+            if (!VRSettings.useHapticForShooting)
+            {
+                return;
+            }
 
+            float duration = 0.15f;
+            float frequency = 55f;
+
+            dmg = dmg.RemapClamped(0, 1, 0.10f, VRSettings.shootingHapticsStrength);
+            
+            SteamVR_InputHandler.TriggerHapticPulse(Mathf.Lerp(duration, duration * 2.5f, dmg),
+                Mathf.Lerp(frequency, frequency * 1.3f, dmg),
+                Mathf.Lerp(0.1f, 1f, dmg),
+                Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
+        }
+
+        private void HammerCharging(float pressure)
+        {
+            if (!VRSettings.useHapticForShooting)
+            {
+                return;
+            }
+
+            if (pressure > 0.02f && Time.time > lastVibrateTime)
+            {
+                float intensity = pressure;
+                float duration = 0.1f;
+                float frequency = Mathf.Lerp(20, 30, pressure);
+
+                SteamVR_InputHandler.TriggerHapticPulse(
+              Mathf.Lerp(duration, duration * 1.5f, intensity),
+              Mathf.Lerp(frequency, frequency * 1.5f, intensity),
+              2f,
+              Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
+
+                lastVibrateTime = Time.time + vibrationDelay;
+            }
+        }
 
         private void GlueGunPressureHaptics(float pressure)
         {
@@ -31,7 +72,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 return;
             }
-            if (pressure > 0.05f && Time.time > lastGlueGunVibrateTime)
+            if (pressure > 0.05f && Time.time > lastVibrateTime)
             {
                 //hapticDelay = Mathf.Lerp(baseHapticDelay, baseHapticDelay / 2f, strength);
                 float intensity = pressure;
@@ -44,7 +85,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
               intensity,
               Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
 
-                lastGlueGunVibrateTime = Time.time + glueGunVibrationDelay;
+                lastVibrateTime = Time.time + vibrationDelay;
             }
         }
 
@@ -119,6 +160,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerFireWeaponEvents.OnPlayerFireWeapon -= PlayWeaponFireHaptics;
             PlayerReloadEvents.OnPlayerReloaded -= PlayWeaponReloadHaptics;
             GlueGunEvents.OnPressureUpdate -= GlueGunPressureHaptics;
+            HammerEvents.OnHammerCharging -= HammerCharging;
+            HammerEvents.OnHammerSmack -= HammerSmack;
         }
     }
 }
