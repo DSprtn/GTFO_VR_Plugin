@@ -9,6 +9,9 @@ using UnityEngine;
 
 namespace GTFO_VR.Core.PlayerBehaviours
 {
+    /// <summary>
+    /// For now the only purpose of this class is to disable the melee weapon's animations
+    /// </summary>
     public class VRHammer : MonoBehaviour
     {
         public VRHammer(IntPtr value) : base(value)
