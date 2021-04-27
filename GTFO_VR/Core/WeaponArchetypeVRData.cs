@@ -17,12 +17,14 @@ namespace GTFO_VR.Core
             public Vector3 positonOffset;
             public bool allowsDoubleHanded;
             public Quaternion rotationOffset;
+            public float scaleMultiplier;
 
             public VRWeaponData(Vector3 transformToGrip, bool doubleHandedAim)
             {
                 positonOffset = transformToGrip;
                 allowsDoubleHanded = doubleHandedAim;
                 rotationOffset = Quaternion.identity;
+                scaleMultiplier = 1.1f;
             }
 
             public VRWeaponData(Vector3 posToGripOffset, Quaternion rotationOffset, bool doubleHandedAim)
@@ -30,6 +32,23 @@ namespace GTFO_VR.Core
                 positonOffset = posToGripOffset;
                 allowsDoubleHanded = doubleHandedAim;
                 this.rotationOffset = rotationOffset;
+                scaleMultiplier = 1.1f;
+            }
+
+            public VRWeaponData(Vector3 posToGripOffset,bool doubleHandedAim, float scaleMult)
+            {
+                positonOffset = posToGripOffset;
+                allowsDoubleHanded = doubleHandedAim;
+                this.rotationOffset = Quaternion.identity;
+                scaleMultiplier = scaleMult;
+            }
+
+            public VRWeaponData(Vector3 posToGripOffset, Quaternion rotationOffset, bool doubleHandedAim, float scaleMult)
+            {
+                positonOffset = posToGripOffset;
+                allowsDoubleHanded = doubleHandedAim;
+                this.rotationOffset = rotationOffset;
+                scaleMultiplier = scaleMult;
             }
         }
 
@@ -48,13 +67,12 @@ namespace GTFO_VR.Core
             weaponArchetypes = new Dictionary<string, VRWeaponData>
             {
                 { "Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
-                { "DefaultDoubleHanded", new VRWeaponData(new Vector3(0f, 0f, -0.05f), true) },
-                { "Melee", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f - VRSettings.globalWeaponRotationOffset, 0, 0)), false) },
-
+                { "Melee", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f - VRSettings.globalWeaponRotationOffset, 0, 0)), false, 1.15f) },
+                
                 { "Mine deployer", new VRWeaponData(new Vector3(0f, 0f, -.05f), false) },
-                { "Bio Tracker", new VRWeaponData(new Vector3(0f, 0f, -.05f), false) },
+                { "Bio Tracker", new VRWeaponData(new Vector3(0f, 0f, -.05f), false, 1.45f) },
 
-                { "Pistol", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
+                { "Pistol", new VRWeaponData(new Vector3(0f, 0f, 0f), false, 1.1f) },
                 { "Revolver", new VRWeaponData(new Vector3(0f, -.01f, 0f), false) },
                 { "HEL Revolver", new VRWeaponData(new Vector3(.0f, 0f, 0f), false) },
                 { "Autorevolver", new VRWeaponData(new Vector3(.0f, 0f, 0f), false) },
@@ -89,22 +107,34 @@ namespace GTFO_VR.Core
 
         private static void PlayerSwitchedWeapon(ItemEquippable item)
         {
+            float muzzleDistance = 0;
+            if(item.MuzzleAlign)
+            {
+                muzzleDistance = Vector3.Distance(item.transform.position, item.MuzzleAlign.position);
+            }
+            
+            Log.Debug($"Item {item.ArchetypeName} - MuzzleDistance {muzzleDistance} - Allows DH? {muzzleDistance > 0.25f}");
+
             if (weaponArchetypes.TryGetValue(item.ArchetypeName, out VRWeaponData data))
             {
                 m_current = data;
+                item.transform.localScale = Vector3.one * m_current.scaleMultiplier;
             }
             else
             {
                 if (item.ItemDataBlock.inventorySlot.Equals(Player.InventorySlot.GearStandard) || item.ItemDataBlock.inventorySlot.Equals(Player.InventorySlot.GearSpecial))
                 {
-                    m_current = weaponArchetypes["DefaultDoubleHanded"];
+                    VRWeaponData currentData = new VRWeaponData(Vector3.zero, Quaternion.identity, false);
+                    currentData.allowsDoubleHanded = muzzleDistance > 0.25f;
+                    weaponArchetypes.Add(item.ArchetypeName, currentData);
+                    m_current = currentData;
+                    Log.Debug($"Item {item.ArchetypeName} - MuzzleDistance {muzzleDistance} - Allows DH? {currentData.allowsDoubleHanded}");
                 }
                 else
                 {
                     m_current = weaponArchetypes["Default"];
                 }
             }
-            CalculateGripOffset();
         }
 
         public static Vector3 CalculateGripOffset()
