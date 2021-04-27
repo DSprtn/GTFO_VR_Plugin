@@ -111,6 +111,12 @@ Try to get used to the game in Non-VR mode first before using!
 	
 ### MISC IN-GAME ACTIONS
 
+#### HAMMER
+
+	You have to charge the hammer just like in non-VR GTFO. Release the button at the beginning of your swing
+	and you will have a ~.7s window to make a hit with it.
+
+
 #### AIMING
 
 	Double handed aiming is triggered by the proximity of your offhand (the one without a weapon) to
@@ -203,7 +209,7 @@ Try to get used to the game in Non-VR mode first before using!
 ## Known issues: 
 
 	The IL2CPP build hasn't been tested thoroughly yet so crashes may occur. If one does occur,
-	send me the output log from the path given below:
+	send me the output log from the path given below (before starting another game!):
 	SteamApps/GTFO/Bepinex/LogOutput.log
 	
 
