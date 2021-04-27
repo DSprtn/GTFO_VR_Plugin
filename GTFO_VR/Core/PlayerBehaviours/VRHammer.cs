@@ -1,4 +1,5 @@
 ﻿using Gear;
+using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
         }
 
+        public static float hammerSizeMult = 0.8f;
+
         MeleeWeaponFirstPerson m_weapon;
         Transform m_animatorRoot;
 
@@ -29,7 +32,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         void LateUpdate()
         {
-            if(FocusStateEvents.currentState == eFocusState.FPS) {
+            if (FocusStateEvents.currentState == eFocusState.FPS) {
                 m_animatorRoot.transform.localPosition = Vector3.zero;
                 m_animatorRoot.transform.localRotation = Quaternion.identity;
             }

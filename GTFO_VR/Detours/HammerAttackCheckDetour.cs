@@ -6,6 +6,7 @@ using GTFO_VR.Core;
 using GTFO_VR.Core.VR_Input;
 using Gear;
 using System.Collections.Generic;
+using GTFO_VR.Core.PlayerBehaviours;
 
 namespace GTFO_VR.Detours
 {
@@ -31,7 +32,7 @@ namespace GTFO_VR.Detours
 
         private unsafe static bool OurAttackCheck(IntPtr thisPtr, IntPtr attackData, float sphereRad, float elapsedTime, out IntPtr hits)
         {
-            bool result = OriginalScannerMethod(thisPtr, attackData, sphereRad, elapsedTime, out hits);
+            bool result = OriginalScannerMethod(thisPtr, attackData, sphereRad * VRHammer.hammerSizeMult, elapsedTime, out hits);
 
             if (Controllers.mainControllerPose.GetVelocity().magnitude < 0.4f)
             {

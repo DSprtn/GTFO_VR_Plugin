@@ -32,7 +32,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-            float duration = 0.15f;
+            float duration = 0.2f;
             float frequency = 55f;
 
             dmg = dmg.RemapClamped(0, 1, 0.10f, VRSettings.shootingHapticsStrength);
@@ -55,6 +55,16 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 float intensity = pressure;
                 float duration = 0.1f;
                 float frequency = Mathf.Lerp(20, 30, pressure);
+                float vibrateDelay = vibrationDelay;
+                intensity *= intensity;
+
+                if (pressure >= 0.99f)
+                {
+                    intensity = 2f;
+                    duration = .08f;
+                    frequency = 80;
+                    vibrateDelay *= 2f;
+                }
 
                 SteamVR_InputHandler.TriggerHapticPulse(
               Mathf.Lerp(duration, duration * 1.5f, intensity),
@@ -62,7 +72,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
               2f,
               Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
 
-                lastVibrateTime = Time.time + vibrationDelay;
+                lastVibrateTime = Time.time + vibrateDelay;
             }
         }
 
@@ -72,12 +82,24 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 return;
             }
+
+
             if (pressure > 0.05f && Time.time > lastVibrateTime)
             {
                 //hapticDelay = Mathf.Lerp(baseHapticDelay, baseHapticDelay / 2f, strength);
                 float intensity = pressure;
+                intensity *= intensity;
                 float duration = 0.1f;
                 float frequency = Mathf.Lerp(20, 35, pressure);
+                float vibrateDelay = vibrationDelay;
+
+                if (pressure >= 0.99f)
+                {
+                    intensity = 2f;
+                    duration = .08f;
+                    frequency = 80;
+                    vibrateDelay *= 2f;
+                }
 
                 SteamVR_InputHandler.TriggerHapticPulse(
               Mathf.Lerp(duration, duration * 1.5f, intensity),
@@ -85,7 +107,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
               intensity,
               Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
 
-                lastVibrateTime = Time.time + vibrationDelay;
+                lastVibrateTime = Time.time + vibrateDelay;
             }
         }
 
