@@ -174,11 +174,23 @@ namespace GTFO_VR.UI
         public static void PrepareNavMarker(NavMarker n)
         {
             n.transform.SetParent(null);
-
             n.m_initScale *= 0.009f;
             SetTransformHierarchyLayer(n.transform);
-            SetTextShader(n.transform);
-            SetSpriteRendererShader(n.transform);
+
+            foreach(TextMeshPro p in n.transform.GetComponentsInChildren<TextMeshPro>(true))
+            {
+                if(p == null || p.fontSharedMaterial == null)
+                {
+                    return;
+                }
+                Log.Debug($"Prev shader = {p.fontMaterial.shader.name}");
+                p.fontSharedMaterial.shader = VRAssets.GetTextNoCull();
+            }
+
+            if(n != null && n.m_distance != null && n.m_distance.fontSharedMaterial != null)
+            {
+                n.m_distance.fontSharedMaterial.shader = VRAssets.GetTextNoCull();
+            }
 
             if (n.m_trackingObj)
             {
@@ -256,6 +268,7 @@ namespace GTFO_VR.UI
             foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>(true))
             {
                 p.GetComponent<MeshRenderer>().material.shader = VRAssets.TextAlwaysRender;
+                p.ForceMeshUpdate(false);
             }
         }
 
@@ -280,6 +293,7 @@ namespace GTFO_VR.UI
             foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>(true))
             {
                 p.GetComponent<MeshRenderer>().material.shader = shader;
+                p.ForceMeshUpdate(false);
             }
         }
 

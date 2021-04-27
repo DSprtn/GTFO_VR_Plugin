@@ -23,17 +23,18 @@ namespace GTFO_VR.Injections.UI
     /// <summary>
     /// For some reason we can't do this the easy way like all the other UI, so we just brute force it.
     /// </summary>
-    [HarmonyPatch(typeof(NavMarker), nameof(NavMarker.SetDistance))]
-    internal class InjectNavMarkerWorldDistanceHack
+    [HarmonyPatch(typeof(NavMarkerComponent), nameof(NavMarkerComponent.Start))]
+    internal class InjectNavMarkerWorldSpriteHack
     {
-        private static void Postfix(NavMarker __instance)
+        private static void Postfix(NavMarkerComponent __instance)
         {
-            if (__instance.m_distance)
+            foreach (SpriteRenderer r in __instance.transform.GetComponentsInChildren<SpriteRenderer>())
             {
-                __instance.m_distance.GetComponent<MeshRenderer>().material.shader = VRAssets.TextAlwaysRender;
+                r.material.shader = VRAssets.SpriteAlwaysRender;
             }
         }
     }
+
 
     /// <summary>
     /// Calls into our VR library to handle positioning, scaling and rotating all nav markers
@@ -92,6 +93,10 @@ namespace GTFO_VR.Injections.UI
                         else if (n.m_currentState != NavMarkerState.Visible)
                         {
                             n.SetState(NavMarkerState.Visible);
+                        }
+                        if(n.m_distance != null && n.m_distance.fontSharedMaterial != null)
+                        {
+                            n.m_distance.fontSharedMaterial.shader = VRAssets.GetTextNoCull();
                         }
                         n.SetDistance(distanceToCamera);
 
