@@ -61,7 +61,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void FixHeadAttachedFlashlightPos()
         {
-            if(!ItemEquippableEvents.CurrentItemHasFlashlight())
+            if(FocusStateEvents.currentState == eFocusState.FPS && !ItemEquippableEvents.CurrentItemHasFlashlight())
             {
                 Transform flashlight = m_fpsCamera.m_owner.Inventory.m_flashlight.transform;
                 flashlight.position = HMD.Hmd.transform.TransformPoint(m_fpsCamera.m_owner.Inventory.m_flashlightCameraOffset + new Vector3(0,0,-.1f));
