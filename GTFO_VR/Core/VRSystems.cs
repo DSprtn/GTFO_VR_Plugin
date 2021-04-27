@@ -40,6 +40,9 @@ namespace GTFO_VR.Core
 
             FocusStateEvents.OnFocusStateChange += FocusChanged;
             Setup();
+
+            // Disable crouch toggle because it doesn't work in VR
+            CellSettingsApply.ApplyCrouchToggle(false);
         }
 
         private void Setup()
