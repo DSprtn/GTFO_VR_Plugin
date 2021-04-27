@@ -39,9 +39,26 @@ namespace GTFO_VR.Core
             return WatchPrefab;
         }
 
+        public static Shader GetTextNoCull()
+        {
+            if (assetBundle == null)
+            {
+                assetBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/vrwatch");
+            }
+
+            if(TextAlwaysRender == null)
+            {
+                TextAlwaysRender = assetBundle.LoadAsset("assets/textmesh pro/resources/shaders/tmp_noztest.shader").Cast<Shader>();
+            }
+            return TextAlwaysRender;
+        }
+
         private void Awake()
         {
-            assetBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/vrwatch");
+            if(assetBundle == null)
+            {
+                assetBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/vrwatch");
+            }
             if (assetBundle == null)
             {
                 Log.Error("No assetbundle present!");
@@ -50,7 +67,10 @@ namespace GTFO_VR.Core
             SpriteAlwaysRender = assetBundle.LoadAsset("assets/spritenoztest.shader").Cast<Shader>();
             TextSphereClip = assetBundle.LoadAsset("assets/textmesh pro/resources/shaders/tmp_clipsphere.shader").Cast<Shader>();
             SpriteSphereClip = assetBundle.LoadAsset("assets/spritenoztestandclip.shader").Cast<Shader>();
-            TextAlwaysRender = assetBundle.LoadAsset("assets/textmesh pro/resources/shaders/tmp_noztest.shader").Cast<Shader>();
+            if(TextAlwaysRender == null)
+            {
+                TextAlwaysRender = assetBundle.LoadAsset("assets/textmesh pro/resources/shaders/tmp_noztest.shader").Cast<Shader>();
+            }
 
             if (!SpriteAlwaysRender)
             {
