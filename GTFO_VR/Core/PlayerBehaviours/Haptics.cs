@@ -21,11 +21,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerFireWeaponEvents.OnPlayerFireWeapon += PlayWeaponFireHaptics;
             PlayerReloadEvents.OnPlayerReloaded += PlayWeaponReloadHaptics;
             GlueGunEvents.OnPressureUpdate += GlueGunPressureHaptics;
-            HammerEvents.OnHammerCharging += HammerCharging;
-            HammerEvents.OnHammerSmack += HammerSmack;
+            HammerEvents.OnHammerCharging += HammerChargingHaptics;
+            HammerEvents.OnHammerSmack += HammerSmackHaptics;
         }
 
-        private void HammerSmack(float dmg)
+        private void HammerSmackHaptics(float dmg)
         {
             if (!VRSettings.useHapticForShooting)
             {
@@ -43,7 +43,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
         }
 
-        private void HammerCharging(float pressure)
+        private void HammerChargingHaptics(float pressure)
         {
             if (!VRSettings.useHapticForShooting)
             {
@@ -182,8 +182,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerFireWeaponEvents.OnPlayerFireWeapon -= PlayWeaponFireHaptics;
             PlayerReloadEvents.OnPlayerReloaded -= PlayWeaponReloadHaptics;
             GlueGunEvents.OnPressureUpdate -= GlueGunPressureHaptics;
-            HammerEvents.OnHammerCharging -= HammerCharging;
-            HammerEvents.OnHammerSmack -= HammerSmack;
+            HammerEvents.OnHammerCharging -= HammerChargingHaptics;
+            HammerEvents.OnHammerSmack -= HammerSmackHaptics;
         }
     }
 }

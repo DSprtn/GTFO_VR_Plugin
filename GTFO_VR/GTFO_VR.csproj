@@ -98,7 +98,6 @@
     <Compile Include="Injections\UI\InjectSmallerMarkers.cs" />
     <Compile Include="Injections\Rendering\InjectDisableUIRendering.cs" />
     <Compile Include="Injections\Gameplay\InjectVRHammer.cs" />
-    <Compile Include="Injections\GameHooks\InjectVRUIRef.cs" />
     <Compile Include="Injections\UI\InjectWatchObjectives.cs" />
     <Compile Include="Injections\UI\InjectWatchUpdateStatus.cs" />
     <Compile Include="Injections\Gameplay\InjectWeaponAimFlashlightAggro.cs" />

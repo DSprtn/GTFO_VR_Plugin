@@ -32,9 +32,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         void LateUpdate()
         {
-            if (FocusStateEvents.currentState == eFocusState.FPS) {
-                m_animatorRoot.transform.localPosition = Vector3.zero;
-                m_animatorRoot.transform.localRotation = Quaternion.identity;
+            if(m_weapon.Owner && m_weapon.Owner.IsLocallyOwned)
+            {
+                if (FocusStateEvents.currentState == eFocusState.FPS)
+                {
+                    m_animatorRoot.transform.localPosition = Vector3.zero;
+                    m_animatorRoot.transform.localRotation = Quaternion.identity;
+                }
             }
         }
 
