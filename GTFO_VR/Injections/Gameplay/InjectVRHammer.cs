@@ -6,6 +6,7 @@ using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
 using HarmonyLib;
 using Il2CppSystem.Collections.Generic;
+using LevelGeneration;
 using UnityEngine;
 
 namespace GTFO_VR.Injections
@@ -18,8 +19,8 @@ namespace GTFO_VR.Injections
     {
         static void Postfix(MeleeWeaponFirstPerson __instance)
         {
-            __instance.gameObject.AddComponent<VRHammer>().Setup(__instance);
 
+            __instance.gameObject.AddComponent<VRHammer>().Setup(__instance);
         }
     }
 
@@ -31,6 +32,10 @@ namespace GTFO_VR.Injections
     {
         static void Postfix(MeleeWeaponFirstPerson __instance, MeleeWeaponDamageData data, bool isPush)
         {
+            if (!__instance.Owner.IsLocallyOwned)
+            {
+                return;
+            }
             Vector3 velocity = Controllers.mainControllerPose.GetVelocity() * 3f;
             data.sourcePos = data.hitPos - data.hitNormal * velocity.magnitude;
             if(isPush)
@@ -43,4 +48,28 @@ namespace GTFO_VR.Injections
             }
         }
     }
+
+    /// <summary>
+    /// Enable door smacking on VR hammer
+    /// </summary>
+    [HarmonyPatch(typeof(MeleeWeaponFirstPerson), nameof(MeleeWeaponFirstPerson.DoAttackDamage))]
+    static class InjectVRHammerSmackDoors
+    {
+        static void Prefix(MeleeWeaponFirstPerson __instance)
+        {
+            if(!__instance.Owner.IsLocallyOwned)
+            {
+                return;
+            }
+            if (__instance.Owner.FPSCamera.CameraRayDist <= 3f && __instance.Owner.FPSCamera.CameraRayObject != null && __instance.Owner.FPSCamera.CameraRayObject.layer == LayerManager.LAYER_DYNAMIC)
+            {
+                iLG_WeakDoor_Destruction componentInParent = __instance.Owner.FPSCamera.CameraRayObject.GetComponentInParent<iLG_WeakDoor_Destruction>();
+                if (componentInParent != null && !componentInParent.SkinnedDoorEnabled)
+                {
+                    componentInParent.EnableSkinnedDoor();
+                }
+            }
+        }
+    }
+
 }
