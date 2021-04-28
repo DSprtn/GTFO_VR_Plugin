@@ -7,7 +7,7 @@ using static SteamVR_Utils;
 namespace GTFO_VR.Core.UI
 {
     /// <summary>
-    /// Responsible for managing the UI overlay for the main menu and map.
+    /// Responsible for managing the UI overlay rendering for the main menu and map.
     /// </summary>
     public class VR_UI_Overlay : MonoBehaviour
     {
@@ -18,11 +18,13 @@ namespace GTFO_VR.Core.UI
 
         public static bool Overlay_Active = true;
 
-        public static UI_Pass UI_ref;
+        public static Camera UI_Camera;
 
         private ulong m_overlayHandle = OpenVR.k_ulOverlayHandleInvalid;
 
         private RigidTransform m_currentRigidTransform;
+
+        private RenderTexture m_overlayTarget;
 
         private void Awake()
         {
@@ -68,20 +70,42 @@ namespace GTFO_VR.Core.UI
 
         private void Update()
         {
+            if (UI_Core.m_uiPass && m_overlayTarget == null)
+            {
+                CreateRenderTexture();
+                UI_Camera = UI_Core.m_uiPass.transform.GetComponentInChildren<UI_RenderUI>().gameObject.GetComponent<Camera>();
+                return;
+            }
             if (m_overlayHandle != OpenVR.k_ulOverlayHandleInvalid)
             {
-                var texture = new Texture_t
-                {
-                    handle = UI_ref.m_UIRenderTarget.GetNativeTexturePtr(),
-                    eType = SteamVR.instance.textureType,
-                    eColorSpace = EColorSpace.Auto
-                };
-                OpenVR.Overlay.SetOverlayTexture(m_overlayHandle, ref texture);
-
                 if (SteamVR_InputHandler.GetActionDown(InputAction.Crouch) || SteamVR_InputHandler.GetActionDown(InputAction.Aim))
                 {
                     OrientateOverlay();
                 }
+                RenderUI();
+            }
+        }
+
+        internal void CreateRenderTexture()
+        {
+            Resolution res = SteamVR_Camera.GetResolutionForAspect(16, 9);
+            m_overlayTarget = new RenderTexture(res.width, res.height, 16, RenderTextureFormat.ARGBFloat);
+        }
+
+        private void RenderUI()
+        {
+            if (m_overlayHandle != OpenVR.k_ulOverlayHandleInvalid)
+            {
+                UI_Camera.targetTexture = m_overlayTarget;
+                UI_Camera.Render();
+                var texture = new Texture_t
+                {
+                    handle = m_overlayTarget.GetNativeTexturePtr(),
+                    eType = SteamVR.instance.textureType,
+                    eColorSpace = EColorSpace.Auto
+                };
+                UI_Camera.targetTexture = null;
+                OpenVR.Overlay.SetOverlayTexture(m_overlayHandle, ref texture);
             }
         }
 
