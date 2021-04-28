@@ -57,6 +57,14 @@ namespace GTFO_VR.Injections.Rendering
             foreach (Renderer renderer in __instance.FPSArms.GetComponentsInChildren<Renderer>())
             {
                 renderer.enabled = false;
+                /*
+                 * ToDO - Fix hand IK and rendering and enable this
+                 *  if (!renderer.name.Contains("gloves"))
+                {
+                    renderer.enabled = false;
+                }
+                 * 
+                 */
             }
         }
     }

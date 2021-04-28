@@ -59,5 +59,7 @@ namespace GTFO_VR.Core
         internal static bool useVignettePostProcess = false;
 
         internal static bool useEyeAdaptionPostProcess = true;
+
+        internal static bool oculusCrashWorkaround = false;
     }
 }

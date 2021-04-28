@@ -64,7 +64,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerLocomotionEvents.OnPlayerEnterLadder += PlayerEnteredLadder;
             SteamVR_Events.NewPosesApplied.Listen(new Action(OnNewPoses));
 
-            ClusteredRendering.Current.OnResolutionChange(new Resolution());
+
         }
 
         private void Update()
@@ -82,6 +82,26 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_origin.UpdateOrigin();
             UpdateVRCameraTransform(FpsCamera);
             UpdateHeldItemTransform();
+            //UpdateHandIK();
+        }
+
+        // ToDO - Tweak hand IK so it actually works
+        private void UpdateHandIK()
+        {
+            if(PlayerAgent.FPItemHolder == null || PlayerAgent.FPItemHolder.WieldedItem == null)
+            {
+                return;
+            }
+            if(VRSettings.mainHand == HandType.Right)
+            {
+                PlayerAgent.FPItemHolder.FPSArms.SetRightArmTargetPosRot(PlayerAgent.FPItemHolder.WieldedItem.RightHandGripTrans);
+                PlayerAgent.FPItemHolder.FPSArms.SetLeftArmTargetPosRot(Controllers.offhandController.transform);
+            } else
+            {
+                PlayerAgent.FPItemHolder.FPSArms.SetLeftArmTargetPosRot(PlayerAgent.FPItemHolder.WieldedItem.RightHandGripTrans);
+                PlayerAgent.FPItemHolder.FPSArms.SetRightArmTargetPosRot(Controllers.offhandController.transform);
+            }
+
         }
 
         private void HandleSnapturnInput()

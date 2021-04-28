@@ -86,7 +86,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             if (pressure > 0.05f && Time.time > lastVibrateTime)
             {
-                //hapticDelay = Mathf.Lerp(baseHapticDelay, baseHapticDelay / 2f, strength);
                 float intensity = pressure;
                 intensity *= intensity;
                 float duration = 0.1f;

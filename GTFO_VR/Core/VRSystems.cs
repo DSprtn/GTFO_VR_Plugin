@@ -106,6 +106,7 @@ namespace GTFO_VR.Core
             {
                 HandleOutOfGameFocus();
             }
+
             ClearUIRenderTex();
         }
 
@@ -175,6 +176,10 @@ namespace GTFO_VR.Core
 
         private void TogglePlayerCam(bool toggle)
         {
+            if (VRSettings.oculusCrashWorkaround)
+            {
+                return;
+            } 
             SteamVR_Render.pauseRendering = !toggle;
         }
 
