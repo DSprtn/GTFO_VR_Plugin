@@ -67,7 +67,7 @@ namespace GTFO_VR.Core
             weaponArchetypes = new Dictionary<string, VRWeaponData>
             {
                 { "Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
-                { "Melee", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f - VRSettings.globalWeaponRotationOffset, 0, 0)), false, 1.2f) },
+                { "Melee", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f - VRSettings.globalWeaponRotationOffset, 0, 0)), false, 1.1f) },
                 
                 { "Mine deployer", new VRWeaponData(new Vector3(0f, 0f, -.05f), false) },
                 { "Bio Tracker", new VRWeaponData(new Vector3(0f, 0f, -.05f), false, 1.45f) },
