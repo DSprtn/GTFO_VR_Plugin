@@ -1,6 +1,8 @@
 # GTFO_VR_Plugin
 ### A plugin to add full roomscale virtual reality support to your favorite game!
 
+### The mod doesn't work with the newest update just yet, hang tight until it's ready!
+
 GTFO VR now also has a little corner over on the flatscreen to VR modding discord!
 https://discord.gg/ZFSCSDe
 
