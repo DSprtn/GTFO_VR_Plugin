@@ -303,15 +303,11 @@
       <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\ToolBuddy.Curvy.Examples.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnhollowerBaseLib, Version=0.4.13.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnhollowerBaseLib">
       <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\UnhollowerBaseLib.dll</HintPath>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="UnhollowerRuntimeLib, Version=0.4.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnhollowerRuntimeLib">
       <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\UnhollowerRuntimeLib.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Unity.TextMeshPro.dll</HintPath>

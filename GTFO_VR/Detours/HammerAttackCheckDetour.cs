@@ -18,7 +18,7 @@ namespace GTFO_VR.Detours
 
         public unsafe static void HookAll()
         {
-            Log.Info("Creating detours for bioscanner...");
+            Log.Info("Creating detours for hammer attack checks...");
 
             var hammerAttackTargetCheckPointer = *(IntPtr*)(IntPtr)UnhollowerUtils
                    .GetIl2CppMethodInfoPointerFieldForGeneratedMethod(typeof(MeleeWeaponFirstPerson).GetMethod(nameof(MeleeWeaponFirstPerson.CheckForAttackTargets)))
@@ -26,13 +26,13 @@ namespace GTFO_VR.Detours
 
             FastNativeDetour.CreateAndApply(hammerAttackTargetCheckPointer,
                 OurAttackCheck,
-                out OriginalScannerMethod,
+                out OriginalHammerMethod,
                 CallingConvention.Cdecl);
         }
 
         private unsafe static bool OurAttackCheck(IntPtr thisPtr, IntPtr attackData, float sphereRad, float elapsedTime, out IntPtr hits)
         {
-            bool result = OriginalScannerMethod(thisPtr, attackData, sphereRad * VRHammer.hammerSizeMult, elapsedTime, out hits);
+            bool result = OriginalHammerMethod(thisPtr, attackData, sphereRad * VRHammer.hammerSizeMult, elapsedTime, out hits);
 
             if (Controllers.mainControllerPose.GetVelocity().magnitude < 0.4f)
             {
@@ -44,7 +44,7 @@ namespace GTFO_VR.Detours
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private unsafe delegate bool AttackCheckDelegate(IntPtr thisPtr, IntPtr attackData, float sphereRad,float elapsedTime, out IntPtr hits);
 
-        private static AttackCheckDelegate OriginalScannerMethod;
+        private static AttackCheckDelegate OriginalHammerMethod;
 
     }
 }
