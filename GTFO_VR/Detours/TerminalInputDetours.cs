@@ -15,7 +15,7 @@ namespace GTFO_VR.Detours
 
         public static void HookAll()
         {
-            Log.Info($"Patching all native functions...");
+            Log.Info($"Patching all terminal functions...");
 
             FastNativeDetour.CreateAndApply(IL2CPP.il2cpp_resolve_icall("UnityEngine.Input::" + "get_inputString"),
                 OurGetInputString, out originalInputStringGetter, CallingConvention.Cdecl);

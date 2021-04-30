@@ -37,12 +37,14 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Core\PlayerBehaviours\VRHammer.cs" />
     <Compile Include="Core\VRConfig.cs" />
     <Compile Include="Core\Log.cs" />
     <Compile Include="Core\PlayerBehaviours\ColisionFade.cs" />
     <Compile Include="Core\PlayerBehaviours\Haptics.cs" />
     <Compile Include="Core\PlayerBehaviours\VRRendering.cs" />
     <Compile Include="Detours\BioscannerDetours.cs" />
+    <Compile Include="Detours\HammerAttackCheckDetour.cs" />
     <Compile Include="Detours\TerminalInputDetours.cs" />
     <Compile Include="Core\PlayerBehaviours\PlayerOrigin.cs" />
     <Compile Include="Core\PlayerBehaviours\Snapturn.cs" />
@@ -54,11 +56,13 @@
     <Compile Include="Events\PlayerLocomotionEvents.cs" />
     <Compile Include="Events\PlayerReloadEvents.cs" />
     <Compile Include="Events\GlueGunEvents.cs" />
+    <Compile Include="Events\HammerEvents.cs" />
     <Compile Include="Events\WeaponRecoilEvents.cs" />
     <Compile Include="Events\PlayerReceivedDamageEvents.cs" />
     <Compile Include="Injections\Events\InjectFocusStateEvents.cs" />
     <Compile Include="Injections\Events\InjectInventoryAmmoUpdateEvent.cs" />
     <Compile Include="Injections\Events\InjectItemEquippableEvents.cs" />
+    <Compile Include="Injections\Events\InjectHammerChargeEvents.cs" />
     <Compile Include="Injections\Events\InjectPlayerReloadEvents.cs" />
     <Compile Include="Injections\Events\InjectGlueGunEvents.cs" />
     <Compile Include="Injections\Events\InjectPlayerWeaponFireEvents.cs" />
@@ -94,7 +98,6 @@
     <Compile Include="Injections\UI\InjectSmallerMarkers.cs" />
     <Compile Include="Injections\Rendering\InjectDisableUIRendering.cs" />
     <Compile Include="Injections\Gameplay\InjectVRHammer.cs" />
-    <Compile Include="Injections\GameHooks\InjectVRUIRef.cs" />
     <Compile Include="Injections\UI\InjectWatchObjectives.cs" />
     <Compile Include="Injections\UI\InjectWatchUpdateStatus.cs" />
     <Compile Include="Injections\Gameplay\InjectWeaponAimFlashlightAggro.cs" />
@@ -300,15 +303,11 @@
       <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\ToolBuddy.Curvy.Examples.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnhollowerBaseLib, Version=0.4.13.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnhollowerBaseLib">
       <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\UnhollowerBaseLib.dll</HintPath>
-      <Private>False</Private>
     </Reference>
-    <Reference Include="UnhollowerRuntimeLib, Version=0.4.10.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnhollowerRuntimeLib">
       <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\UnhollowerRuntimeLib.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Unity.TextMeshPro.dll</HintPath>

@@ -61,7 +61,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void FixHeadAttachedFlashlightPos()
         {
-            if(!ItemEquippableEvents.CurrentItemHasFlashlight())
+            if(FocusStateEvents.currentState == eFocusState.FPS && !ItemEquippableEvents.CurrentItemHasFlashlight())
             {
                 Transform flashlight = m_fpsCamera.m_owner.Inventory.m_flashlight.transform;
                 flashlight.position = HMD.Hmd.transform.TransformPoint(m_fpsCamera.m_owner.Inventory.m_flashlightCameraOffset + new Vector3(0,0,-.1f));
@@ -70,10 +70,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void PrepareFrame()
         {
-            if (m_fpsCamera.m_renderUI)
-            {
-                UI_Core.RenderUI();
-            }
+
+            UI_Core.RenderUI();
+            
 
             if (ScreenLiquidManager.LiquidSystem != null)
                 ScreenLiquidManager.LiquidSystem.CollectCommands(m_fpsCamera.m_preRenderCmds);
@@ -149,6 +148,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
             // Make sure camera is disabled at all times because rendering should only be called from within SteamVR's rendering system
             m_fpsCamera.m_camera.enabled = false;
+            m_fpsCamera.m_itemCamera.enabled = false;
         }
 
         private void OnDestroy()

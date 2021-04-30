@@ -43,14 +43,24 @@ namespace GTFO_VR.Events
 
         public static Vector3 GetCorrectedGripPosition()
         {
-            if(!currentItem || !currentItem.LeftHandGripTrans || !currentItem.MuzzleAlign)
+            if (!currentItem)
             {
-                Log.Warning("Trying to get grip position for null item, null grip or null muzzle!");
+                Log.Warning("Trying to get grip position for null item!");
                 return Vector3.zero;
             }
-            Vector3 offsetToGrip = currentItem.LeftHandGripTrans.position - currentItem.transform.position;
-            Vector3 normalToMuzzle = (currentItem.MuzzleAlign.transform.position - currentItem.transform.position).normalized;
-            return currentItem.transform.position + Vector3.Project(offsetToGrip, normalToMuzzle);
+            return GetCorrectedGripPosition(currentItem);
+        }
+
+        public static Vector3 GetCorrectedGripPosition(ItemEquippable item)
+        {
+            if (!currentItem.LeftHandGripTrans || !currentItem.MuzzleAlign)
+            {
+                Log.Warning("Trying to get grip position for null leftHandGripTrans or Muzzle!");
+                return Vector3.zero;
+            }
+            Vector3 offsetToGrip = item.LeftHandGripTrans.position - item.transform.position;
+            Vector3 normalToMuzzle = (item.MuzzleAlign.transform.position - item.transform.position).normalized;
+            return item.transform.position + Vector3.Project(offsetToGrip, normalToMuzzle);
         }
     }
 }

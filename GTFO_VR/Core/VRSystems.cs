@@ -40,6 +40,9 @@ namespace GTFO_VR.Core
 
             FocusStateEvents.OnFocusStateChange += FocusChanged;
             Setup();
+
+            // Disable crouch toggle because it doesn't work in VR
+            CellSettingsApply.ApplyCrouchToggle(false);
         }
 
         private void Setup()
@@ -99,10 +102,11 @@ namespace GTFO_VR.Core
                 HandleIngameFocus();
             }
 
-            if (state.Equals(eFocusState.MainMenu) || state.Equals(eFocusState.Map))
+            if (state.Equals(eFocusState.MainMenu) || state.Equals(eFocusState.Map) || state.Equals(eFocusState.GlobalPopupMessage))
             {
                 HandleOutOfGameFocus();
             }
+
             ClearUIRenderTex();
         }
 
@@ -132,6 +136,7 @@ namespace GTFO_VR.Core
                 }
             } catch(UnhollowerBaseLib.ObjectCollectedException e)
             {
+                Log.Warning("Got GC'D object, falling back..." + e.ToString());
                 m_player = null;
                 AppendVRComponents();
             }
@@ -171,6 +176,10 @@ namespace GTFO_VR.Core
 
         private void TogglePlayerCam(bool toggle)
         {
+            if (VRSettings.oculusCrashWorkaround)
+            {
+                return;
+            } 
             SteamVR_Render.pauseRendering = !toggle;
         }
 

@@ -267,7 +267,7 @@ namespace GTFO_VR.Core.VR_Input
             {
                 if (InputAction.MoveHorizontal.Equals(action) || InputAction.GamepadLookHorizontal.Equals(action))
                 {
-                    if (FocusStateManager.CurrentState.Equals(eFocusState.MainMenu))
+                    if (FocusStateManager.CurrentState.Equals(eFocusState.MainMenu) || FocusStateManager.CurrentState.Equals(eFocusState.GlobalPopupMessage))
                     {
                         return m_movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).x / 10f;
                     }
@@ -280,7 +280,7 @@ namespace GTFO_VR.Core.VR_Input
                 }
                 if (InputAction.MoveVertical.Equals(action) || InputAction.GamepadLookVertical.Equals(action))
                 {
-                    if (FocusStateManager.CurrentState.Equals(eFocusState.MainMenu))
+                    if (FocusStateManager.CurrentState.Equals(eFocusState.MainMenu) || FocusStateManager.CurrentState.Equals(eFocusState.GlobalPopupMessage))
                     {
                         return m_movementAxisAction.GetAxis(SteamVR_Input_Sources.Any).y / 10f;
                     }

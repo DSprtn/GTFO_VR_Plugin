@@ -117,6 +117,11 @@ namespace GTFO_VR.UI
             {
                 m_intelHolder.transform.rotation = LerpUIRot(m_intelHolder.transform);
             }
+
+            if(intel != null && intel.transform.localScale.x > 0.002) {
+                intel.transform.localScale = Vector3.one * 0.0018f;
+            }
+            
         }
 
         private void UpdateStatus()
@@ -156,6 +161,10 @@ namespace GTFO_VR.UI
                 Log.Error("m_compassHolder bar was null!");
                 return;
             }
+            if(compass != null && compass.transform.localScale.x > 0.0037)
+            {
+                compass.transform.localScale = Vector3.one * 0.0036f;
+            }
             m_compassHolder.SetActive(playerGUI.IsVisible());
             if (m_compassHolder.activeSelf)
             {
@@ -174,11 +183,23 @@ namespace GTFO_VR.UI
         public static void PrepareNavMarker(NavMarker n)
         {
             n.transform.SetParent(null);
-
             n.m_initScale *= 0.009f;
             SetTransformHierarchyLayer(n.transform);
-            SetTextShader(n.transform);
-            SetSpriteRendererShader(n.transform);
+
+            foreach(TextMeshPro p in n.transform.GetComponentsInChildren<TextMeshPro>(true))
+            {
+                if(p == null || p.fontSharedMaterial == null)
+                {
+                    return;
+                }
+                Log.Debug($"Prev shader = {p.fontMaterial.shader.name}");
+                p.fontSharedMaterial.shader = VRAssets.GetTextNoCull();
+            }
+
+            if(n != null && n.m_distance != null && n.m_distance.fontSharedMaterial != null)
+            {
+                n.m_distance.fontSharedMaterial.shader = VRAssets.GetTextNoCull();
+            }
 
             if (n.m_trackingObj)
             {
@@ -256,6 +277,7 @@ namespace GTFO_VR.UI
             foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>(true))
             {
                 p.GetComponent<MeshRenderer>().material.shader = VRAssets.TextAlwaysRender;
+                p.ForceMeshUpdate(false);
             }
         }
 
@@ -280,6 +302,7 @@ namespace GTFO_VR.UI
             foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>(true))
             {
                 p.GetComponent<MeshRenderer>().material.shader = shader;
+                p.ForceMeshUpdate(false);
             }
         }
 

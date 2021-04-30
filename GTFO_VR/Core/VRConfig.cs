@@ -31,6 +31,7 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configPostVignette;
         internal static ConfigEntry<bool> configPostBloom;
         internal static ConfigEntry<bool> configPostEyeAdaptation;
+        internal static ConfigEntry<bool> configOculusCrashWorkaround;
 
         internal static void SetupConfig(ConfigFile file)
         {
@@ -71,7 +72,7 @@ namespace GTFO_VR.Core
             configShootingHapticsStrength = file.Bind("Haptics", "Shooting haptic strength", .75f, "The strength of haptic feedback while shooting. (0.0 to 1.0)");
             configWeaponRotationOffset = file.Bind("Misc", "Weapon forward rotation offset in degrees", 12f, "Change this to rotate all weapons forward by the given amount of degrees (-45,45) --- \n'12' seems to work really well for the Quest and Index with the 'tip' action pose");
 
-
+            configOculusCrashWorkaround = file.Bind("Misc", "Use Oculus crash workaround?", false, "If true, map and menu might look a little janky but it should crash less. Blame Zuck!");
 
             Log.Debug("VR enabled?" + configEnableVR.Value);
             Log.Debug("Toggle VR by SteamVR running?" + configToggleVRBySteamVR.Value);
@@ -95,6 +96,8 @@ namespace GTFO_VR.Core
             Log.Debug("Haptics strength - " + configShootingHapticsStrength.Value);
             Log.Debug("Weapon rotation offset - " + configWeaponRotationOffset.Value);
 
+            Log.Debug("Oculus crash workaround? - " + configOculusCrashWorkaround.Value);
+
 
             Log.Debug("Use eye adaptation? " + configPostEyeAdaptation.Value);
             Log.Debug("Use vignette? " + configPostVignette.Value);
@@ -117,6 +120,8 @@ namespace GTFO_VR.Core
             VRSettings.useHapticForShooting = configUseHapticsForShooting.Value;
             VRSettings.shootingHapticsStrength = configShootingHapticsStrength.Value;
             VRSettings.globalWeaponRotationOffset = Mathf.Clamp(configWeaponRotationOffset.Value, -45, 45);
+
+            VRSettings.oculusCrashWorkaround = configOculusCrashWorkaround.Value;
 
             VRSettings.useBloomPostProcess = configPostBloom.Value;
             VRSettings.useEyeAdaptionPostProcess = configPostEyeAdaptation.Value;

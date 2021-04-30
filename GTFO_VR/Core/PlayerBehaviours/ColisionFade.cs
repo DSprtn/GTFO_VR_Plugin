@@ -32,7 +32,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
         }
 
         /// <summary>
-        /// Check for collision between the player's ture position and VR camera position, and in a box at the player's VR camera position
+        /// If the player head is colliding with something or if an object like a door is between the camera and the true player agent position
+        /// We fade the screen. No cheating!
         /// </summary>
         public void HandleCameraInCollision()
         {
