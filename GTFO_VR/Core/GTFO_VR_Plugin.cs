@@ -27,7 +27,7 @@ namespace GTFO_VR.Core
         public override void Load()
         {
             Core.Log.Setup(BepInEx.Logging.Logger.CreateLogSource(MODNAME));
-            Core.Log.Info("Loading VR plugin...");
+            Core.Log.Info($"Loading VR plugin {VERSION}");
 
             VRConfig.SetupConfig(Config);
 
