@@ -17,10 +17,12 @@ Try to get used to the game in Non-VR mode first before using!
 	Consult the installation video here if you're having trouble: 
 	https://www.youtube.com/watch?v=EH7CsLs3GlQ (Thanks Alabaster!)
 
-	If you have an old Bepinex/GTFO_VR installation, delete it! Removing the bepinex folder should suffice.
 	
- 	1. Download and extract BepInEx 6.0.0 into your GTFO game folder (SteamLibrary\steamapps\common\GTFO\)
-	from https://builds.bepis.io/projects/bepinex_be/350/BepInEx_UnityIL2CPP_x64_07a69cf_6.0.0-be.350.zip
+	If you are upgrading to R5 or have an old Bepinex/GTFO_VR installation, delete it! 
+	Removing the bepinex folder should suffice. You'll have to redo your config!
+	
+ 	1. Download and extract BepInEx 6.0.0b363 into your GTFO game folder (SteamLibrary\steamapps\common\GTFO\)
+	from https://builds.bepis.io/projects/bepinex_be/363/BepInEx_UnityIL2CPP_x64_086d2f8_6.0.0-be.363.zip
 	
 	You can also find the GTFO game path by doing the following:
 	Right click GTFO in your Steam library, go into Properties->Local Files->Browse
@@ -29,7 +31,7 @@ Try to get used to the game in Non-VR mode first before using!
 	and extract it into the same folder (SteamLibrary\steamapps\common\GTFO\)
 	
 	3. Download and extract the following archive into Steamapps\Common\GTFO\Bepinex\unity-libs\ 
-	https://github.com/LavaGang/MelonLoader/raw/master/BaseLibs/UnityDependencies/2019.4.1.zip
+	https://github.com/DSprtn/MelonLoader/raw/master/BaseLibs/UnityDependencies/_2019.4.21.zip
 	
 	The order of extracting the archives is important! It should be done in order of the steps.
 	
@@ -37,26 +39,29 @@ Try to get used to the game in Non-VR mode first before using!
 	
 	GTFO/
 	├── BepInEx/
-	│   ├── core/
+	|   ├── core/
 	│       ├── AssemblyUnhollower.dll
-	|       ├── etc.
-	│   ├── plugins/
+	│       ├── etc.
+	|   ├── plugins/
 	│       ├── GTFO_VR.dll
 	│       ├── Newtonsoft.Json.dll
 	│       ├── openvr_api.dll
 	│       └── SteamVR_Standalone_IL2CPP.dll
-	│   ├── unhollowed/ - Delete this folder if you're having issues!
-	│   └── unity-libs/
+	|   ├── unhollowed/ - Delete this folder if you're having issues!
+	|   └── unity-libs/
 	│       ├── UnityEngine.AccessbilityModule.dll
 	│       ├── etc.
 	└── GTFO_DATA/
+		├── Plugins/
+		│	├── openvr_api.dll
+		│	└── etc.
 	    └── StreamingAssets/
-		├── AssetBundles
-		├── vrshaders
-		├── vrwatch
-		├── SteamVR_Standalone/
-		    ├── actions.json
-		    ├── etc.
+			├── AssetBundles
+			├── vrshaders
+			├── vrwatch
+			├── SteamVR_Standalone/
+				├── actions.json
+				├── etc.
 	
 	4. Make sure 'use desktop game theatre' is off in the properties of GTFO in the steam library 
 	(or in general steam settings)

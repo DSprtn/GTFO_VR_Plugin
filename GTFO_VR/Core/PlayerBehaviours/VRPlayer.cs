@@ -64,7 +64,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerLocomotionEvents.OnPlayerEnterLadder += PlayerEnteredLadder;
             SteamVR_Events.NewPosesApplied.Listen(new Action(OnNewPoses));
 
-
+            ClusteredRendering.Current.OnResolutionChange(new Resolution());
         }
 
         private void Update()
