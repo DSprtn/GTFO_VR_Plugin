@@ -55,7 +55,7 @@ Try to get used to the game in Non-VR mode first before using!
 		├── Plugins/
 		│	├── openvr_api.dll
 		│	└── etc.
-	    └── StreamingAssets/
+	    	└── StreamingAssets/
 			├── AssetBundles
 			├── vrshaders
 			├── vrwatch
