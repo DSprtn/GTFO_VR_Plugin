@@ -102,7 +102,7 @@ namespace GTFO_VR.Core
                 HandleIngameFocus();
             }
 
-            if (state.Equals(eFocusState.MainMenu) || state.Equals(eFocusState.Map))
+            if (state.Equals(eFocusState.MainMenu) || state.Equals(eFocusState.Map) || state.Equals(eFocusState.GlobalPopupMessage))
             {
                 HandleOutOfGameFocus();
             }

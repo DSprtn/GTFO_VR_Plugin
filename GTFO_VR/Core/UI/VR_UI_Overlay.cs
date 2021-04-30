@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.Core.VR_Input;
+using GTFO_VR.Events;
 using System;
 using UnityEngine;
 using Valve.VR;
@@ -16,9 +17,10 @@ namespace GTFO_VR.Core.UI
 
         public static VR_UI_Overlay Current;
 
-        public static bool Overlay_Active = true;
+        Camera UI_Camera;
+        Camera Popup_Camera;
 
-        public static Camera UI_Camera;
+
 
         private ulong m_overlayHandle = OpenVR.k_ulOverlayHandleInvalid;
 
@@ -40,6 +42,19 @@ namespace GTFO_VR.Core.UI
             OrientateOverlay();
 
             OpenVR.Compositor.FadeToColor(9999f, 0, 0, 0, 0, false);
+
+            FocusStateEvents.OnFocusStateChange += FocusChanged;
+        }
+
+        private void FocusChanged(eFocusState newState)
+        {
+           if(UI_Camera && Popup_Camera)
+            {
+                if(newState.Equals(eFocusState.GlobalPopupMessage))
+                {
+                    Popup_Camera.enabled = true;
+                }
+            }
         }
 
         private void Setup()
@@ -73,7 +88,8 @@ namespace GTFO_VR.Core.UI
             if (UI_Core.m_uiPass && m_overlayTarget == null)
             {
                 CreateRenderTexture();
-                UI_Camera = UI_Core.m_uiPass.transform.GetComponentInChildren<UI_RenderUI>().gameObject.GetComponent<Camera>();
+                Popup_Camera = UI_Core.m_uiPass.transform.GetComponent<Camera>();
+                UI_Camera = Popup_Camera.transform.GetComponentInChildren<UI_RenderUI>().gameObject.GetComponent<Camera>();
                 return;
             }
             if (m_overlayHandle != OpenVR.k_ulOverlayHandleInvalid)

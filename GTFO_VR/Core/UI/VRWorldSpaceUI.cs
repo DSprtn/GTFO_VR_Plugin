@@ -117,6 +117,11 @@ namespace GTFO_VR.UI
             {
                 m_intelHolder.transform.rotation = LerpUIRot(m_intelHolder.transform);
             }
+
+            if(intel != null && intel.transform.localScale.x > 0.002) {
+                intel.transform.localScale = Vector3.one * 0.0018f;
+            }
+            
         }
 
         private void UpdateStatus()
@@ -155,6 +160,10 @@ namespace GTFO_VR.UI
             {
                 Log.Error("m_compassHolder bar was null!");
                 return;
+            }
+            if(compass != null && compass.transform.localScale.x > 0.0037)
+            {
+                compass.transform.localScale = Vector3.one * 0.0036f;
             }
             m_compassHolder.SetActive(playerGUI.IsVisible());
             if (m_compassHolder.activeSelf)

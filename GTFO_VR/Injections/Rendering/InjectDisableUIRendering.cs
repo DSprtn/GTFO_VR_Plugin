@@ -12,7 +12,7 @@ namespace GTFO_VR.Injections.Rendering
     {
         private static bool Prefix()
         {
-            if (!VRSettings.Render2DUI && !FocusStateManager.CurrentState.Equals(eFocusState.Map) && !FocusStateManager.CurrentState.Equals(eFocusState.MainMenu))
+            if (!VRSettings.Render2DUI && !FocusStateManager.CurrentState.Equals(eFocusState.Map) && !FocusStateManager.CurrentState.Equals(eFocusState.MainMenu) && !FocusStateManager.Current.Equals(eFocusState.GlobalPopupMessage))
             {
                 return false;
             }
