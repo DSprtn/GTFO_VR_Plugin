@@ -19,7 +19,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
         }
 
-        public static float hammerSizeMult = 0.85f;
+        public static float hammerSizeMult = .9f;
 
         MeleeWeaponFirstPerson m_weapon;
         Transform m_animatorRoot;
