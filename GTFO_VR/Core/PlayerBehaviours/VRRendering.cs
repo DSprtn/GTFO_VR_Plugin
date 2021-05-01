@@ -17,11 +17,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
         }
 
         private FPSCamera m_fpsCamera;
+        private UI_Apply m_uiBlitter;
         private static bool m_skipLeftEye;
 
         private void Awake()
         {
             m_fpsCamera = GetComponent<FPSCamera>();
+            m_uiBlitter = GetComponent<UI_Apply>();
             SteamVR_Render.eyePreRenderCallback += PrepareFrameForEye;
         }
 
@@ -98,15 +100,12 @@ namespace GTFO_VR.Core.PlayerBehaviours
             Vector4 zbufferParams = ClusteredRendering.GetZBufferParams(ClusteredRendering.Current.m_camera);
             m_fpsCamera.m_preRenderCmds.SetGlobalVector(ClusteredRendering.ID_ProjectionParams, projectionParams);
             m_fpsCamera.m_preRenderCmds.SetGlobalVector(ClusteredRendering.ID_ZBufferParams, zbufferParams);
-
-            CL_ShadowAtlas.Current.m_dynamicShadowsRenderedThisFrame = 0;
-            CL_ShadowAtlas.Current.m_staticShadowsRenderedThisFrame = 0;
-            CL_ShadowAtlas.Current.m_compositeShadowsRenderedThisFrame = 0;
         }
 
         // Force FOV/Aspects and position match up for all relevant game cameras
         private void DoUglyCameraHack()
         {
+            m_uiBlitter.enabled = false;
             m_fpsCamera.PlayerMoveEnabled = true;
             m_fpsCamera.MouseLookEnabled = true;
 
