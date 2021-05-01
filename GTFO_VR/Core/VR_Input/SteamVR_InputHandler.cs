@@ -52,9 +52,29 @@ namespace GTFO_VR.Core.VR_Input
 
         public static void Setup()
         {
+            if(Initialized)
+            {
+                return;
+            }
             InitializeActionMapping();
             Initialized = true;
             Log.Info("Input initialized");
+        }
+
+        public static bool TryGetActionNameFromInputAction(InputAction a, ref string output)
+        {
+            if(!Initialized)
+            {
+                Setup();
+            }
+            if(boolActions.ContainsKey(a))
+            {
+                output = boolActions[a].GetShortName();
+                Log.Debug($"Found action name for {a} - {output}");
+                return true;
+            }
+            Log.Debug($"Action {a} was not in boolActions...");
+            return false;
         }
 
         public static void TriggerHapticPulse(ushort microSecondsDuration, SteamVR_Input_Sources controller)
