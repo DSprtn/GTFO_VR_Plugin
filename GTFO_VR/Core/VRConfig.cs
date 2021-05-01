@@ -6,8 +6,6 @@ namespace GTFO_VR.Core
 {
     internal static class VRConfig
     {
-        internal static ConfigEntry<bool> configEnableVR;
-        internal static ConfigEntry<bool> configToggleVRBySteamVR;
         internal static ConfigEntry<bool> configUseControllers;
         internal static ConfigEntry<bool> configIRLCrouch;
         internal static ConfigEntry<bool> configUseLeftHand;
@@ -35,10 +33,6 @@ namespace GTFO_VR.Core
 
         internal static void SetupConfig(ConfigFile file)
         {
-            
-            configEnableVR = file.Bind("Startup", "Run VR plugin?", true, "If true, game will start in VR");
-            configToggleVRBySteamVR = file.Bind("Startup", "Start in pancake if SteamVR is off?", true, "If true, will start the game in pancake mode if SteamVR is not detected");
-
             configUseControllers = file.Bind("Input", "Use VR Controllers?", true, "If true, will use VR controllers. You can play with a gamepad and head aiming if you set this to false");
             configIRLCrouch = file.Bind("Input", "Crouch in-game when you crouch IRL?", true, "If true, when crouching down below a certain threshold IRL, the in-game character will also crouch");
             configUseLeftHand = file.Bind("Input", "Use left hand as main hand?", false, "If true, all items will appear in the left hand");
@@ -74,8 +68,6 @@ namespace GTFO_VR.Core
 
             configOculusCrashWorkaround = file.Bind("Misc", "Use Oculus crash workaround?", false, "If true, map and menu might look a little janky but it should crash less. Blame Zuck!");
 
-            Log.Debug("VR enabled?" + configEnableVR.Value);
-            Log.Debug("Toggle VR by SteamVR running?" + configToggleVRBySteamVR.Value);
             Log.Debug("Use VR Controllers? : " + configUseControllers.Value);
             Log.Debug("Crouch on IRL crouch? : " + configIRLCrouch.Value);
             Log.Debug("Use left hand as main hand? : " + configUseLeftHand.Value);
@@ -112,7 +104,6 @@ namespace GTFO_VR.Core
             VRSettings.useSmoothTurn = configSmoothSnapTurn.Value;
             VRSettings.recenterOnSmoothTurn = configRecenterPlayspaceDuringSmoothTurn.Value;
             VRSettings.watchScale = Mathf.Clamp(configWatchScaling.Value, 0.5f, 2f);
-            VRSettings.toggleVRBySteamVRRunning = configToggleVRBySteamVR.Value;
             VRSettings.useNumbersForAmmoDisplay = configUseNumbersForAmmoDisplay.Value;
             VRSettings.IRLCrouchBorder = Mathf.Clamp(configCrouchHeight.Value, 1f, 1.45f);
             VRSettings.alternateLightRenderingPerEye = configAlternateEyeRendering.Value;

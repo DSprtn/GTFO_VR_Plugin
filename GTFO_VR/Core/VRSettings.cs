@@ -28,10 +28,6 @@ namespace GTFO_VR.Core
 
         public static float watchScale = 1f;
 
-        public static bool toggleVRBySteamVRRunning = true;
-
-        public static bool VREnabled = true;
-
         public static bool useNumbersForAmmoDisplay = false;
 
         public static bool Render2DUI = false;

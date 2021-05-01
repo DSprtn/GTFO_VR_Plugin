@@ -31,7 +31,7 @@ namespace GTFO_VR.Core
 
             VRConfig.SetupConfig(Config);
 
-            if (VRSettings.VREnabled && SteamVRRunningCheck())
+            if (SteamVRRunningCheck())
             {
                 InjectVR();
             }
@@ -75,11 +75,6 @@ namespace GTFO_VR.Core
 
         private bool SteamVRRunningCheck()
         {
-            if (!VRSettings.toggleVRBySteamVRRunning)
-            {
-                return true;
-            }
-
             List<Process> possibleVRProcesses = new List<Process>();
 
             possibleVRProcesses.AddRange(Process.GetProcessesByName("vrserver"));
