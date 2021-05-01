@@ -1,5 +1,5 @@
 ManifestFileVersion: 0
-CRC: 3295335992
+CRC: 503332599
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
@@ -7,4 +7,7 @@ AssetBundleManifest:
       Dependencies: {}
     Info_1:
       Name: vrwatch
+      Dependencies: {}
+    Info_2:
+      Name: nuts
       Dependencies: {}
