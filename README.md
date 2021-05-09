@@ -74,6 +74,8 @@ Try to get used to the game in Non-VR mode first before using!
 	7. Tweak or setup your controls under SteamVR -> Settings -> Controllers 
 	-> Manage Controller Bindings -> GTFO VR
 	
+	8. Tweak all in-game options under Settings -> VR Settings
+	
 	
 	To enable tracking or change the angle at which the weapons are being held you must set an action pose 
 	within the binding menu. Tip seems to be the most intuitive. Remember to set all required actions or the 
@@ -88,20 +90,22 @@ Try to get used to the game in Non-VR mode first before using!
 	-	Rendering tweaks - Post-processing and other performance tweaks/hacks
 	-	Left handed mode 
 	-	No VR controller mode
+	- 	Floor height offset
 	- 	Shooting haptics - Toggle, strength
 	- 	IRL Crouching - Toggle, height tweak
 	-	Laser pointer - Toggle, color
 	-	Two handed aiming - Toggle, always on mode
-	- 	Snap turn - Amount, smooth turn, playspace recentering
+	- 	Snap turn - Amount, smooth turn
 	-	Watch - Scale, color, number display for ammo
-	- 	VR Mod loading - SteamVR running check, global toggle
+	-	etc. - Have a look in the menu!
 
-	They can be found in a config file which is created after starting the game at least once with 
-	the VR mod installed. It can be found under "GTFO\BepInEx\config\com.Spartan.GTFO_VR_Plugin.cfg"
+	They can be found in-game under Settings -> VR Settings and/or in a config file which is created 
+	after starting the game at least once with the VR mod installed. 
+	The config file can be found under "GTFO\BepInEx\config\com.Spartan.GTFO_VR_Plugin.cfg"
 
 #### PERFORMANCE
 
-	Lower your render resolution in SteamVR and also the quality of the in-game settings. 
+	Lower your render resolution (under Settings->VR Settings) and the quality of the in-game settings! 
 	GTFO VR is a BIG resource hog!
 	
 	You can disable post processing effects like bloom or eye adaptation in the config to 
@@ -119,14 +123,16 @@ Try to get used to the game in Non-VR mode first before using!
 #### HAMMER
 
 	You have to charge the hammer just like in non-VR GTFO. Release the button at the beginning of your swing
-	and you will have a ~.7s window to make a hit with it.
+	and you will have a ~.7s window to make a hit with it. There is a config option to use the 'old' VR hammer 
+	which swings by itself.
 
 
 #### AIMING
 
 	Double handed aiming is triggered by the proximity of your offhand (the one without a weapon) to
 	the weapon grip. Bring your offhand to the gun's grip as you would IRL and you will enable it. 
-	Bring your offhand far enough away and you will disable it.
+	Bring your offhand far enough away and you will disable it. 
+	This can be tweaked/disabled in the config.
 	
 #### WATCH
 	
@@ -201,6 +207,9 @@ Try to get used to the game in Non-VR mode first before using!
 	
 	Customized user interface for VR
 	
+	Fully configurable in-game and in an external config file with lots of customization options
+	(If you're missing any options, let me know!)
+	
 	Main menu, map UI and terminal working correctly in VR
 	
 	Support for single or double handed aiming, gun stocks
@@ -209,12 +218,9 @@ Try to get used to the game in Non-VR mode first before using!
 	
 	Snap turn
 	
-	Loads of configurable options (more coming soon and if you're missing any let me know!)
-	
 ## Known issues: 
 
-	The IL2CPP build hasn't been tested thoroughly yet so crashes may occur. If one does occur,
-	send me the output log from the path given below (before starting another game!):
+	If a crash occurs send me the output log from the path given below (before starting another game!):
 	SteamApps/GTFO/Bepinex/LogOutput.log
 	
 
