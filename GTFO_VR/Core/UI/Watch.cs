@@ -60,14 +60,31 @@ namespace GTFO_VR.UI
             Current = this;
             ItemEquippableEvents.OnPlayerWieldItem += ItemSwitched;
             InventoryAmmoEvents.OnInventoryAmmoUpdate += AmmoUpdate;
+            Controllers.HandednessSwitched += SetHandedness;
+            VRConfig.configWatchScaling.SettingChanged += WatchScaleChanged;
+            VRConfig.configUseNumbersForAmmoDisplay.SettingChanged += AmmoDisplayChanged;
+            VRConfig.configWatchColor.SettingChanged += WatchColorChanged;
+        }
 
-            Setup();
+        private void WatchColorChanged(object sender, EventArgs e)
+        {
+            SetWatchColor();
+        }
+
+        private void AmmoDisplayChanged(object sender, EventArgs e)
+        {
+            SwitchState(m_currentState);
         }
 
         void Start()
         {
-            transform.FindDeepChild("STRAP_LP").GetComponent<MeshRenderer>().material.color = VRSettings.watchColor;
-            transform.FindDeepChild("WATCH_LP").GetComponent<MeshRenderer>().material.color = VRSettings.watchColor;
+            SetWatchColor();
+        }
+
+        private void SetWatchColor()
+        {
+            transform.FindDeepChild("STRAP_LP").GetComponent<MeshRenderer>().material.color = ExtensionMethods.FromColorConversion(VRConfig.configWatchColor.Value);
+            transform.FindDeepChild("WATCH_LP").GetComponent<MeshRenderer>().material.color = ExtensionMethods.FromColorConversion(VRConfig.configWatchColor.Value);
         }
 
         void Update()
@@ -200,16 +217,12 @@ namespace GTFO_VR.UI
             if (ItemEquippableEvents.IsCurrentItemShootableWeapon() &&
                 ItemEquippableEvents.currentItem.ItemDataBlock.inventorySlot.Equals(item.Slot))
             {
-                if (VRSettings.useNumbersForAmmoDisplay)
-                {
-                    m_numberBulletsInMagDisplay.text = clipLeft + "\n----\n" + ((int)(item.BulletsMaxCap * item.RelInPack)).ToString();
-                    m_numberBulletsInMagDisplay.ForceMeshUpdate(false);
-                } else
-                {
-                    m_bulletsInMagDisplay.MaxValue = Mathf.Max(item.BulletClipSize, 1);
-                    m_bulletsInMagDisplay.UpdateCurrentAmmo(clipLeft);
-                    m_bulletsInMagDisplay.UpdateAmmoGridDivisions();
-                }
+                m_numberBulletsInMagDisplay.text = clipLeft + "\n----\n" + ((int)(item.BulletsMaxCap * item.RelInPack)).ToString();
+                m_numberBulletsInMagDisplay.ForceMeshUpdate(false);
+
+                m_bulletsInMagDisplay.MaxValue = Mathf.Max(item.BulletClipSize, 1);
+                m_bulletsInMagDisplay.UpdateCurrentAmmo(clipLeft);
+                m_bulletsInMagDisplay.UpdateAmmoGridDivisions();
             }
         }
 
@@ -218,7 +231,7 @@ namespace GTFO_VR.UI
 
             if (ItemEquippableEvents.IsCurrentItemShootableWeapon())
             {
-                if (!VRSettings.useNumbersForAmmoDisplay)
+                if (!VRConfig.configUseNumbersForAmmoDisplay.Value)
                 {
                     m_bulletsInMagDisplay.MaxValue = item.GetMaxClip();
                     m_bulletsInMagDisplay.CurrentValue = item.GetCurrentClip();
@@ -227,41 +240,38 @@ namespace GTFO_VR.UI
             }
             else
             {
-                if (!VRSettings.useNumbersForAmmoDisplay)
-                {
-                    m_bulletsInMagDisplay.CurrentValue = 0;
-                    m_bulletsInMagDisplay.UpdateShaderVals(1, 1);
-                } else
-                {
-                    m_numberBulletsInMagDisplay.text = "";
-                    m_numberBulletsInMagDisplay.ForceMeshUpdate(false);
-                }
+                m_bulletsInMagDisplay.CurrentValue = 0;
+                m_bulletsInMagDisplay.UpdateShaderVals(1, 1);
 
+                m_numberBulletsInMagDisplay.text = "";
+                m_numberBulletsInMagDisplay.ForceMeshUpdate(false);
             }
         }
 
-        private void Setup()
+        public void Setup()
         {
             m_inventoryMeshes = transform.FindDeepChild("Inventory_UI").GetComponentsInChildren<MeshRenderer>();
 
-            SetupTransform();
+            SetHandedness();
             SetupObjectiveDisplay();
             SetupInventoryLinkData();
             SetInitialPlayerStatusValues();
             SwitchState(m_currentState);
+            SetWatchScale();
         }
 
-        private void SetupTransform()
+        private void SetHandedness()
         {
             transform.SetParent(Controllers.offhandController.transform);
             transform.localPosition = m_handOffset;
-            if(VRSettings.mainHand == HandType.Right) {
+            if (!VRConfig.configUseLeftHand.Value)
+            {
                 transform.localRotation = m_leftHandRotationOffset;
-            } else
+            }
+            else
             {
                 transform.localRotation = m_rightHandRotationOffset;
             }
-            
         }
 
         private void SetupObjectiveDisplay()
@@ -352,7 +362,6 @@ namespace GTFO_VR.UI
                 case (WatchState.Inventory):
                     ToggleInventoryRendering(true);
                     ToggleObjectiveRendering(false);
-
                     break;
                 case (WatchState.Objective):
                     ToggleInventoryRendering(false);
@@ -367,7 +376,7 @@ namespace GTFO_VR.UI
                 m.enabled = toggle;
             }
 
-            if (VRSettings.useNumbersForAmmoDisplay)
+            if (VRConfig.configUseNumbersForAmmoDisplay.Value)
             {
                 m_numberBulletsInMagDisplay.gameObject.SetActive(toggle);
                 m_bulletsInMagDisplay.gameObject.SetActive(false);
@@ -389,10 +398,26 @@ namespace GTFO_VR.UI
             m_objectiveDisplay.ForceMeshUpdate();
         }
 
+        private void WatchScaleChanged(object sender, EventArgs e)
+        {
+            SetWatchScale();
+        }
+
+        void SetWatchScale()
+        {
+            Vector3 watchScale = new Vector3(1.25f, 1.25f, 1.25f);
+            watchScale *= VRConfig.configWatchScaling.Value;
+            transform.localScale = watchScale;
+        }
+
         void OnDestroy()
         {
             ItemEquippableEvents.OnPlayerWieldItem -= ItemSwitched;
             InventoryAmmoEvents.OnInventoryAmmoUpdate -= AmmoUpdate;
+            Controllers.HandednessSwitched -= SetHandedness;
+            VRConfig.configUseNumbersForAmmoDisplay.SettingChanged -= AmmoDisplayChanged;
+            VRConfig.configWatchScaling.SettingChanged -= WatchScaleChanged;
+            VRConfig.configWatchColor.SettingChanged -= WatchColorChanged;
         }
     }
 }

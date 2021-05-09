@@ -35,31 +35,48 @@ namespace GTFO_VR.Util
             return null;
         }
 
-        public static bool Hex(string hexString, ref Color color)
+        public enum ColorSelection
         {
-            if (hexString.StartsWith("#"))
-                hexString = hexString.Substring(1);
-            if (hexString.Length == 6)
-                hexString += "FF";
-            if (hexString.Length != 8)
-                return false;
-            int[] numArray = new int[4];
-            try
-            {
-                numArray[0] = int.Parse(hexString.Substring(0, 2), NumberStyles.HexNumber);
-                numArray[1] = int.Parse(hexString.Substring(2, 2), NumberStyles.HexNumber);
-                numArray[2] = int.Parse(hexString.Substring(4, 2), NumberStyles.HexNumber);
-                numArray[3] = int.Parse(hexString.Substring(6, 2), NumberStyles.HexNumber);
-
-
-                color = new Color((float)numArray[0] / (float)byte.MaxValue, (float)numArray[1] / (float)byte.MaxValue, (float)numArray[2] / (float)byte.MaxValue, (float)numArray[3] / (float)byte.MaxValue);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            WHITE = 0,
+            RED = 1,
+            GREEN = 2,
+            BLUE = 3,
+            CYAN = 4,
+            YELLOW = 5,
+            PINK = 6,
+            MAGENTA = 7,
+            ORANGE = 8,
+            BLACK = 9
         }
 
+        public static Color FromColorConversion(string color)
+        {
+            switch (color)
+            {
+                case ("WHITE"):
+                    return Color.white;
+                case ("RED"):
+                    return ColorExt.RedBright(1f);
+                case ("GREEN"):
+                    return ColorExt.GreenBright(1f);
+                case ("BLUE"):
+                    return Color.blue;
+                case ("CYAN"):
+                    return Color.cyan;
+                case ("YELLOW"):
+                    return Color.yellow;
+                case ("PINK"):
+                    return ColorExt.Pink(1f);
+                case ("MAGENTA"):
+                    return Color.magenta;
+                case ("ORANGE"):
+                    return ColorExt.OrangeBright(1f);
+                case ("BLACK"):
+                    return Color.black;
+                default:
+                    return Color.white;
+            }
+            
+        }
     }
 }

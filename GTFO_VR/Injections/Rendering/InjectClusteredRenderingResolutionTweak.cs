@@ -18,17 +18,17 @@ namespace GTFO_VR.Injections.Rendering
         private static void Prefix(ref Resolution res)
         {
             Resolution HMDRes = SteamVR_Camera.GetSceneResolution();
-            if (VRSettings.lightRenderMode.Equals(1))
+            if (VRConfig.configLightResMode.Value.Equals("75%"))
             {
                 HMDRes.width = Mathf.FloorToInt(HMDRes.width * .75f);
                 HMDRes.height = Mathf.FloorToInt(HMDRes.height * .75f);
             }
-            else if (VRSettings.lightRenderMode.Equals(2))
+            else if (VRConfig.configLightResMode.Value.Equals("60%"))
             {
                 HMDRes.width = Mathf.FloorToInt(HMDRes.width * .5f);
                 HMDRes.height = Mathf.FloorToInt(HMDRes.height * .5f);
             }
-            else if (VRSettings.lightRenderMode.Equals(3))
+            else if (VRConfig.configLightResMode.Value.Equals("30%"))
             {
                 HMDRes.width =  Mathf.FloorToInt(HMDRes.width * .3f);
                 HMDRes.height = Mathf.FloorToInt(HMDRes.height * .3f);

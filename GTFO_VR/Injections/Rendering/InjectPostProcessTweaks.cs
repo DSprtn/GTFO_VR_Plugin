@@ -15,9 +15,9 @@ namespace GTFO_VR.Injections.Rendering
         {
             if (__instance.profile != null)
             {
-                __instance.m_Bloom.model.enabled = VRSettings.useBloomPostProcess;
-                __instance.m_EyeAdaptation.model.enabled = VRSettings.useEyeAdaptionPostProcess;
-                __instance.m_Vignette.model.enabled = VRSettings.useVignettePostProcess;
+                __instance.m_Bloom.model.enabled = VRConfig.configPostBloom.Value;
+                __instance.m_EyeAdaptation.model.enabled = VRConfig.configPostEyeAdaptation.Value;
+                __instance.m_Vignette.model.enabled = VRConfig.configPostVignette.Value;
             }
         }
     }

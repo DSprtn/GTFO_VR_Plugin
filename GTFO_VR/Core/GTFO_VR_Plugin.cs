@@ -9,6 +9,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnhollowerRuntimeLib;
+using static GTFO_VR.Util.ExtensionMethods;
 
 namespace GTFO_VR.Core
 {
@@ -22,7 +23,7 @@ namespace GTFO_VR.Core
             MODNAME = "GTFO_VR_Plugin",
             AUTHOR = "Spartan",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "0.9.3b1";
+            VERSION = "0.9.4.0";
 
         public override void Load()
         {

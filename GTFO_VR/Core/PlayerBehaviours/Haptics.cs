@@ -27,7 +27,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void HammerSmackHaptics(float dmg)
         {
-            if (!VRSettings.useHapticForShooting)
+            if (!VRConfig.configUseWeaponHaptics.Value)
             {
                 return;
             }
@@ -35,7 +35,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             float duration = 0.2f;
             float frequency = 55f;
 
-            dmg = dmg.RemapClamped(0, 1, 0.10f, VRSettings.shootingHapticsStrength);
+            dmg = dmg.RemapClamped(0, 1, 0.10f, VRConfig.configShootingHapticsStrength.Value);
             
             SteamVR_InputHandler.TriggerHapticPulse(Mathf.Lerp(duration, duration * 2.5f, dmg),
                 Mathf.Lerp(frequency, frequency * 1.3f, dmg),
@@ -45,7 +45,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void HammerChargingHaptics(float pressure)
         {
-            if (!VRSettings.useHapticForShooting)
+            if (!VRConfig.configUseWeaponHaptics.Value)
             {
                 return;
             }
@@ -78,7 +78,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void GlueGunPressureHaptics(float pressure)
         {
-            if (!VRSettings.useHapticForShooting)
+            if (!VRConfig.configUseWeaponHaptics.Value)
             {
                 return;
             }
@@ -125,7 +125,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void PlayWeaponFireHaptics(Weapon weapon)
         {
-            if (!VRSettings.useHapticForShooting)
+            if (!VRConfig.configUseWeaponHaptics.Value)
             {
                 return;
             }
@@ -135,7 +135,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             float duration = 0.03f;
             float frequency = 40f;
 
-            intensity = intensity.RemapClamped(0, 8, 0.10f, VRSettings.shootingHapticsStrength);
+            intensity = intensity.RemapClamped(0, 8, 0.10f, VRConfig.configShootingHapticsStrength.Value);
 
             if (Controllers.aimingTwoHanded)
             {

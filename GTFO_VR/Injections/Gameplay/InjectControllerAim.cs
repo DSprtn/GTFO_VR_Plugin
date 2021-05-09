@@ -58,7 +58,7 @@ namespace GTFO_VR.Injections.Gameplay
         private static bool Prefix(FPSCamera __instance)
         {
             bool vis = false;
-            if (VRSettings.useVRControllers)
+            if (VRConfig.configUseControllers.Value)
             {
                 //Used for throwing weapons
                 __instance.CameraRayDir = HMD.GetVRInteractionLookDir();

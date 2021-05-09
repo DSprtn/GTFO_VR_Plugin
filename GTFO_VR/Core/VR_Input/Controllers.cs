@@ -36,17 +36,22 @@ namespace GTFO_VR.Core.VR_Input
 
         private bool m_wasInDoubleHandPosLastFrame = false;
 
+        public static event Action HandednessSwitched;
+
 
         private void Awake()
         {
             SetupControllers();
             SetMainController();
             ItemEquippableEvents.OnPlayerWieldItem += CheckShouldDoubleHand;
+            VRConfig.configUseLeftHand.SettingChanged += HandednessSwitch;
+            VRConfig.configWeaponRotationOffset.SettingChanged += TiltChanged;
         }
+
 
         private void Update()
         {
-            if (!VRSettings.alwaysDoubleHanded && !FocusStateEvents.currentState.Equals(eFocusState.InElevator))
+            if (!VRConfig.configAlwaysDoubleHanded.Value && !FocusStateEvents.currentState.Equals(eFocusState.InElevator))
             {
                 HandleDoubleHandedChecks();
             }
@@ -54,7 +59,7 @@ namespace GTFO_VR.Core.VR_Input
 
         private void SetMainController()
         {
-            if (VRSettings.mainHand.Equals(HandType.Right))
+            if (!VRConfig.configUseLeftHand.Value)
             {
                 mainController = RightController;
                 offhandController = LeftController;
@@ -104,7 +109,7 @@ namespace GTFO_VR.Core.VR_Input
 
         public static bool IsFiringFromADS()
         {
-            return !VRSettings.twoHandedAimingEnabled || (aimingTwoHanded || !GetVRWeaponData(ItemEquippableEvents.currentItem).allowsDoubleHanded);
+            return !VRConfig.configUseTwoHanded.Value || (aimingTwoHanded || !GetVRWeaponData(ItemEquippableEvents.currentItem).allowsDoubleHanded);
         }
 
         private GameObject SetupController(SteamVR_Input_Sources source)
@@ -113,7 +118,7 @@ namespace GTFO_VR.Core.VR_Input
             SteamVR_Behaviour_Pose steamVR_Behaviour_Pose = controller.AddComponent<SteamVR_Behaviour_Pose>();
             steamVR_Behaviour_Pose.inputSource = source;
             steamVR_Behaviour_Pose.broadcastDeviceChanges = true;
-            steamVR_Behaviour_Pose.rotationOffset = Quaternion.Euler(VRSettings.globalWeaponRotationOffset, 0, 0);
+            steamVR_Behaviour_Pose.rotationOffset = Quaternion.Euler(VRConfig.configWeaponRotationOffset.Value, 0, 0);
             return controller;
         }
 
@@ -166,7 +171,7 @@ namespace GTFO_VR.Core.VR_Input
 
         private void CheckShouldDoubleHand(ItemEquippable item)
         {
-            if (!VRSettings.twoHandedAimingEnabled)
+            if (!VRConfig.configUseTwoHanded.Value)
             {
                 return;
             }
@@ -174,7 +179,7 @@ namespace GTFO_VR.Core.VR_Input
             if (itemData.allowsDoubleHanded)
             {
                 Log.Debug("Item allows double hand!");
-                if (VRSettings.alwaysDoubleHanded)
+                if (VRConfig.configAlwaysDoubleHanded.Value)
                 {
                     Log.Debug("Always double hand is on!");
                     aimingTwoHanded = true;
@@ -283,7 +288,7 @@ namespace GTFO_VR.Core.VR_Input
                 return Quaternion.identity;
             }
 
-            if ((VRSettings.twoHandedAimingEnabled || VRSettings.alwaysDoubleHanded) && aimingTwoHanded)
+            if ((VRConfig.configUseTwoHanded.Value || VRConfig.configAlwaysDoubleHanded.Value) && aimingTwoHanded)
             {
                 return GetTwoHandedRotation();
             }
@@ -299,8 +304,33 @@ namespace GTFO_VR.Core.VR_Input
             return mainController.transform.position;
         }
 
+
+        private void TiltChanged(object sender, EventArgs e)
+        {
+            TiltChanged(LeftController);
+            TiltChanged(RightController);
+        }
+
+        private static void TiltChanged(GameObject controller)
+        {
+            if(controller)
+            {
+                SteamVR_Behaviour_Pose pose = controller.GetComponent<SteamVR_Behaviour_Pose>();
+                if (pose)
+                    pose.rotationOffset = Quaternion.Euler(VRConfig.configWeaponRotationOffset.Value, 0, 0);
+            }
+        }
+
+        private void HandednessSwitch(object sender, EventArgs e)
+        {
+            SetMainController();
+            HandednessSwitched?.Invoke();
+        }
+
         private void OnDestroy()
         {
+            VRConfig.configUseLeftHand.SettingChanged -= HandednessSwitch;
+            VRConfig.configWeaponRotationOffset.SettingChanged -= TiltChanged;
             ItemEquippableEvents.OnPlayerWieldItem -= CheckShouldDoubleHand;
         }
     }

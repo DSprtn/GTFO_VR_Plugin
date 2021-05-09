@@ -34,7 +34,7 @@ namespace GTFO_VR.Detours
         {
             bool result = OriginalHammerMethod(thisPtr, attackData, sphereRad * VRHammer.hammerSizeMult, elapsedTime, out hits);
 
-            if (Controllers.mainControllerPose.GetVelocity().magnitude < 0.4f)
+            if ((!VRConfig.configUseOldHammer.Value || !VRConfig.configUseControllers.Value) && Controllers.mainControllerPose.GetVelocity().magnitude < 0.4f)
             {
                 return false;
             }

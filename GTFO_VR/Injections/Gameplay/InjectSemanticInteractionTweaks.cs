@@ -1,4 +1,5 @@
 ﻿using Gear;
+using GTFO_VR.Core;
 using GTFO_VR.Core.VR_Input;
 using HarmonyLib;
 using Player;
@@ -151,6 +152,10 @@ namespace GTFO_VR.Injections.Gameplay
 
         private static void Postfix(PlayerInteraction __instance, ref Vector3 __result)
         {
+            if(!VRConfig.configUseControllers.Value)
+            {
+                return;
+            }
             if (useVRInteractionForward)
             {
                 __result = HMD.GetVRInteractionLookDir();
@@ -172,6 +177,10 @@ namespace GTFO_VR.Injections.Gameplay
 
         private static void Postfix(PlayerInteraction __instance, ref Vector3 __result)
         {
+            if (!VRConfig.configUseControllers.Value)
+            {
+                return;
+            }
             if (useInteractionControllersPosition)
             {
                 __result = HMD.GetVRInteractionFromPosition();

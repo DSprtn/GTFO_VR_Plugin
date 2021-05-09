@@ -43,6 +43,16 @@ namespace GTFO_VR.Core
 
             // Disable crouch toggle because it doesn't work in VR
             CellSettingsApply.ApplyCrouchToggle(false);
+            VRConfig.configRenderResolutionMultiplier.SettingChanged += VRResolutionChanged;
+        }
+
+        private void VRResolutionChanged(object sender, EventArgs e)
+        {
+            SteamVR_Camera.sceneResolutionScaleMultiplier = VRConfig.configRenderResolutionMultiplier.Value;
+            if(ClusteredRendering.Current)
+            {
+                ClusteredRendering.Current.OnResolutionChange(new Resolution());
+            }
         }
 
         private void Setup()
@@ -73,7 +83,7 @@ namespace GTFO_VR.Core
             if(FocusStateEvents.IsInGame())
             {
                 Log.Debug("Player spawned while an in-game state was active");
-                VRSystems.Current.HandleIngameFocus();
+                Current.HandleIngameFocus();
             }
         }
 
@@ -156,7 +166,6 @@ namespace GTFO_VR.Core
 
             m_player = m_currentFPSCameraRef.gameObject.AddComponent<VRPlayer>();
             m_player.Setup(m_currentFPSCameraRef, m_currentPlayerAgentRef);
-            
         }
 
         private void ToggleOverlay(bool toggle)
@@ -176,8 +185,9 @@ namespace GTFO_VR.Core
 
         private void TogglePlayerCam(bool toggle)
         {
-            if (VRSettings.oculusCrashWorkaround)
+            if (VRConfig.configOculusCrashWorkaround.Value)
             {
+                SteamVR_Render.pauseRendering = false;
                 return;
             } 
             SteamVR_Render.pauseRendering = !toggle;
@@ -185,6 +195,7 @@ namespace GTFO_VR.Core
 
         private void OnDestroy()
         {
+            VRConfig.configRenderResolutionMultiplier.SettingChanged -= VRResolutionChanged;
             FocusStateEvents.OnFocusStateChange -= FocusChanged;
         }
     }

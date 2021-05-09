@@ -46,7 +46,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_fpsCamera.m_preRenderCmds.Clear();
             m_fpsCamera.m_beforeForwardAlpahCmds.Clear();
 
-            if (VRSettings.alternateLightRenderingPerEye)
+            if (VRConfig.configAlternateEyeRendering.Value)
             {
                 if (m_skipLeftEye && eye == EVREye.Eye_Left)
                 {
@@ -105,7 +105,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
         // Force FOV/Aspects and position match up for all relevant game cameras
         private void DoUglyCameraHack()
         {
-            m_uiBlitter.enabled = false;
+            if(m_uiBlitter != null)
+            {
+                m_uiBlitter.enabled = VRConfig.configCameraBlood.Value;
+            }
+            
             m_fpsCamera.PlayerMoveEnabled = true;
             m_fpsCamera.MouseLookEnabled = true;
 

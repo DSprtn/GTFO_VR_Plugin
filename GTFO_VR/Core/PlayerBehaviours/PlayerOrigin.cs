@@ -92,7 +92,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 return;
             }
-            Vector3 newPosition = m_agent.PlayerCharacterController.SmoothPosition;
+            Vector3 newPosition = m_agent.PlayerCharacterController.SmoothPosition + new Vector3(0, VRConfig.configFloorOffset.Value / 100f, 0);
 
             transform.position = newPosition - m_offsetFromPlayerToHMD;
             transform.rotation = PlayerRotationOffset;
@@ -103,7 +103,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
             if (m_agent && m_agent.Locomotion.m_currentStateEnum.Equals(PlayerLocomotion.PLOC_State.Crouch))
             {
-                float goalCrouchHeight = VRSettings.IRLCrouchBorder;
+                float goalCrouchHeight = VRConfig.configCrouchHeight.Value / 100f;
 
                 float diff = Mathf.Max(0f, HMD.GetPlayerHeight() - goalCrouchHeight);
                 return new Vector3(0, diff, 0);

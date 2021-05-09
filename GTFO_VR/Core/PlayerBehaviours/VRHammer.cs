@@ -32,6 +32,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         void LateUpdate()
         {
+            if(VRConfig.configUseOldHammer.Value || !VRConfig.configUseControllers.Value)
+            {
+                return;
+            }
             if(m_weapon.Owner && m_weapon.Owner.IsLocallyOwned)
             {
                 if (FocusStateEvents.currentState == eFocusState.FPS)

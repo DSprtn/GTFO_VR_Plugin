@@ -32,7 +32,7 @@ namespace GTFO_VR.Injections.Gameplay
         private static void Postfix(FPSCamera __instance)
         {
             // Repeat position inject or the transforms will get out of sync (Unity transform handling mumbo jumbo ensues, frame later or frame behind tracking)
-            if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
+            if (!FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 __instance.Position = HMD.GetWorldPosition();
             }
@@ -48,7 +48,7 @@ namespace GTFO_VR.Injections.Gameplay
     {
         private static void Postfix(FPSCamera __instance)
         {
-            if (VRSettings.VR_TRACKING_TYPE.Equals(TrackingType.PositionAndRotation) && !FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
+            if (!FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 __instance.Position = HMD.GetWorldPosition();
             }

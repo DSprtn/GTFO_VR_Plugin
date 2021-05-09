@@ -48,7 +48,6 @@
     <Compile Include="Detours\TerminalInputDetours.cs" />
     <Compile Include="Core\PlayerBehaviours\PlayerOrigin.cs" />
     <Compile Include="Core\PlayerBehaviours\Snapturn.cs" />
-    <Compile Include="Core\VRSettings.cs" />
     <Compile Include="Core\VRAssets.cs" />
     <Compile Include="Core\VR_Input\VRKeyboard.cs" />
     <Compile Include="Events\FocusStateEvents.cs" />
@@ -90,6 +89,7 @@
     <Compile Include="Injections\GameHooks\InjectInteractionPromptRef.cs" />
     <Compile Include="Injections\Gameplay\InjectSemanticInteractionTweaks.cs" />
     <Compile Include="Injections\Gameplay\InjectMeleeIgnoreCameraDir.cs" />
+    <Compile Include="Injections\UI\InjectMenuConfigUI.cs" />
     <Compile Include="Injections\UI\InjectNavMarkerWorldSpace.cs" />
     <Compile Include="Injections\Gameplay\InjectNoVRCamHIjack.cs" />
     <Compile Include="Injections\GameHooks\InjectPlayerAgentRef.cs" />
@@ -475,7 +475,9 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Core\Menu\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetPath)" "S:/_VS_BUILDS" /E /Y</PostBuildEvent>

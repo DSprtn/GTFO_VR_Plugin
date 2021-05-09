@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.Events;
+using GTFO_VR.Util;
 using System;
 using UnityEngine;
 
@@ -23,12 +24,25 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void Awake()
         {
+            CreatePointerObjects();
             ItemEquippableEvents.OnPlayerWieldItem += PlayerChangedItem;
+            VRConfig.configUseLaserPointerOnWeapons.SettingChanged += LaserPointerToggled;
+            VRConfig.configLaserPointerColor.SettingChanged += LaserPointerColorChanged;
+            if(!VRConfig.configUseLaserPointerOnWeapons.Value)
+            {
+                TogglePointer(false);
+            }
         }
 
-        private void Start()
+        private void LaserPointerColorChanged(object sender, EventArgs e)
         {
-            CreatePointerObjects();
+            m_pointer.GetComponent<MeshRenderer>().material.color = ExtensionMethods.FromColorConversion(VRConfig.configLaserPointerColor.Value);
+            m_dot.GetComponent<MeshRenderer>().material.color = ExtensionMethods.FromColorConversion(VRConfig.configLaserPointerColor.Value);
+        }
+
+        private void LaserPointerToggled(object sender, EventArgs e)
+        {
+            TogglePointer(VRConfig.configUseLaserPointerOnWeapons.Value);
         }
 
         private void FixedUpdate()
@@ -111,9 +125,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_pointer.transform.localRotation = Quaternion.identity;
             m_dot.transform.localRotation = Quaternion.identity;
             Material material = new Material(Shader.Find("Unlit/Color"));
-            material.SetColor("_Color", VRSettings.laserPointerColor);
+            material.SetColor("_Color", ExtensionMethods.FromColorConversion(VRConfig.configLaserPointerColor.Value));
             m_pointer.GetComponent<MeshRenderer>().material = material;
             m_dot.GetComponent<MeshRenderer>().material = material;
+
+            
             m_setup = true;
 
             TogglePointer(false);
@@ -121,6 +137,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
+            VRConfig.configUseLaserPointerOnWeapons.SettingChanged -= LaserPointerToggled;
+            VRConfig.configLaserPointerColor.SettingChanged -= LaserPointerColorChanged;
             ItemEquippableEvents.OnPlayerWieldItem -= PlayerChangedItem;
         }
     }

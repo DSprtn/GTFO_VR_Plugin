@@ -19,7 +19,6 @@ namespace GTFO_VR.Injections
     {
         static void Postfix(MeleeWeaponFirstPerson __instance)
         {
-
             __instance.gameObject.AddComponent<VRHammer>().Setup(__instance);
         }
     }
