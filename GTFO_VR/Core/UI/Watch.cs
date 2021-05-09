@@ -83,8 +83,8 @@ namespace GTFO_VR.UI
 
         private void SetWatchColor()
         {
-            transform.FindDeepChild("STRAP_LP").GetComponent<MeshRenderer>().material.color = ExtensionMethods.FromColorConversion(VRConfig.configWatchColor.Value);
-            transform.FindDeepChild("WATCH_LP").GetComponent<MeshRenderer>().material.color = ExtensionMethods.FromColorConversion(VRConfig.configWatchColor.Value);
+            transform.FindDeepChild("STRAP_LP").GetComponent<MeshRenderer>().material.color = ExtensionMethods.FromString(VRConfig.configWatchColor.Value);
+            transform.FindDeepChild("WATCH_LP").GetComponent<MeshRenderer>().material.color = ExtensionMethods.FromString(VRConfig.configWatchColor.Value);
         }
 
         void Update()

@@ -23,7 +23,7 @@ namespace GTFO_VR.Injections.Rendering
                 HMDRes.width = Mathf.FloorToInt(HMDRes.width * .75f);
                 HMDRes.height = Mathf.FloorToInt(HMDRes.height * .75f);
             }
-            else if (VRConfig.configLightResMode.Value.Equals("60%"))
+            else if (VRConfig.configLightResMode.Value.Equals("50%"))
             {
                 HMDRes.width = Mathf.FloorToInt(HMDRes.width * .5f);
                 HMDRes.height = Mathf.FloorToInt(HMDRes.height * .5f);

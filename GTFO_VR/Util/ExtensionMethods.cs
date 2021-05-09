@@ -49,7 +49,7 @@ namespace GTFO_VR.Util
             BLACK = 9
         }
 
-        public static Color FromColorConversion(string color)
+        public static Color FromString(string color)
         {
             switch (color)
             {
