@@ -1,26 +1,27 @@
-﻿using System;
+﻿using GTFO_VR.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace GTFO_VR.Events
 {
-
-    public static class HammerEvents
+    class HammerEvents
     {
         public static event Action<float> OnHammerSmack;
-        public static event Action<float> OnHammerCharging;
+        public static event Action OnHammerFullyCharged;
+
 
         public static void HammerSmacked(float damage)
         {
             OnHammerSmack?.Invoke(damage);
         }
 
-        public static void HammerCharging(float progress)
+        public static void HammerFullyCharged()
         {
-            OnHammerCharging?.Invoke(progress);
+            Log.Debug("Hammer fully charged!");
+            OnHammerFullyCharged?.Invoke();
         }
     }
 }

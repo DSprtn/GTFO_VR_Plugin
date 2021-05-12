@@ -21,7 +21,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerFireWeaponEvents.OnPlayerFireWeapon += PlayWeaponFireHaptics;
             PlayerReloadEvents.OnPlayerReloaded += PlayWeaponReloadHaptics;
             GlueGunEvents.OnPressureUpdate += GlueGunPressureHaptics;
-            HammerEvents.OnHammerCharging += HammerChargingHaptics;
+            HeldItemEvents.OnItemCharging += HammerChargingHaptics;
             HammerEvents.OnHammerSmack += HammerSmackHaptics;
         }
 
@@ -181,7 +181,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerFireWeaponEvents.OnPlayerFireWeapon -= PlayWeaponFireHaptics;
             PlayerReloadEvents.OnPlayerReloaded -= PlayWeaponReloadHaptics;
             GlueGunEvents.OnPressureUpdate -= GlueGunPressureHaptics;
-            HammerEvents.OnHammerCharging -= HammerChargingHaptics;
+            HeldItemEvents.OnItemCharging -= HammerChargingHaptics;
             HammerEvents.OnHammerSmack -= HammerSmackHaptics;
         }
     }

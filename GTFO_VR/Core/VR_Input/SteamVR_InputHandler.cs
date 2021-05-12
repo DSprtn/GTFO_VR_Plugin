@@ -217,6 +217,7 @@ namespace GTFO_VR.Core.VR_Input
 
             boolActions = new Dictionary<InputAction, SteamVR_Action_Boolean>
             {
+
                 { InputAction.Jump, m_jumpAction },
                 { InputAction.Use, m_interactAction },
                 { InputAction.Aim, m_toggleWatchAction },
@@ -234,7 +235,7 @@ namespace GTFO_VR.Core.VR_Input
                 { InputAction.MenuExit, m_reloadAction },
                 { InputAction.MenuToggle, m_openMenuAction },
                 { InputAction.ToggleMap, m_openMapAction },
-                { InputAction.Flashlight, m_flashlightAction }
+                { InputAction.Flashlight, m_flashlightAction },
             };
         }
 
@@ -251,13 +252,13 @@ namespace GTFO_VR.Core.VR_Input
         {
             if (InputAction.ScrollItems.Equals(action))
             {
-                if (m_weaponSwitchLeftAction.GetStateDown(SteamVR_Input_Sources.Any))
+                if (m_weaponSwitchLeftAction.GetState(SteamVR_Input_Sources.Any))
                 {
-                    return -1f;
+                    return -1f * Time.deltaTime;
                 }
-                if (m_weaponSwitchRightAction.GetStateDown(SteamVR_Input_Sources.Any))
+                if (m_weaponSwitchRightAction.GetState(SteamVR_Input_Sources.Any))
                 {
-                    return 1f;
+                    return 1f * Time.deltaTime;
                 }
                 return 0f;
             }

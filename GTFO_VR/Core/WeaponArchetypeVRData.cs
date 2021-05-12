@@ -70,7 +70,7 @@ namespace GTFO_VR.Core
                 { "Melee", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f - VRConfig.configWeaponRotationOffset.Value, 0, 0)), false, 1.15f) },
                 
                 { "Mine deployer", new VRWeaponData(new Vector3(0f, 0f, -.05f), false) },
-                { "Bio Tracker", new VRWeaponData(new Vector3(0f, 0f, -.05f), false, 1.45f) },
+                { "Bio Tracker", new VRWeaponData(new Vector3(0f, 0f, -.05f), false, 1.3f) },
 
                 { "Pistol", new VRWeaponData(new Vector3(0f, 0f, 0f), false, 1.1f) },
                 { "Revolver", new VRWeaponData(new Vector3(0f, -.01f, 0f), false) },
@@ -118,6 +118,7 @@ namespace GTFO_VR.Core
             if (weaponArchetypes.TryGetValue(item.ArchetypeName, out VRWeaponData data))
             {
                 m_current = data;
+
                 item.transform.localScale = Vector3.one * m_current.scaleMultiplier;
             }
             else

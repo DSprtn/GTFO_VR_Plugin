@@ -34,6 +34,7 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<int> configFloorOffset;
         internal static ConfigEntry<bool> configUseOldHammer;
         internal static ConfigEntry<bool> configCameraBlood;
+        internal static ConfigEntry<bool> configUseVisualHammerIndicator;
 
         private static List<BepinGTFOSettingBase> VRSettings = new List<BepinGTFOSettingBase>();
 
@@ -41,8 +42,25 @@ namespace GTFO_VR.Core
 
         private static Dictionary<eCellSettingID, ConfigEntryBase> configBindings = new Dictionary<eCellSettingID, ConfigEntryBase>();
 
+        internal static ConfigEntry<bool> configDebugShowTwoHHitboxes;
+        internal static ConfigEntry<bool> configDebugShowHammerHitbox;
+        internal static ConfigEntry<float> configDebugHammersizeMult;
+        internal static ConfigEntry<float> configHammerPosYOffset;
+        internal static ConfigEntry<float> configHammerPosXOffset;
+
         internal static void SetupConfig(ConfigFile file)
         {
+            if(GTFO_VR_Plugin.DEBUG_ENABLED)
+            {
+                BindHeader("DEBUG");
+                configDebugShowTwoHHitboxes = BindBool(file, "Debug - If you see this, I screwed up!", "Show 2H hitboxes", false, "Shows two handed weapon hitboxes", "Show 2H hitboxes");
+                configDebugShowHammerHitbox = BindBool(file, "Debug - If you see this, I screwed up!", "Show hammer hitbox", false, "Shows hammer hitbox", "Hammer hitbox debug");
+                configDebugHammersizeMult = BindFloat(file, "Debug - If you see this, I screwed up!", "Hammer hitbox size mult", 1f, 0.5f, 3f, "Hammer hitbox size multiplier", "Hammer hitbox size");
+                configHammerPosYOffset = BindFloat(file, "Debug - If you see this, I screwed up!", "Hammer hitbox y offset", .45f, 0.0f, 1f, "Hammer hitbox position offset", "Hammer hurtbox Y offset");
+                configHammerPosXOffset = BindFloat(file, "Debug - If you see this, I screwed up!", "Hammer hitbox x offset", .45f, -1.0f, 1f, "Hammer hitbox position offset", "Hammer hitbox X offset");
+            }
+
+
             BindHeader("Input");
             configUseLeftHand = BindBool(file, "Input", "Use left hand as main hand?", false, "If true, all items will appear in the left hand", "Left handed mode");
 
@@ -53,7 +71,7 @@ namespace GTFO_VR.Core
             configSnapTurnAmount = BindInt(file, "Input", "Snap turn angle", 60, 0, 180, "The amount of degrees to turn on a snap turn (or turn per half a second if smooth turn is enabled)", "Snap turn amount/speed (angle)");
 
             BindHeader("Watch");
-            configWatchColor = BindStringDropdown(file, "Watch", "Hex color to use for watch", "0", "Configure this in-game...", "Watch color", new string[] { "WHITE", "RED", "GREEN", "BLUE", "CYAN", "YELLOW", "MAGENTA", "ORANGE", "BLACK" });
+            configWatchColor = BindStringDropdown(file, "Watch", "Watch color", "WHITE", "Color to use for watch", "Watch color", new string[] { "WHITE", "RED", "GREEN", "BLUE", "CYAN", "YELLOW", "MAGENTA", "ORANGE", "BLACK" });
             configWatchScaling = BindFloat(file, "Watch", "Watch scale multiplier", 1f, 0.8f, 1.5f, "Watch size multiplier", "Watch size");
             configUseNumbersForAmmoDisplay = BindBool(file, "Watch", "Use numbers for ammo display?", false, "If true, current ammo and max ammo will be displayed as numbers on the watch", "Use number display for ammo");
 
@@ -65,7 +83,7 @@ namespace GTFO_VR.Core
             configAlwaysDoubleHanded = BindBool(file, "Input", "Always use double handed aiming? (Where it applies)", false, "If true, double handed weapons will always use double handed aiming (RECOMMENDED FOR GUN STOCK USERS)", "Always use two handed");
 
             configUseLaserPointerOnWeapons = BindBool(file, "Laser pointer", "Use laser pointer on weapons?", true, "If true, all weapons will have a laser pointer.", "Laserpointer");
-            configLaserPointerColor = BindStringDropdown(file, "Laser pointer", "Hex color to use for laster pointer", "ORANGE", "Google hexcolor and paste whatever color you want here.", "Laserpointer color", new string[] { "WHITE", "RED", "GREEN", "CYAN", "YELLOW", "MAGENTA", "ORANGE" });
+            configLaserPointerColor = BindStringDropdown(file, "Laser pointer", "Laser pointer color", "RED", "Color to use for the laser pointer", "Laserpointer color", new string[] { "WHITE", "RED", "GREEN", "CYAN", "YELLOW", "MAGENTA", "ORANGE", "ALABASTER_RED"});
 
             configWeaponRotationOffset = BindInt(file, "Misc", "Weapon forward rotation offset in degrees", 12, -45, 45, "Change this to rotate all weapons forward by the given amount of degrees (-45,45) --- \n'12' seems to work really well for the Quest and Index with the 'tip' action pose",
 "Weapon Tilt (angles, forward)");
@@ -94,6 +112,7 @@ namespace GTFO_VR.Core
             BindHeader("Misc");
 
             configFloorOffset = BindInt(file, "Misc", "Floor height offset (cm)", 0, 0, 50, "Floor offset in cm", "Floor offset (cm)");
+            configUseVisualHammerIndicator = BindBool(file, "Misc", "Show light for hammer charge?", false, "If true, will show a light indicator when hammer is fully charged", "Glow when hammer charged");
             configUseOldHammer = BindBool(file, "Misc", "Use old hammer?", false, "If true, will use the old hammer that uses animations and moves by itself.", "Old VR hammer");
             configOculusCrashWorkaround = BindBool(file, "Misc", "Use Oculus crash workaround?", false, "If true, map and menu might look a little janky but it should crash less. Blame Zuck!", "Oculus crash workaround");
 

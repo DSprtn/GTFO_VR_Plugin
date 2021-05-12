@@ -6,18 +6,19 @@ using UnityEngine;
 namespace GTFO_VR.Injections.Events
 {
     /// <summary>
-    /// Add event calls for the player taking damage
+    /// Add misc. event calls for held items
     /// </summary>
 
     [HarmonyPatch(typeof(CrosshairGuiLayer), nameof(CrosshairGuiLayer.SetChargeUpVisibleAndProgress))]
-    internal class InjectHammerChargeEvents
+    internal class InjectHeldItemEvents
     {
         private static void Postfix(bool visible, float progress)
         {
             if(visible)
             {
-                HammerEvents.HammerCharging(progress);
+                HeldItemEvents.ItemCharging(progress);
             }
         }
     }
+
 }

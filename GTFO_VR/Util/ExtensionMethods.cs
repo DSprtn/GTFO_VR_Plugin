@@ -55,6 +55,8 @@ namespace GTFO_VR.Util
             {
                 case ("WHITE"):
                     return Color.white;
+                case ("ALABASTER_RED"):
+                    return ColorExt.Hex("C4302B");
                 case ("RED"):
                     return ColorExt.RedBright(1f);
                 case ("GREEN"):

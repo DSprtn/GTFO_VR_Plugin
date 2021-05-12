@@ -60,7 +60,8 @@ namespace GTFO_VR.Events
             }
             Vector3 offsetToGrip = item.LeftHandGripTrans.position - item.transform.position;
             Vector3 normalToMuzzle = (item.MuzzleAlign.transform.position - item.transform.position).normalized;
-            return item.transform.position + Vector3.Project(offsetToGrip, normalToMuzzle);
+
+            return item.transform.position + Vector3.Project(offsetToGrip, normalToMuzzle) + normalToMuzzle * .1f;
         }
     }
 }
