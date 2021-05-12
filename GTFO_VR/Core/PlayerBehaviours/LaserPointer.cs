@@ -28,21 +28,21 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ItemEquippableEvents.OnPlayerWieldItem += PlayerChangedItem;
             VRConfig.configUseLaserPointerOnWeapons.SettingChanged += LaserPointerToggled;
             VRConfig.configLaserPointerColor.SettingChanged += LaserPointerColorChanged;
-            if(!VRConfig.configUseLaserPointerOnWeapons.Value)
-            {
-                TogglePointer(false);
-            }
         }
 
         private void LaserPointerColorChanged(object sender, EventArgs e)
         {
+            if(!m_setup)
+            {
+                return;
+            }
             m_pointer.GetComponent<MeshRenderer>().material.color = ExtensionMethods.FromString(VRConfig.configLaserPointerColor.Value);
             m_dot.GetComponent<MeshRenderer>().material.color = ExtensionMethods.FromString(VRConfig.configLaserPointerColor.Value);
         }
 
         private void LaserPointerToggled(object sender, EventArgs e)
         {
-            TogglePointer(VRConfig.configUseLaserPointerOnWeapons.Value);
+            PlayerChangedItem(ItemEquippableEvents.currentItem);
         }
 
         private void FixedUpdate()
@@ -74,11 +74,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public void PlayerChangedItem(ItemEquippable item)
         {
-            if (!m_setup)
+            if (!m_setup || item == null)
             {
                 return;
             }
-            if (item.HasFlashlight && item.AmmoType != Player.AmmoType.None)
+            if (item.HasFlashlight && item.AmmoType != Player.AmmoType.None && VRConfig.configUseLaserPointerOnWeapons.Value)
             {
                 TogglePointer(true);
                 SetHolderTransform(item.MuzzleAlign);
