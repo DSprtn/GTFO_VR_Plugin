@@ -87,16 +87,16 @@ Try to get used to the game in Non-VR mode first before using!
 #### CONFIGURATION 
 	
 	There are configurable options for:
+	-	Left handed mode 
+	- 	Snap turn - Amount, smooth turn
 	-	Rendering tweaks - Post-processing, resolution and other performance tweaks/hacks
 	- 	Floor height offset (for seated mode and height adjustment!)
-	-	Left handed mode 
 	- 	Shooting haptics - Toggle, strength
 	- 	IRL Crouching - Toggle, height tweak
 	-	Laser pointer - Toggle, color
-	-	Hammer - Visual charge indicator, 'Old hammer' (auto-swing)
-	-	Two handed aiming - Toggle, always on mode
-	- 	Snap turn - Amount, smooth turn
+	-	Hammer - Visual charge indicator, 'Old hammer' (auto-swing with animations)
 	-	Watch - Scale, color, number display for ammo
+	-	Two handed aiming - Toggle, always on mode
 	-	No motion controller mode (You can play with a gamepad!)
 	-	etc. - Have a look in the menu!
 
@@ -196,20 +196,19 @@ Try to get used to the game in Non-VR mode first before using!
                 case ("U"):
                         returns "UPLINK_VERIFY ";
 		
-
 	If you'd like to have custom bindable shortcuts let me know! 
 				
 ## Features:
-	Works in multiplayer, with others not having to have the mod!
+	Works in multiplayer, with others not needing any mods!
 	
 	Full SteamVR input binding support, you can play with all VR controllers, provided they have enough buttons 
 	for all the actions in GTFO. Most in-game actions are supported, if you're missing any let me know!
 	
-	Full VR controller based aiming (including fancy laserpointer)
+	Full motion controller based aiming (including fancy laserpointer)
 	
 	Customized user interface for VR
 	
-	Fully configurable in-game and in an external config file with lots of customization options
+	Everything is fully configurable in-game and in an external config. 
 	(If you're missing any options, let me know!)
 	
 	Main menu, map UI and terminal working correctly in VR
@@ -223,7 +222,8 @@ Try to get used to the game in Non-VR mode first before using!
 	Customized melee mechanics for VR
 	
 ## Known issues: 
-	Nothing left over here! 
+	SteamVR games crash often on v28 of Oculus. There's a workaround in the config that should
+	reduce crashing with some small side effects.
 
 	If a crash occurs send me the output log from the path given below (before starting another game!):
 	SteamApps/GTFO/Bepinex/LogOutput.log
