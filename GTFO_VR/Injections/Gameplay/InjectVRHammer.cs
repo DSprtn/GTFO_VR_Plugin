@@ -36,19 +36,25 @@ namespace GTFO_VR.Injections
         static void Postfix(MWS_ChargeUp __instance)
         {
 
-            if (Controllers.mainControllerPose.GetVelocity().magnitude > 0.4f)
+            if (Controllers.mainControllerPose.GetVelocity().magnitude > 0.5f)
             {
-                Collider[] staticColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRHammer.hammerSizeMult * .25f, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC);
+               
                 Collider[] enemyColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRHammer.hammerSizeMult * .75f, LayerManager.MASK_ENEMY_DAMAGABLE);
+                bool shouldReleaseCharge = enemyColliders.Length > 0;
                 if (GTFO_VR_Plugin.DEBUG_ENABLED)
                 {
                     if(VRConfig.configDebugShowHammerHitbox.Value)
                     {
-                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRHammer.hammerSizeMult, ColorExt.Blue(0.2f));
-                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRHammer.hammerSizeMult, ColorExt.Red(0.2f));
+                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRHammer.hammerSizeMult * .75f, ColorExt.Blue(0.2f));
+                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRHammer.hammerSizeMult * .25f, ColorExt.Red(0.2f));
                     }
                 }
-                if (staticColliders.Length > 0 || enemyColliders.Length > 0)
+                if(Controllers.mainControllerPose.GetVelocity().magnitude > 1.6f) {
+                    Collider[] staticColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRHammer.hammerSizeMult * .25f, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC);
+                    shouldReleaseCharge = shouldReleaseCharge || staticColliders.Length > 0;
+                }
+
+                if (shouldReleaseCharge)
                 {
                     __instance.OnChargeupRelease();
                 }
