@@ -105,7 +105,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 float goalCrouchHeight = VRConfig.configCrouchHeight.Value / 100f;
 
-                float diff = Mathf.Max(0f, HMD.GetPlayerHeight() - goalCrouchHeight);
+                float diff = Mathf.Max(0f, HMD.GetPlayerHeight() - goalCrouchHeight + VRConfig.configFloorOffset.Value / 100f);
                 return new Vector3(0, diff, 0);
             }
             return Vector3.zero;

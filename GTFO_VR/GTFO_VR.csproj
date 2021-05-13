@@ -37,6 +37,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Core\PlayerBehaviours\MovementVignette.cs" />
     <Compile Include="Core\PlayerBehaviours\VRHammer.cs" />
     <Compile Include="Core\VRConfig.cs" />
     <Compile Include="Core\Log.cs" />

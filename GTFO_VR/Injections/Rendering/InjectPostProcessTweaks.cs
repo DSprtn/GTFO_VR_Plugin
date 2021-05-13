@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.Core;
+using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.UI;
 using GTFO_VR.Events;
 using HarmonyLib;
@@ -17,7 +18,7 @@ namespace GTFO_VR.Injections.Rendering
             {
                 __instance.m_Bloom.model.enabled = VRConfig.configPostBloom.Value;
                 __instance.m_EyeAdaptation.model.enabled = VRConfig.configPostEyeAdaptation.Value;
-                __instance.m_Vignette.model.enabled = VRConfig.configPostVignette.Value;
+                __instance.m_Vignette.model.enabled = VRConfig.configPostVignette.Value || VRConfig.configUseVignetteWhenMoving.Value;
             }
         }
     }

@@ -28,6 +28,15 @@ namespace GTFO_VR.Injections.UI
     [HarmonyPatch(typeof(PUI_GameObjectives), nameof(PUI_GameObjectives.SetSubObjective))]
     internal class InjectWatchSubObjectives
     {
+        /// <summary>
+        /// Do not show done objectives
+        /// </summary>
+        /// <param name="showPrevious"></param>
+        private static void Prefix(ref bool showPrevious)
+        {
+            showPrevious = false;
+        }
+
         private static void Postfix(PUI_GameObjectives __instance)
         {
             Watch.Current?.UpdateSubObjective(__instance.m_subObjective.text);

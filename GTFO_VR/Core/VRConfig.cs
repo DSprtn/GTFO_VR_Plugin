@@ -35,6 +35,8 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configUseOldHammer;
         internal static ConfigEntry<bool> configCameraBlood;
         internal static ConfigEntry<bool> configUseVisualHammerIndicator;
+        internal static ConfigEntry<bool> configUseVignetteWhenMoving;
+        internal static ConfigEntry<float> configMovementVignetteIntensity;
 
         private static List<BepinGTFOSettingBase> VRSettings = new List<BepinGTFOSettingBase>();
 
@@ -66,6 +68,8 @@ namespace GTFO_VR.Core
             configSmoothSnapTurn = BindBool(file, "Input", "Use smooth turning?", false, "If true, will use smooth turn instead of snap turn", "Smooth turning");
             configSnapTurnAmount = BindInt(file, "Input", "Snap turn angle", 60, 0, 180, "The amount of degrees to turn on a snap turn (or turn per half a second if smooth turn is enabled)", "Snap turn amount/speed (angle)");
             configFloorOffset = BindInt(file, "Misc", "Floor height offset (cm)", 0, 0, 50, "Floor offset in cm", "Floor offset (cm)");
+            configUseVignetteWhenMoving = BindBool(file, "Misc", "Use Vignette when moving?", false, "If true, will display vignette effect while moving.", "Vignette while moving");
+            configMovementVignetteIntensity = BindFloat(file, "Input", "Movement vignette intensity", 1f, .5f, 1.5f, "Multiplier for vignette intensity while moving", "Movement vignette intensity");
 
             BindHeader("Watch");
             configWatchColor = BindStringDropdown(file, "Watch", "Watch color", "WHITE", "Color to use for watch", "Watch color", new string[] { "WHITE", "RED", "GREEN", "BLUE", "CYAN", "YELLOW", "MAGENTA", "ORANGE", "BLACK" });
@@ -114,7 +118,6 @@ namespace GTFO_VR.Core
     "Alternate rendering per eye");
 
             BindHeader("Misc");
-
             configOculusCrashWorkaround = BindBool(file, "Misc", "Use Oculus crash workaround?", false, "If true, map and menu might look a little janky but it should crash less. Blame Zuck!", "Oculus crash workaround");
             configUseControllers = BindBool(file, "Input", "Use VR Controllers?", true, "If true, will use VR controllers. You can play with a gamepad and head aiming if you set this to false", "Motion Controllers (Restart if turning off!)");
 

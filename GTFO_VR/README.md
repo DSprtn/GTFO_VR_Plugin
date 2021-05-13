@@ -91,6 +91,7 @@ Try to get used to the game in Non-VR mode first before using!
 	- 	Snap turn - Amount, smooth turn
 	-	Rendering tweaks - Post-processing, resolution and other performance tweaks/hacks
 	- 	Floor height offset (for seated mode and height adjustment!)
+	-	Movement vignette - Toggle, intensity
 	- 	Shooting haptics - Toggle, strength
 	- 	IRL Crouching - Toggle, height tweak
 	-	Laser pointer - Toggle, color

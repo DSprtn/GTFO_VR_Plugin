@@ -4,6 +4,7 @@ using GTFO_VR.UI;
 using Player;
 using System;
 using UnityEngine;
+using UnityEngine.PostProcessing;
 using Valve.VR;
 
 namespace GTFO_VR.Core.PlayerBehaviours
@@ -24,6 +25,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private LaserPointer m_pointer;
         private CollisionFade m_fade;
         private Haptics m_haptics;
+        private MovementVignette m_movementVignette;
 
         public static PlayerAgent PlayerAgent;
         public static FPSCamera FpsCamera;
@@ -39,6 +41,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_snapTurn.Setup(m_origin);
 
             gameObject.AddComponent<VRWorldSpaceUI>();
+
+            m_movementVignette = gameObject.AddComponent<MovementVignette>();
+            m_movementVignette.Setup(agent.Locomotion, GetComponent<PostProcessingBehaviour>());
 
 
             GameObject laserPointer = new GameObject("LaserPointer");

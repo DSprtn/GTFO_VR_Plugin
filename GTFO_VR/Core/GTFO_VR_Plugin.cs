@@ -75,6 +75,7 @@ namespace GTFO_VR.Core
             ClassInjector.RegisterTypeInIl2Cpp<Watch>();
             ClassInjector.RegisterTypeInIl2Cpp<VRHammer>();
             ClassInjector.RegisterTypeInIl2Cpp<DividedBarShaderController>();
+            ClassInjector.RegisterTypeInIl2Cpp<MovementVignette>();
         }
 
         private bool SteamVRRunningCheck()
