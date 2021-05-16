@@ -5,4 +5,10 @@
         Left,
         Right
     }
+
+    public enum InteractionHand
+    {
+        Offhand, 
+        MainHand
+    }
 }

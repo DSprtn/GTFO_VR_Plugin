@@ -11,11 +11,13 @@ namespace GTFO_VR.Core.VR_Input
     /// </summary>
     public class VRKeyboard : MonoBehaviour
     {
+        static bool m_chatMode = false;
         public VRKeyboard(IntPtr value) : base(value)
         {
         }
 
         private static string CurrentFrameInput = "";
+        private static string CurrentTotalInput = "";
 
         public static bool KeyboardClosedThisFrame;
 
@@ -34,8 +36,15 @@ namespace GTFO_VR.Core.VR_Input
             {
                 SteamVR_Render.unfocusedRenderResolution = 1f;
                 SteamVR.instance.overlay.ShowKeyboard(0, 0, "Terminal input", 256, "", true, 0);
+                m_chatMode = false;
 
                 OrientKeyboard();
+            } else if (state.Equals(eFocusState.FPS_TypingInChat))
+            {
+                SteamVR_Render.unfocusedRenderResolution = 1f;
+                SteamVR.instance.overlay.ShowKeyboard(0, 0, "Chat input", 256, "", false, 0);
+                OrientKeyboard();
+                m_chatMode = true;
             }
             else
             {
@@ -47,18 +56,61 @@ namespace GTFO_VR.Core.VR_Input
         public void OnKeyboardDone(VREvent_t arg0)
         {
             KeyboardClosedThisFrame = true;
+            Log.Debug("KB done/closed");
+            if (m_chatMode)
+            {
+                if (PlayerChatManager.Current != null && PlayerChatManager.InChatMode)
+                {
+                    if(CurrentTotalInput.Length > 0)
+                    {
+                        PlayerChatManager.Current.m_currentValue = CurrentTotalInput;
+                        PlayerChatManager.Current.PostMessage();
+                    } else
+                    {
+                        PlayerChatManager.Current.ExitChatMode();
+                    }
+                }
+            }
+            CurrentTotalInput = "";
         }
 
         private void OnKeyboardInput(VREvent_t ev)
         {
-            VREvent_Keyboard_t keyboard = ev.data.keyboard;
-            byte[] inputBytes = new byte[] { keyboard.cNewInput0, keyboard.cNewInput1, keyboard.cNewInput2, keyboard.cNewInput3, keyboard.cNewInput4, keyboard.cNewInput5, keyboard.cNewInput6, keyboard.cNewInput7 };
-            int len = 0;
-            for (; inputBytes[len] != 0 && len < 7; len++) ;
-            string input = Encoding.UTF8.GetString(inputBytes, 0, len);
-            input = HandleSpecialConversionAndShortcuts(input);
+            string input = "";
+            if(!m_chatMode)
+            {
+                VREvent_Keyboard_t keyboard = ev.data.keyboard;
+                byte[] inputBytes = new byte[] { keyboard.cNewInput0, keyboard.cNewInput1, keyboard.cNewInput2, keyboard.cNewInput3, keyboard.cNewInput4, keyboard.cNewInput5, keyboard.cNewInput6, keyboard.cNewInput7 };
+                int len = 0;
+                for (; inputBytes[len] != 0 && len < 7; len++) ;
+                input = Encoding.UTF8.GetString(inputBytes, 0, len);
+                input = HandleSpecialConversionAndShortcuts(input);
+                CurrentFrameInput = input;
+            } else
+            {
+                StringBuilder textBuilder = new StringBuilder(256);
+                SteamVR.instance.overlay.GetKeyboardText(textBuilder, 256);
+                input = textBuilder.ToString();
+                CurrentTotalInput = input;
+                if (KeyboardClosedThisFrame || input.Contains("\r") || input.Contains("\n"))
+                {
+                    input = input.Replace("\r", "").Replace("\n", "");
+                    if (PlayerChatManager.Current != null && PlayerChatManager.InChatMode)
+                    {
+                        if(input.Length < 1)
+                        {
+                            PlayerChatManager.Current.ExitChatMode();
+                        }
+                        else
+                        {
+                            PlayerChatManager.Current.m_currentValue = input;
+                            PlayerChatManager.Current.PostMessage();
+                            Log.Debug(input);
+                        }
+                    }
+                }
+            }
 
-            CurrentFrameInput = input;
         }
 
         public static string GetKeyboardInput()

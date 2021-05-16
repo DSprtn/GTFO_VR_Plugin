@@ -23,7 +23,7 @@ namespace GTFO_VR.Core
             MODNAME = "GTFO_VR_Plugin",
             AUTHOR = "Spartan",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "0.9.5.0";
+            VERSION = "1.0.0.0";
 
 
         public static bool DEBUG_ENABLED = false;
@@ -76,6 +76,9 @@ namespace GTFO_VR.Core
             ClassInjector.RegisterTypeInIl2Cpp<VRHammer>();
             ClassInjector.RegisterTypeInIl2Cpp<DividedBarShaderController>();
             ClassInjector.RegisterTypeInIl2Cpp<MovementVignette>();
+            ClassInjector.RegisterTypeInIl2Cpp<RadialMenu>();
+            ClassInjector.RegisterTypeInIl2Cpp<RadialItem>();
+            ClassInjector.RegisterTypeInIl2Cpp<WeaponRadialMenu>();
         }
 
         private bool SteamVRRunningCheck()

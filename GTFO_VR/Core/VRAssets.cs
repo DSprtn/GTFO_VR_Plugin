@@ -24,6 +24,19 @@ namespace GTFO_VR.Core
 
         public static Shader SpriteSphereClip;
 
+        public static Sprite RadialBG;
+        public static Sprite Objective;
+        public static Sprite Chat;
+        public static Sprite ChatType;
+        public static Sprite MeleeFallback;
+        public static Sprite PrimaryFallback;
+        public static Sprite SecondaryFallback;
+        public static Sprite ToolFallback;
+        public static Sprite ThrowableFallback;
+        public static Sprite PackFallback;
+        public static Sprite HackingToolFallback;
+
+
 
         // GameObjects loaded from bundles can get wiped on load, so we sometimes need to reload them
         public static GameObject GetWatchPrefab()
@@ -53,6 +66,11 @@ namespace GTFO_VR.Core
             return TextAlwaysRender;
         }
 
+        public Sprite CreateSpriteFromTexture2D(Texture2D tex)
+        {
+            return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f,0.5f), 100f);
+        }
+
         private void Awake()
         {
             if(assetBundle == null)
@@ -63,6 +81,19 @@ namespace GTFO_VR.Core
             {
                 Log.Error("No assetbundle present!");
             }
+
+            RadialBG = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/bg.png").Cast<Texture2D>());
+            Objective = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/objective.png").Cast<Texture2D>());
+            Chat = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/chat.png").Cast<Texture2D>());
+            ChatType = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/chattype.png").Cast<Texture2D>());
+            MeleeFallback = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/melee.png").Cast<Texture2D>());
+            HackingToolFallback = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/hackingtool.png").Cast<Texture2D>());
+            PackFallback = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/packfallback.png").Cast<Texture2D>());
+            ToolFallback = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/tool.png").Cast<Texture2D>());
+            SecondaryFallback = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/secondary.png").Cast<Texture2D>());
+            PrimaryFallback = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/primary.png").Cast<Texture2D>());
+            ThrowableFallback = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/throwable.png").Cast<Texture2D>());
+
             WatchPrefab = assetBundle.LoadAsset("assets/p_vrwatch.prefab").Cast<GameObject>();
             SpriteAlwaysRender = assetBundle.LoadAsset("assets/spritenoztest.shader").Cast<Shader>();
             TextSphereClip = assetBundle.LoadAsset("assets/textmesh pro/resources/shaders/tmp_clipsphere.shader").Cast<Shader>();

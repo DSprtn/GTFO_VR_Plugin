@@ -160,6 +160,24 @@ namespace GTFO_VR.Core.VR_Input
             }
         }
 
+        public static GameObject GetInteractionHandGO(InteractionHand hand)
+        {
+            if(hand == InteractionHand.MainHand)
+            {
+                return mainController;
+            }
+            return offhandController;
+        }
+
+        public static SteamVR_Input_Sources GetDeviceFromInteractionHandType(InteractionHand type)
+        {
+            if (type.Equals(InteractionHand.MainHand))
+            {
+                return GetDeviceFromHandType(mainControllerType);
+            }
+            return GetDeviceFromHandType(offHandControllerType);
+        }
+
         public static SteamVR_Input_Sources GetDeviceFromHandType(HandType type)
         {
             if (type.Equals(HandType.Left))

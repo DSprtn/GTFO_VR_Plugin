@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.Core;
+using GTFO_VR.Core.UI;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
 using GTFO_VR.Util;
@@ -7,8 +8,10 @@ using SteamVR_Standalone_IL2CPP.Util;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
+using Valve.VR;
 using Mathf = SteamVR_Standalone_IL2CPP.Util.Mathf;
 
 namespace GTFO_VR.UI
@@ -25,12 +28,16 @@ namespace GTFO_VR.UI
         internal enum WatchState
         {
             Inventory,
-            Objective
+            Objective,
+            Chat
         }
 
         public Watch(IntPtr value): base(value) { }
 
         public static Watch Current;
+
+
+        RadialMenu m_watchRadialMenu;
 
         Dictionary<InventorySlot, DividedBarShaderController> m_inventoryToAmmoDisplayMapping = new Dictionary<InventorySlot, DividedBarShaderController>();
         DividedBarShaderController m_bulletsInMagDisplay;
@@ -40,6 +47,9 @@ namespace GTFO_VR.UI
         DividedBarShaderController m_infectionDisplay;
         DividedBarShaderController m_oxygenDisplay;
         TextMeshPro m_objectiveDisplay;
+        TextMeshPro m_chatDisplay;
+
+        Queue<string> msgBuffer = new Queue<string>();
 
         readonly Color m_normalHealthCol = new Color(0.66f, 0f, 0f);
         readonly Color m_normalInfectionCol = new Color(0.533f, 1, 0.8f);
@@ -55,8 +65,14 @@ namespace GTFO_VR.UI
         string m_mainObjective;
         string m_subObjective;
 
+
+        SteamVR_Action_Boolean toggleWatchMode;
+        SteamVR_Action_Boolean watchRadialMenu;
+
         void Awake()
         {
+            watchRadialMenu = SteamVR_Input.GetBooleanAction("WatchRadialMenu");
+            toggleWatchMode = SteamVR_Input.GetBooleanAction("ToggleWatchMode");
             Current = this;
             ItemEquippableEvents.OnPlayerWieldItem += ItemSwitched;
             InventoryAmmoEvents.OnInventoryAmmoUpdate += AmmoUpdate;
@@ -64,6 +80,97 @@ namespace GTFO_VR.UI
             VRConfig.configWatchScaling.SettingChanged += WatchScaleChanged;
             VRConfig.configUseNumbersForAmmoDisplay.SettingChanged += AmmoDisplayChanged;
             VRConfig.configWatchColor.SettingChanged += WatchColorChanged;
+            ChatMsgEvents.OnChatMsgReceived += ChatMsgReceived;
+        }
+
+        private void ChatMsgReceived(string msg)
+        {
+            if (msgBuffer.Contains(msg))
+            {
+                return;
+            }
+            SteamVR_InputHandler.TriggerHapticPulse(0.1f, 40f, .75f, Controllers.GetDeviceFromInteractionHandType(InteractionHand.Offhand));
+            CellSound.Post(AK.EVENTS.GAME_MENU_CHANGE_PAGE, transform.position);
+            msgBuffer.Enqueue(msg);
+            if (msgBuffer.Count > 8) {
+                msgBuffer.Dequeue();
+            }
+            m_chatDisplay.text = "";
+            foreach(string chatMsg in msgBuffer)
+            {
+                m_chatDisplay.text += chatMsg + "\n";
+            }
+            m_chatDisplay.ForceMeshUpdate(false);
+        }
+
+        public void Setup()
+        {
+            m_inventoryMeshes = transform.FindDeepChild("Inventory_UI").GetComponentsInChildren<MeshRenderer>();
+
+            SetupRadialMenu();
+            SetHandedness();
+            SetupObjectiveDisplay();
+            SetupChatDisplay();
+            SetupInventoryLinkData();
+            SetInitialPlayerStatusValues();
+            SwitchState(m_currentState);
+            SetWatchScale();
+        }
+
+        private void SetupChatDisplay()
+        {
+            GameObject chatParent = transform.FindDeepChild("Chat").gameObject;
+
+            RectTransform chatTransform = chatParent.GetComponent<RectTransform>();
+            m_chatDisplay = chatParent.AddComponent<TextMeshPro>();
+
+            m_chatDisplay.enableAutoSizing = true;
+            m_chatDisplay.fontSizeMin = 18;
+            m_chatDisplay.fontSizeMax = 36;
+            m_chatDisplay.alignment = TextAlignmentOptions.Center;
+            MelonCoroutines.Start(SetRectSize(chatTransform, new Vector2(34, 43f)));
+        }
+
+        private void SetupRadialMenu()
+        {
+            m_watchRadialMenu = new GameObject("WatchRadial").AddComponent<RadialMenu>();
+            m_watchRadialMenu.Setup(InteractionHand.Offhand, gameObject);
+
+            m_watchRadialMenu.AddRadialItem("Inventory", SwitchToInventory, out RadialItem inventory);
+            inventory.SetIcon(VRAssets.PrimaryFallback);
+
+            m_watchRadialMenu.AddRadialItem("Objective", SwitchToObjective, out RadialItem objective);
+            objective.SetIcon(VRAssets.Objective);
+
+            // ToDO - KB Doesn't work correctly!? -- Investigate
+            m_watchRadialMenu.AddRadialItem("ChatType", TypeInChat, out RadialItem chatType);
+            chatType.SetIcon(VRAssets.ChatType);
+
+            m_watchRadialMenu.AddRadialItem("Chat", SwitchToChat, out RadialItem chat);
+            chat.SetIcon(VRAssets.Chat);
+        }
+
+        public void TypeInChat()
+        {
+            if (PlayerChatManager.Current != null && !PlayerChatManager.InChatMode)
+            {
+                PlayerChatManager.Current.EnterChatMode();
+            }
+        }
+
+        public void SwitchToChat()
+        {
+            SwitchState(WatchState.Chat);
+        }
+
+        public void SwitchToInventory()
+        {
+            SwitchState(WatchState.Inventory);
+        }
+
+        public void SwitchToObjective()
+        {
+            SwitchState(WatchState.Objective);
         }
 
         private void WatchColorChanged(object sender, EventArgs e)
@@ -89,11 +196,25 @@ namespace GTFO_VR.UI
 
         void Update()
         {
-            if (SteamVR_InputHandler.GetActionDown(InputAction.Aim))
+            UpdateInput();
+        }
+
+        private void UpdateInput()
+        {
+            if (watchRadialMenu.GetStateDown(SteamVR_Input_Sources.Any))
+            {
+                m_watchRadialMenu.Show();
+            }
+            if (watchRadialMenu.GetStateUp(SteamVR_Input_Sources.Any))
+            {
+                m_watchRadialMenu.Hide();
+            }
+            if (toggleWatchMode.GetStateDown(SteamVR_Input_Sources.Any))
             {
                 SwitchState();
             }
         }
+
         public void UpdateMainObjective(string mainObj)
         {
             this.m_mainObjective = mainObj;
@@ -248,18 +369,6 @@ namespace GTFO_VR.UI
             }
         }
 
-        public void Setup()
-        {
-            m_inventoryMeshes = transform.FindDeepChild("Inventory_UI").GetComponentsInChildren<MeshRenderer>();
-
-            SetHandedness();
-            SetupObjectiveDisplay();
-            SetupInventoryLinkData();
-            SetInitialPlayerStatusValues();
-            SwitchState(m_currentState);
-            SetWatchScale();
-        }
-
         private void SetHandedness()
         {
             transform.SetParent(Controllers.offhandController.transform);
@@ -362,13 +471,27 @@ namespace GTFO_VR.UI
                 case (WatchState.Inventory):
                     ToggleInventoryRendering(true);
                     ToggleObjectiveRendering(false);
+                    ToggleChatRendering(false);
                     break;
                 case (WatchState.Objective):
                     ToggleInventoryRendering(false);
                     ToggleObjectiveRendering(true);
+                    ToggleChatRendering(false);
+                    break;
+                case (WatchState.Chat):
+                    ToggleInventoryRendering(false);
+                    ToggleObjectiveRendering(false);
+                    ToggleChatRendering(true);
                     break;
             }
         }
+
+        private void ToggleChatRendering(bool toggle)
+        {
+            m_chatDisplay.enabled = toggle;
+            m_chatDisplay.ForceMeshUpdate(false);
+        }
+
         void ToggleInventoryRendering(bool toggle)
         {
             foreach (MeshRenderer m in m_inventoryMeshes)
@@ -418,6 +541,7 @@ namespace GTFO_VR.UI
             VRConfig.configUseNumbersForAmmoDisplay.SettingChanged -= AmmoDisplayChanged;
             VRConfig.configWatchScaling.SettingChanged -= WatchScaleChanged;
             VRConfig.configWatchColor.SettingChanged -= WatchColorChanged;
+            ChatMsgEvents.OnChatMsgReceived -= ChatMsgReceived;
         }
     }
 }
