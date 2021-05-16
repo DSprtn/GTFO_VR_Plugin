@@ -15,7 +15,6 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configUseTwoHanded;
         internal static ConfigEntry<bool> configAlwaysDoubleHanded;
         internal static ConfigEntry<int> configSnapTurnAmount;
-        internal static ConfigEntry<bool> configSmoothSnapTurn;
         internal static ConfigEntry<float> configWatchScaling;
         internal static ConfigEntry<bool> configUseNumbersForAmmoDisplay;
         internal static ConfigEntry<string> configWatchColor;
@@ -65,7 +64,6 @@ namespace GTFO_VR.Core
             configIRLCrouch = BindBool(file, "Input", "Crouch in-game when you crouch IRL?", true, "If true, when crouching down below a certain threshold IRL, the in-game character will also crouch", "Crouch on IRL crouch");
             configCrouchHeight = BindInt(file, "Input", "Crouch height in centimeters", 115, 90, 145, "In-game character will be crouching if your head is lower than this height above the playspace", "Crouch height (cm)");
 
-            configSmoothSnapTurn = BindBool(file, "Input", "Use smooth turning?", false, "If true, will use smooth turn instead of snap turn", "Smooth turning");
             configSnapTurnAmount = BindInt(file, "Input", "Snap turn angle", 60, 0, 180, "The amount of degrees to turn on a snap turn (or turn per half a second if smooth turn is enabled)", "Snap turn amount/speed (angle)");
             configFloorOffset = BindInt(file, "Misc", "Floor height offset (cm)", 0, 0, 50, "Floor offset in cm", "Floor offset (cm)");
             configUseVignetteWhenMoving = BindBool(file, "Misc", "Use Vignette when moving?", false, "If true, will display vignette effect while moving.", "Vignette while moving");
@@ -92,7 +90,7 @@ namespace GTFO_VR.Core
 
 
             BindHeader("Hammer");
-            configUseVisualHammerIndicator = BindBool(file, "Misc", "Show light for hammer charge?", true, "If true, will show a light indicator when hammer is fully charged", "Glow when fully charged");
+            configUseVisualHammerIndicator = BindBool(file, "Misc", "Show light for hammer charge?", true, "If true, will show a light indicator when hammer is half/fully charged", "Flash on 50%/100% charge");
             configUseOldHammer = BindBool(file, "Misc", "Use old hammer?", false, "If true, will use the old hammer that uses animations and moves by itself.", "(OLD) Auto-swing hammer");
 
 

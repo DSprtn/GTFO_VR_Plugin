@@ -30,8 +30,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
         public static PlayerAgent PlayerAgent;
         public static FPSCamera FpsCamera;
 
+
+
+
+
         public void Setup(FPSCamera camera, PlayerAgent agent)
         {
+
             FpsCamera = camera;
             PlayerAgent = agent;
 
@@ -80,11 +85,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ClusteredRendering.Current.OnResolutionChange(new Resolution());
         }
 
-        private void Update()
-        {
-            HandleSnapturnInput();
-        }
-
         private void OnNewPoses()
         {
             if (!FpsCamera || !m_origin)
@@ -115,19 +115,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 PlayerAgent.FPItemHolder.FPSArms.SetRightArmTargetPosRot(Controllers.offhandController.transform);
             }
 
-        }
-
-        private void HandleSnapturnInput()
-        {
-            if (SteamVR_InputHandler.GetSnapTurningLeft())
-            {
-                m_snapTurn.DoSnapTurn(-VRConfig.configSnapTurnAmount.Value);
-            }
-
-            if (SteamVR_InputHandler.GetSnapTurningRight())
-            {
-                m_snapTurn.DoSnapTurn(VRConfig.configSnapTurnAmount.Value);
-            }
         }
 
         public static void UpdateVRCameraTransform(FPSCamera fpsCamera)

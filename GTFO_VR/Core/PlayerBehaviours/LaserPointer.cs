@@ -2,6 +2,7 @@
 using GTFO_VR.Util;
 using System;
 using UnityEngine;
+using Valve.VR;
 
 namespace GTFO_VR.Core.PlayerBehaviours
 {
@@ -14,6 +15,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
         }
 
+        SteamVR_Action_Boolean toggleLaserPointer;
+
         private GameObject m_pointer;
         private GameObject m_dot;
         private readonly float m_thickness = 1f / 400f;
@@ -24,10 +27,20 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void Awake()
         {
+            toggleLaserPointer = SteamVR_Input.GetBooleanAction("ToggleLaserPointer");
+
             CreatePointerObjects();
             ItemEquippableEvents.OnPlayerWieldItem += PlayerChangedItem;
             VRConfig.configUseLaserPointerOnWeapons.SettingChanged += LaserPointerToggled;
             VRConfig.configLaserPointerColor.SettingChanged += LaserPointerColorChanged;
+        }
+
+        void Update()
+        {
+            if (toggleLaserPointer.GetStateDown(SteamVR_Input_Sources.Any))
+            {
+                VRConfig.configUseLaserPointerOnWeapons.Value = !VRConfig.configUseLaserPointerOnWeapons.Value;
+            }
         }
 
         private void LaserPointerColorChanged(object sender, EventArgs e)

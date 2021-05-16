@@ -129,21 +129,28 @@ namespace GTFO_VR.Injections
     {
         private static void Prefix(MWS_ChargeUp __instance)
         {
-            InjectHammerChargeEvents.hammerChargeEventFired = false;
+            InjectHammerChargeEvents.fullChargeEventFired = false;
+            InjectHammerChargeEvents.halfChargeEventFired = false;
         }
     }
 
     [HarmonyPatch(typeof(MWS_ChargeUp), nameof(MWS_ChargeUp.Update))]
     internal class InjectHammerChargeEvents
     {
-        internal static bool hammerChargeEventFired;
+        internal static bool fullChargeEventFired;
+        internal static bool halfChargeEventFired;
         private static void Prefix(MWS_ChargeUp __instance)
         {
             float progress = Mathf.Min(__instance.m_elapsed / __instance.m_maxDamageTime, 1f);
-            if (progress >= 1 && !hammerChargeEventFired)
+            if (progress >= 1 && !fullChargeEventFired)
             {
                 HammerEvents.HammerFullyCharged();
-                hammerChargeEventFired = true;
+                fullChargeEventFired = true;
+            }
+            if (progress >= .5f && !halfChargeEventFired)
+            {
+                HammerEvents.HammerHalfCharged();
+                halfChargeEventFired = true;
             }
         }
     }

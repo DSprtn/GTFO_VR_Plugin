@@ -11,6 +11,7 @@ namespace GTFO_VR.Events
     {
         public static event Action<float> OnHammerSmack;
         public static event Action OnHammerFullyCharged;
+        public static event Action OnHammerHalfCharged;
 
 
         public static void HammerSmacked(float damage)
@@ -20,8 +21,12 @@ namespace GTFO_VR.Events
 
         public static void HammerFullyCharged()
         {
-            Log.Debug("Hammer fully charged!");
             OnHammerFullyCharged?.Invoke();
+        }
+
+        public static void HammerHalfCharged()
+        {
+            OnHammerHalfCharged?.Invoke();
         }
     }
 }

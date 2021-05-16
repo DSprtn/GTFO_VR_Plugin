@@ -48,6 +48,10 @@ namespace GTFO_VR.Core.VR_Input
 
         private static SteamVR_Action_Boolean m_pushToTalkAction;
 
+        private static SteamVR_Action_Boolean m_openObjectivesAction;
+
+        private static SteamVR_Action_Boolean m_aimOrShoveAction;
+
         private static Dictionary<InputAction, SteamVR_Action_Boolean> boolActions;
 
         public static void Setup()
@@ -114,6 +118,10 @@ namespace GTFO_VR.Core.VR_Input
             {
                 return true;
             }
+            if(action.Equals(InputAction.TextChatClose) && VRKeyboard.KeyboardClosedThisFrame)
+            {
+                return true;
+            }
             return boolActionMapping != null && boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any);
         }
 
@@ -161,37 +169,6 @@ namespace GTFO_VR.Core.VR_Input
             return SteamVR_InputHandler.GetAxisValue(action);
         }
 
-        public static bool GetSnapTurningLeft()
-        {
-            if (Initialized)
-            {
-                if (VRConfig.configSmoothSnapTurn.Value)
-                {
-                    return SteamVR_InputHandler.m_snapLeftAction.GetState(SteamVR_Input_Sources.Any);
-                }
-                else
-                {
-                    return SteamVR_InputHandler.m_snapLeftAction.GetStateDown(SteamVR_Input_Sources.Any);
-                }
-            }
-            return false;
-        }
-
-        public static bool GetSnapTurningRight()
-        {
-            if (Initialized)
-            {
-                if (VRConfig.configSmoothSnapTurn.Value)
-                {
-                    return SteamVR_InputHandler.m_snapRightAction.GetState(SteamVR_Input_Sources.Any);
-                }
-                else
-                {
-                    return SteamVR_InputHandler.m_snapRightAction.GetStateDown(SteamVR_Input_Sources.Any);
-                }
-            }
-            return false;
-        }
 
         private static void InitializeActionMapping()
         {
@@ -212,6 +189,8 @@ namespace GTFO_VR.Core.VR_Input
             m_openMapAction = SteamVR_Input.GetBooleanAction("OpenMap", false);
             m_openMenuAction = SteamVR_Input.GetBooleanAction("OpenMenu", false);
             m_pingAction = SteamVR_Input.GetBooleanAction("Ping", false);
+            m_openObjectivesAction = SteamVR_Input.GetBooleanAction("OpenObjectives", false);
+            m_aimOrShoveAction = SteamVR_Input.GetBooleanAction("AimOrShove", false);
             m_pushToTalkAction = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/PushToTalk");
 
 
@@ -220,7 +199,8 @@ namespace GTFO_VR.Core.VR_Input
 
                 { InputAction.Jump, m_jumpAction },
                 { InputAction.Use, m_interactAction },
-                { InputAction.Aim, m_toggleWatchAction },
+                { InputAction.Aim, m_aimOrShoveAction},
+                { InputAction.ToggleObjectives, m_openObjectivesAction},
                 { InputAction.Fire, m_shootAction },
                 { InputAction.Run, m_sprintAction },
                 { InputAction.Crouch, m_crouchAction },
