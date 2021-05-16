@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.Core;
+using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.UI;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
@@ -103,11 +104,11 @@ namespace GTFO_VR.UI
             m_chatDisplay.ForceMeshUpdate(false);
         }
 
-        public void Setup()
+        public void Setup(Transform parent)
         {
             m_inventoryMeshes = transform.FindDeepChild("Inventory_UI").GetComponentsInChildren<MeshRenderer>();
 
-            SetupRadialMenu();
+            SetupRadialMenu(parent);
             SetHandedness();
             SetupObjectiveDisplay();
             SetupChatDisplay();
@@ -131,18 +132,17 @@ namespace GTFO_VR.UI
             MelonCoroutines.Start(SetRectSize(chatTransform, new Vector2(34, 43f)));
         }
 
-        private void SetupRadialMenu()
+        private void SetupRadialMenu(Transform parent)
         {
             m_watchRadialMenu = new GameObject("WatchRadial").AddComponent<RadialMenu>();
             m_watchRadialMenu.Setup(InteractionHand.Offhand, gameObject);
-
+            m_watchRadialMenu.transform.SetParent(parent);
             m_watchRadialMenu.AddRadialItem("Inventory", SwitchToInventory, out RadialItem inventory);
             inventory.SetIcon(VRAssets.PrimaryFallback);
 
             m_watchRadialMenu.AddRadialItem("Objective", SwitchToObjective, out RadialItem objective);
             objective.SetIcon(VRAssets.Objective);
 
-            // ToDO - KB Doesn't work correctly!? -- Investigate
             m_watchRadialMenu.AddRadialItem("ChatType", TypeInChat, out RadialItem chatType);
             chatType.SetIcon(VRAssets.ChatType);
 
@@ -535,6 +535,10 @@ namespace GTFO_VR.UI
 
         void OnDestroy()
         {
+            if(m_watchRadialMenu)
+            {
+                Destroy(m_watchRadialMenu);
+            }
             ItemEquippableEvents.OnPlayerWieldItem -= ItemSwitched;
             InventoryAmmoEvents.OnInventoryAmmoUpdate -= AmmoUpdate;
             Controllers.HandednessSwitched -= SetHandedness;

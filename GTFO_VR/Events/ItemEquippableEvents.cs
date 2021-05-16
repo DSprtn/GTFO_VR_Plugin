@@ -33,7 +33,13 @@ namespace GTFO_VR.Events
 
         public static bool IsCurrentItemShootableWeapon()
         {
-            return currentItem != null && currentItem.IsWeapon && currentItem.AmmoType != Player.AmmoType.None && currentItem.HasFlashlight;
+            return IsItemShootableWeapon(currentItem);
+            
+        }
+
+        public static bool IsItemShootableWeapon(ItemEquippable item)
+        {
+            return item != null && item.IsWeapon && item.AmmoType != Player.AmmoType.None && item.HasFlashlight;
         }
 
         public static bool CurrentItemHasFlashlight()

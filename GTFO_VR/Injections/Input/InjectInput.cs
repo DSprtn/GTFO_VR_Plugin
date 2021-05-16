@@ -1,4 +1,5 @@
-﻿using GTFO_VR.Core.VR_Input;
+﻿using GTFO_VR.Core.UI;
+using GTFO_VR.Core.VR_Input;
 using HarmonyLib;
 
 namespace GTFO_VR.Injections.Input
@@ -33,7 +34,7 @@ namespace GTFO_VR.Injections.Input
     {
         private static void Postfix(InputAction action, ref bool __result)
         {
-            __result = __result || SteamVR_InputHandler.GetActionDown(action);
+            __result = __result || SteamVR_InputHandler.GetActionDown(action) || WeaponRadialMenu.GetSpecialActionMappingDown(action);
         }
     }
 
@@ -42,7 +43,7 @@ namespace GTFO_VR.Injections.Input
     {
         private static void Postfix(InputAction action, ref bool __result)
         {
-            __result = __result || SteamVR_InputHandler.GetAction(action);
+            __result = __result || SteamVR_InputHandler.GetAction(action) || WeaponRadialMenu.GetSpecialActionMappingDown(action);
         }
     }
 }

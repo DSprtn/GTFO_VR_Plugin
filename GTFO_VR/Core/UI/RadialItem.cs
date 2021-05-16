@@ -28,15 +28,17 @@ namespace GTFO_VR.Core.UI
 
         Action OnExecuted;
 
+        public bool Active = true;
+
         public void Setup(Action OnExecuted, Sprite BG)
         {
             this.OnExecuted = OnExecuted;
             itemText = SetupText(new Vector2(45, 45));
             itemInfo = SetupText(new Vector2(25, 25));
-            itemInfo.transform.localPosition = new Vector3(0, -50f, 0);
-            itemInfo.text = "30%";
+            itemInfo.transform.localPosition = new Vector3(0, -55f, 0);
+            itemInfo.lineSpacing = -45f;
             SetupImage(ref BGImage, "BG", 64f);
-            SetupImage(ref iconImage, "Icon", 22f,0);
+            SetupImage(ref iconImage, "Icon", 21f,0);
             iconImage.color = new Color(.0f, .0f, .0f, 1f);
             BGImage.sprite = BG;
             BGImage.color = defaultColor;
@@ -57,6 +59,7 @@ namespace GTFO_VR.Core.UI
             img.transform.localRotation = Quaternion.identity;
             img.transform.localScale = Vector3.one * scale;
             img.receiveShadows = false;
+            img.material.shader = VRAssets.SpriteAlwaysRender;
         }
 
         private TextMeshPro SetupText(Vector2 size)
@@ -75,13 +78,14 @@ namespace GTFO_VR.Core.UI
             text.fontSizeMax = 244;
             text.alignment = TextAlignmentOptions.Midline;
             text.fontSizeMin = 6;
-            text.color = Color.black;
+            text.color = Color.white;
             text.outlineWidth = 0.2f;
-            text.outlineColor = new Color32(255, 255, 255, 255);
+            text.outlineColor = new Color32(0, 0, 0, 255);
 
             text.enableWordWrapping = true;
             text.overflowMode = TextOverflowModes.Overflow;
             text.ForceMeshUpdate(false);
+            text.material.shader = VRAssets.TextAlwaysRender;
             return text;
         }
 
@@ -131,10 +135,9 @@ namespace GTFO_VR.Core.UI
                 itemText.enabled = true;
             }
             BGImage.enabled = true;
-            if(itemInfo.text.Length > 0)
-            {
-                itemInfo.enabled = true;
-            }
+            itemInfo.enabled = true;
+            itemInfo.ForceMeshUpdate(false);
+            itemText.ForceMeshUpdate(false);
         }
 
         internal void Hide()
@@ -143,6 +146,8 @@ namespace GTFO_VR.Core.UI
             iconImage.enabled = false;
             BGImage.enabled = false;
             itemInfo.enabled = false;
+            itemInfo.ForceMeshUpdate(false);
+            itemText.ForceMeshUpdate(false);
         }
     }
 }

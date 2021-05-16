@@ -1,4 +1,5 @@
-﻿using GTFO_VR.Core.VR_Input;
+﻿using GTFO_VR.Core.UI;
+using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
 using GTFO_VR.UI;
 using Player;
@@ -26,6 +27,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private CollisionFade m_fade;
         private Haptics m_haptics;
         private MovementVignette m_movementVignette;
+        private WeaponRadialMenu m_weaponRadial;
 
         public static PlayerAgent PlayerAgent;
         public static FPSCamera FpsCamera;
@@ -50,6 +52,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_movementVignette = gameObject.AddComponent<MovementVignette>();
             m_movementVignette.Setup(agent.Locomotion, GetComponent<PostProcessingBehaviour>());
 
+            m_weaponRadial = gameObject.AddComponent<WeaponRadialMenu>();
+            m_weaponRadial.Setup(m_origin.transform);
 
             GameObject laserPointer = new GameObject("LaserPointer");
             m_pointer = laserPointer.AddComponent<LaserPointer>();
@@ -63,7 +67,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             FpsCamera.gameObject.AddComponent<SteamVR_Fade>();
 
             m_watch = Instantiate(VRAssets.GetWatchPrefab(), Vector3.zero, Quaternion.identity, null).AddComponent<Watch>();
-            m_watch.Setup();
+            m_watch.Setup(m_origin.transform.parent);
 
             m_haptics = gameObject.AddComponent<Haptics>();
             m_haptics.Setup();

@@ -17,7 +17,6 @@ Try to get used to the game in Non-VR mode first before using!
 	Consult the installation video here if you're having trouble: 
 	https://www.youtube.com/watch?v=EH7CsLs3GlQ (Thanks Alabaster!)
 
-	
 	If you are upgrading to R5 or have an old Bepinex/GTFO_VR installation, delete it! 
 	Removing the bepinex folder should suffice. You'll have to redo your config!
 	
@@ -139,7 +138,9 @@ Try to get used to the game in Non-VR mode first before using!
 	
 #### WATCH
 	
-	The watch can be toggled between inventory and objectives with the ToggleWatchMode action.
+	The watch can be toggled between inventory, chat and objectives with the ToggleWatchMode action.
+	There is also a radial menu bind that allows you switch between all the modes freely and
+	also allows you to type in chat.
 	
 	The inventory watch UI is as follows ---
 	
@@ -201,16 +202,16 @@ Try to get used to the game in Non-VR mode first before using!
 				
 ## Features:
 	Works in multiplayer, with others not needing any mods!
+
+	Everything is fully configurable in-game and in an external config. 
+	(If you're missing any options, let me know!)
 	
 	Full SteamVR input binding support, you can play with all VR controllers, provided they have enough buttons 
 	for all the actions in GTFO. Most in-game actions are supported, if you're missing any let me know!
 	
 	Full motion controller based aiming (including fancy laserpointer)
 	
-	Customized user interface for VR
-	
-	Everything is fully configurable in-game and in an external config. 
-	(If you're missing any options, let me know!)
+	Customized user interface for VR - 3D UI, watch, radial menus, etc.
 	
 	Main menu, map UI and terminal working correctly in VR
 	
@@ -224,7 +225,7 @@ Try to get used to the game in Non-VR mode first before using!
 	
 ## Known issues: 
 	SteamVR games crash often on v28 of Oculus. There's a workaround in the config that should
-	reduce crashing with some small side effects.
+	reduce crashing with some small side effects (Oculus Crash workaround.)
 
 	If a crash occurs send me the output log from the path given below (before starting another game!):
 	SteamApps/GTFO/Bepinex/LogOutput.log

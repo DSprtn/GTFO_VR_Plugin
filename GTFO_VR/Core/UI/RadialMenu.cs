@@ -69,15 +69,21 @@ namespace GTFO_VR.Core.UI
             radialItems.Add(item);
         }
 
-        private void SelectClosestRadialItem()
+        GameObject GetOrigin()
         {
-            float closestDistance = 9999f;
-
             GameObject hand = Controllers.GetInteractionHandGO(targetHand);
             if (originOverride != null)
             {
                 hand = originOverride;
             }
+            return hand;
+        }
+
+        private void SelectClosestRadialItem()
+        {
+            float closestDistance = 9999f;
+
+            GameObject hand = GetOrigin();
 
             if (closest == null || Vector3.Distance(closest.transform.position, hand.transform.position) > maxDistance)
             {
@@ -96,6 +102,10 @@ namespace GTFO_VR.Core.UI
             {
                 foreach (RadialItem item in radialItems)
                 {
+                    if(!item.Active)
+                    {
+                        continue;
+                    }
                     float distance = Vector3.Distance(item.transform.position, hand.transform.position);
                     if (distance < closestDistance)
                     {
@@ -115,8 +125,6 @@ namespace GTFO_VR.Core.UI
                     closest = null;
                 }
             }
-
-
         }
 
         public void Show()
@@ -126,7 +134,13 @@ namespace GTFO_VR.Core.UI
             m_canvas.enabled = true;
             foreach (RadialItem item in radialItems)
             {
-                item.Show();
+                if(item.Active)
+                {
+                    item.Show();
+                } else
+                {
+                    item.Hide();
+                }
             }
         }
 
