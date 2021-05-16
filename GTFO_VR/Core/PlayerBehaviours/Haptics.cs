@@ -56,7 +56,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 float duration = 0.1f;
                 float frequency = Mathf.Lerp(20, 30, pressure);
                 float vibrateDelay = vibrationDelay;
-                intensity *= intensity;
+                intensity = intensity * intensity * intensity;
 
                 if (pressure >= 0.99f)
                 {

@@ -27,11 +27,27 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_animatorRoot = m_weapon.ModelData.m_damageRefAttack.parent;
             m_chargeupIndicatorLight = new GameObject("VR_Hammer_Chargeup_Light").AddComponent<Light>();
             m_chargeupIndicatorLight.color = Color.white;
-            m_chargeupIndicatorLight.range = 1.5f;
-            m_chargeupIndicatorLight.intensity = 1.5f;
+
             m_chargeupIndicatorLight.enabled = false;
             m_chargeupIndicatorLight.shadows = LightShadows.None;
             HammerEvents.OnHammerFullyCharged += HammerFullyCharged;
+            HammerEvents.OnHammerHalfCharged += HammerHalfCharged;
+        }
+
+        private void HammerHalfCharged()
+        {
+            if (!VRConfig.configUseVisualHammerIndicator.Value)
+            {
+                return;
+            }
+
+            if (m_chargeupIndicatorLight != null)
+            {
+                m_chargeupIndicatorLight.range = 1.75f;
+                m_chargeupIndicatorLight.intensity = .75f;
+                m_chargeupIndicatorLight.enabled = true;
+            }
+            Invoke(nameof(VRHammer.TurnChargeLightOff), 0.10f);
         }
 
         private void HammerFullyCharged()
@@ -43,6 +59,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             if (m_chargeupIndicatorLight != null)
             {
+                m_chargeupIndicatorLight.range = 1.75f;
+                m_chargeupIndicatorLight.intensity = 1.75f;
                 m_chargeupIndicatorLight.enabled = true;
             }
             Invoke(nameof(VRHammer.TurnChargeLightOff), 0.15f);
@@ -106,6 +124,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
+            HammerEvents.OnHammerHalfCharged -= HammerHalfCharged;
             HammerEvents.OnHammerFullyCharged -= HammerFullyCharged;
         }
     }
