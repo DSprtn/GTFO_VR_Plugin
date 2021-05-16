@@ -17,7 +17,6 @@ Try to get used to the game in Non-VR mode first before using!
 	Consult the installation video here if you're having trouble: 
 	https://www.youtube.com/watch?v=EH7CsLs3GlQ (Thanks Alabaster!)
 
-	
 	If you are upgrading to R5 or have an old Bepinex/GTFO_VR installation, delete it! 
 	Removing the bepinex folder should suffice. You'll have to redo your config!
 	
@@ -74,7 +73,7 @@ Try to get used to the game in Non-VR mode first before using!
 	7. Tweak or setup your controls under SteamVR -> Settings -> Controllers 
 	-> Manage Controller Bindings -> GTFO VR
 	
-	8. Tweak all in-game options under Settings -> VR Settings
+	8. Tweak all VR config options under Settings -> VR Settings
 	
 	
 	To enable tracking or change the angle at which the weapons are being held you must set an action pose 
@@ -87,16 +86,18 @@ Try to get used to the game in Non-VR mode first before using!
 #### CONFIGURATION 
 	
 	There are configurable options for:
-	-	Rendering tweaks - Post-processing and other performance tweaks/hacks
 	-	Left handed mode 
-	-	No VR controller mode
-	- 	Floor height offset
+	- 	Snap turn - Amount, smooth turn
+	-	Rendering tweaks - Post-processing, resolution and other performance tweaks/hacks
+	- 	Floor height offset (for seated mode and height adjustment!)
+	-	Movement vignette - Toggle, intensity
 	- 	Shooting haptics - Toggle, strength
 	- 	IRL Crouching - Toggle, height tweak
 	-	Laser pointer - Toggle, color
-	-	Two handed aiming - Toggle, always on mode
-	- 	Snap turn - Amount, smooth turn
+	-	Hammer - Visual charge indicator, 'Old hammer' (auto-swing with animations)
 	-	Watch - Scale, color, number display for ammo
+	-	Two handed aiming - Toggle, always on mode
+	-	No motion controller mode (You can play with a gamepad!)
 	-	etc. - Have a look in the menu!
 
 	They can be found in-game under Settings -> VR Settings and/or in a config file which is created 
@@ -122,9 +123,10 @@ Try to get used to the game in Non-VR mode first before using!
 
 #### HAMMER
 
-	You have to charge the hammer just like in non-VR GTFO. Release the button at the beginning of your swing
-	and you will have a ~.7s window to make a hit with it. There is a config option to use the 'old' VR hammer 
-	which swings by itself.
+	You have to charge the hammer just like in non-VR GTFO. You can only hit with it while it's charging/charged.
+	Haptics and sound indicate the charging level. A flash of light indicates the hammer is fully charged. 
+	The flash of light and haptics can be turned off.
+	There is also a config option to use the 'old' VR hammer which swings by itself.
 
 
 #### AIMING
@@ -136,7 +138,9 @@ Try to get used to the game in Non-VR mode first before using!
 	
 #### WATCH
 	
-	The watch can be toggled between inventory and objectives with the ToggleWatchMode action.
+	The watch can be toggled between inventory, chat and objectives with the ToggleWatchMode action.
+	There is also a radial menu bind that allows you switch between all the modes freely and
+	also allows you to type in chat.
 	
 	The inventory watch UI is as follows ---
 	
@@ -194,21 +198,20 @@ Try to get used to the game in Non-VR mode first before using!
                 case ("U"):
                         returns "UPLINK_VERIFY ";
 		
-
 	If you'd like to have custom bindable shortcuts let me know! 
 				
 ## Features:
-	Works in multiplayer, with others not having to have the mod!
+	Works in multiplayer, with others not needing any mods!
+
+	Everything is fully configurable in-game and in an external config. 
+	(If you're missing any options, let me know!)
 	
 	Full SteamVR input binding support, you can play with all VR controllers, provided they have enough buttons 
 	for all the actions in GTFO. Most in-game actions are supported, if you're missing any let me know!
 	
-	Full VR controller based aiming (including fancy laserpointer)
+	Full motion controller based aiming (including fancy laserpointer)
 	
-	Customized user interface for VR
-	
-	Fully configurable in-game and in an external config file with lots of customization options
-	(If you're missing any options, let me know!)
+	Customized user interface for VR - 3D UI, watch, radial menus, etc.
 	
 	Main menu, map UI and terminal working correctly in VR
 	
@@ -217,8 +220,12 @@ Try to get used to the game in Non-VR mode first before using!
 	Haptics
 	
 	Snap turn
+
+	Customized melee mechanics for VR
 	
 ## Known issues: 
+	SteamVR games crash often on v28 of Oculus. There's a workaround in the config that should
+	reduce crashing with some small side effects (Oculus Crash workaround.)
 
 	If a crash occurs send me the output log from the path given below (before starting another game!):
 	SteamApps/GTFO/Bepinex/LogOutput.log
@@ -226,6 +233,6 @@ Try to get used to the game in Non-VR mode first before using!
 
 ## Want to contribute?
 
-E-mail any suggestions for new features or tweaks over to GTFOVRMod@gmail.com
-Open up tickets for any issues you find over here on github, 
-or if you're unfamiliar with Github just send me an e-mail.
+Join the discord and send some feedback my way!
+Alternatively, e-mail any suggestions for new features or tweaks over to GTFOVRMod@gmail.com
+Open up tickets for any issues you find over here on github, or mention them on the discord.
