@@ -21,16 +21,12 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private float m_snapTurnDelay = 0.25f;
 
         SteamVR_Action_Vector2 smoothTurn;
-        SteamVR_Action_Boolean snapTurnLeft;
-        SteamVR_Action_Boolean snapTurnRight;
 
         private void Awake()
         {
             Log.Info("Snapturn init");
 
-            smoothTurn = SteamVR_Input.GetVector2Action("SmoothTurn");
-            snapTurnLeft = SteamVR_Input.GetBooleanAction("SnapTurnLeft");
-            snapTurnRight = SteamVR_Input.GetBooleanAction("SnapTurnRight");
+            smoothTurn = SteamVR_Input.GetVector2Action("SnapTurn");
         }
 
         public void Setup(PlayerOrigin origin)
@@ -40,21 +36,27 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         void Update()
         {
-            if (snapTurnLeft.GetStateDown(SteamVR_Input_Sources.Any))
-            {
-                DoSnapTurn(-VRConfig.configSnapTurnAmount.Value);
-            }
+            HandleInput();
+        }
 
-            if (snapTurnRight.GetStateDown(SteamVR_Input_Sources.Any))
-            {
-                DoSnapTurn(VRConfig.configSnapTurnAmount.Value);
-            }
-
+        private void HandleInput()
+        {
             float smoothTurnX = smoothTurn.GetAxis(SteamVR_Input_Sources.Any).x;
-
-            if (Mathf.Abs(smoothTurnX) > 0.05f)
+            if (VRConfig.configSmoothSnapTurn.Value)
             {
-                DoSmoothTurn(smoothTurnX);
+                if (Mathf.Abs(smoothTurnX) > 0.01f)
+                {
+                    DoSmoothTurn(VRConfig.configSmoothTurnSpeed.Value * smoothTurnX * Time.deltaTime);
+                }
+            }
+            else
+            {
+                if (Mathf.Abs(smoothTurnX) > 0.9f)
+                {
+                    float angle = VRConfig.configSnapTurnAmount.Value;
+                    angle *= smoothTurnX > 0 ? 1 : -1;
+                    DoSnapTurn(angle);
+                }
             }
         }
 
@@ -69,9 +71,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
-        internal void DoSmoothTurn(float axis)
+        internal void DoSmoothTurn(float angle)
         {
-            m_origin.RotatePlayer(Quaternion.Euler(new Vector3(0, VRConfig.configSnapTurnAmount.Value * Time.deltaTime * 2f * axis, 0f)));
+            m_origin.RotatePlayer(Quaternion.Euler(new Vector3(0, angle, 0f)));
             OnSnapTurn?.Invoke();
         }
 
@@ -81,9 +83,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
             SteamVR_Fade.Start(Color.clear, duration, true);
         }
 
-        public void DoSnapTurnTowards(Vector3 rotation, float fadeDuration)
+        public void DoSnapTurnTowards(Vector3 direction, float fadeDuration)
         {
-            Vector3 deltaRot = Quaternion.LookRotation(rotation).eulerAngles;
+            Vector3 deltaRot = Quaternion.LookRotation(direction).eulerAngles;
             deltaRot.x = 0;
             deltaRot.z = 0;
             deltaRot.y -= HMD.GetVRCameraEulerRelativeToFPSCameraParent().y;
@@ -91,7 +93,5 @@ namespace GTFO_VR.Core.PlayerBehaviours
             SnapTurnFade(fadeDuration);
             OnSnapTurn.Invoke();
         }
-
-
     }
 }

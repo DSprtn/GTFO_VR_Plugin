@@ -14,7 +14,7 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configAlternateEyeRendering;
         internal static ConfigEntry<bool> configUseTwoHanded;
         internal static ConfigEntry<bool> configAlwaysDoubleHanded;
-        internal static ConfigEntry<int> configSnapTurnAmount;
+
         internal static ConfigEntry<float> configWatchScaling;
         internal static ConfigEntry<bool> configUseNumbersForAmmoDisplay;
         internal static ConfigEntry<string> configWatchColor;
@@ -36,6 +36,9 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configUseVisualHammerIndicator;
         internal static ConfigEntry<bool> configUseVignetteWhenMoving;
         internal static ConfigEntry<float> configMovementVignetteIntensity;
+        internal static ConfigEntry<int> configSnapTurnAmount;
+        internal static ConfigEntry<int> configSmoothTurnSpeed;
+        internal static ConfigEntry<bool> configSmoothSnapTurn;
 
         private static List<BepinGTFOSettingBase> VRSettings = new List<BepinGTFOSettingBase>();
 
@@ -63,11 +66,13 @@ namespace GTFO_VR.Core
 
             configIRLCrouch = BindBool(file, "Input", "Crouch in-game when you crouch IRL?", true, "If true, when crouching down below a certain threshold IRL, the in-game character will also crouch", "Crouch on IRL crouch");
             configCrouchHeight = BindInt(file, "Input", "Crouch height in centimeters", 115, 90, 145, "In-game character will be crouching if your head is lower than this height above the playspace", "Crouch height (cm)");
-
-            configSnapTurnAmount = BindInt(file, "Input", "Snap turn angle", 60, 0, 180, "The amount of degrees to turn on a snap turn (or turn per half a second if smooth turn is enabled)", "Snap turn amount/speed (angle)");
+            configSmoothSnapTurn = BindBool(file, "Input", "Use smooth turning?", false, "If true, will use smooth turn instead of snap turn", "Smooth turn");
+            configSnapTurnAmount = BindInt(file, "Input", "Snap turn angle", 60, 0, 180, "The amount of degrees to turn on a snap turn", "Snap turn angle");            
+            configSmoothTurnSpeed = BindInt(file, "Input", "Smooth turn speed", 90, 0, 180, "The amount of degrees to turn per second at full speed", "Smooth turn speed (degrees/s)");
             configFloorOffset = BindInt(file, "Misc", "Floor height offset (cm)", 0, 0, 50, "Floor offset in cm", "Floor offset (cm)");
             configUseVignetteWhenMoving = BindBool(file, "Misc", "Use Vignette when moving?", false, "If true, will display vignette effect while moving.", "Vignette while moving");
             configMovementVignetteIntensity = BindFloat(file, "Input", "Movement vignette intensity", 1f, .5f, 1.5f, "Multiplier for vignette intensity while moving", "Movement vignette intensity");
+
 
             BindHeader("Watch");
             configWatchColor = BindStringDropdown(file, "Watch", "Watch color", "WHITE", "Color to use for watch", "Watch color", new string[] { "WHITE", "RED", "GREEN", "BLUE", "CYAN", "YELLOW", "MAGENTA", "ORANGE", "BLACK" });
@@ -109,7 +114,7 @@ namespace GTFO_VR.Core
             configPostEyeAdaptation = BindBool(file, "Rendering - PostProcessing", "Use eye adaptation? (Simulate the way a human eye adapts to light changes)", true,
                 "If false, will disable eye adaptation. Gives a very slight performance boost if disabled (0.1-0.2ms.) Will make dark areas much darker though!", "Eye adaptation");
 
-            configCameraBlood = BindBool(file, "Rendering - Postprocessing", "Enable Camera blood effect?", true, "If false, will disable camera blood effect. Will give a little FPS boost.", "Camera blood streaks");
+            configCameraBlood = BindBool(file, "Rendering - Postprocessing", "Enable Camera liquid effects?", true, "If false, will disable camera liquid effects. Will give a little FPS boost.", "Camera liquid effects");
 
             configAlternateEyeRendering = BindBool(file, "Rendering - Experimental", "Alternate eye rendering (janky!)", false,
     "If true will alternate between eyes when drawing lights and shadows each frame, \n might look really janky so only use this if you absolutely want to play this in VR but don't have the rig for it!",
