@@ -14,13 +14,7 @@ namespace GTFO_VR.Core.VR_Input
 
         public static SteamVR_Action_Vibration hapticAction;
 
-        private static SteamVR_Action_Boolean m_snapLeftAction;
-
-        private static SteamVR_Action_Boolean m_snapRightAction;
-
         private static SteamVR_Action_Boolean m_shootAction;
-
-        private static SteamVR_Action_Boolean m_toggleWatchAction;
 
         private static SteamVR_Action_Vector2 m_movementAxisAction;
 
@@ -177,10 +171,7 @@ namespace GTFO_VR.Core.VR_Input
             m_weaponSwitchRightAction = SteamVR_Input.GetBooleanAction("WeaponSwitchRight", false);
             m_reloadAction = SteamVR_Input.GetBooleanAction("Reload", false);
             m_flashlightAction = SteamVR_Input.GetBooleanAction("ToggleFlashlight", false);
-            m_snapLeftAction = SteamVR_Input.GetBooleanAction("SnapTurnLeft", false);
-            m_snapRightAction = SteamVR_Input.GetBooleanAction("SnapTurnRight", false);
             m_shootAction = SteamVR_Input.GetBooleanAction("Shoot", false);
-            m_toggleWatchAction = SteamVR_Input.GetBooleanAction("ToggleWatchMode", false);
             m_movementAxisAction = SteamVR_Input.GetVector2Action("Movement", false);
             m_interactAction = SteamVR_Input.GetBooleanAction("interact", false);
             m_crouchAction = SteamVR_Input.GetBooleanAction("Crouch", false);

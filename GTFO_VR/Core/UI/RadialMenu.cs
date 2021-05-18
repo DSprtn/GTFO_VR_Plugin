@@ -117,7 +117,7 @@ namespace GTFO_VR.Core.UI
                 if (closest && closestDistance < maxDistance)
                 {
                     CellSound.Post(AK.EVENTS.GAME_MENU_SELECT_GEAR, closest.transform.position);
-                    SteamVR_InputHandler.TriggerHapticPulse(0.0125f, 40f, 0.15f, Controllers.GetDeviceFromInteractionHandType(targetHand));
+                    SteamVR_InputHandler.TriggerHapticPulse(0.02f, 40f, 0.25f, Controllers.GetDeviceFromInteractionHandType(targetHand));
                     closest.Select();
                 }
                 else
