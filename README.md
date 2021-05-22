@@ -88,6 +88,7 @@ Try to get used to the game in Non-VR mode first before using!
 	There are configurable options for:
 	-	Left handed mode 
 	- 	Snap turn - Amount, smooth turn
+	-  	Radial menus - Extra text info, quickswitch weapon to last used 
 	-	Rendering tweaks - Post-processing, resolution and other performance tweaks/hacks
 	- 	Floor height offset (for seated mode and height adjustment!)
 	-	Movement vignette - Toggle, intensity
@@ -121,10 +122,20 @@ Try to get used to the game in Non-VR mode first before using!
 	
 ### MISC IN-GAME ACTIONS
 
+#### RADIAL MENUS
+
+	Radial menus have been added for selecting watch modes/weapons. There are also config options for how much
+	text info should be shown and a quickswitch functionality. If you open the menu and close it immediately 
+	with it enabled, you will switch to the last weapon you used (if it's available.) 
+	
+	Remember to bind the menus if they aren't bound in your current input config!
+
 #### HAMMER
 
 	You have to charge the hammer just like in non-VR GTFO. You can only hit with it while it's charging/charged.
-	Haptics and sound indicate the charging level. A flash of light indicates the hammer is fully charged. 
+	Haptics and sound indicate the charging level. A flash of light indicates the hammer is 50% charged, and a bigger 
+	one indicates it's fully charged.
+	
 	The flash of light and haptics can be turned off.
 	There is also a config option to use the 'old' VR hammer which swings by itself.
 
