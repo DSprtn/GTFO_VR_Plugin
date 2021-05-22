@@ -20,8 +20,6 @@ namespace GTFO_VR.Core.UI
         Camera UI_Camera;
         Camera Popup_Camera;
 
-
-
         private ulong m_overlayHandle = OpenVR.k_ulOverlayHandleInvalid;
 
         private RigidTransform m_currentRigidTransform;

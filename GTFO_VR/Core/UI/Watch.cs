@@ -81,7 +81,13 @@ namespace GTFO_VR.UI
             VRConfig.configWatchScaling.SettingChanged += WatchScaleChanged;
             VRConfig.configUseNumbersForAmmoDisplay.SettingChanged += AmmoDisplayChanged;
             VRConfig.configWatchColor.SettingChanged += WatchColorChanged;
+            VRConfig.configWatchInfoText.SettingChanged += WatchRadialInfoTextChanged;
             ChatMsgEvents.OnChatMsgReceived += ChatMsgReceived;
+        }
+
+        private void WatchRadialInfoTextChanged(object sender, EventArgs e)
+        {
+            m_watchRadialMenu?.ToggleAllInfoText(VRConfig.configWatchInfoText.Value);
         }
 
         private void ChatMsgReceived(string msg)
@@ -139,15 +145,19 @@ namespace GTFO_VR.UI
             m_watchRadialMenu.transform.SetParent(parent);
             m_watchRadialMenu.AddRadialItem("Inventory", SwitchToInventory, out RadialItem inventory);
             inventory.SetIcon(VRAssets.PrimaryFallback);
+            inventory.SetInfoText("Inventory");
 
             m_watchRadialMenu.AddRadialItem("Objective", SwitchToObjective, out RadialItem objective);
             objective.SetIcon(VRAssets.Objective);
+            objective.SetInfoText("Objective");
 
             m_watchRadialMenu.AddRadialItem("ChatType", TypeInChat, out RadialItem chatType);
             chatType.SetIcon(VRAssets.ChatType);
+            chatType.SetInfoText("Type In Chat");
 
             m_watchRadialMenu.AddRadialItem("Chat", SwitchToChat, out RadialItem chat);
             chat.SetIcon(VRAssets.Chat);
+            chat.SetInfoText("Chat");
         }
 
         public void TypeInChat()
@@ -545,6 +555,7 @@ namespace GTFO_VR.UI
             VRConfig.configUseNumbersForAmmoDisplay.SettingChanged -= AmmoDisplayChanged;
             VRConfig.configWatchScaling.SettingChanged -= WatchScaleChanged;
             VRConfig.configWatchColor.SettingChanged -= WatchColorChanged;
+            VRConfig.configWatchInfoText.SettingChanged -= WatchRadialInfoTextChanged;
             ChatMsgEvents.OnChatMsgReceived -= ChatMsgReceived;
         }
     }

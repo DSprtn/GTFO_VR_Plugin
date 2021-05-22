@@ -9,6 +9,7 @@ namespace GTFO_VR.Events
     public static class ItemEquippableEvents
     {
         public static ItemEquippable currentItem;
+        public static ItemEquippable lastWielded;
 
         public static event PlayerWieldItem OnPlayerWieldItem;
 
@@ -18,12 +19,13 @@ namespace GTFO_VR.Events
         {
             if (OnPlayerWieldItem != null && item.Owner.IsLocallyOwned)
             {
+                lastWielded = currentItem;
                 currentItem = item;
                 Log.Debug("Item equip changed---");
                 Log.Debug(item.ArchetypeName);
                 Log.Debug(item.PublicName);
                 OnPlayerWieldItem.Invoke(item);
-
+                
                 if(currentItem.LeftHandGripTrans)
                 {
                     Log.Debug($"Distance from left hand align to origin = {Vector3.Distance(currentItem.LeftHandGripTrans.position, currentItem.transform.position)}");

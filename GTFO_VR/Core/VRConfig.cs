@@ -40,6 +40,10 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<int> configSmoothTurnSpeed;
         internal static ConfigEntry<bool> configSmoothSnapTurn;
 
+        internal static ConfigEntry<bool> configUseQuickSwitch;
+        internal static ConfigEntry<bool> configWatchInfoText;
+        internal static ConfigEntry<bool> configWeaponInfoText;
+
         private static List<BepinGTFOSettingBase> VRSettings = new List<BepinGTFOSettingBase>();
 
         private static int baseVRConfigID = 11000;
@@ -64,6 +68,7 @@ namespace GTFO_VR.Core
             BindHeader("Input");
             configUseLeftHand = BindBool(file, "Input", "Use left hand as main hand?", false, "If true, all items will appear in the left hand", "Left handed mode");
 
+
             configIRLCrouch = BindBool(file, "Input", "Crouch in-game when you crouch IRL?", true, "If true, when crouching down below a certain threshold IRL, the in-game character will also crouch", "Crouch on IRL crouch");
             configCrouchHeight = BindInt(file, "Input", "Crouch height in centimeters", 115, 90, 145, "In-game character will be crouching if your head is lower than this height above the playspace", "Crouch height (cm)");
             configSmoothSnapTurn = BindBool(file, "Input", "Use smooth turning?", false, "If true, will use smooth turn instead of snap turn", "Smooth turn");
@@ -73,6 +78,13 @@ namespace GTFO_VR.Core
             configUseVignetteWhenMoving = BindBool(file, "Misc", "Use Vignette when moving?", false, "If true, will display vignette effect while moving.", "Vignette while moving");
             configMovementVignetteIntensity = BindFloat(file, "Input", "Movement vignette intensity", 1f, .5f, 1.5f, "Multiplier for vignette intensity while moving", "Movement vignette intensity");
 
+            BindHeader("Radial Menus");
+            configUseQuickSwitch = BindBool(file, "Radial menu", "Use quick switch for radial menu?", true,
+                "If true, opening and closing the radial menu fast will switch to last weapon", "Cycle to last weapon on fast press");
+            configWatchInfoText = BindBool(file, "Radial menu", "Show watch info text in radial menu?", true,
+    "If true, will show extra text info in watch radial menu", "Show watch menu text info");
+            configWeaponInfoText = BindBool(file, "Radial menu", "Show weapon info text in radial menu?", true,
+    "If true, will show extra text info in weapon radial menu", "Show weapon text info");
 
             BindHeader("Watch");
             configWatchColor = BindStringDropdown(file, "Watch", "Watch color", "WHITE", "Color to use for watch", "Watch color", new string[] { "WHITE", "RED", "GREEN", "BLUE", "CYAN", "YELLOW", "MAGENTA", "ORANGE", "BLACK" });
@@ -155,7 +167,6 @@ namespace GTFO_VR.Core
             {
                 ConfigEntry<T> cfgEntry = (ConfigEntry<T>)cfgBase;
                 cfgEntry.Value = value;
-                Log.Info($"Config changed! {cfgEntry.Definition.Key} - new value: {value}");
             }
         }
 
@@ -169,7 +180,6 @@ namespace GTFO_VR.Core
         {
             baseVRConfigID++;
             var entry = file.Bind<T>(definition, defaultValue, cd);
-            Log.Info($"{entry.Definition.Key} - {entry.Value}");
             return entry;
         }
 

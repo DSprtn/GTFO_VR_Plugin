@@ -1,57 +1,59 @@
 ﻿using SteamVR_Standalone_IL2CPP.Util;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace GTFO_VR.Core.UI
 {
     public class RadialItem : MonoBehaviour
     {
-
         public RadialItem(IntPtr value)
 : base(value) { }
 
-
-        Color defaultColor = new Color(0.83f, 1f, 0.964f, .2f);
-        Color selectedColor = new Color(1f, 0.5f, 0f, .35f);
-
-        TextMeshPro itemText;
-        TextMeshPro itemInfo;
-        SpriteRenderer iconImage;
-        SpriteRenderer BGImage;
-
-        Action OnExecuted;
-
         public bool Active = true;
+        public float scale = 1f;
+
+        private Color defaultColor = new Color(0.83f, 1f, 0.964f, .2f);
+        private Color inactiveColor = new Color(0.988f, 0.192f, 0.192f, .2f);
+        private Color selectedColor = new Color(1f, 0.5f, 0f, .35f);
+
+        private TextMeshPro itemText;
+        private TextMeshPro itemInfo;
+        private SpriteRenderer iconImage;
+        private SpriteRenderer BGImage;
+
+        private Action OnExecuted;
+
+        private float m_iconBaseScale = 21f;
+
+        private bool m_itemInfoTextEnabled = true;
 
         public void Setup(Action OnExecuted, Sprite BG)
         {
             this.OnExecuted = OnExecuted;
-            itemText = SetupText(new Vector2(45, 45));
-            itemInfo = SetupText(new Vector2(25, 25));
-            itemInfo.transform.localPosition = new Vector3(0, -55f, 0);
+            itemText = SetupText(new Vector2(45, 45) * scale);
+            itemInfo = SetupText(new Vector2(15, 12.5f) * scale);
+            itemInfo.enableAutoSizing = false;
+            itemInfo.fontSize = 110f;
+            itemInfo.enableWordWrapping = false;
+            itemInfo.transform.localPosition = new Vector3(0, -53f, 0) * scale;
             itemInfo.lineSpacing = -45f;
-            SetupImage(ref BGImage, "BG", 64f);
-            SetupImage(ref iconImage, "Icon", 21f,0);
+            SetupImage(ref BGImage, "BG", 64f * scale);
+            SetupImage(ref iconImage, "Icon", 21f * scale, 0);
             iconImage.color = new Color(.0f, .0f, .0f, 1f);
             BGImage.sprite = BG;
             BGImage.color = defaultColor;
             Hide();
         }
 
-        IEnumerator SetSize(RectTransform rect, Vector2 size)
+        private IEnumerator SetSize(RectTransform rect, Vector2 size)
         {
             yield return new WaitForSeconds(0.1f);
             rect.sizeDelta = size;
         }
 
-        private void SetupImage(ref SpriteRenderer img, string name, float scale, float zOffset =.1f)
+        private void SetupImage(ref SpriteRenderer img, string name, float scale, float zOffset = .1f)
         {
             img = new GameObject(name).AddComponent<SpriteRenderer>();
             img.transform.SetParent(transform);
@@ -75,17 +77,17 @@ namespace GTFO_VR.Core.UI
             MelonCoroutines.Start(SetSize(text.rectTransform, size));
             text.enableAutoSizing = true;
             text.fontSize = 144f;
-            text.fontSizeMax = 244;
+            text.fontSizeMax = 244f;
             text.alignment = TextAlignmentOptions.Midline;
-            text.fontSizeMin = 6;
+            text.fontSizeMin = 55f;
             text.color = Color.white;
             text.outlineWidth = 0.2f;
             text.outlineColor = new Color32(0, 0, 0, 255);
 
             text.enableWordWrapping = true;
             text.overflowMode = TextOverflowModes.Overflow;
+            text.fontSharedMaterial.shader = VRAssets.GetTextNoCull();
             text.ForceMeshUpdate(false);
-            text.material.shader = VRAssets.TextAlwaysRender;
             return text;
         }
 
@@ -101,9 +103,10 @@ namespace GTFO_VR.Core.UI
             this.itemText.ForceMeshUpdate(false);
         }
 
-        public void SetIcon(Sprite img)
+        public void SetIcon(Sprite img, float scaleMult = 1f)
         {
             iconImage.sprite = img;
+            iconImage.transform.localScale = Vector2.one * m_iconBaseScale * scale * scaleMult;
         }
 
         public void Select()
@@ -113,7 +116,14 @@ namespace GTFO_VR.Core.UI
 
         public void Deselect()
         {
-            BGImage.color = defaultColor;
+            if (Active)
+            {
+                BGImage.color = defaultColor;
+            }
+            else
+            {
+                BGImage.color = inactiveColor;
+            }
         }
 
         public void Execute()
@@ -135,7 +145,11 @@ namespace GTFO_VR.Core.UI
                 itemText.enabled = true;
             }
             BGImage.enabled = true;
-            itemInfo.enabled = true;
+            if(m_itemInfoTextEnabled)
+            {
+                itemInfo.enabled = true;
+            }
+
             itemInfo.ForceMeshUpdate(false);
             itemText.ForceMeshUpdate(false);
         }
@@ -148,6 +162,12 @@ namespace GTFO_VR.Core.UI
             itemInfo.enabled = false;
             itemInfo.ForceMeshUpdate(false);
             itemText.ForceMeshUpdate(false);
+        }
+
+
+        public void ToggleInfoText(bool toggle)
+        {
+            m_itemInfoTextEnabled = toggle;
         }
     }
 }

@@ -4,13 +4,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Valve.VR;
 
 namespace GTFO_VR.Core.UI
 {
     public class RadialMenu : MonoBehaviour
     {
-
         public RadialMenu(IntPtr value)
 : base(value) { }
 
@@ -22,9 +20,15 @@ namespace GTFO_VR.Core.UI
         private List<RadialItem> radialItems;
         private RadialItem closest;
 
-        private float maxDistance = 0.11f;
-        private float itemDistance = 120f;
+        private float m_maxDistance = 0.11f;
+        private float m_itemDistance = 120f;
+        private float m_outsideofMenuDistance = 0.275f;
 
+        private float m_scale = 1.25f;
+        private float m_lastOpenTime;
+        private RadialItem m_lastHovered;
+
+        public event Action<float> OnMenuClosedWithoutItem;
 
         public void Setup(InteractionHand hand, GameObject originOverride = null)
         {
@@ -32,14 +36,14 @@ namespace GTFO_VR.Core.UI
             targetHand = hand;
             m_canvas = gameObject.AddComponent<Canvas>();
             m_canvas.renderMode = RenderMode.WorldSpace;
+            m_canvas.enabled = false;
             RectTransform canvasTransform = m_canvas.GetComponent<RectTransform>();
-            canvasTransform.sizeDelta = new Vector2(80f, 80f);
-            MelonCoroutines.Start(SetSize(canvasTransform, new Vector2(80, 80)));
+            MelonCoroutines.Start(SetSize(canvasTransform, new Vector2(80, 80) * m_scale));
             canvasTransform.localScale = Vector3.one * .001f;
             radialItems = new List<RadialItem>();
         }
 
-        IEnumerator SetSize(RectTransform rect, Vector2 size)
+        private IEnumerator SetSize(RectTransform rect, Vector2 size)
         {
             yield return new WaitForSeconds(0.1f);
             rect.sizeDelta = size;
@@ -54,6 +58,21 @@ namespace GTFO_VR.Core.UI
             if (m_canvas.enabled)
             {
                 SelectClosestRadialItem();
+                CheckForQuickSelectOutsideMenu();
+            }
+        }
+
+        private void CheckForQuickSelectOutsideMenu()
+        {
+            if (m_lastHovered && m_lastHovered.Active)
+            {
+                GameObject hand = GetHand();
+                float distance = Vector3.Distance(transform.position, hand.transform.position);
+                if (distance > m_outsideofMenuDistance)
+                {
+                    closest = m_lastHovered;
+                    Hide();
+                }
             }
         }
 
@@ -63,13 +82,14 @@ namespace GTFO_VR.Core.UI
             item.transform.SetParent(transform);
             item.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
             item.transform.localScale = Vector3.one;
+            item.scale = m_scale;
             item.Setup(OnExecuted, VRAssets.RadialBG);
             item.SetText(text);
             newItem = item;
             radialItems.Add(item);
         }
 
-        GameObject GetOrigin()
+        private GameObject GetHand()
         {
             GameObject hand = Controllers.GetInteractionHandGO(targetHand);
             if (originOverride != null)
@@ -81,11 +101,12 @@ namespace GTFO_VR.Core.UI
 
         private void SelectClosestRadialItem()
         {
+            RadialItem lastClosest = closest;
             float closestDistance = 9999f;
 
-            GameObject hand = GetOrigin();
+            GameObject hand = GetHand();
 
-            if (closest == null || Vector3.Distance(closest.transform.position, hand.transform.position) > maxDistance)
+            if (closest != null && Vector3.Distance(closest.transform.position, hand.transform.position) > m_maxDistance * m_scale)
             {
                 closest = null;
             }
@@ -98,27 +119,28 @@ namespace GTFO_VR.Core.UI
                 }
             }
 
-            if (closest == null)
+            foreach (RadialItem item in radialItems)
             {
-                foreach (RadialItem item in radialItems)
+                if (!item.Active)
                 {
-                    if(!item.Active)
-                    {
-                        continue;
-                    }
-                    float distance = Vector3.Distance(item.transform.position, hand.transform.position);
-                    if (distance < closestDistance)
-                    {
-                        closestDistance = distance;
-                        closest = item;
-                    }
+                    continue;
                 }
+                float distance = Vector3.Distance(item.transform.position, hand.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closest = item;
+                }
+            }
 
-                if (closest && closestDistance < maxDistance)
+            if (closest != null && closest != lastClosest)
+            {
+                if (closestDistance < m_maxDistance * m_scale)
                 {
                     CellSound.Post(AK.EVENTS.GAME_MENU_SELECT_GEAR, closest.transform.position);
                     SteamVR_InputHandler.TriggerHapticPulse(0.02f, 40f, 0.25f, Controllers.GetDeviceFromInteractionHandType(targetHand));
                     closest.Select();
+                    m_lastHovered = closest;
                 }
                 else
                 {
@@ -134,27 +156,23 @@ namespace GTFO_VR.Core.UI
             m_canvas.enabled = true;
             foreach (RadialItem item in radialItems)
             {
-                if(item.Active)
-                {
-                    item.Show();
-                } else
-                {
-                    item.Hide();
-                }
+                item.Show();
             }
+            m_lastOpenTime = Time.time;
         }
 
         private void OrientMenu()
         {
-            if(originOverride != null)
+            if (originOverride != null)
             {
                 transform.position = originOverride.transform.position;
-            } else
+            }
+            else
             {
                 transform.position = Controllers.GetInteractionHandGO(targetHand).transform.position;
             }
 
-            transform.rotation = Quaternion.LookRotation(HMD.Hmd.transform.forward, Vector3.up);
+            transform.rotation = Quaternion.LookRotation(transform.position -HMD.GetWorldPosition(), Vector3.up);
         }
 
         private void OrientAllItems()
@@ -168,20 +186,37 @@ namespace GTFO_VR.Core.UI
             float angleStep = 360 / itemsAmount;
             foreach (RadialItem item in radialItems)
             {
-                Vector3 offset = new Vector3(0, itemDistance, 0f);
+                Vector3 offset = new Vector3(0, m_itemDistance, 0f) * m_scale;
                 offset = Quaternion.Euler(0, 0, -currAngle) * offset;
                 item.transform.localPosition = offset;
                 currAngle += angleStep;
             }
         }
 
+        public void ToggleAllInfoText(bool toggle)
+        {
+            foreach(RadialItem item in radialItems)
+            {
+                item.ToggleInfoText(toggle);
+            }
+        }
+
         public void Hide()
         {
+            if (!m_canvas.enabled)
+            {
+                return;
+            }
             m_canvas.enabled = false;
             if (closest != null)
             {
                 closest.Execute();
                 closest = null;
+            }
+            else
+            {
+                Log.Debug($"Radial menu closed after {Time.time - m_lastOpenTime} seconds...");
+                OnMenuClosedWithoutItem?.Invoke(Time.time - m_lastOpenTime);
             }
 
             foreach (RadialItem item in radialItems)
