@@ -51,7 +51,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
             else
             {
-                if (Mathf.Abs(smoothTurnX) > 0.9f)
+                if (Mathf.Abs(smoothTurnX) > 0.8f)
                 {
                     float angle = VRConfig.configSnapTurnAmount.Value;
                     angle *= smoothTurnX > 0 ? 1 : -1;
