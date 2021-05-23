@@ -67,7 +67,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             FpsCamera.gameObject.AddComponent<SteamVR_Fade>();
 
             m_watch = Instantiate(VRAssets.GetWatchPrefab(), Vector3.zero, Quaternion.identity, null).AddComponent<Watch>();
-            m_watch.Setup(m_origin.transform.parent);
+            m_watch.Setup(m_origin.transform);
 
             m_haptics = gameObject.AddComponent<Haptics>();
             m_haptics.Setup();
