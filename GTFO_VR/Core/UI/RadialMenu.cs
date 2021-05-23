@@ -172,7 +172,7 @@ namespace GTFO_VR.Core.UI
                 transform.position = Controllers.GetInteractionHandGO(targetHand).transform.position;
             }
 
-            transform.rotation = Quaternion.LookRotation(transform.position -HMD.GetWorldPosition(), Vector3.up);
+            transform.rotation = Quaternion.LookRotation(transform.position -HMD.GetWorldPosition());
         }
 
         private void OrientAllItems()
