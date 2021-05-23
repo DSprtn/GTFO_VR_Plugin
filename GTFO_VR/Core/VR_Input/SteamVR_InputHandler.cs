@@ -223,13 +223,13 @@ namespace GTFO_VR.Core.VR_Input
         {
             if (InputAction.ScrollItems.Equals(action))
             {
-                if (m_weaponSwitchLeftAction.GetState(SteamVR_Input_Sources.Any))
+                if (m_weaponSwitchLeftAction.GetStateDown(SteamVR_Input_Sources.Any))
                 {
-                    return -1f * Time.deltaTime;
+                    return -1f;
                 }
-                if (m_weaponSwitchRightAction.GetState(SteamVR_Input_Sources.Any))
+                if (m_weaponSwitchRightAction.GetStateDown(SteamVR_Input_Sources.Any))
                 {
-                    return 1f * Time.deltaTime;
+                    return 1f;
                 }
                 return 0f;
             }

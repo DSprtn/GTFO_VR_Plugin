@@ -20,9 +20,9 @@ namespace GTFO_VR.Core.UI
         private List<RadialItem> radialItems;
         private RadialItem closest;
 
-        private float m_maxDistance = 0.11f;
-        private float m_itemDistance = 120f;
-        private float m_outsideofMenuDistance = 0.275f;
+        private float m_maxDistance = 0.125f;
+        private float m_itemDistance = 135f;
+        private float m_outsideofMenuDistance = 0.3f;
 
         private float m_scale = 1.25f;
         private float m_lastOpenTime;
