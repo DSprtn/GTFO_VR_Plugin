@@ -43,6 +43,7 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configUseQuickSwitch;
         internal static ConfigEntry<bool> configWatchInfoText;
         internal static ConfigEntry<bool> configWeaponInfoText;
+        internal static ConfigEntry<bool> configCheckSteamVR;
 
         private static List<BepinGTFOSettingBase> VRSettings = new List<BepinGTFOSettingBase>();
 
@@ -53,6 +54,7 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configDebugShowTwoHHitboxes;
         internal static ConfigEntry<bool> configDebugShowHammerHitbox;
         internal static ConfigEntry<float> configDebugHammersizeMult;
+        internal static ConfigEntry<bool> configWeaponAmmoHoloText;
 
         internal static void SetupConfig(ConfigFile file)
         {
@@ -102,6 +104,8 @@ namespace GTFO_VR.Core
             configLaserPointerColor = BindStringDropdown(file, "Laser pointer", "Laser pointer color", "RED", "Color to use for the laser pointer", "Laserpointer color", 
                 new string[] { "WHITE", "RED", "GREEN", "CYAN", "YELLOW", "MAGENTA", "ORANGE", "ALABASTER_RED"});
 
+            configWeaponAmmoHoloText = BindBool(file, "Misc", "Use holo ammo text on weapons?", true, "If true, weapons will display clip ammo text.", "Holographic ammo display");
+
             configWeaponRotationOffset = BindInt(file, "Misc", "Weapon forward rotation offset in degrees", 12, -45, 45, 
                 "Change this to rotate all weapons forward by the given amount of degrees (-45,45) --- \n'12' seems to work really well for the Quest and Index with the 'tip' action pose", "Weapon Tilt (angles, forward)");
 
@@ -135,6 +139,7 @@ namespace GTFO_VR.Core
             BindHeader("Misc");
             configOculusCrashWorkaround = BindBool(file, "Misc", "Use Oculus crash workaround?", false, "If true, map and menu might look a little janky but it should crash less. Blame Zuck!", "Oculus crash workaround");
             configUseControllers = BindBool(file, "Input", "Use VR Controllers?", true, "If true, will use VR controllers. You can play with a gamepad and head aiming if you set this to false", "Motion Controllers (Restart if turning off!)");
+            configCheckSteamVR = BindBool(file, "Misc", "Check if SteamVR running", true, "If true, will check if SteamVR is running before launching in VR.", "SteamVR running check");
 
         }
 

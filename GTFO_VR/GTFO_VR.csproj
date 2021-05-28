@@ -41,6 +41,7 @@
     <Compile Include="Core\UI\RadialItem.cs" />
     <Compile Include="Core\UI\RadialMenu.cs" />
     <Compile Include="Core\PlayerBehaviours\VRHammer.cs" />
+    <Compile Include="Core\UI\WeaponAmmoHologram.cs" />
     <Compile Include="Core\UI\WeaponRadialMenu.cs" />
     <Compile Include="Core\VRConfig.cs" />
     <Compile Include="Core\Log.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Injections\Events\InjectPlayerWeaponFireEvents.cs" />
     <Compile Include="Injections\Events\InjectPlayerDamageEvents.cs" />
     <Compile Include="Injections\Events\InjectLadderPLOCEvent.cs" />
+    <Compile Include="Injections\Events\InjectPLOCEvents.cs" />
     <Compile Include="Injections\GameHooks\InjectPlayerGUIRef.cs" />
     <Compile Include="Injections\GameHooks\InjectVRStart.cs" />
     <Compile Include="Injections\Rendering\InjectPostProcessTweaks.cs" />

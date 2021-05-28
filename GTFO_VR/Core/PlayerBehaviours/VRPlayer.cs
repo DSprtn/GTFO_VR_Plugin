@@ -28,13 +28,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private Haptics m_haptics;
         private MovementVignette m_movementVignette;
         private WeaponRadialMenu m_weaponRadial;
+        private WeaponAmmoHologram m_weaponAmmoHolo;
 
         public static PlayerAgent PlayerAgent;
         public static FPSCamera FpsCamera;
-
-
-
-
 
         public void Setup(FPSCamera camera, PlayerAgent agent)
         {
@@ -54,6 +51,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             m_weaponRadial = gameObject.AddComponent<WeaponRadialMenu>();
             m_weaponRadial.Setup(m_origin.transform);
+
+            m_weaponAmmoHolo = gameObject.AddComponent<WeaponAmmoHologram>();
+            m_weaponAmmoHolo.Setup();
 
             GameObject laserPointer = new GameObject("LaserPointer");
             m_pointer = laserPointer.AddComponent<LaserPointer>();
@@ -99,6 +99,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_origin.UpdateOrigin();
             UpdateVRCameraTransform(FpsCamera);
             UpdateHeldItemTransform();
+            m_weaponAmmoHolo.UpdateTransform();
             //UpdateHandIK();
         }
 

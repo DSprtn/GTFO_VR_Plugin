@@ -35,6 +35,7 @@ namespace GTFO_VR.Core
         public static Sprite ThrowableFallback;
         public static Sprite PackFallback;
         public static Sprite HackingToolFallback;
+        public static Sprite holoBG;
 
 
 
@@ -93,6 +94,8 @@ namespace GTFO_VR.Core
             SecondaryFallback = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/secondary.png").Cast<Texture2D>());
             PrimaryFallback = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/primary.png").Cast<Texture2D>());
             ThrowableFallback = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/throwable.png").Cast<Texture2D>());
+
+            holoBG = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/blob.png").Cast<Texture2D>());
 
             WatchPrefab = assetBundle.LoadAsset("assets/p_vrwatch.prefab").Cast<GameObject>();
             SpriteAlwaysRender = assetBundle.LoadAsset("assets/spritenoztest.shader").Cast<Shader>();
