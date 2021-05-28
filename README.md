@@ -97,6 +97,7 @@ Try to get used to the game in Non-VR mode first before using!
 	-	Laser pointer - Toggle, color
 	-	Hammer - Visual charge indicator, 'Old hammer' (auto-swing with animations)
 	-	Watch - Scale, color, number display for ammo
+	- 	Holographic ammo display - Toggle
 	-	Two handed aiming - Toggle, always on mode
 	-	No motion controller mode (You can play with a gamepad!)
 	-	etc. - Have a look in the menu!
