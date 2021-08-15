@@ -37,6 +37,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Core\PlayerBehaviours\BhapticsIntegration.cs" />
     <Compile Include="Core\PlayerBehaviours\MovementVignette.cs" />
     <Compile Include="Core\UI\RadialItem.cs" />
     <Compile Include="Core\UI\RadialMenu.cs" />
