@@ -133,361 +133,364 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\0Harmony.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\core\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Addons-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Addons-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Addons-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="AlienFXManagedWrapper3.5">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\AlienFXManagedWrapper3.5.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\AlienFXManagedWrapper3.5.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="AssetPrefabs-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\AssetPrefabs-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\AssetPrefabs-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assets-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Assets-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Assets-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx.Core">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\BepInEx.Core.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\core\BepInEx.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx.IL2CPP">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\BepInEx.IL2CPP.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\core\BepInEx.IL2CPP.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Bhaptics.Tact">
+      <HintPath>$(GTFO_PATH)\BepInEx\plugins\Bhaptics.Tact.dll</HintPath>
+    </Reference>
     <Reference Include="CellSound-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\CellSound-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\CellSound-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="CommandSystem">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\CommandSystem.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\CommandSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DevConsoleCommands-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\DevConsoleCommands-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\DevConsoleCommands-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DevConsoloe-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\DevConsoloe-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\DevConsoloe-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Dissonance-integrations-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Dissonance-integrations-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Dissonance-integrations-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DissonanceVoip">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\DissonanceVoip.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\DissonanceVoip.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DropServerSDK-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\DropServerSDK-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\DropServerSDK-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ExcludeInBuild-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\ExcludeInBuild-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\ExcludeInBuild-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="FluffyUnderware.DevTools">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\FluffyUnderware.DevTools.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\FluffyUnderware.DevTools.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GameData-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\GameData-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\GameData-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GlobalFramework-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\GlobalFramework-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\GlobalFramework-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GUIX-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\GUIX-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\GUIX-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppMono.Security">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppMono.Security.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppMono.Security.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2Cppmscorlib.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2Cppmscorlib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppSystem.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Configuration">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppSystem.Configuration.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppSystem.Configuration.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Core">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppSystem.Core.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppSystem.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Net.Http">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppSystem.Net.Http.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppSystem.Net.Http.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Runtime.Serialization">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppSystem.Runtime.Serialization.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppSystem.Runtime.Serialization.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Xml">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppSystem.Xml.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppSystem.Xml.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Xml.Linq">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Il2CppSystem.Xml.Linq.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppSystem.Xml.Linq.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="LibTessDotNet">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\LibTessDotNet.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\LibTessDotNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Modules-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Modules-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Modules-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\base\Newtonsoft.Json.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\base\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PlayFab-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\PlayFab-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\PlayFab-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Plugins-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Plugins-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Plugins-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Prototype">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Prototype.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Prototype.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Prototypes_ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Prototypes_ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Prototypes_ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Resources-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Resources-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Resources-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RootMotion-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\RootMotion-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\RootMotion-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Scenes-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Scenes-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Scenes-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Shards-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Shards-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Shards-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SNet_ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\SNet_ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\SNet_ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="StandardAssets-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\StandardAssets-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\StandardAssets-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SteamVR_Standalone_IL2CPP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\_VS_BUILDS\SteamVR_Standalone_IL2CPP.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\plugins\SteamVR_Standalone_IL2CPP.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SteamWorks_ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\SteamWorks_ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\SteamWorks_ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="ToolBuddy.Curvy">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\ToolBuddy.Curvy.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\ToolBuddy.Curvy.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ToolBuddy.Curvy.Examples">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\ToolBuddy.Curvy.Examples.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\ToolBuddy.Curvy.Examples.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnhollowerBaseLib">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\UnhollowerBaseLib.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\core\UnhollowerBaseLib.dll</HintPath>
     </Reference>
     <Reference Include="UnhollowerRuntimeLib">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\core\UnhollowerRuntimeLib.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\core\UnhollowerRuntimeLib.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Unity.TextMeshPro.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Unity.TextMeshPro.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.AIModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.AIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AndroidJNIModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.AndroidJNIModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.AndroidJNIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.AnimationModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.AnimationModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.AssetBundleModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AudioModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.AudioModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.AudioModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ClothModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.ClothModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.ClothModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CrashReportingModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.CrashReportingModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.CrashReportingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.DirectorModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.DirectorModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.DirectorModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.GridModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.GridModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.GridModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.ImageConversionModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.ImageConversionModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.IMGUIModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.InputLegacyModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.InputLegacyModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.InputModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.InputModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.InputModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.ParticleSystemModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.PerformanceReportingModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.PerformanceReportingModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.PerformanceReportingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.Physics2DModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.Physics2DModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.Physics2DModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.PhysicsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ScreenCaptureModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.ScreenCaptureModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.SharedInternalsModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.SharedInternalsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.SharedInternalsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.SpriteMaskModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.SpriteMaskModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.SpriteMaskModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.SubsystemsModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.SubsystemsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.SubsystemsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TerrainModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.TerrainModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.TerrainModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TextCoreModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.TextCoreModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.TextCoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.TextRenderingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TilemapModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.TilemapModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.TilemapModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.UI.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UIElementsModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.UIElementsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.UIElementsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.UIModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.UIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityAnalyticsModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.UnityAnalyticsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.UnityWebRequestModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestWWWModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.VFXModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.VFXModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.VFXModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.VideoModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.VideoModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.VideoModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.VRModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.VRModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.VRModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.XRModule">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityEngine.XRModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.XRModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityFileDebug-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\UnityFileDebug-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityFileDebug-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Utils-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Utils-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Utils-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Wwise-ASM">
-      <HintPath>..\..\..\..\..\SteamLibrary\steamapps\common\GTFO\BepInEx\unhollowed\Wwise-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Wwise-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "S:/_VS_BUILDS" /E /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(TargetPath)" "$(GTFO_PATH)\BepInEx\plugins" /E /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
