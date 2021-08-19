@@ -65,6 +65,7 @@
     <Compile Include="Events\PlayerReloadEvents.cs" />
     <Compile Include="Events\GlueGunEvents.cs" />
     <Compile Include="Events\HeldItemEvents.cs" />
+    <Compile Include="Events\PlayerTriggerReloadEvents.cs" />
     <Compile Include="Events\WeaponRecoilEvents.cs" />
     <Compile Include="Events\PlayerReceivedDamageEvents.cs" />
     <Compile Include="Injections\Events\InjectBackpackEvents.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Injections\Events\InjectHeldItemEvents.cs" />
     <Compile Include="Injections\Events\InjectPlayerReloadEvents.cs" />
     <Compile Include="Injections\Events\InjectGlueGunEvents.cs" />
+    <Compile Include="Injections\Events\InjectPlayerTriggerReloadEvents.cs" />
     <Compile Include="Injections\Events\InjectPlayerWeaponFireEvents.cs" />
     <Compile Include="Injections\Events\InjectPlayerDamageEvents.cs" />
     <Compile Include="Injections\Events\InjectLadderPLOCEvent.cs" />

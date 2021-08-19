@@ -21,6 +21,7 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<int> configCrouchHeight;
         internal static ConfigEntry<bool> configUseLaserPointerOnWeapons;
         internal static ConfigEntry<bool> configUseWeaponHaptics;
+        internal static ConfigEntry<bool> configUseBhaptics;
         internal static ConfigEntry<string> configLaserPointerColor;
         internal static ConfigEntry<float> configShootingHapticsStrength;
         internal static ConfigEntry<int> configWeaponRotationOffset;
@@ -140,7 +141,7 @@ namespace GTFO_VR.Core
             configOculusCrashWorkaround = BindBool(file, "Misc", "Use Oculus crash workaround?", false, "If true, map and menu might look a little janky but it should crash less. Blame Zuck!", "Oculus crash workaround");
             configUseControllers = BindBool(file, "Input", "Use VR Controllers?", true, "If true, will use VR controllers. You can play with a gamepad and head aiming if you set this to false", "Motion Controllers (Restart if turning off!)");
             configCheckSteamVR = BindBool(file, "Misc", "Check if SteamVR running", true, "If true, will check if SteamVR is running before launching in VR.", "SteamVR running check");
-
+            configUseBhaptics = BindBool(file, "Bhaptics", "Enable bhaptics", true, "If true, bhaptics integration will be enabled", "Bhaptics");
         }
 
         internal static Il2CppSystem.Collections.Generic.List<iSettingsFieldData> InjectConfigIntoGame()

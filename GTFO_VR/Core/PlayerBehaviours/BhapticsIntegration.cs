@@ -2,16 +2,24 @@
 using Bhaptics.Tact;
 using GTFO_VR.Events;
 using System;
+using System.IO;
+using System.Collections;
 
 namespace GTFO_VR.Core.PlayerBehaviours
 {
     public class BhapticsIntegration : MonoBehaviour
     {
-        private static readonly string FIRE_KEY = "fire";
-        private static readonly string EXPLOSION_HAPTIC_STR =
-            "{\"project\":{\"createdAt\":1593681836617,\"description\":\"\",\"layout\":{\"layouts\":{\"VestBack\":[{\"index\":0,\"x\":0,\"y\":0},{\"index\":1,\"x\":0.333,\"y\":0},{\"index\":2,\"x\":0.667,\"y\":0},{\"index\":3,\"x\":1,\"y\":0},{\"index\":4,\"x\":0,\"y\":0.25},{\"index\":5,\"x\":0.333,\"y\":0.25},{\"index\":6,\"x\":0.667,\"y\":0.25},{\"index\":7,\"x\":1,\"y\":0.25},{\"index\":8,\"x\":0,\"y\":0.5},{\"index\":9,\"x\":0.333,\"y\":0.5},{\"index\":10,\"x\":0.667,\"y\":0.5},{\"index\":11,\"x\":1,\"y\":0.5},{\"index\":12,\"x\":0,\"y\":0.75},{\"index\":13,\"x\":0.333,\"y\":0.75},{\"index\":14,\"x\":0.667,\"y\":0.75},{\"index\":15,\"x\":1,\"y\":0.75},{\"index\":16,\"x\":0,\"y\":1},{\"index\":17,\"x\":0.333,\"y\":1},{\"index\":18,\"x\":0.667,\"y\":1},{\"index\":19,\"x\":1,\"y\":1}],\"VestFront\":[{\"index\":0,\"x\":0,\"y\":0},{\"index\":1,\"x\":0.333,\"y\":0},{\"index\":2,\"x\":0.667,\"y\":0},{\"index\":3,\"x\":1,\"y\":0},{\"index\":4,\"x\":0,\"y\":0.25},{\"index\":5,\"x\":0.333,\"y\":0.25},{\"index\":6,\"x\":0.667,\"y\":0.25},{\"index\":7,\"x\":1,\"y\":0.25},{\"index\":8,\"x\":0,\"y\":0.5},{\"index\":9,\"x\":0.333,\"y\":0.5},{\"index\":10,\"x\":0.667,\"y\":0.5},{\"index\":11,\"x\":1,\"y\":0.5},{\"index\":12,\"x\":0,\"y\":0.75},{\"index\":13,\"x\":0.333,\"y\":0.75},{\"index\":14,\"x\":0.667,\"y\":0.75},{\"index\":15,\"x\":1,\"y\":0.75},{\"index\":16,\"x\":0,\"y\":1},{\"index\":17,\"x\":0.333,\"y\":1},{\"index\":18,\"x\":0.667,\"y\":1},{\"index\":19,\"x\":1,\"y\":1}]},\"name\":\"Tactot\",\"type\":\"Tactot\"},\"mediaFileDuration\":1,\"name\":\"UpperBothPing1\",\"tracks\":[{\"effects\":[{\"modes\":{\"VestBack\":{\"dotMode\":{\"dotConnected\":true,\"feedback\":[{\"endTime\":119,\"playbackType\":\"NONE\",\"pointList\":[{\"index\":4,\"intensity\":0.3},{\"index\":3,\"intensity\":0.3}],\"startTime\":0},{\"endTime\":239,\"playbackType\":\"NONE\",\"pointList\":[{\"index\":7,\"intensity\":0.3},{\"index\":0,\"intensity\":0.3}],\"startTime\":119},{\"endTime\":359,\"playbackType\":\"NONE\",\"pointList\":[{\"index\":4,\"intensity\":0.3},{\"index\":3,\"intensity\":0.3}],\"startTime\":239},{\"endTime\":359,\"playbackType\":\"NONE\",\"pointList\":[{\"index\":7,\"intensity\":0.3},{\"index\":0,\"intensity\":0.3}],\"startTime\":359}]},\"mode\":\"DOT_MODE\",\"pathMode\":{\"feedback\":[{\"movingPattern\":\"CONST_SPEED\",\"playbackType\":\"NONE\",\"visible\":true,\"pointList\":[]}]}},\"VestFront\":{\"dotMode\":{\"dotConnected\":true,\"feedback\":[{\"endTime\":119,\"playbackType\":\"NONE\",\"pointList\":[{\"index\":4,\"intensity\":0.6},{\"index\":3,\"intensity\":0.6}],\"startTime\":0},{\"endTime\":239,\"playbackType\":\"NONE\",\"pointList\":[{\"index\":7,\"intensity\":0.6},{\"index\":0,\"intensity\":0.6}],\"startTime\":119},{\"endTime\":359,\"playbackType\":\"NONE\",\"pointList\":[{\"index\":4,\"intensity\":0.6},{\"index\":3,\"intensity\":0.6}],\"startTime\":239},{\"endTime\":359,\"playbackType\":\"NONE\",\"pointList\":[{\"index\":7,\"intensity\":0.6},{\"index\":0,\"intensity\":0.6}],\"startTime\":359}]},\"mode\":\"DOT_MODE\",\"pathMode\":{\"feedback\":[{\"movingPattern\":\"CONST_SPEED\",\"playbackType\":\"NONE\",\"visible\":true,\"pointList\":[]}]}}},\"name\":\"Effect 1\",\"offsetTime\":359,\"startTime\":0}],\"enable\":true},{\"enable\":true,\"effects\":[]}],\"updatedAt\":1593681836617,\"id\":\"-MBDpmuaHkvAAgc9macg\"},\"durationMillis\":0,\"intervalMillis\":20,\"size\":20}";
+        private static readonly string DAMAGE_KEY = "damage";
+        private static readonly string FIRE_R_KEY = "fire_r";
+        private static readonly string RELOAD_R_KEY = "reload_r";
+        private static readonly string RELOAD_L_KEY = "reload_l";
+        private static readonly string HAMMER_CHARGING_R_KEY = "hammer_charging_r";
+        private static readonly string HAMMER_SMACK_R_KEY = "hammer_smack_r";
 
-        private HapticPlayer hapticPlayer;
+        private HapticPlayer m_hapticPlayer;
+        private float m_nextReloadHapticPatternTime;
+        private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
+        public static float m_cameraYRotation;
 
         public BhapticsIntegration(IntPtr value) : base(value)
         {
@@ -19,20 +27,136 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public void Setup()
         {
-            hapticPlayer = new HapticPlayer();
-            hapticPlayer.RegisterTactFileStr(FIRE_KEY, EXPLOSION_HAPTIC_STR);
+            m_hapticPlayer = new HapticPlayer();
+            RegisterTactKey(DAMAGE_KEY);
+            RegisterTactKey(FIRE_R_KEY);
+            RegisterTactKey(RELOAD_R_KEY);
+            //RegisterTactKey(RELOAD_L_KEY);
+            RegisterTactKey(HAMMER_CHARGING_R_KEY);
+            RegisterTactKey(HAMMER_SMACK_R_KEY);
 
+            PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
             PlayerFireWeaponEvents.OnPlayerFireWeapon += PlayWeaponFireHaptics;
+            PlayerReloadEvents.OnPlayerReloaded += PlayWeaponReloadedHaptics;
+            PlayerTriggerReloadEvents.OnTriggerWeaponReloaded += PlayTriggerWeaponReloadHaptics;
+            HeldItemEvents.OnItemCharging += HammerChargingHaptics;
+            HammerEvents.OnHammerSmack += HammerSmackHaptics;
+        }
+        void Update()
+        {
+            bool isReloading = (m_nextReloadHapticPatternTime > 0);
+            if (isReloading && Time.time >= m_nextReloadHapticPatternTime)
+            {
+                Log.Info("Launch reload haptic at " + Time.time);
+                m_hapticPlayer.SubmitRegistered(RELOAD_R_KEY);
+                m_nextReloadHapticPatternTime += RELOAD_FEEDBACK_DURATION;
+            }
         }
 
-        private void OnDestroy()
+        public static void SetCameraYRotation(float cameraYRotation)
         {
-            PlayerFireWeaponEvents.OnPlayerFireWeapon -= PlayWeaponFireHaptics;
+            m_cameraYRotation = cameraYRotation;
+        }
+
+        private void HammerSmackHaptics(float dmg)
+        {
+            if (VRConfig.configUseBhaptics.Value)
+            {
+                m_hapticPlayer.SubmitRegistered(HAMMER_SMACK_R_KEY);
+            }
+        }
+
+        private void HammerChargingHaptics(float pressure)
+        {
+            if (VRConfig.configUseBhaptics.Value)
+            {
+                var scaleOption = new ScaleOption(pressure, 1f); // pressure goes from 0 to 1
+                m_hapticPlayer.SubmitRegistered(HAMMER_CHARGING_R_KEY, scaleOption);
+            }
+        }
+
+        private void PlayWeaponReloadedHaptics()
+        {
+            if (VRConfig.configUseBhaptics.Value)
+            {
+                m_nextReloadHapticPatternTime = 0;
+                m_hapticPlayer.TurnOff(RELOAD_R_KEY);
+                m_hapticPlayer.TurnOff(RELOAD_L_KEY);
+            }
+        }
+
+        private void PlayTriggerWeaponReloadHaptics()
+        {
+            if (VRConfig.configUseBhaptics.Value)
+            {
+                m_nextReloadHapticPatternTime = Time.time;
+            }
         }
 
         private void PlayWeaponFireHaptics(Weapon weapon)
         {
-            hapticPlayer.SubmitRegistered(FIRE_KEY);
+            if (VRConfig.configUseBhaptics.Value)
+            {
+                float intensity = Haptics.GetFireHapticStrength(weapon);
+                var scaleOption = new ScaleOption(intensity, 1.0f);
+                m_hapticPlayer.SubmitRegistered(FIRE_R_KEY, scaleOption);
+            }
+        }
+
+        private void PlayReceiveDamageHaptics(float dmg, Vector3 direction)
+        {
+            if (VRConfig.configUseBhaptics.Value)
+            {
+                /*
+                 * direction coordinates are [-1, 1]
+                 * offsetAngleX: [0, 360]
+                 * offsetY: [-0.5, 0.5]
+                 */
+                float angleRadians = (float) Math.Atan2(direction.z, direction.x);
+                float angleDegrees = (float) (angleRadians * 180 / Math.PI);
+                float offsetAngleX = NormalizeOrientation(angleDegrees + m_cameraYRotation + 90f);
+                float offsetY = Clamp(0.5f - (direction.y * 2), -0.5f, 0.5f);
+                var rotationOption = new RotationOption(offsetAngleX, offsetY);
+
+                float intensity = dmg * 0.25f + 0.25f;
+                float duration = 1f;
+                var scaleOption = new ScaleOption(intensity, duration);
+
+                m_hapticPlayer.SubmitRegisteredVestRotation(DAMAGE_KEY, "", rotationOption, scaleOption);
+            }
+        }
+
+        private float NormalizeOrientation(float orientation)
+        {
+            float result = orientation % 360;
+
+            if (result < 0)
+            {
+                result += 360;
+            }
+
+            return result;
+        }
+
+        private float Clamp(float v, float min, float max)
+        {
+            return Math.Min(Math.Max(v, min), max);
+        }
+
+        private void RegisterTactKey(string key)
+        {
+            string patternFileContent = File.ReadAllText("BepInEx\\plugins\\bhaptics-patterns\\vest\\" + key + ".tact");
+            m_hapticPlayer.RegisterTactFileStr(key, patternFileContent);
+        }
+
+        private void OnDestroy()
+        {
+            PlayerReceivedDamageEvents.OnPlayerTakeDamage -= PlayReceiveDamageHaptics;
+            PlayerFireWeaponEvents.OnPlayerFireWeapon -= PlayWeaponFireHaptics;
+            PlayerReloadEvents.OnPlayerReloaded -= PlayWeaponReloadedHaptics;
+            PlayerTriggerReloadEvents.OnTriggerWeaponReloaded -= PlayTriggerWeaponReloadHaptics;
+            HeldItemEvents.OnItemCharging -= HammerChargingHaptics;
+            HammerEvents.OnHammerSmack -= HammerSmackHaptics;
         }
     }
 }
