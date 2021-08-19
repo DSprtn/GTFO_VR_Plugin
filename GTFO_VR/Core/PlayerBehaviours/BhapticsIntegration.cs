@@ -3,18 +3,25 @@ using Bhaptics.Tact;
 using GTFO_VR.Events;
 using System;
 using System.IO;
-using System.Collections;
 
 namespace GTFO_VR.Core.PlayerBehaviours
 {
     public class BhapticsIntegration : MonoBehaviour
     {
-        private static readonly string DAMAGE_KEY = "damage";
-        private static readonly string FIRE_R_KEY = "fire_r";
-        private static readonly string RELOAD_R_KEY = "reload_r";
-        private static readonly string RELOAD_L_KEY = "reload_l";
-        private static readonly string HAMMER_CHARGING_R_KEY = "hammer_charging_r";
-        private static readonly string HAMMER_SMACK_R_KEY = "hammer_smack_r";
+        private static readonly string VEST_DAMAGE_KEY = "vest_damage";
+        private static readonly string VEST_FIRE_R_KEY = "vest_fire_r";
+        private static readonly string VEST_RELOAD_R_KEY = "vest_reload_r";
+        private static readonly string VEST_RELOAD_L_KEY = "vest_reload_l";
+        private static readonly string VEST_HAMMER_CHARGING_R_KEY = "vest_hammer_charging_r";
+        private static readonly string VEST_HAMMER_SMACK_R_KEY = "vest_hammer_smack_r";
+
+        private static readonly string ARMS_FIRE_R_KEY = "arms_fire_r";
+        private static readonly string ARMS_RELOAD_R_KEY = "arms_reload_r";
+        private static readonly string ARMS_RELOAD_L_KEY = "arms_reload_l";
+        private static readonly string ARMS_HAMMER_CHARGING_R_KEY = "arms_hammer_charging_r";
+        private static readonly string ARMS_HAMMER_SMACK_R_KEY = "arms_hammer_smack_r";
+
+        private static readonly string PATTERNS_FOLDER = "BepInEx\\plugins\\bhaptics-patterns\\";
 
         private HapticPlayer m_hapticPlayer;
         private float m_nextReloadHapticPatternTime;
@@ -28,12 +35,17 @@ namespace GTFO_VR.Core.PlayerBehaviours
         public void Setup()
         {
             m_hapticPlayer = new HapticPlayer();
-            RegisterTactKey(DAMAGE_KEY);
-            RegisterTactKey(FIRE_R_KEY);
-            RegisterTactKey(RELOAD_R_KEY);
-            //RegisterTactKey(RELOAD_L_KEY);
-            RegisterTactKey(HAMMER_CHARGING_R_KEY);
-            RegisterTactKey(HAMMER_SMACK_R_KEY);
+            RegisterVestTactKey(VEST_DAMAGE_KEY);
+            RegisterVestTactKey(VEST_FIRE_R_KEY);
+            RegisterVestTactKey(VEST_RELOAD_R_KEY);
+            //RegisterVestTactKey(VEST_RELOAD_L_KEY);
+            RegisterVestTactKey(VEST_HAMMER_CHARGING_R_KEY);
+            RegisterVestTactKey(VEST_HAMMER_SMACK_R_KEY);
+
+            RegisterArmsTactKey(ARMS_FIRE_R_KEY);
+            RegisterArmsTactKey(ARMS_RELOAD_R_KEY);
+            RegisterArmsTactKey(ARMS_HAMMER_CHARGING_R_KEY);
+            RegisterArmsTactKey(ARMS_HAMMER_SMACK_R_KEY);
 
             PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
             PlayerFireWeaponEvents.OnPlayerFireWeapon += PlayWeaponFireHaptics;
@@ -47,8 +59,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             bool isReloading = (m_nextReloadHapticPatternTime > 0);
             if (isReloading && Time.time >= m_nextReloadHapticPatternTime)
             {
-                Log.Info("Launch reload haptic at " + Time.time);
-                m_hapticPlayer.SubmitRegistered(RELOAD_R_KEY);
+                m_hapticPlayer.SubmitRegistered(VEST_RELOAD_R_KEY);
+                m_hapticPlayer.SubmitRegistered(ARMS_RELOAD_R_KEY);
                 m_nextReloadHapticPatternTime += RELOAD_FEEDBACK_DURATION;
             }
         }
@@ -62,7 +74,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
             if (VRConfig.configUseBhaptics.Value)
             {
-                m_hapticPlayer.SubmitRegistered(HAMMER_SMACK_R_KEY);
+                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_SMACK_R_KEY);
+                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_SMACK_R_KEY);
             }
         }
 
@@ -71,7 +84,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             if (VRConfig.configUseBhaptics.Value)
             {
                 var scaleOption = new ScaleOption(pressure, 1f); // pressure goes from 0 to 1
-                m_hapticPlayer.SubmitRegistered(HAMMER_CHARGING_R_KEY, scaleOption);
+                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_R_KEY, scaleOption);
+                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_R_KEY, scaleOption);
             }
         }
 
@@ -80,8 +94,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
             if (VRConfig.configUseBhaptics.Value)
             {
                 m_nextReloadHapticPatternTime = 0;
-                m_hapticPlayer.TurnOff(RELOAD_R_KEY);
-                m_hapticPlayer.TurnOff(RELOAD_L_KEY);
+                m_hapticPlayer.TurnOff(VEST_RELOAD_R_KEY);
+                m_hapticPlayer.TurnOff(VEST_RELOAD_L_KEY);
+                m_hapticPlayer.TurnOff(ARMS_RELOAD_R_KEY);
+                m_hapticPlayer.TurnOff(ARMS_RELOAD_L_KEY);
             }
         }
 
@@ -99,7 +115,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 float intensity = Haptics.GetFireHapticStrength(weapon);
                 var scaleOption = new ScaleOption(intensity, 1.0f);
-                m_hapticPlayer.SubmitRegistered(FIRE_R_KEY, scaleOption);
+                m_hapticPlayer.SubmitRegistered(VEST_FIRE_R_KEY, scaleOption);
+                m_hapticPlayer.SubmitRegistered(ARMS_FIRE_R_KEY, scaleOption);
             }
         }
 
@@ -122,7 +139,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 float duration = 1f;
                 var scaleOption = new ScaleOption(intensity, duration);
 
-                m_hapticPlayer.SubmitRegisteredVestRotation(DAMAGE_KEY, "", rotationOption, scaleOption);
+                m_hapticPlayer.SubmitRegisteredVestRotation(VEST_DAMAGE_KEY, "", rotationOption, scaleOption);
             }
         }
 
@@ -143,9 +160,20 @@ namespace GTFO_VR.Core.PlayerBehaviours
             return Math.Min(Math.Max(v, min), max);
         }
 
-        private void RegisterTactKey(string key)
+        private void RegisterVestTactKey(string key)
         {
-            string patternFileContent = File.ReadAllText("BepInEx\\plugins\\bhaptics-patterns\\vest\\" + key + ".tact");
+            RegisterArmsTactKey(PATTERNS_FOLDER + "vest\\", key);
+        }
+
+        private void RegisterArmsTactKey(string key)
+        {
+            RegisterArmsTactKey(PATTERNS_FOLDER + "arms\\", key);
+        }
+
+        private void RegisterArmsTactKey(string folder, string key)
+        {
+            string fileName = key.Substring(key.IndexOf("_") + 1);
+            string patternFileContent = File.ReadAllText(folder + fileName + ".tact");
             m_hapticPlayer.RegisterTactFileStr(key, patternFileContent);
         }
 
