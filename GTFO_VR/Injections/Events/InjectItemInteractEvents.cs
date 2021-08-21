@@ -21,4 +21,22 @@ namespace GTFO_VR.Injections.Events
             ItemInteractEvents.ItemInteracted();
         }
     }
+
+    [HarmonyPatch(typeof(LG_ResourceContainer_Sync), nameof(LG_ResourceContainer_Sync.AttemptInteract))]
+    internal class InjectAttemptInteractResourceContainerEvents
+    {
+        private static void Postfix()
+        {
+            ItemInteractEvents.ItemInteracted();
+        }
+    }
+
+    [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(LG_ComputerTerminal.OnInteract))]
+    internal class InjectAttemptInteractComputerTerminalEvents
+    {
+        private static void Postfix()
+        {
+            ItemInteractEvents.ItemInteracted();
+        }
+    }
 }
