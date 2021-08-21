@@ -198,7 +198,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
             if (VRConfig.configUseBhaptics.Value)
             {
-                if (focusState == eFocusState.FPS)
+                if (FocusStateEvents.lastState.Equals(eFocusState.InElevator) && focusState == eFocusState.FPS)
                 {
                     m_hapticPlayer.SubmitRegistered(VEST_LANDING_KEY);
                 }
