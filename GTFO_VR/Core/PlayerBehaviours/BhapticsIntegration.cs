@@ -15,6 +15,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string VEST_RELOAD_L_KEY = "vest_reload_l";
         private static readonly string VEST_HAMMER_CHARGING_R_KEY = "vest_hammer_charging_r";
         private static readonly string VEST_HAMMER_SMACK_R_KEY = "vest_hammer_smack_r";
+        private static readonly string VEST_LANDING_KEY = "vest_landing";
 
         private static readonly string ARMS_FIRE_R_KEY = "arms_fire_r";
         private static readonly string ARMS_RELOAD_R_KEY = "arms_reload_r";
@@ -44,6 +45,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             //RegisterVestTactKey(VEST_RELOAD_L_KEY);
             RegisterVestTactKey(VEST_HAMMER_CHARGING_R_KEY);
             RegisterVestTactKey(VEST_HAMMER_SMACK_R_KEY);
+            RegisterVestTactKey(VEST_LANDING_KEY);
 
             RegisterArmsTactKey(ARMS_FIRE_R_KEY);
             RegisterArmsTactKey(ARMS_RELOAD_R_KEY);
@@ -57,6 +59,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerTriggerReloadEvents.OnTriggerWeaponReloaded += PlayTriggerWeaponReloadHaptics;
             HeldItemEvents.OnItemCharging += HammerChargingHaptics;
             HammerEvents.OnHammerSmack += HammerSmackHaptics;
+            FocusStateEvents.OnFocusStateChange += FocusStateChangedHaptics;
         }
         void Update()
         {
@@ -173,6 +176,17 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 }
             }
         }
+
+        private void FocusStateChangedHaptics(eFocusState focusState)
+        {
+            if (VRConfig.configUseBhaptics.Value)
+            {
+                if (focusState == eFocusState.FPS)
+                {
+                    m_hapticPlayer.SubmitRegistered(VEST_LANDING_KEY);
+                }
+            }
+        }
             }
         }
 
@@ -219,6 +233,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerTriggerReloadEvents.OnTriggerWeaponReloaded -= PlayTriggerWeaponReloadHaptics;
             HeldItemEvents.OnItemCharging -= HammerChargingHaptics;
             HammerEvents.OnHammerSmack -= HammerSmackHaptics;
+            FocusStateEvents.OnFocusStateChange -= FocusStateChangedHaptics;
         }
     }
 }
