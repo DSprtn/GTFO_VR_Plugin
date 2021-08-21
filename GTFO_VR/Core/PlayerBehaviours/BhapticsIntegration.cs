@@ -9,6 +9,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
     public class BhapticsIntegration : MonoBehaviour
     {
         private static readonly string VEST_DAMAGE_KEY = "vest_damage";
+        private static readonly string VEST_TENTACLE_ATTACK_KEY = "vest_tentacle_attack";
         private static readonly string VEST_FIRE_R_KEY = "vest_fire_r";
         private static readonly string VEST_RELOAD_R_KEY = "vest_reload_r";
         private static readonly string VEST_RELOAD_L_KEY = "vest_reload_l";
@@ -25,6 +26,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private HapticPlayer m_hapticPlayer;
         private float m_nextReloadHapticPatternTime;
+        private RotationOption m_lastDamageRotationOption;
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
         public static float m_cameraYRotation;
 
@@ -36,6 +38,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
             m_hapticPlayer = new HapticPlayer();
             RegisterVestTactKey(VEST_DAMAGE_KEY);
+            RegisterVestTactKey(VEST_TENTACLE_ATTACK_KEY);
             RegisterVestTactKey(VEST_FIRE_R_KEY);
             RegisterVestTactKey(VEST_RELOAD_R_KEY);
             //RegisterVestTactKey(VEST_RELOAD_L_KEY);
@@ -48,6 +51,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             RegisterArmsTactKey(ARMS_HAMMER_SMACK_R_KEY);
 
             PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
+            TentacleAttackEvents.OnTentacleAttack += TentacleAttackHaptics;
             PlayerFireWeaponEvents.OnPlayerFireWeapon += PlayWeaponFireHaptics;
             PlayerReloadEvents.OnPlayerReloaded += PlayWeaponReloadedHaptics;
             PlayerTriggerReloadEvents.OnTriggerWeaponReloaded += PlayTriggerWeaponReloadHaptics;
@@ -120,26 +124,55 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
+        private RotationOption GetRotationOptionFromDirection(Vector3 direction)
+        {
+            /*
+             * direction coordinates are [-1, 1]
+             * offsetAngleX: [0, 360]
+             * offsetY: [-0.5, 0.5]
+             */
+            float angleRadians = (float)Math.Atan2(direction.z, direction.x);
+            float angleDegrees = (float)(angleRadians * 180 / Math.PI);
+            float offsetAngleX = NormalizeOrientation(angleDegrees + m_cameraYRotation + 90f);
+            float offsetY = Clamp(0.5f - (direction.y * 2), -0.5f, 0.5f);
+            return new RotationOption(offsetAngleX, offsetY);
+        }
+
         private void PlayReceiveDamageHaptics(float dmg, Vector3 direction)
         {
             if (VRConfig.configUseBhaptics.Value)
             {
-                /*
-                 * direction coordinates are [-1, 1]
-                 * offsetAngleX: [0, 360]
-                 * offsetY: [-0.5, 0.5]
-                 */
-                float angleRadians = (float) Math.Atan2(direction.z, direction.x);
-                float angleDegrees = (float) (angleRadians * 180 / Math.PI);
-                float offsetAngleX = NormalizeOrientation(angleDegrees + m_cameraYRotation + 90f);
-                float offsetY = Clamp(0.5f - (direction.y * 2), -0.5f, 0.5f);
-                var rotationOption = new RotationOption(offsetAngleX, offsetY);
+                var rotationOption = GetRotationOptionFromDirection(direction);
 
                 float intensity = dmg * 0.25f + 0.25f;
                 float duration = 1f;
                 var scaleOption = new ScaleOption(intensity, duration);
 
                 m_hapticPlayer.SubmitRegisteredVestRotation(VEST_DAMAGE_KEY, "", rotationOption, scaleOption);
+
+                m_lastDamageRotationOption = rotationOption;
+            }
+        }
+
+        private void TentacleAttackHaptics(float dmg, Agents.Agent sourceAgent, Vector3 position)
+        {
+            if (VRConfig.configUseBhaptics.Value)
+            {
+                if (m_lastDamageRotationOption != null)
+                {
+                    var rotationOption = m_lastDamageRotationOption;
+                    //var rotationOption = GetRotationOptionFromDirection(position - sourceAgent.TentacleTarget.position); // could maybe calculate direction with this, but offsetY is not right
+                    Log.Info("Receive tentacle hit for " + dmg + " at " + Time.time + " from position: " + position.x + " | " + position.y + " | " + position.z + ", cameraRotY: " + m_cameraYRotation
+                        + ", offsetAngleX: " + rotationOption.OffsetAngleX + ", offsetY: " + rotationOption.OffsetY + " at frame " + Time.frameCount);
+
+                    m_hapticPlayer.SubmitRegisteredVestRotation(VEST_TENTACLE_ATTACK_KEY, rotationOption);
+                }
+                else
+                {
+                    Log.Error("Received tentacle attack with no last damage rotation option!");
+                }
+            }
+        }
             }
         }
 
@@ -180,6 +213,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private void OnDestroy()
         {
             PlayerReceivedDamageEvents.OnPlayerTakeDamage -= PlayReceiveDamageHaptics;
+            TentacleAttackEvents.OnTentacleAttack -= TentacleAttackHaptics;
             PlayerFireWeaponEvents.OnPlayerFireWeapon -= PlayWeaponFireHaptics;
             PlayerReloadEvents.OnPlayerReloaded -= PlayWeaponReloadedHaptics;
             PlayerTriggerReloadEvents.OnTriggerWeaponReloaded -= PlayTriggerWeaponReloadHaptics;
