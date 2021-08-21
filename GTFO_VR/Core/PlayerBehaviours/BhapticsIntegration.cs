@@ -185,9 +185,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 {
                     var rotationOption = m_lastDamageRotationOption;
                     //var rotationOption = GetRotationOptionFromDirection(position - sourceAgent.TentacleTarget.position); // could maybe calculate direction with this, but offsetY is not right
-                    Log.Info("Receive tentacle hit for " + dmg + " at " + Time.time + " from position: " + position.x + " | " + position.y + " | " + position.z + ", cameraRotY: " + m_cameraYRotation
-                        + ", offsetAngleX: " + rotationOption.OffsetAngleX + ", offsetY: " + rotationOption.OffsetY + " at frame " + Time.frameCount);
-
                     m_hapticPlayer.SubmitRegisteredVestRotation(VEST_TENTACLE_ATTACK_KEY, rotationOption);
                 }
                 else
