@@ -25,6 +25,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string ARMS_HAMMER_SMACK_R_KEY = "arms_hammer_smack_r";
         private static readonly string ARMS_HAMMER_FULLY_CHARGED_R_KEY = "arms_hammer_fully_charged_r";
         private static readonly string ARMS_INTERACT_ITEM_R_KEY = "arms_interact_item_r";
+        private static readonly string ARMS_FLASHLIGHT_TOGGLE_R_KEY = "arms_flashlight_toggle_r";
 
         private static readonly string PATTERNS_FOLDER = "BepInEx\\plugins\\bhaptics-patterns\\";
 
@@ -57,6 +58,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             RegisterArmsTactKey(ARMS_HAMMER_FULLY_CHARGED_R_KEY);
             RegisterArmsTactKey(ARMS_HAMMER_SMACK_R_KEY);
             RegisterArmsTactKey(ARMS_INTERACT_ITEM_R_KEY);
+            RegisterArmsTactKey(ARMS_FLASHLIGHT_TOGGLE_R_KEY);
 
             PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
             TentacleAttackEvents.OnTentacleAttack += TentacleAttackHaptics;
@@ -68,6 +70,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             HammerEvents.OnHammerFullyCharged += HammerFullyChargedHaptics;
             FocusStateEvents.OnFocusStateChange += FocusStateChangedHaptics;
             ItemInteractEvents.OnItemInteracted += ItemInteractedHaptics;
+            ItemInteractEvents.OnFlashlightToggled += FlashlightToggledHaptics;
         }
         void Update()
         {
@@ -213,6 +216,14 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
+        private void FlashlightToggledHaptics(bool enabled)
+        {
+            if (VRConfig.configUseBhaptics.Value)
+            {
+                m_hapticPlayer.SubmitRegistered(ARMS_FLASHLIGHT_TOGGLE_R_KEY);
+            }
+        }
+
         private float NormalizeOrientation(float orientation)
         {
             float result = orientation % 360;
@@ -259,6 +270,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             HammerEvents.OnHammerFullyCharged -= HammerFullyChargedHaptics;
             FocusStateEvents.OnFocusStateChange -= FocusStateChangedHaptics;
             ItemInteractEvents.OnItemInteracted -= ItemInteractedHaptics;
+            ItemInteractEvents.OnFlashlightToggled += FlashlightToggledHaptics;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using LevelGeneration;
 using GTFO_VR.Events;
+using GTFO_VR.Core;
 
 namespace GTFO_VR.Injections.Events
 {
@@ -37,6 +38,21 @@ namespace GTFO_VR.Injections.Events
         private static void Postfix()
         {
             ItemInteractEvents.ItemInteracted();
+        }
+    }
+
+    [HarmonyPatch(typeof(PlayerInventoryBase), nameof(PlayerInventoryBase.SetFlashlightEnabled))]
+    internal class InjectFlashlightEnabledEvents
+    {
+        private static bool m_lastFlashlightState;
+
+        private static void Postfix(bool enabled)
+        {
+            if (m_lastFlashlightState != enabled)
+            {
+                ItemInteractEvents.FlashlightToggled(enabled);
+                m_lastFlashlightState = enabled;
+            }
         }
     }
 }
