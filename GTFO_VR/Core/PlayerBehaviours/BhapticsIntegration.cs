@@ -144,7 +144,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 var rotationOption = GetRotationOptionFromDirection(direction);
 
-                float intensity = dmg * 0.25f + 0.25f;
+                float intensity = dmg * 0.3f + 0.3f;
                 float duration = 1f;
                 var scaleOption = new ScaleOption(intensity, duration);
 
