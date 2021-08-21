@@ -22,6 +22,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string ARMS_RELOAD_L_KEY = "arms_reload_l";
         private static readonly string ARMS_HAMMER_CHARGING_R_KEY = "arms_hammer_charging_r";
         private static readonly string ARMS_HAMMER_SMACK_R_KEY = "arms_hammer_smack_r";
+        private static readonly string ARMS_INTERACT_ITEM_R_KEY = "arms_interact_item_r";
 
         private static readonly string PATTERNS_FOLDER = "BepInEx\\plugins\\bhaptics-patterns\\";
 
@@ -51,6 +52,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             RegisterArmsTactKey(ARMS_RELOAD_R_KEY);
             RegisterArmsTactKey(ARMS_HAMMER_CHARGING_R_KEY);
             RegisterArmsTactKey(ARMS_HAMMER_SMACK_R_KEY);
+            RegisterArmsTactKey(ARMS_INTERACT_ITEM_R_KEY);
 
             PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
             TentacleAttackEvents.OnTentacleAttack += TentacleAttackHaptics;
@@ -60,6 +62,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             HeldItemEvents.OnItemCharging += HammerChargingHaptics;
             HammerEvents.OnHammerSmack += HammerSmackHaptics;
             FocusStateEvents.OnFocusStateChange += FocusStateChangedHaptics;
+            ItemInteractEvents.OnItemInteracted += ItemInteractedHaptics;
         }
         void Update()
         {
@@ -187,6 +190,12 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 }
             }
         }
+
+        private void ItemInteractedHaptics()
+        {
+            if (VRConfig.configUseBhaptics.Value)
+            {
+                m_hapticPlayer.SubmitRegistered(ARMS_INTERACT_ITEM_R_KEY);
             }
         }
 
@@ -234,6 +243,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             HeldItemEvents.OnItemCharging -= HammerChargingHaptics;
             HammerEvents.OnHammerSmack -= HammerSmackHaptics;
             FocusStateEvents.OnFocusStateChange -= FocusStateChangedHaptics;
+            ItemInteractEvents.OnItemInteracted -= ItemInteractedHaptics;
         }
     }
 }

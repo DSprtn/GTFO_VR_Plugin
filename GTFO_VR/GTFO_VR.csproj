@@ -61,6 +61,7 @@
     <Compile Include="Events\FocusStateEvents.cs" />
     <Compile Include="Events\HammerEvents.cs" />
     <Compile Include="Events\InventoryAmmoEvents.cs" />
+    <Compile Include="Events\ItemInteractEvents.cs" />
     <Compile Include="Events\PlayerLocomotionEvents.cs" />
     <Compile Include="Events\PlayerReloadEvents.cs" />
     <Compile Include="Events\GlueGunEvents.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="Injections\Events\InjectInventoryAmmoUpdateEvent.cs" />
     <Compile Include="Injections\Events\InjectItemEquippableEvents.cs" />
     <Compile Include="Injections\Events\InjectHeldItemEvents.cs" />
+    <Compile Include="Injections\Events\InjectItemInteractEvents.cs" />
     <Compile Include="Injections\Events\InjectPlayerReloadEvents.cs" />
     <Compile Include="Injections\Events\InjectGlueGunEvents.cs" />
     <Compile Include="Injections\Events\InjectPlayerTriggerReloadEvents.cs" />
