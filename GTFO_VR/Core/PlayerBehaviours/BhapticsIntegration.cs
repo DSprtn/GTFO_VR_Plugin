@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Bhaptics.Tact;
 using GTFO_VR.Events;
+using GTFO_VR.Core.VR_Input;
 using System;
 using System.IO;
 
@@ -11,22 +12,33 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string VEST_DAMAGE_KEY = "vest_damage";
         private static readonly string VEST_TENTACLE_ATTACK_KEY = "vest_tentacle_attack";
         private static readonly string VEST_FIRE_R_KEY = "vest_fire_r";
+        private static readonly string VEST_FIRE_L_KEY = "vest_fire_l";
         private static readonly string VEST_RELOAD_R_KEY = "vest_reload_r";
         private static readonly string VEST_RELOAD_L_KEY = "vest_reload_l";
         private static readonly string VEST_HAMMER_CHARGING_R_KEY = "vest_hammer_charging_r";
+        private static readonly string VEST_HAMMER_CHARGING_L_KEY = "vest_hammer_charging_l";
         private static readonly string VEST_HAMMER_SMACK_R_KEY = "vest_hammer_smack_r";
+        private static readonly string VEST_HAMMER_SMACK_L_KEY = "vest_hammer_smack_l";
         private static readonly string VEST_HAMMER_FULLY_CHARGED_R_KEY = "vest_hammer_fully_charged_r";
+        private static readonly string VEST_HAMMER_FULLY_CHARGED_L_KEY = "vest_hammer_fully_charged_l";
         private static readonly string VEST_LANDING_KEY = "vest_landing";
 
         private static readonly string ARMS_FIRE_R_KEY = "arms_fire_r";
+        private static readonly string ARMS_FIRE_L_KEY = "arms_fire_l";
         private static readonly string ARMS_RELOAD_R_KEY = "arms_reload_r";
         private static readonly string ARMS_RELOAD_L_KEY = "arms_reload_l";
         private static readonly string ARMS_HAMMER_CHARGING_R_KEY = "arms_hammer_charging_r";
+        private static readonly string ARMS_HAMMER_CHARGING_L_KEY = "arms_hammer_charging_l";
         private static readonly string ARMS_HAMMER_SMACK_R_KEY = "arms_hammer_smack_r";
+        private static readonly string ARMS_HAMMER_SMACK_L_KEY = "arms_hammer_smack_l";
         private static readonly string ARMS_HAMMER_FULLY_CHARGED_R_KEY = "arms_hammer_fully_charged_r";
+        private static readonly string ARMS_HAMMER_FULLY_CHARGED_L_KEY = "arms_hammer_fully_charged_l";
         private static readonly string ARMS_INTERACT_ITEM_R_KEY = "arms_interact_item_r";
+        private static readonly string ARMS_INTERACT_ITEM_L_KEY = "arms_interact_item_l";
         private static readonly string ARMS_FLASHLIGHT_TOGGLE_R_KEY = "arms_flashlight_toggle_r";
+        private static readonly string ARMS_FLASHLIGHT_TOGGLE_L_KEY = "arms_flashlight_toggle_l";
         private static readonly string ARMS_CHANGE_ITEM_R_KEY = "arms_change_item_r";
+        private static readonly string ARMS_CHANGE_ITEM_L_KEY = "arms_change_item_l";
 
         private static readonly string PATTERNS_FOLDER = "BepInEx\\plugins\\bhaptics-patterns\\";
 
@@ -46,21 +58,33 @@ namespace GTFO_VR.Core.PlayerBehaviours
             RegisterVestTactKey(VEST_DAMAGE_KEY);
             RegisterVestTactKey(VEST_TENTACLE_ATTACK_KEY);
             RegisterVestTactKey(VEST_FIRE_R_KEY);
+            RegisterVestTactKey(VEST_FIRE_L_KEY);
             RegisterVestTactKey(VEST_RELOAD_R_KEY);
-            //RegisterVestTactKey(VEST_RELOAD_L_KEY);
+            RegisterVestTactKey(VEST_RELOAD_L_KEY);
             RegisterVestTactKey(VEST_HAMMER_CHARGING_R_KEY);
+            RegisterVestTactKey(VEST_HAMMER_CHARGING_L_KEY);
             RegisterVestTactKey(VEST_HAMMER_FULLY_CHARGED_R_KEY);
+            RegisterVestTactKey(VEST_HAMMER_FULLY_CHARGED_L_KEY);
             RegisterVestTactKey(VEST_HAMMER_SMACK_R_KEY);
+            RegisterVestTactKey(VEST_HAMMER_SMACK_L_KEY);
             RegisterVestTactKey(VEST_LANDING_KEY);
 
             RegisterArmsTactKey(ARMS_FIRE_R_KEY);
+            RegisterArmsTactKey(ARMS_FIRE_L_KEY);
             RegisterArmsTactKey(ARMS_RELOAD_R_KEY);
+            RegisterArmsTactKey(ARMS_RELOAD_L_KEY);
             RegisterArmsTactKey(ARMS_HAMMER_CHARGING_R_KEY);
+            RegisterArmsTactKey(ARMS_HAMMER_CHARGING_L_KEY);
             RegisterArmsTactKey(ARMS_HAMMER_FULLY_CHARGED_R_KEY);
+            RegisterArmsTactKey(ARMS_HAMMER_FULLY_CHARGED_L_KEY);
             RegisterArmsTactKey(ARMS_HAMMER_SMACK_R_KEY);
+            RegisterArmsTactKey(ARMS_HAMMER_SMACK_L_KEY);
             RegisterArmsTactKey(ARMS_INTERACT_ITEM_R_KEY);
+            RegisterArmsTactKey(ARMS_INTERACT_ITEM_L_KEY);
             RegisterArmsTactKey(ARMS_FLASHLIGHT_TOGGLE_R_KEY);
+            RegisterArmsTactKey(ARMS_FLASHLIGHT_TOGGLE_L_KEY);
             RegisterArmsTactKey(ARMS_CHANGE_ITEM_R_KEY);
+            RegisterArmsTactKey(ARMS_CHANGE_ITEM_L_KEY);
 
             PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
             TentacleAttackEvents.OnTentacleAttack += TentacleAttackHaptics;
@@ -75,13 +99,22 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ItemInteractEvents.OnFlashlightToggled += FlashlightToggledHaptics;
             ItemEquippableEvents.OnPlayerWieldItem += PlayerChangedItemHaptics;
         }
+
         void Update()
         {
             bool isReloading = (m_nextReloadHapticPatternTime > 0);
             if (isReloading && Time.time >= m_nextReloadHapticPatternTime)
             {
-                m_hapticPlayer.SubmitRegistered(VEST_RELOAD_R_KEY);
-                m_hapticPlayer.SubmitRegistered(ARMS_RELOAD_R_KEY);
+                if (Controllers.mainControllerType == HandType.Left)
+                {
+                    m_hapticPlayer.SubmitRegistered(VEST_RELOAD_L_KEY);
+                    m_hapticPlayer.SubmitRegistered(ARMS_RELOAD_L_KEY);
+                }
+                else
+                {
+                    m_hapticPlayer.SubmitRegistered(VEST_RELOAD_R_KEY);
+                    m_hapticPlayer.SubmitRegistered(ARMS_RELOAD_R_KEY);
+                }
                 m_nextReloadHapticPatternTime += RELOAD_FEEDBACK_DURATION;
             }
         }
@@ -98,8 +131,16 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-			m_hapticPlayer.SubmitRegistered(VEST_HAMMER_SMACK_R_KEY);
-			m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_SMACK_R_KEY);
+			if (Controllers.mainControllerType == HandType.Left)
+			{
+				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_SMACK_L_KEY);
+				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_SMACK_L_KEY);
+			}
+			else
+			{
+				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_SMACK_R_KEY);
+				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_SMACK_R_KEY);
+			}
         }
 
         private void HammerFullyChargedHaptics()
@@ -109,8 +150,16 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-			m_hapticPlayer.SubmitRegistered(VEST_HAMMER_FULLY_CHARGED_R_KEY);
-			m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_FULLY_CHARGED_R_KEY);
+			if (Controllers.mainControllerType == HandType.Left)
+			{
+				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_FULLY_CHARGED_L_KEY);
+				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_FULLY_CHARGED_L_KEY);
+			}
+			else
+			{
+				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_FULLY_CHARGED_R_KEY);
+				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_FULLY_CHARGED_R_KEY);
+			}
         }
 
         private void HammerChargingHaptics(float pressure)
@@ -121,8 +170,17 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
 
 			var scaleOption = new ScaleOption(pressure, 1f); // pressure goes from 0 to 1
-			m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_R_KEY, scaleOption);
-			m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_R_KEY, scaleOption);
+
+			if (Controllers.mainControllerType == HandType.Left)
+			{
+				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_L_KEY, scaleOption);
+				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_L_KEY, scaleOption);
+			}
+			else
+			{
+				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_R_KEY, scaleOption);
+				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_R_KEY, scaleOption);
+			}
         }
 
         private void PlayWeaponReloadedHaptics()
@@ -134,7 +192,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
 			m_nextReloadHapticPatternTime = 0;
 			m_hapticPlayer.TurnOff(VEST_RELOAD_R_KEY);
+			m_hapticPlayer.TurnOff(VEST_RELOAD_L_KEY);
 			m_hapticPlayer.TurnOff(ARMS_RELOAD_R_KEY);
+			m_hapticPlayer.TurnOff(ARMS_RELOAD_L_KEY);
         }
 
         private void PlayTriggerWeaponReloadHaptics()
@@ -156,8 +216,18 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
 			float intensity = Haptics.GetFireHapticStrength(weapon);
 			var scaleOption = new ScaleOption(intensity, 1.0f);
-			m_hapticPlayer.SubmitRegistered(VEST_FIRE_R_KEY, scaleOption);
-			m_hapticPlayer.SubmitRegistered(ARMS_FIRE_R_KEY, scaleOption);
+
+			if (Controllers.mainControllerType == HandType.Left || Controllers.aimingTwoHanded)
+			{
+				m_hapticPlayer.SubmitRegistered(VEST_FIRE_L_KEY, scaleOption);
+				m_hapticPlayer.SubmitRegistered(ARMS_FIRE_L_KEY, scaleOption);
+			}
+
+			if (Controllers.mainControllerType == HandType.Right || Controllers.aimingTwoHanded)
+			{
+				m_hapticPlayer.SubmitRegistered(VEST_FIRE_R_KEY, scaleOption);
+				m_hapticPlayer.SubmitRegistered(ARMS_FIRE_R_KEY, scaleOption);
+			}
         }
 
         private RotationOption GetRotationOptionFromDirection(Vector3 direction)
@@ -231,7 +301,14 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-			m_hapticPlayer.SubmitRegistered(ARMS_INTERACT_ITEM_R_KEY);
+			if (Controllers.mainControllerType == HandType.Left)
+			{
+				m_hapticPlayer.SubmitRegistered(ARMS_INTERACT_ITEM_L_KEY);
+			}
+			else
+			{
+				m_hapticPlayer.SubmitRegistered(ARMS_INTERACT_ITEM_R_KEY);
+			}
         }
 
         private void FlashlightToggledHaptics(bool enabled)
@@ -241,7 +318,14 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-			m_hapticPlayer.SubmitRegistered(ARMS_FLASHLIGHT_TOGGLE_R_KEY);
+			if (Controllers.mainControllerType == HandType.Left)
+			{
+				m_hapticPlayer.SubmitRegistered(ARMS_FLASHLIGHT_TOGGLE_L_KEY);
+			}
+			else
+			{
+				m_hapticPlayer.SubmitRegistered(ARMS_FLASHLIGHT_TOGGLE_R_KEY);
+			}
         }
 
         private void PlayerChangedItemHaptics(ItemEquippable item)
@@ -251,7 +335,14 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-			m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_R_KEY);
+			if (Controllers.mainControllerType == HandType.Left)
+			{
+				m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_L_KEY);
+			}
+			else
+			{
+				m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_R_KEY);
+			}
         }
 
         private float NormalizeOrientation(float orientation)
