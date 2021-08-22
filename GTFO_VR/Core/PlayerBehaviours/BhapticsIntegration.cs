@@ -182,6 +182,14 @@ namespace GTFO_VR.Core.PlayerBehaviours
 				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_R_KEY, scaleOption);
 			}
         }
+        private void StopWeaponReloadHaptics()
+        {
+            m_nextReloadHapticPatternTime = 0;
+            m_hapticPlayer.TurnOff(VEST_RELOAD_R_KEY);
+            m_hapticPlayer.TurnOff(VEST_RELOAD_L_KEY);
+            m_hapticPlayer.TurnOff(ARMS_RELOAD_R_KEY);
+            m_hapticPlayer.TurnOff(ARMS_RELOAD_L_KEY);
+        }
 
         private void PlayWeaponReloadedHaptics()
         {
@@ -190,11 +198,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-			m_nextReloadHapticPatternTime = 0;
-			m_hapticPlayer.TurnOff(VEST_RELOAD_R_KEY);
-			m_hapticPlayer.TurnOff(VEST_RELOAD_L_KEY);
-			m_hapticPlayer.TurnOff(ARMS_RELOAD_R_KEY);
-			m_hapticPlayer.TurnOff(ARMS_RELOAD_L_KEY);
+            StopWeaponReloadHaptics();
         }
 
         private void PlayTriggerWeaponReloadHaptics()
@@ -335,14 +339,16 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-			if (Controllers.mainControllerType == HandType.Left)
-			{
-				m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_L_KEY);
-			}
+            StopWeaponReloadHaptics();
+
+            if (Controllers.mainControllerType == HandType.Left)
+            {
+                m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_L_KEY);
+            }
 			else
-			{
-				m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_R_KEY);
-			}
+            {
+                m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_R_KEY);
+            }
         }
 
         private float NormalizeOrientation(float orientation)
