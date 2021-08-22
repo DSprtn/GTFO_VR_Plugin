@@ -93,61 +93,71 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void HammerSmackHaptics(float dmg)
         {
-            if (VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value)
             {
-                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_SMACK_R_KEY);
-                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_SMACK_R_KEY);
+                return;
             }
+
+			m_hapticPlayer.SubmitRegistered(VEST_HAMMER_SMACK_R_KEY);
+			m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_SMACK_R_KEY);
         }
 
         private void HammerFullyChargedHaptics()
         {
-            if (VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value)
             {
-                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_FULLY_CHARGED_R_KEY);
-                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_FULLY_CHARGED_R_KEY);
+                return;
             }
+
+			m_hapticPlayer.SubmitRegistered(VEST_HAMMER_FULLY_CHARGED_R_KEY);
+			m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_FULLY_CHARGED_R_KEY);
         }
 
         private void HammerChargingHaptics(float pressure)
         {
-            if (VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value)
             {
-                var scaleOption = new ScaleOption(pressure, 1f); // pressure goes from 0 to 1
-                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_R_KEY, scaleOption);
-                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_R_KEY, scaleOption);
+                return;
             }
+
+			var scaleOption = new ScaleOption(pressure, 1f); // pressure goes from 0 to 1
+			m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_R_KEY, scaleOption);
+			m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_R_KEY, scaleOption);
         }
 
         private void PlayWeaponReloadedHaptics()
         {
-            if (VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value)
             {
-                m_nextReloadHapticPatternTime = 0;
-                m_hapticPlayer.TurnOff(VEST_RELOAD_R_KEY);
-                m_hapticPlayer.TurnOff(VEST_RELOAD_L_KEY);
-                m_hapticPlayer.TurnOff(ARMS_RELOAD_R_KEY);
-                m_hapticPlayer.TurnOff(ARMS_RELOAD_L_KEY);
+                return;
             }
+
+			m_nextReloadHapticPatternTime = 0;
+			m_hapticPlayer.TurnOff(VEST_RELOAD_R_KEY);
+			m_hapticPlayer.TurnOff(ARMS_RELOAD_R_KEY);
         }
 
         private void PlayTriggerWeaponReloadHaptics()
         {
-            if (VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value)
             {
-                m_nextReloadHapticPatternTime = Time.time;
+                return;
             }
+
+			m_nextReloadHapticPatternTime = Time.time;
         }
 
         private void PlayWeaponFireHaptics(Weapon weapon)
         {
-            if (VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value)
             {
-                float intensity = Haptics.GetFireHapticStrength(weapon);
-                var scaleOption = new ScaleOption(intensity, 1.0f);
-                m_hapticPlayer.SubmitRegistered(VEST_FIRE_R_KEY, scaleOption);
-                m_hapticPlayer.SubmitRegistered(ARMS_FIRE_R_KEY, scaleOption);
+                return;
             }
+
+			float intensity = Haptics.GetFireHapticStrength(weapon);
+			var scaleOption = new ScaleOption(intensity, 1.0f);
+			m_hapticPlayer.SubmitRegistered(VEST_FIRE_R_KEY, scaleOption);
+			m_hapticPlayer.SubmitRegistered(ARMS_FIRE_R_KEY, scaleOption);
         }
 
         private RotationOption GetRotationOptionFromDirection(Vector3 direction)
@@ -166,70 +176,82 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void PlayReceiveDamageHaptics(float dmg, Vector3 direction)
         {
-            if (VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value)
             {
-                var rotationOption = GetRotationOptionFromDirection(direction);
-
-                float intensity = dmg * 0.3f + 0.3f;
-                float duration = 1f;
-                var scaleOption = new ScaleOption(intensity, duration);
-
-                m_hapticPlayer.SubmitRegisteredVestRotation(VEST_DAMAGE_KEY, "", rotationOption, scaleOption);
-
-                m_lastDamageRotationOption = rotationOption;
+                return;
             }
+
+			var rotationOption = GetRotationOptionFromDirection(direction);
+
+			float intensity = dmg * 0.3f + 0.3f;
+			float duration = 1f;
+			var scaleOption = new ScaleOption(intensity, duration);
+
+			m_hapticPlayer.SubmitRegisteredVestRotation(VEST_DAMAGE_KEY, "", rotationOption, scaleOption);
+
+			m_lastDamageRotationOption = rotationOption;
         }
 
         private void TentacleAttackHaptics(float dmg, Agents.Agent sourceAgent, Vector3 position)
         {
-            if (VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value)
             {
-                if (m_lastDamageRotationOption != null)
-                {
-                    var rotationOption = m_lastDamageRotationOption;
-                    //var rotationOption = GetRotationOptionFromDirection(position - sourceAgent.TentacleTarget.position); // could maybe calculate direction with this, but offsetY is not right
-                    m_hapticPlayer.SubmitRegisteredVestRotation(VEST_TENTACLE_ATTACK_KEY, rotationOption);
-                }
-                else
-                {
-                    Log.Error("Received tentacle attack with no last damage rotation option!");
-                }
+                return;
             }
+
+			if (m_lastDamageRotationOption != null)
+			{
+				var rotationOption = m_lastDamageRotationOption;
+				//var rotationOption = GetRotationOptionFromDirection(position - sourceAgent.TentacleTarget.position); // could maybe calculate direction with this, but offsetY is not right
+				m_hapticPlayer.SubmitRegisteredVestRotation(VEST_TENTACLE_ATTACK_KEY, rotationOption);
+			}
+			else
+			{
+				Log.Error("Received tentacle attack with no last damage rotation option!");
+			}
         }
 
         private void FocusStateChangedHaptics(eFocusState focusState)
         {
-            if (VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value)
             {
-                if (FocusStateEvents.lastState.Equals(eFocusState.InElevator) && focusState == eFocusState.FPS)
-                {
-                    m_hapticPlayer.SubmitRegistered(VEST_LANDING_KEY);
-                }
+                return;
             }
+
+			if (FocusStateEvents.lastState.Equals(eFocusState.InElevator) && focusState == eFocusState.FPS)
+			{
+				m_hapticPlayer.SubmitRegistered(VEST_LANDING_KEY);
+			}
         }
 
         private void ItemInteractedHaptics()
         {
-            if (VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value)
             {
-                m_hapticPlayer.SubmitRegistered(ARMS_INTERACT_ITEM_R_KEY);
+                return;
             }
+
+			m_hapticPlayer.SubmitRegistered(ARMS_INTERACT_ITEM_R_KEY);
         }
 
         private void FlashlightToggledHaptics(bool enabled)
         {
-            if (VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value)
             {
-                m_hapticPlayer.SubmitRegistered(ARMS_FLASHLIGHT_TOGGLE_R_KEY);
+                return;
             }
+
+			m_hapticPlayer.SubmitRegistered(ARMS_FLASHLIGHT_TOGGLE_R_KEY);
         }
 
         private void PlayerChangedItemHaptics(ItemEquippable item)
         {
-            if (VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value)
             {
-                m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_R_KEY);
+                return;
             }
+
+			m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_R_KEY);
         }
 
         private float NormalizeOrientation(float orientation)
