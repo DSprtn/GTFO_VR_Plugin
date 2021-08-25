@@ -4,6 +4,7 @@ using GTFO_VR.Events;
 using GTFO_VR.Core.VR_Input;
 using System;
 using System.IO;
+using Player;
 
 namespace GTFO_VR.Core.PlayerBehaviours
 {
@@ -42,7 +43,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private static readonly string PATTERNS_FOLDER = "BepInEx\\plugins\\bhaptics-patterns\\";
 
+        private PlayerAgent m_player;
         private HapticPlayer m_hapticPlayer;
+
         private float m_nextReloadHapticPatternTime;
         private RotationOption m_lastDamageRotationOption;
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
@@ -52,8 +55,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
         }
 
-        public void Setup()
+        public void Setup(PlayerAgent player)
         {
+            m_player = player;
+
             m_hapticPlayer = new HapticPlayer();
             RegisterVestTactKey(VEST_DAMAGE_KEY);
             RegisterVestTactKey(VEST_TENTACLE_ATTACK_KEY);
@@ -298,10 +303,16 @@ namespace GTFO_VR.Core.PlayerBehaviours
 			}
         }
 
-        private void ItemInteractedHaptics()
+        private void ItemInteractedHaptics(PlayerAgent player)
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
+                return;
+            }
+
+            if (player != m_player)
+            {
+                Log.Info("Another player did an interaction, return");
                 return;
             }
 
