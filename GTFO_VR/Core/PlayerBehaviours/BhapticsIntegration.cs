@@ -23,6 +23,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string VEST_HAMMER_FULLY_CHARGED_R_KEY = "vest_hammer_fully_charged_r";
         private static readonly string VEST_HAMMER_FULLY_CHARGED_L_KEY = "vest_hammer_fully_charged_l";
         private static readonly string VEST_LANDING_KEY = "vest_landing";
+        private static readonly string VEST_ELEVATOR_RIDE_KEY = "vest_elevator_ride";
 
         private static readonly string ARMS_FIRE_R_KEY = "arms_fire_r";
         private static readonly string ARMS_FIRE_L_KEY = "arms_fire_l";
@@ -47,9 +48,16 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private HapticPlayer m_hapticPlayer;
 
         private float m_nextReloadHapticPatternTime;
+        private float m_nextElevatorRideHapticPatternTime;
+        private float m_elevatorDescentStartTime;
+        private float m_elevatorSlowingDownStartTime;
         private RotationOption m_lastDamageRotationOption;
-        private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
         public static float m_cameraYRotation;
+
+        private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
+        private static readonly float ELEVATOR_RIDE_FEEDBACK_DURATION = 0.75f;
+        private static readonly float SLOW_ELEVATOR_SEQUENCE_DURATION = 10.0f;
+        private static readonly float INITIAL_ELEVATOR_RIDE_DELAY = 1.5f;
 
         public BhapticsIntegration(IntPtr value) : base(value)
         {
@@ -73,6 +81,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             RegisterVestTactKey(VEST_HAMMER_SMACK_R_KEY);
             RegisterVestTactKey(VEST_HAMMER_SMACK_L_KEY);
             RegisterVestTactKey(VEST_LANDING_KEY);
+            RegisterVestTactKey(VEST_ELEVATOR_RIDE_KEY);
 
             RegisterArmsTactKey(ARMS_FIRE_R_KEY);
             RegisterArmsTactKey(ARMS_FIRE_L_KEY);
@@ -103,12 +112,16 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ItemInteractEvents.OnItemInteracted += ItemInteractedHaptics;
             ItemInteractEvents.OnFlashlightToggled += FlashlightToggledHaptics;
             ItemEquippableEvents.OnPlayerWieldItem += PlayerChangedItemHaptics;
+            ElevatorEvents.OnElevatorRideStarted += ElevatorRideStartedHaptics;
+            ElevatorEvents.OnElevatorRideStopped += ElevatorRideStoppedHaptics;
         }
 
         void Update()
         {
+            float currentTime = Time.time;
+
             bool isReloading = (m_nextReloadHapticPatternTime > 0);
-            if (isReloading && Time.time >= m_nextReloadHapticPatternTime)
+            if (isReloading && currentTime >= m_nextReloadHapticPatternTime)
             {
                 if (Controllers.mainControllerType == HandType.Left)
                 {
@@ -122,11 +135,51 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 }
                 m_nextReloadHapticPatternTime += RELOAD_FEEDBACK_DURATION;
             }
+
+            bool isElevatorRiding = (m_nextElevatorRideHapticPatternTime > 0);
+            if (isElevatorRiding)
+            {
+                if (m_elevatorSlowingDownStartTime > 0 && currentTime >= m_elevatorSlowingDownStartTime + SLOW_ELEVATOR_SEQUENCE_DURATION)
+                {
+                    // Elevator descent ended
+                    m_nextElevatorRideHapticPatternTime = 0f;
+                    m_elevatorDescentStartTime = 0f;
+                    m_elevatorSlowingDownStartTime = 0f;
+                    m_hapticPlayer.TurnOff(VEST_ELEVATOR_RIDE_KEY);
+                }
+                else if (currentTime >= m_nextElevatorRideHapticPatternTime)
+                {
+                    float duration = GetElevatorRidePatternDuration();
+                    var scaleOption = new ScaleOption(1f, duration);
+                    m_hapticPlayer.SubmitRegistered(VEST_ELEVATOR_RIDE_KEY, "", scaleOption);
+                    m_nextElevatorRideHapticPatternTime += ELEVATOR_RIDE_FEEDBACK_DURATION * duration;
+                }
+            }
         }
 
         public static void SetCameraYRotation(float cameraYRotation)
         {
             m_cameraYRotation = cameraYRotation;
+        }
+
+        private float GetElevatorRidePatternDuration()
+        {
+            float duration = 1f;
+            float currentTime = Time.time;
+
+            if (m_elevatorSlowingDownStartTime > 0f)
+            {
+                // Go progressively from 2.0 to 6.0 duration when elevator slows down
+                float timeSinceSlowDown = currentTime - m_elevatorSlowingDownStartTime;
+                duration = 1.5f + (timeSinceSlowDown / SLOW_ELEVATOR_SEQUENCE_DURATION) * 2.5f;
+            }
+            else if (currentTime >= m_elevatorDescentStartTime + 5f)
+            {
+                // Speed up a bit after a few seconds
+                duration = 0.7f;
+            }
+
+            return duration;
         }
 
         private void HammerSmackHaptics(float dmg)
@@ -299,7 +352,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
 			if (FocusStateEvents.lastState.Equals(eFocusState.InElevator) && focusState == eFocusState.FPS)
 			{
-				m_hapticPlayer.SubmitRegistered(VEST_LANDING_KEY);
+                m_hapticPlayer.SubmitRegistered(VEST_LANDING_KEY);
 			}
         }
 
@@ -362,6 +415,29 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
+        private void ElevatorRideStartedHaptics()
+        {
+            if (!VRConfig.configUseBhaptics.Value)
+            {
+                return;
+            }
+
+            m_nextElevatorRideHapticPatternTime = Time.time + INITIAL_ELEVATOR_RIDE_DELAY;
+            m_elevatorDescentStartTime = Time.time;
+        }
+
+        private void ElevatorRideStoppedHaptics()
+        {
+            // This is called when the elevator starts slowing down, not when it fully stops
+            if (!VRConfig.configUseBhaptics.Value)
+            {
+                return;
+            }
+
+            m_elevatorSlowingDownStartTime = Time.time;
+            m_nextElevatorRideHapticPatternTime = m_elevatorSlowingDownStartTime; // start elevator ride pattern again with reduced pattern duration
+        }
+
         private float NormalizeOrientation(float orientation)
         {
             float result = orientation % 360;
@@ -410,6 +486,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ItemInteractEvents.OnItemInteracted -= ItemInteractedHaptics;
             ItemInteractEvents.OnFlashlightToggled -= FlashlightToggledHaptics;
             ItemEquippableEvents.OnPlayerWieldItem -= PlayerChangedItemHaptics;
+            ElevatorEvents.OnElevatorRideStarted -= ElevatorRideStartedHaptics;
+            ElevatorEvents.OnElevatorRideStopped -= ElevatorRideStoppedHaptics;
         }
     }
 }

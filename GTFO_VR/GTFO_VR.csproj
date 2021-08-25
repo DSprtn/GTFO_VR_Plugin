@@ -58,6 +58,7 @@
     <Compile Include="Core\VR_Input\VRKeyboard.cs" />
     <Compile Include="Events\BackpackEvents.cs" />
     <Compile Include="Events\ChatMsgEvents.cs" />
+    <Compile Include="Events\ElevatorEvents.cs" />
     <Compile Include="Events\FocusStateEvents.cs" />
     <Compile Include="Events\HammerEvents.cs" />
     <Compile Include="Events\InventoryAmmoEvents.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Events\WeaponRecoilEvents.cs" />
     <Compile Include="Events\PlayerReceivedDamageEvents.cs" />
     <Compile Include="Injections\Events\InjectBackpackEvents.cs" />
+    <Compile Include="Injections\Events\InjectElevatorEvents.cs" />
     <Compile Include="Injections\Events\InjectFocusStateEvents.cs" />
     <Compile Include="Injections\Events\InjectInventoryAmmoUpdateEvent.cs" />
     <Compile Include="Injections\Events\InjectItemEquippableEvents.cs" />
