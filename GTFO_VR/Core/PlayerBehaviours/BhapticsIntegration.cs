@@ -166,17 +166,21 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
             float duration = 1f;
             float currentTime = Time.time;
+            const float TIME_BEFORE_SPEED_UP = 5f;
 
             if (m_elevatorSlowingDownStartTime > 0f)
             {
                 // Go progressively from 2.0 to 6.0 duration when elevator slows down
                 float timeSinceSlowDown = currentTime - m_elevatorSlowingDownStartTime;
-                duration = 1.5f + (timeSinceSlowDown / SLOW_ELEVATOR_SEQUENCE_DURATION) * 2.5f;
+                duration = 1.0f + (timeSinceSlowDown / SLOW_ELEVATOR_SEQUENCE_DURATION) * 2.0f;
             }
-            else if (currentTime >= m_elevatorDescentStartTime + 5f)
+            else if (currentTime >= m_elevatorDescentStartTime + TIME_BEFORE_SPEED_UP)
             {
                 // Speed up a bit after a few seconds
-                duration = 0.7f;
+                float timeSinceDescent = currentTime - m_elevatorDescentStartTime;
+                const float MAX_DURATION = 1.0f;
+                const float MIN_DURATION = 0.6f;
+                duration = Clamp(1 - (timeSinceDescent - TIME_BEFORE_SPEED_UP) * 0.2f, MIN_DURATION, MAX_DURATION);
             }
 
             return duration;
