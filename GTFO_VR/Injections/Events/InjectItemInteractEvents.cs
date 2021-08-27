@@ -5,44 +5,27 @@ using Player;
 
 namespace GTFO_VR.Injections.Events
 {
-    [HarmonyPatch(typeof(LG_DoorButton), nameof(LG_DoorButton.Interact))]
-    internal class InjectDoorButtonInteractEvents
-    {
-        private static void Postfix(PlayerAgent source)
-        {
-            Log.Info("Interacted with door button. SourceSlotIndex: " + source.PlayerSlotIndex + " at " + Time.time);
-            ItemInteractEvents.ItemInteracted();
-        }
-    }
-
-    [HarmonyPatch(typeof(LG_SecurityDoorButton), nameof(LG_SecurityDoorButton.Interact))]
-    internal class InjectSecurityDoorButtonInteractEvents
-    {
-        private static void Postfix(PlayerAgent source)
-        {
-            Log.Info("Interacted with security door button. SourceSlotIndex: " + source.PlayerSlotIndex + " at " + Time.time);
-            ItemInteractEvents.ItemInteracted();
-        }
-    }
-
-    [HarmonyPatch(typeof(LG_PickupItem_Sync), nameof(LG_PickupItem_Sync.AttemptInteract))]
-    internal class InjectAttemptInteractPickupItemEvents
+    [HarmonyPatch(typeof(LG_Door_Sync), nameof(LG_Door_Sync.AttemptInteract))]
+    internal class InjectAttemptInteractDoorEvents
     {
         private static void Postfix(pPickupItemInteraction interaction)
         {
-            if (interaction.pPlayer.GetPlayer(out var player) && player.IsLocal)
+            if (!interaction.pPlayer.TryGetPlayer(out var player) || player.IsLocal)
             {
                 ItemInteractEvents.ItemInteracted();
             }
         }
     }
-
-    [HarmonyPatch(typeof(iPickupItemSync), nameof(iPickupItemSync.AttemptPickupInteraction))]
-    internal class InjectPickupItemInteractionEvents
+    
+    [HarmonyPatch(typeof(LG_PickupItem_Sync), nameof(LG_PickupItem_Sync.AttemptInteract))]
+    internal class InjectAttemptInteractPickupItemEvents
     {
-        private static void Postfix(PlayerAgent source)
+        private static void Postfix(pPickupItemInteraction interaction)
         {
-            ItemInteractEvents.ItemInteracted();
+            if (!interaction.pPlayer.TryGetPlayer(out var player) || player.IsLocal)
+            {
+                ItemInteractEvents.ItemInteracted();
+            }
         }
     }
 
