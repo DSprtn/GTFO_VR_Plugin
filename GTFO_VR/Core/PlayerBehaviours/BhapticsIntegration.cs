@@ -306,16 +306,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
 			}
         }
 
-        private void ItemInteractedHaptics(PlayerAgent player)
+        private void ItemInteractedHaptics()
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
-                return;
-            }
-
-            if (player != m_player)
-            {
-                Log.Info("Another player did an interaction, return");
                 return;
             }
 

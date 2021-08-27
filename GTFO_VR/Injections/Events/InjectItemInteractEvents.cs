@@ -5,75 +5,62 @@ using Player;
 
 namespace GTFO_VR.Injections.Events
 {
+    [HarmonyPatch(typeof(LG_DoorButton), nameof(LG_DoorButton.Interact))]
+    internal class InjectDoorButtonInteractEvents
+    {
+        private static void Postfix(PlayerAgent source)
+        {
+            Log.Info("Interacted with door button. SourceSlotIndex: " + source.PlayerSlotIndex + " at " + Time.time);
+            ItemInteractEvents.ItemInteracted();
+        }
+    }
+
+    [HarmonyPatch(typeof(LG_SecurityDoorButton), nameof(LG_SecurityDoorButton.Interact))]
+    internal class InjectSecurityDoorButtonInteractEvents
+    {
+        private static void Postfix(PlayerAgent source)
+        {
+            Log.Info("Interacted with security door button. SourceSlotIndex: " + source.PlayerSlotIndex + " at " + Time.time);
+            ItemInteractEvents.ItemInteracted();
+        }
+    }
+
+    [HarmonyPatch(typeof(LG_PickupItem_Sync), nameof(LG_PickupItem_Sync.AttemptInteract))]
+    internal class InjectAttemptInteractPickupItemEvents
+    {
+        private static void Postfix(pPickupItemInteraction interaction)
+        {
+            if (interaction.pPlayer.GetPlayer(out var player) && player.IsLocal)
+            {
+                ItemInteractEvents.ItemInteracted();
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(iPickupItemSync), nameof(iPickupItemSync.AttemptPickupInteraction))]
+    internal class InjectPickupItemInteractionEvents
+    {
+        private static void Postfix(PlayerAgent source)
+        {
+            ItemInteractEvents.ItemInteracted();
+        }
+    }
+
+    [HarmonyPatch(typeof(LG_ResourceContainer_Sync), nameof(LG_ResourceContainer_Sync.AttemptInteract))]
+    internal class InjectAttemptInteractResourceContainerEvents
+    {
+        private static void Postfix()
+        {
+            ItemInteractEvents.ItemInteracted();
+        }
+    }
+
     [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(LG_ComputerTerminal.OnInteract))]
     internal class InjectAttemptInteractComputerTerminalEvents
     {
         private static void Postfix(PlayerAgent interactionSource)
         {
-            ItemInteractEvents.ItemInteracted(interactionSource);
-        }
-    }
-
-    [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(GenericSmallPickupItem_Core.OnInteractionPickUp))]
-    internal class InjectSmallItemPickupEvents
-    {
-        private static void Postfix(PlayerAgent player)
-        {
-            ItemInteractEvents.ItemInteracted(player);
-        }
-    }
-
-    [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(ArtifactPickup_Core.OnInteractionPickUp))]
-    internal class InjectArtifactPickupEvents
-    {
-        private static void Postfix(PlayerAgent player)
-        {
-            ItemInteractEvents.ItemInteracted(player);
-        }
-    }
-
-    [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(CommodityPickup_Core.OnInteractionPickUp))]
-    internal class InjectCommodityPickupEvents
-    {
-        private static void Postfix(PlayerAgent player)
-        {
-            ItemInteractEvents.ItemInteracted(player);
-        }
-    }
-
-    [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(CarryItemPickup_Core.OnInteractionPickUp))]
-    internal class InjectCarryItemPickupEvents
-    {
-        private static void Postfix(PlayerAgent player)
-        {
-            ItemInteractEvents.ItemInteracted(player);
-        }
-    }
-
-    [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(Gear.ResourcePackPickup.OnInteractionPickUp))]
-    internal class InjectResourcePackPickupEvents
-    {
-        private static void Postfix(PlayerAgent player)
-        {
-            ItemInteractEvents.ItemInteracted(player);
-        }
-    }
-
-    [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(KeyItemPickup_Core.OnInteractionPickUp))]
-    internal class InjectKeyItemPickupEvents
-    {
-        private static void Postfix(PlayerAgent player)
-        {
-            ItemInteractEvents.ItemInteracted(player);
-        }
-    }
-
-    [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(ConsumablePickup_Core.OnInteractionPickUp))]
-    internal class InjectConsumablePickupEvents
-    {
-        private static void Postfix(PlayerAgent player)
-        {
-            ItemInteractEvents.ItemInteracted(player);
+            ItemInteractEvents.ItemInteracted();
         }
     }
 

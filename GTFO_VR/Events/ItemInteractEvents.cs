@@ -1,16 +1,15 @@
 ﻿using System;
-using Player;
 
 namespace GTFO_VR.Events
 {
     public static class ItemInteractEvents
     {
-        public static event Action<PlayerAgent> OnItemInteracted;
+        public static event Action OnItemInteracted;
         public static event Action<bool> OnFlashlightToggled;
 
-        public static void ItemInteracted(PlayerAgent player)
+        public static void ItemInteracted()
         {
-            OnItemInteracted?.Invoke(player);
+            OnItemInteracted?.Invoke();
         }
 
         public static void FlashlightToggled(bool enabled)
