@@ -8,6 +8,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
     public class BhapticsElevatorSequence : MonoBehaviour
     {
         private static readonly string VEST_ELEVATOR_RIDE_KEY = "vest_elevator_ride";
+        private static readonly string VEST_ELEVATOR_RIDE_END_KEY = "vest_elevator_ride_end";
         private static readonly string VEST_ELEVATOR_DEPLOYING_KEY = "vest_elevator_deploying";
 
         private HapticPlayer m_hapticPlayer;
@@ -20,8 +21,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly float ELEVATOR_RIDE_FEEDBACK_DURATION = 0.75f;
         private static readonly float ELEVATOR_DEPLOYING_FEEDBACK_DURATION = 1.0f;
 
-        private static readonly float LANDED_STATE_DURATION = 5f;
-        private static readonly float DEPLOYING_STATE_DURATION = 4.5f;
+        private static readonly float LANDED_STATE_DURATION = 1.5f;
+        private static readonly float DEPLOYING_STATE_DURATION = 8f;
+        private static readonly float ELEVATOR_END_PATTERN_FLOOR_DISTANCE = 60f;
 
         enum ElevatorState
         {
@@ -41,6 +43,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_hapticPlayer = hapticPlayer;
             
             BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_RIDE_KEY);
+            BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_RIDE_END_KEY);
             BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_DEPLOYING_KEY);
 
             ElevatorEvents.OnElevatorPositionChanged += OnElevatorPositionChanged;
@@ -115,7 +118,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             switch (elevatorState)
             {
                 case ElevatorState.Descending:
-                    key = VEST_ELEVATOR_RIDE_KEY;
+                    key = m_elevatorPosition.y > ELEVATOR_END_PATTERN_FLOOR_DISTANCE ? VEST_ELEVATOR_RIDE_KEY : VEST_ELEVATOR_RIDE_END_KEY;
                     patternDuration = ELEVATOR_RIDE_FEEDBACK_DURATION;
                     break;
                 case ElevatorState.Deploying:
@@ -141,7 +144,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             if (m_elevatorState == ElevatorState.Descending)
             {
                 const float MIN_PATTERN_SCALE = 0.5f;
-                const float MAX_PATTERN_SCALE = 1.4f;
+                const float MAX_PATTERN_SCALE = 1.3f;
                 scale = MAX_PATTERN_SCALE - ((GetElevatorVelocity() / MAX_ELEVATOR_VELOCITY) * (MAX_PATTERN_SCALE - MIN_PATTERN_SCALE));
             }
 
