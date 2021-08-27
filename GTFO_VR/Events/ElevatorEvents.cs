@@ -1,20 +1,21 @@
 ﻿using System;
+using UnityEngine;
 
 namespace GTFO_VR.Events
 {
     public static class ElevatorEvents
     {
-        public static event Action OnElevatorRideStarted;
-        public static event Action OnElevatorRideStopped;
+        public static event Action<Vector3> OnElevatorPositionChanged;
+        public static event Action<ElevatorRideState> OnElevatorStateChanged;
 
-        public static void ElevatorRideStarted()
+        public static void ElevatorPositionChanged(Vector3 position)
         {
-            OnElevatorRideStarted?.Invoke();
+            OnElevatorPositionChanged?.Invoke(position);
         }
 
-        public static void ElevatorRideStopped()
+        public static void ElevatorStateChanged(ElevatorRideState state)
         {
-            OnElevatorRideStopped?.Invoke();
+            OnElevatorStateChanged?.Invoke(state);
         }
     }
 }
