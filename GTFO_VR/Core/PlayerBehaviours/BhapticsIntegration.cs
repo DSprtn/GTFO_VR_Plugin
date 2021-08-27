@@ -22,6 +22,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string VEST_HAMMER_FULLY_CHARGED_R_KEY = "vest_hammer_fully_charged_r";
         private static readonly string VEST_HAMMER_FULLY_CHARGED_L_KEY = "vest_hammer_fully_charged_l";
         private static readonly string VEST_LANDING_KEY = "vest_landing";
+        private static readonly string VEST_GAIN_HEALTH_KEY = "vest_gain_health";
+        private static readonly string VEST_GAIN_AMMO_KEY = "vest_gain_ammo";
+        private static readonly string VEST_GAIN_DISINFECTION_KEY = "vest_gain_disinfection";
 
         private static readonly string ARMS_FIRE_R_KEY = "arms_fire_r";
         private static readonly string ARMS_FIRE_L_KEY = "arms_fire_l";
@@ -71,6 +74,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_SMACK_R_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_SMACK_L_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_LANDING_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_HEALTH_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_AMMO_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_DISINFECTION_KEY);
 
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_R_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_L_KEY);
@@ -101,6 +107,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ItemInteractEvents.OnItemInteracted += ItemInteractedHaptics;
             ItemInteractEvents.OnFlashlightToggled += FlashlightToggledHaptics;
             ItemEquippableEvents.OnPlayerWieldItem += PlayerChangedItemHaptics;
+            ResourceGainEvents.OnHealthGained += HealthGainedHaptics;
+            ResourceGainEvents.OnAmmoGained += AmmoGainedHaptics;
+            ResourceGainEvents.OnDisinfectionGained += DisinfectionGainedHaptics;
 
             var elevatorSequence = gameObject.AddComponent<BhapticsElevatorSequence>();
             elevatorSequence.Setup(m_hapticPlayer);
@@ -359,6 +368,36 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
+        private void HealthGainedHaptics(float amountRel)
+        {
+            if (!VRConfig.configUseBhaptics.Value)
+            {
+                return;
+            }
+
+            m_hapticPlayer.SubmitRegistered(VEST_GAIN_HEALTH_KEY);
+        }
+
+        private void AmmoGainedHaptics(float ammoStandardRel, float ammoSpecialRel, float ammoClassRel)
+        {
+            if (!VRConfig.configUseBhaptics.Value)
+            {
+                return;
+            }
+
+            m_hapticPlayer.SubmitRegistered(VEST_GAIN_AMMO_KEY);
+        }
+
+        private void DisinfectionGainedHaptics(float amountRel)
+        {
+            if (!VRConfig.configUseBhaptics.Value)
+            {
+                return;
+            }
+
+            m_hapticPlayer.SubmitRegistered(VEST_GAIN_DISINFECTION_KEY);
+        }
+
         private float NormalizeOrientation(float orientation)
         {
             float result = orientation % 360;
@@ -385,6 +424,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ItemInteractEvents.OnItemInteracted -= ItemInteractedHaptics;
             ItemInteractEvents.OnFlashlightToggled -= FlashlightToggledHaptics;
             ItemEquippableEvents.OnPlayerWieldItem -= PlayerChangedItemHaptics;
+            ResourceGainEvents.OnHealthGained += HealthGainedHaptics;
+            ResourceGainEvents.OnAmmoGained += AmmoGainedHaptics;
+            ResourceGainEvents.OnDisinfectionGained += DisinfectionGainedHaptics;
         }
     }
 }

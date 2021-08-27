@@ -70,12 +70,14 @@
     <Compile Include="Events\GlueGunEvents.cs" />
     <Compile Include="Events\HeldItemEvents.cs" />
     <Compile Include="Events\PlayerTriggerReloadEvents.cs" />
+    <Compile Include="Events\ResourceGainEvents.cs" />
     <Compile Include="Events\TentacleAttackEvents.cs" />
     <Compile Include="Events\WeaponRecoilEvents.cs" />
     <Compile Include="Events\PlayerReceivedDamageEvents.cs" />
     <Compile Include="Injections\Events\InjectBackpackEvents.cs" />
     <Compile Include="Injections\Events\InjectElevatorEvents.cs" />
     <Compile Include="Injections\Events\InjectFocusStateEvents.cs" />
+    <Compile Include="Injections\Events\InjectResourceGainEvent.cs" />
     <Compile Include="Injections\Events\InjectInventoryAmmoUpdateEvent.cs" />
     <Compile Include="Injections\Events\InjectItemEquippableEvents.cs" />
     <Compile Include="Injections\Events\InjectHeldItemEvents.cs" />
