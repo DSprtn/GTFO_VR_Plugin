@@ -74,7 +74,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_haptics.Setup();
 
             m_bhapticsIntegration = gameObject.AddComponent<BhapticsIntegration>();
-            m_bhapticsIntegration.Setup();
+            m_bhapticsIntegration.Setup(agent);
 
             PlayerLocomotionEvents.OnPlayerEnterLadder += PlayerEnteredLadder;
             SteamVR_Events.NewPosesApplied.Listen(new Action(OnNewPoses));

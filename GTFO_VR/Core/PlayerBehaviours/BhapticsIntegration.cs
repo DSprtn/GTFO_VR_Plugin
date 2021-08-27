@@ -3,7 +3,7 @@ using Bhaptics.Tact;
 using GTFO_VR.Events;
 using GTFO_VR.Core.VR_Input;
 using System;
-using System.IO;
+using Player;
 
 namespace GTFO_VR.Core.PlayerBehaviours
 {
@@ -40,51 +40,54 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string ARMS_CHANGE_ITEM_R_KEY = "arms_change_item_r";
         private static readonly string ARMS_CHANGE_ITEM_L_KEY = "arms_change_item_l";
 
-        private static readonly string PATTERNS_FOLDER = "BepInEx\\plugins\\bhaptics-patterns\\";
-
+        private PlayerAgent m_player;
         private HapticPlayer m_hapticPlayer;
+
         private float m_nextReloadHapticPatternTime;
         private RotationOption m_lastDamageRotationOption;
-        private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
         public static float m_cameraYRotation;
+
+        private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
 
         public BhapticsIntegration(IntPtr value) : base(value)
         {
         }
 
-        public void Setup()
+        public void Setup(PlayerAgent player)
         {
-            m_hapticPlayer = new HapticPlayer();
-            RegisterVestTactKey(VEST_DAMAGE_KEY);
-            RegisterVestTactKey(VEST_TENTACLE_ATTACK_KEY);
-            RegisterVestTactKey(VEST_FIRE_R_KEY);
-            RegisterVestTactKey(VEST_FIRE_L_KEY);
-            RegisterVestTactKey(VEST_RELOAD_R_KEY);
-            RegisterVestTactKey(VEST_RELOAD_L_KEY);
-            RegisterVestTactKey(VEST_HAMMER_CHARGING_R_KEY);
-            RegisterVestTactKey(VEST_HAMMER_CHARGING_L_KEY);
-            RegisterVestTactKey(VEST_HAMMER_FULLY_CHARGED_R_KEY);
-            RegisterVestTactKey(VEST_HAMMER_FULLY_CHARGED_L_KEY);
-            RegisterVestTactKey(VEST_HAMMER_SMACK_R_KEY);
-            RegisterVestTactKey(VEST_HAMMER_SMACK_L_KEY);
-            RegisterVestTactKey(VEST_LANDING_KEY);
+            m_player = player;
 
-            RegisterArmsTactKey(ARMS_FIRE_R_KEY);
-            RegisterArmsTactKey(ARMS_FIRE_L_KEY);
-            RegisterArmsTactKey(ARMS_RELOAD_R_KEY);
-            RegisterArmsTactKey(ARMS_RELOAD_L_KEY);
-            RegisterArmsTactKey(ARMS_HAMMER_CHARGING_R_KEY);
-            RegisterArmsTactKey(ARMS_HAMMER_CHARGING_L_KEY);
-            RegisterArmsTactKey(ARMS_HAMMER_FULLY_CHARGED_R_KEY);
-            RegisterArmsTactKey(ARMS_HAMMER_FULLY_CHARGED_L_KEY);
-            RegisterArmsTactKey(ARMS_HAMMER_SMACK_R_KEY);
-            RegisterArmsTactKey(ARMS_HAMMER_SMACK_L_KEY);
-            RegisterArmsTactKey(ARMS_INTERACT_ITEM_R_KEY);
-            RegisterArmsTactKey(ARMS_INTERACT_ITEM_L_KEY);
-            RegisterArmsTactKey(ARMS_FLASHLIGHT_TOGGLE_R_KEY);
-            RegisterArmsTactKey(ARMS_FLASHLIGHT_TOGGLE_L_KEY);
-            RegisterArmsTactKey(ARMS_CHANGE_ITEM_R_KEY);
-            RegisterArmsTactKey(ARMS_CHANGE_ITEM_L_KEY);
+            m_hapticPlayer = new HapticPlayer();
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_DAMAGE_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_TENTACLE_ATTACK_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_FIRE_R_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_FIRE_L_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_RELOAD_R_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_RELOAD_L_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_CHARGING_R_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_CHARGING_L_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_FULLY_CHARGED_R_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_FULLY_CHARGED_L_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_SMACK_R_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_SMACK_L_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_LANDING_KEY);
+
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_R_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_L_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_RELOAD_R_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_RELOAD_L_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_HAMMER_CHARGING_R_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_HAMMER_CHARGING_L_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_HAMMER_FULLY_CHARGED_R_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_HAMMER_FULLY_CHARGED_L_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_HAMMER_SMACK_R_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_HAMMER_SMACK_L_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_INTERACT_ITEM_R_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_INTERACT_ITEM_L_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FLASHLIGHT_TOGGLE_R_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FLASHLIGHT_TOGGLE_L_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_CHANGE_ITEM_R_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_CHANGE_ITEM_L_KEY);
 
             PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
             TentacleAttackEvents.OnTentacleAttack += TentacleAttackHaptics;
@@ -98,12 +101,17 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ItemInteractEvents.OnItemInteracted += ItemInteractedHaptics;
             ItemInteractEvents.OnFlashlightToggled += FlashlightToggledHaptics;
             ItemEquippableEvents.OnPlayerWieldItem += PlayerChangedItemHaptics;
+
+            var elevatorSequence = gameObject.AddComponent<BhapticsElevatorSequence>();
+            elevatorSequence.Setup(m_hapticPlayer);
         }
 
         void Update()
         {
+            float currentTime = Time.time;
+
             bool isReloading = (m_nextReloadHapticPatternTime > 0);
-            if (isReloading && Time.time >= m_nextReloadHapticPatternTime)
+            if (isReloading && currentTime >= m_nextReloadHapticPatternTime)
             {
                 if (Controllers.mainControllerType == HandType.Left)
                 {
@@ -244,7 +252,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             float angleRadians = (float)Math.Atan2(direction.z, direction.x);
             float angleDegrees = (float)(angleRadians * 180 / Math.PI);
             float offsetAngleX = NormalizeOrientation(angleDegrees + m_cameraYRotation + 90f);
-            float offsetY = Clamp(0.5f - (direction.y * 2), -0.5f, 0.5f);
+            float offsetY = BhapticsUtils.Clamp(0.5f - (direction.y * 2), -0.5f, 0.5f);
             return new RotationOption(offsetAngleX, offsetY);
         }
 
@@ -294,14 +302,20 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
 			if (FocusStateEvents.lastState.Equals(eFocusState.InElevator) && focusState == eFocusState.FPS)
 			{
-				m_hapticPlayer.SubmitRegistered(VEST_LANDING_KEY);
+                m_hapticPlayer.SubmitRegistered(VEST_LANDING_KEY);
 			}
         }
 
-        private void ItemInteractedHaptics()
+        private void ItemInteractedHaptics(PlayerAgent player)
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
+                return;
+            }
+
+            if (player != m_player)
+            {
+                Log.Info("Another player did an interaction, return");
                 return;
             }
 
@@ -361,28 +375,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
 
             return result;
-        }
-
-        private float Clamp(float v, float min, float max)
-        {
-            return Math.Min(Math.Max(v, min), max);
-        }
-
-        private void RegisterVestTactKey(string key)
-        {
-            RegisterArmsTactKey(PATTERNS_FOLDER + "vest\\", key);
-        }
-
-        private void RegisterArmsTactKey(string key)
-        {
-            RegisterArmsTactKey(PATTERNS_FOLDER + "arms\\", key);
-        }
-
-        private void RegisterArmsTactKey(string folder, string key)
-        {
-            string fileName = key.Substring(key.IndexOf("_") + 1);
-            string patternFileContent = File.ReadAllText(folder + fileName + ".tact");
-            m_hapticPlayer.RegisterTactFileStr(key, patternFileContent);
         }
 
         private void OnDestroy()
