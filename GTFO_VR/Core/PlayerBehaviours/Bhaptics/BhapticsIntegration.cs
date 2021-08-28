@@ -58,6 +58,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
         private static readonly float HEARTBEAT_REPEAT_DELAY = 1.5f;
+        private static readonly float LOW_HEALTH = 20f;
 
         public BhapticsIntegration(IntPtr value) : base(value)
         {
@@ -119,9 +120,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ItemInteractEvents.OnItemInteracted += ItemInteractedHaptics;
             ItemInteractEvents.OnFlashlightToggled += FlashlightToggledHaptics;
             ItemEquippableEvents.OnPlayerWieldItem += PlayerChangedItemHaptics;
-            ResourceGainEvents.OnHealthGained += HealthGainedHaptics;
-            ResourceGainEvents.OnAmmoGained += AmmoGainedHaptics;
-            ResourceGainEvents.OnDisinfectionGained += DisinfectionGainedHaptics;
+            ResourceUpdatedEvents.OnHealthGained += HealthGainedHaptics;
+            ResourceUpdatedEvents.OnAmmoGained += AmmoGainedHaptics;
+            ResourceUpdatedEvents.OnDisinfectionGained += DisinfectionGainedHaptics;
+            ResourceUpdatedEvents.OnHealthUpdated += OnHealthUpdated;
+            InventoryAmmoEvents.OnInventoryAmmoUpdate += OnAmmoUpdate;
 
             var elevatorSequence = gameObject.AddComponent<BhapticsElevatorSequence>();
             elevatorSequence.Setup(m_hapticPlayer);
@@ -147,10 +150,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 m_nextReloadHapticPatternTime += RELOAD_FEEDBACK_DURATION;
             }
 
-            if (m_player.NeedHealth() && (m_nextHeartbeatPatternTime <= 0f || currentTime >= m_nextHeartbeatPatternTime))
+            if (m_nextHeartbeatPatternTime > 0f || currentTime >= m_nextHeartbeatPatternTime)
             {
                 m_hapticPlayer.SubmitRegistered(VEST_NEED_HEALTH_KEY);
-                m_nextHeartbeatPatternTime = currentTime + HEARTBEAT_REPEAT_DELAY;
+                m_nextHeartbeatPatternTime += HEARTBEAT_REPEAT_DELAY;
             }
         }
 
@@ -267,24 +270,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 				m_hapticPlayer.SubmitRegistered(VEST_FIRE_R_KEY, scaleOption);
 				m_hapticPlayer.SubmitRegistered(ARMS_FIRE_R_KEY, scaleOption);
 			}
-
-            if (m_player.NeedWeaponAmmo())
-            {
-                PlayOutOfAmmoHaptics();
-            }
-        }
-
-        private void PlayOutOfAmmoHaptics()
-        {
-            if (Controllers.mainControllerType == HandType.Left || Controllers.aimingTwoHanded)
-            {
-                m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_L_KEY);
-            }
-
-            if (Controllers.mainControllerType == HandType.Right || Controllers.aimingTwoHanded)
-            {
-                m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_R_KEY);
-            }
         }
 
         private RotationOption GetRotationOptionFromDirection(Vector3 direction)
@@ -441,6 +426,39 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_hapticPlayer.SubmitRegistered(VEST_GAIN_DISINFECTION_KEY);
         }
 
+        private void OnHealthUpdated(float health)
+        {
+            if (health <= LOW_HEALTH && m_nextHeartbeatPatternTime <= 0)
+            {
+                m_nextHeartbeatPatternTime = Time.time;
+            }
+            else if (health > LOW_HEALTH && m_nextHeartbeatPatternTime > 0)
+            {
+                m_nextHeartbeatPatternTime = 0;
+                m_hapticPlayer.TurnOff(VEST_NEED_HEALTH_KEY);
+            }
+        }
+
+        private void OnAmmoUpdate(InventorySlotAmmo item, int clipleft)
+        {
+            AmmoType ammoType = item.AmmoType;
+            if (ammoType == AmmoType.Standard || ammoType == AmmoType.Special)
+            {
+                if (clipleft == 0)
+                {
+                    if (Controllers.mainControllerType == HandType.Left || Controllers.aimingTwoHanded)
+                    {
+                        m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_L_KEY);
+                    }
+
+                    if (Controllers.mainControllerType == HandType.Right || Controllers.aimingTwoHanded)
+                    {
+                        m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_R_KEY);
+                    }
+                }
+            }
+        }
+
         private float NormalizeOrientation(float orientation)
         {
             float result = orientation % 360;
@@ -467,9 +485,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ItemInteractEvents.OnItemInteracted -= ItemInteractedHaptics;
             ItemInteractEvents.OnFlashlightToggled -= FlashlightToggledHaptics;
             ItemEquippableEvents.OnPlayerWieldItem -= PlayerChangedItemHaptics;
-            ResourceGainEvents.OnHealthGained += HealthGainedHaptics;
-            ResourceGainEvents.OnAmmoGained += AmmoGainedHaptics;
-            ResourceGainEvents.OnDisinfectionGained += DisinfectionGainedHaptics;
+            ResourceUpdatedEvents.OnHealthGained -= HealthGainedHaptics;
+            ResourceUpdatedEvents.OnAmmoGained -= AmmoGainedHaptics;
+            ResourceUpdatedEvents.OnDisinfectionGained -= DisinfectionGainedHaptics;
+            ResourceUpdatedEvents.OnHealthUpdated -= OnHealthUpdated;
+            InventoryAmmoEvents.OnInventoryAmmoUpdate -= OnAmmoUpdate;
         }
     }
 }

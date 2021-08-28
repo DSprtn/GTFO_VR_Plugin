@@ -9,7 +9,7 @@ namespace GTFO_VR.Injections.Events
     {
         private static void Postfix(float amountRel)
         {
-            ResourceGainEvents.HealthGained(amountRel);
+            ResourceUpdatedEvents.HealthGained(amountRel);
         }
     }
 
@@ -18,7 +18,7 @@ namespace GTFO_VR.Injections.Events
     {
         private static void Postfix(float ammoStandardRel, float ammoSpecialRel, float ammoClassRel)
         {
-            ResourceGainEvents.AmmoGained(ammoStandardRel, ammoSpecialRel, ammoClassRel);
+            ResourceUpdatedEvents.AmmoGained(ammoStandardRel, ammoSpecialRel, ammoClassRel);
         }
     }
 
@@ -27,7 +27,7 @@ namespace GTFO_VR.Injections.Events
     {
         private static void Postfix(float amountRel)
         {
-            ResourceGainEvents.DisinfectionGained(amountRel);
+            ResourceUpdatedEvents.DisinfectionGained(amountRel);
         }
     }
 }

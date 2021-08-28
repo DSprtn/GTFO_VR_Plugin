@@ -70,7 +70,7 @@
     <Compile Include="Events\GlueGunEvents.cs" />
     <Compile Include="Events\HeldItemEvents.cs" />
     <Compile Include="Events\PlayerTriggerReloadEvents.cs" />
-    <Compile Include="Events\ResourceGainEvents.cs" />
+    <Compile Include="Events\ResourceUpdatedEvents.cs" />
     <Compile Include="Events\TentacleAttackEvents.cs" />
     <Compile Include="Events\WeaponRecoilEvents.cs" />
     <Compile Include="Events\PlayerReceivedDamageEvents.cs" />
