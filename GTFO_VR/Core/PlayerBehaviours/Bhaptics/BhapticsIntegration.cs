@@ -45,6 +45,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string ARMS_CHANGE_ITEM_L_KEY = "arms_change_item_l";
         private static readonly string ARMS_OUT_OF_AMMO_R_KEY = "arms_out_of_ammo_r";
         private static readonly string ARMS_OUT_OF_AMMO_L_KEY = "arms_out_of_ammo_l";
+        private static readonly string ARMS_LANDING_KEY = "arms_landing";
 
         private PlayerAgent m_player;
         private HapticPlayer m_hapticPlayer;
@@ -100,6 +101,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_CHANGE_ITEM_L_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_OUT_OF_AMMO_R_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_OUT_OF_AMMO_L_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_LANDING_KEY);
 
             PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
             TentacleAttackEvents.OnTentacleAttack += TentacleAttackHaptics;
@@ -341,7 +343,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
 			if (FocusStateEvents.lastState.Equals(eFocusState.InElevator) && focusState == eFocusState.FPS)
 			{
                 m_hapticPlayer.SubmitRegistered(VEST_LANDING_KEY);
-			}
+                m_hapticPlayer.SubmitRegistered(ARMS_LANDING_KEY);
+            }
         }
 
         private void ItemInteractedHaptics()
