@@ -27,7 +27,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private static readonly float LANDED_STATE_DURATION = 1.5f;
         private static readonly float DEPLOYING_STATE_DURATION = 8f;
-        private static readonly float ELEVATOR_END_PATTERN_FLOOR_DISTANCE = 60f;
+        private static readonly float ELEVATOR_END_PATTERN_FLOOR_DISTANCE = 100f;
 
         enum ElevatorState
         {
