@@ -52,10 +52,12 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private HapticPlayer m_hapticPlayer;
 
         private float m_nextReloadHapticPatternTime;
+        private float m_nextHeartbeatPatternTime;
         private RotationOption m_lastDamageRotationOption;
         public static float m_cameraYRotation;
 
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
+        private static readonly float HEARTBEAT_REPEAT_DELAY = 1.5f;
 
         public BhapticsIntegration(IntPtr value) : base(value)
         {
@@ -145,9 +147,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 m_nextReloadHapticPatternTime += RELOAD_FEEDBACK_DURATION;
             }
 
-            if (m_player.NeedHealth() && !m_hapticPlayer.IsPlaying(VEST_NEED_HEALTH_KEY))
+            if (m_player.NeedHealth() && (m_nextHeartbeatPatternTime <= 0f || currentTime >= m_nextHeartbeatPatternTime))
             {
                 m_hapticPlayer.SubmitRegistered(VEST_NEED_HEALTH_KEY);
+                m_nextHeartbeatPatternTime = currentTime + HEARTBEAT_REPEAT_DELAY;
             }
         }
 
@@ -411,9 +414,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             m_hapticPlayer.SubmitRegistered(VEST_GAIN_HEALTH_KEY);
 
-            if (!m_player.NeedHealth() && m_hapticPlayer.IsPlaying(VEST_NEED_HEALTH_KEY))
+            if (!m_player.NeedHealth() && m_nextHeartbeatPatternTime > 0f)
             {
-                m_hapticPlayer.TurnOff(VEST_NEED_HEALTH_KEY);
+                m_nextHeartbeatPatternTime = 0f;
             }
         }
 
