@@ -8,18 +8,18 @@ namespace GTFO_VR.Core.PlayerBehaviours
 {
     public class BhapticsElevatorSequence : MonoBehaviour
     {
-        private static readonly string VEST_ELEVATOR_RIDE_KEY = "vest_elevator_ride";
-        private static readonly string VEST_ELEVATOR_RIDE_END_KEY = "vest_elevator_ride_end";
+        private static readonly string VEST_ELEVATOR_RIDE_NOISE_KEY = "vest_elevator_ride_noise";
+        private static readonly string VEST_ELEVATOR_RIDE_WAVE_KEY = "vest_elevator_ride_wave";
         private static readonly string VEST_ELEVATOR_DEPLOYING_KEY = "vest_elevator_deploying";
         
-        private static readonly string ARMS_ELEVATOR_RIDE_KEY = "arms_elevator_ride";
+        private static readonly string ARMS_ELEVATOR_RIDE_WAVE_KEY = "arms_elevator_ride_wave";
         private static readonly string ARMS_ELEVATOR_DEPLOYING_KEY = "arms_elevator_deploying";
 
         private HapticPlayer m_hapticPlayer;
 
         private ElevatorState m_elevatorState = ElevatorState.None;
         private float m_currentStateStartTime;
-        private float m_nextHapticPatternTime;
+        private Dictionary<string, float> m_nextHapticPatternTimes = new Dictionary<string, float>();
         private Vector3 m_elevatorPosition;
 
         private static readonly float ELEVATOR_RIDE_FEEDBACK_DURATION = 0.75f;
@@ -34,6 +34,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             None,
             Preparing,
             Descending,
+            SlowingDown,
             Landed,
             Deploying,
         }
@@ -46,11 +47,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
             m_hapticPlayer = hapticPlayer;
             
-            BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_RIDE_KEY);
-            BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_RIDE_END_KEY);
+            BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_RIDE_NOISE_KEY);
+            BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_RIDE_WAVE_KEY);
             BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_DEPLOYING_KEY);
 
-            BhapticsUtils.RegisterArmsTactKey(hapticPlayer, ARMS_ELEVATOR_RIDE_KEY);
+            BhapticsUtils.RegisterArmsTactKey(hapticPlayer, ARMS_ELEVATOR_RIDE_WAVE_KEY);
             BhapticsUtils.RegisterArmsTactKey(hapticPlayer, ARMS_ELEVATOR_DEPLOYING_KEY);
 
             ElevatorEvents.OnElevatorPositionChanged += OnElevatorPositionChanged;
@@ -59,26 +60,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         void Update()
         {
-            float currentTime = Time.time;
-
             if (m_elevatorState != ElevatorState.None)
             {
                 UpdateCurrentState();
-
-                if (m_nextHapticPatternTime > 0 && currentTime >= m_nextHapticPatternTime)
-                {
-                    List<string> hapticPatternKeys = GetHapticPatternKeys(m_elevatorState);
-
-                    foreach (string hapticPatternKey in hapticPatternKeys)
-                    {
-                        float hapticPatternDuration = GetFeedbackDuration(hapticPatternKey);
-                        float durationScale = GetElevatorRidePatternDurationScale();
-                        var scaleOption = new ScaleOption(1f, durationScale);
-                        Log.Info("Start elevator haptic pattern " + hapticPatternKey + " with duration " + hapticPatternDuration + " and scale " + durationScale + " at " + currentTime);
-                        m_hapticPlayer.SubmitRegistered(hapticPatternKey, "", scaleOption);
-                        m_nextHapticPatternTime += hapticPatternDuration * durationScale;
-                    }
-                }
+                ResubmitCompletedHapticPatterns();
             }
         }
 
@@ -89,25 +74,54 @@ namespace GTFO_VR.Core.PlayerBehaviours
             if (m_elevatorState == ElevatorState.Preparing && GetElevatorVelocity() > 0)
             {
                 ChangeElevatorState(ElevatorState.Descending);
-                m_nextHapticPatternTime = Time.time;
+                AddNextHapticPatternTimes();
             }
-            else if (m_elevatorState == ElevatorState.Descending && m_elevatorPosition.y < 2f)
+            else if (m_elevatorState == ElevatorState.Descending && m_elevatorPosition.y < ELEVATOR_END_PATTERN_FLOOR_DISTANCE)
+            {
+                ChangeElevatorState(ElevatorState.SlowingDown);
+                AddNextHapticPatternTimes();
+            }
+            else if (m_elevatorState == ElevatorState.SlowingDown && m_elevatorPosition.y < 2f)
             {
                 ChangeElevatorState(ElevatorState.Landed);
-                m_nextHapticPatternTime = 0f;
-                m_hapticPlayer.TurnOff(VEST_ELEVATOR_RIDE_END_KEY);
+                TurnOffHapticPatterns();
             }
             else if (m_elevatorState == ElevatorState.Landed && timeSinceStateStart >= LANDED_STATE_DURATION)
             {
                 ChangeElevatorState(ElevatorState.Deploying);
-                m_nextHapticPatternTime = Time.time;
+                AddNextHapticPatternTimes();
             }
-            
             else if (m_elevatorState == ElevatorState.Deploying && timeSinceStateStart >= DEPLOYING_STATE_DURATION)
             {
                 ChangeElevatorState(ElevatorState.None);
-                m_nextHapticPatternTime = 0f;
-                m_hapticPlayer.TurnOff(VEST_ELEVATOR_DEPLOYING_KEY);
+                TurnOffHapticPatterns();
+            }
+        }
+
+        private void ResubmitCompletedHapticPatterns()
+        {
+            var m_nextHapticPatternTimesClone = new Dictionary<string, float>(m_nextHapticPatternTimes); // to avoid modifying original dictionary while looping on it
+
+            foreach (KeyValuePair<string, float> pair in m_nextHapticPatternTimesClone)
+            {
+                string patternKey = pair.Key;
+                float nextHapticPatternTime = pair.Value;
+
+                if (Time.time >= nextHapticPatternTime && nextHapticPatternTime > 0)
+                {
+                    FeedbackDetails feedback = GetElevatorStateFeedback(m_elevatorState, patternKey);
+
+                    if (feedback != null)
+                    {
+                        var scaleOption = new ScaleOption(1f, feedback.FeedbackDurationScale);
+                        m_hapticPlayer.SubmitRegistered(feedback.PatternKey, feedback.PatternKey, scaleOption);
+                        m_nextHapticPatternTimes[patternKey] += feedback.FeedbackDuration * feedback.FeedbackDurationScale;
+                    }
+                    else
+                    {
+                        m_nextHapticPatternTimes[patternKey] = 0;
+                    }
+                }
             }
         }
 
@@ -116,65 +130,77 @@ namespace GTFO_VR.Core.PlayerBehaviours
             return ElevatorRide.CurrentVelocity;
         }
 
-        private List<string> GetHapticPatternKeys(ElevatorState elevatorState)
+        private void AddNextHapticPatternTimes()
         {
-            var keys = new List<string>();
+            foreach (FeedbackDetails feedback in GetElevatorStateFeedbacks(m_elevatorState))
+            {
+                m_nextHapticPatternTimes[feedback.PatternKey] = Time.time;
+            }
+        }
+
+        private void TurnOffHapticPatterns()
+        {
+            foreach (string patternKey in m_nextHapticPatternTimes.Keys)
+            {
+                m_hapticPlayer.TurnOff(patternKey);
+            }
+
+            m_nextHapticPatternTimes.Clear();
+        }
+
+        private List<FeedbackDetails> GetElevatorStateFeedbacks(ElevatorState elevatorState)
+        {
+            var result = new List<FeedbackDetails>();
 
             switch (elevatorState)
             {
                 case ElevatorState.Descending:
-                    if (m_elevatorPosition.y > ELEVATOR_END_PATTERN_FLOOR_DISTANCE)
                     {
-                        keys.Add(VEST_ELEVATOR_RIDE_KEY);
-                        keys.Add(ARMS_ELEVATOR_RIDE_KEY);
+                        float duration = ELEVATOR_RIDE_FEEDBACK_DURATION;
+                        float durationScale = GetElevatorRideDurationScale();
+                        result.Add(new FeedbackDetails(VEST_ELEVATOR_RIDE_NOISE_KEY, duration, durationScale));
+                        result.Add(new FeedbackDetails(VEST_ELEVATOR_RIDE_WAVE_KEY, duration, durationScale));
+                        result.Add(new FeedbackDetails(ARMS_ELEVATOR_RIDE_WAVE_KEY, duration, durationScale));
                     }
-                    else
+                    break;
+                case ElevatorState.SlowingDown:
                     {
-                        keys.Add(VEST_ELEVATOR_RIDE_END_KEY);
+                        float durationScale = GetElevatorRideDurationScale();
+                        result.Add(new FeedbackDetails(VEST_ELEVATOR_RIDE_NOISE_KEY, ELEVATOR_RIDE_FEEDBACK_DURATION, durationScale));
                     }
                     break;
                 case ElevatorState.Deploying:
-                    keys.Add(VEST_ELEVATOR_DEPLOYING_KEY);
-                    keys.Add(ARMS_ELEVATOR_DEPLOYING_KEY);
-                    break;
-                case ElevatorState.None:
-                case ElevatorState.Preparing:
-                case ElevatorState.Landed:
+                    {
+                        float feedbackDuration = ELEVATOR_DEPLOYING_FEEDBACK_DURATION;
+                        float durationScale = 1f;
+                        result.Add(new FeedbackDetails(VEST_ELEVATOR_DEPLOYING_KEY, feedbackDuration, durationScale));
+                        result.Add(new FeedbackDetails(ARMS_ELEVATOR_DEPLOYING_KEY, feedbackDuration, durationScale));
+                    }
                     break;
             }
 
-            return keys;
+            return result;
         }
 
-        private float GetFeedbackDuration(string patternKey)
+        private float GetElevatorRideDurationScale()
         {
-            if (patternKey == VEST_ELEVATOR_RIDE_KEY || patternKey == VEST_ELEVATOR_RIDE_END_KEY || patternKey == ARMS_ELEVATOR_RIDE_KEY)
-            {
-                return ELEVATOR_RIDE_FEEDBACK_DURATION;
-            }
-            else if (patternKey == VEST_ELEVATOR_DEPLOYING_KEY || patternKey == ARMS_ELEVATOR_DEPLOYING_KEY)
-            {
-                return ELEVATOR_DEPLOYING_FEEDBACK_DURATION;
-            }
-
-            return 0;
-        }
-
-        private float GetElevatorRidePatternDurationScale()
-        {
-            float scale = 1f;
-            float currentTime = Time.time;
-
             const float MAX_ELEVATOR_VELOCITY = 400f;
+            const float MIN_PATTERN_SCALE = 0.5f;
+            const float MAX_PATTERN_SCALE = 1.3f;
+            return MAX_PATTERN_SCALE - ((GetElevatorVelocity() / MAX_ELEVATOR_VELOCITY) * (MAX_PATTERN_SCALE - MIN_PATTERN_SCALE));
+        }
 
-            if (m_elevatorState == ElevatorState.Descending)
+        private FeedbackDetails GetElevatorStateFeedback(ElevatorState elevatorState, string patternKey)
+        {
+            foreach (FeedbackDetails feedback in GetElevatorStateFeedbacks(elevatorState))
             {
-                const float MIN_PATTERN_SCALE = 0.5f;
-                const float MAX_PATTERN_SCALE = 1.3f;
-                scale = MAX_PATTERN_SCALE - ((GetElevatorVelocity() / MAX_ELEVATOR_VELOCITY) * (MAX_PATTERN_SCALE - MIN_PATTERN_SCALE));
+                if (feedback.PatternKey == patternKey)
+                {
+                    return feedback;
+                }
             }
 
-            return scale;
+            return null;
         }
 
         private void OnElevatorStateChangedHaptics(ElevatorRideState elevatorRideState)
@@ -205,6 +231,20 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
             ElevatorEvents.OnElevatorPositionChanged -= OnElevatorPositionChanged;
             ElevatorEvents.OnElevatorStateChanged -= OnElevatorStateChangedHaptics;
+        }
+
+        class FeedbackDetails
+        {
+            public string PatternKey { get; }
+            public float FeedbackDuration { get; }
+            public float FeedbackDurationScale { get; }
+
+            public FeedbackDetails(string patternKey, float feedbackDuration, float feedbackDurationScale)
+            {
+                PatternKey = patternKey;
+                FeedbackDuration = feedbackDuration;
+                FeedbackDurationScale = feedbackDurationScale;
+            }
         }
     }
 }
