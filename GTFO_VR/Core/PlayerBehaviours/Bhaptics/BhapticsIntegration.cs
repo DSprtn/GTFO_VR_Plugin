@@ -25,6 +25,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string VEST_GAIN_HEALTH_KEY = "vest_gain_health";
         private static readonly string VEST_GAIN_AMMO_KEY = "vest_gain_ammo";
         private static readonly string VEST_GAIN_DISINFECTION_KEY = "vest_gain_disinfection";
+        private static readonly string VEST_NEED_HEALTH_KEY = "vest_need_health";
 
         private static readonly string ARMS_FIRE_R_KEY = "arms_fire_r";
         private static readonly string ARMS_FIRE_L_KEY = "arms_fire_l";
@@ -42,6 +43,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string ARMS_FLASHLIGHT_TOGGLE_L_KEY = "arms_flashlight_toggle_l";
         private static readonly string ARMS_CHANGE_ITEM_R_KEY = "arms_change_item_r";
         private static readonly string ARMS_CHANGE_ITEM_L_KEY = "arms_change_item_l";
+        private static readonly string ARMS_OUT_OF_AMMO_R_KEY = "arms_out_of_ammo_r";
+        private static readonly string ARMS_OUT_OF_AMMO_L_KEY = "arms_out_of_ammo_l";
 
         private PlayerAgent m_player;
         private HapticPlayer m_hapticPlayer;
@@ -77,6 +80,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_HEALTH_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_AMMO_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_DISINFECTION_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_NEED_HEALTH_KEY);
 
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_R_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_L_KEY);
@@ -94,6 +98,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FLASHLIGHT_TOGGLE_L_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_CHANGE_ITEM_R_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_CHANGE_ITEM_L_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_OUT_OF_AMMO_R_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_OUT_OF_AMMO_L_KEY);
 
             PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
             TentacleAttackEvents.OnTentacleAttack += TentacleAttackHaptics;
@@ -133,6 +139,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
                     m_hapticPlayer.SubmitRegistered(ARMS_RELOAD_R_KEY);
                 }
                 m_nextReloadHapticPatternTime += RELOAD_FEEDBACK_DURATION;
+            }
+
+            if (m_player.NeedHealth() && !m_hapticPlayer.IsPlaying(VEST_NEED_HEALTH_KEY))
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_NEED_HEALTH_KEY);
             }
         }
 
@@ -249,6 +260,24 @@ namespace GTFO_VR.Core.PlayerBehaviours
 				m_hapticPlayer.SubmitRegistered(VEST_FIRE_R_KEY, scaleOption);
 				m_hapticPlayer.SubmitRegistered(ARMS_FIRE_R_KEY, scaleOption);
 			}
+
+            if (m_player.NeedWeaponAmmo())
+            {
+                PlayOutOfAmmoHaptics();
+            }
+        }
+
+        private void PlayOutOfAmmoHaptics()
+        {
+            if (Controllers.mainControllerType == HandType.Left || Controllers.aimingTwoHanded)
+            {
+                m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_L_KEY);
+            }
+
+            if (Controllers.mainControllerType == HandType.Right || Controllers.aimingTwoHanded)
+            {
+                m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_R_KEY);
+            }
         }
 
         private RotationOption GetRotationOptionFromDirection(Vector3 direction)
@@ -376,6 +405,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
 
             m_hapticPlayer.SubmitRegistered(VEST_GAIN_HEALTH_KEY);
+
+            if (!m_player.NeedHealth() && m_hapticPlayer.IsPlaying(VEST_NEED_HEALTH_KEY))
+            {
+                m_hapticPlayer.TurnOff(VEST_NEED_HEALTH_KEY);
+            }
         }
 
         private void AmmoGainedHaptics(float ammoStandardRel, float ammoSpecialRel, float ammoClassRel)
