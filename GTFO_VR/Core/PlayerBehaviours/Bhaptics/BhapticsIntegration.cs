@@ -46,6 +46,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string ARMS_OUT_OF_AMMO_R_KEY = "arms_out_of_ammo_r";
         private static readonly string ARMS_OUT_OF_AMMO_L_KEY = "arms_out_of_ammo_l";
         private static readonly string ARMS_LANDING_KEY = "arms_landing";
+        private static readonly string ARMS_GAIN_AMMO_KEY = "arms_gain_ammo";
 
         private PlayerAgent m_player;
         private HapticPlayer m_hapticPlayer;
@@ -102,6 +103,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_OUT_OF_AMMO_R_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_OUT_OF_AMMO_L_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_LANDING_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_GAIN_AMMO_KEY);
 
             PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
             TentacleAttackEvents.OnTentacleAttack += TentacleAttackHaptics;
@@ -423,6 +425,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
 
             m_hapticPlayer.SubmitRegistered(VEST_GAIN_AMMO_KEY);
+            m_hapticPlayer.SubmitRegistered(ARMS_GAIN_AMMO_KEY);
         }
 
         private void DisinfectionGainedHaptics(float amountRel)
