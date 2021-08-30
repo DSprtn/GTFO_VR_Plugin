@@ -34,4 +34,22 @@ namespace GTFO_VR.Injections.Events
             }
         }
     }
+
+    [HarmonyPatch(typeof(ElevatorCage), nameof(ElevatorCage.StartPreReleaseSequence))]
+    internal class InjectElevator2StartPreReleaseEvents
+    {
+        private static void Postfix()
+        {
+            ElevatorEvents.PreReleaseSequenceStarted();
+        }
+    }
+
+    [HarmonyPatch(typeof(ElevatorCage), nameof(ElevatorCage.SkipPreReleaseSequence))]
+    internal class InjectElevator2SkipPreReleaseEvents
+    {
+        private static void Postfix()
+        {
+            ElevatorEvents.PreReleaseSequenceSkipped();
+        }
+    }
 }

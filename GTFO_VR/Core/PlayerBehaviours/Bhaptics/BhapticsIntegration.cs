@@ -127,7 +127,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             InventoryAmmoEvents.OnInventoryAmmoUpdate += OnAmmoUpdate;
 
             var elevatorSequence = gameObject.AddComponent<BhapticsElevatorSequence>();
-            elevatorSequence.Setup(m_hapticPlayer);
+            elevatorSequence.Setup(m_player, m_hapticPlayer);
         }
 
         void Update()
