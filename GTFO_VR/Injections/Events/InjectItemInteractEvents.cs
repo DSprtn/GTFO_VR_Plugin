@@ -8,9 +8,9 @@ namespace GTFO_VR.Injections.Events
     [HarmonyPatch(typeof(LG_Door_Sync), nameof(LG_Door_Sync.AttemptInteract))]
     internal class InjectAttemptInteractDoorEvents
     {
-        private static void Postfix(pPickupItemInteraction interaction)
+        private static void Postfix(pDoorInteraction interaction)
         {
-            if (!interaction.pPlayer.TryGetPlayer(out var player) || player.IsLocal)
+            if (!interaction.user.TryGetPlayer(out var player) || player.IsLocal)
             {
                 ItemInteractEvents.ItemInteracted();
             }
