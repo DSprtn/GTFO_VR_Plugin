@@ -43,7 +43,7 @@ namespace GTFO_VR.Injections.Events
     {
         private static void Postfix(PlayerAgent interactionSource)
         {
-            ItemInteractEvents.ItemInteracted();
+            ItemInteractEvents.ItemInteracted(interactionSource);
         }
     }
 
