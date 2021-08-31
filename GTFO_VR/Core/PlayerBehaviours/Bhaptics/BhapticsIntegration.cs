@@ -53,12 +53,15 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private float m_nextReloadHapticPatternTime;
         private float m_nextHeartbeatPatternTime;
+        private float m_lastHealth;
+        private bool m_lastFlashlightEnabledState;
         private RotationOption m_lastDamageRotationOption;
         public static float m_cameraYRotation;
 
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
-        private static readonly float HEARTBEAT_REPEAT_DELAY = 1.5f;
-        private static readonly float LOW_HEALTH = 20f;
+        private static readonly float HEARTBEAT_REPEAT_DELAY = 1.0f;
+        private static readonly float LOW_HEALTH = 0.20f;
+        private static readonly float MIN_HEALTH_GAIN_FOR_HAPTIC = 0.10f;
 
         public BhapticsIntegration(IntPtr value) : base(value)
         {
@@ -118,9 +121,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             HammerEvents.OnHammerFullyCharged += HammerFullyChargedHaptics;
             FocusStateEvents.OnFocusStateChange += FocusStateChangedHaptics;
             ItemInteractEvents.OnItemInteracted += ItemInteractedHaptics;
-            ItemInteractEvents.OnFlashlightToggled += FlashlightToggledHaptics;
             ItemEquippableEvents.OnPlayerWieldItem += PlayerChangedItemHaptics;
-            ResourceUpdatedEvents.OnHealthGained += HealthGainedHaptics;
             ResourceUpdatedEvents.OnAmmoGained += AmmoGainedHaptics;
             ResourceUpdatedEvents.OnDisinfectionGained += DisinfectionGainedHaptics;
             ResourceUpdatedEvents.OnHealthUpdated += OnHealthUpdated;
@@ -150,10 +151,16 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 m_nextReloadHapticPatternTime += RELOAD_FEEDBACK_DURATION;
             }
 
-            if (m_nextHeartbeatPatternTime > 0f || currentTime >= m_nextHeartbeatPatternTime)
+            if (m_nextHeartbeatPatternTime > 0f && currentTime >= m_nextHeartbeatPatternTime)
             {
                 m_hapticPlayer.SubmitRegistered(VEST_NEED_HEALTH_KEY);
                 m_nextHeartbeatPatternTime += HEARTBEAT_REPEAT_DELAY;
+            }
+
+            if (m_lastFlashlightEnabledState != m_player.Inventory.FlashlightEnabled)
+            {
+                FlashlightToggledHaptics();
+                m_lastFlashlightEnabledState = m_player.Inventory.FlashlightEnabled;
             }
         }
 
@@ -337,9 +344,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
-        private void ItemInteractedHaptics()
+        private void ItemInteractedHaptics(PlayerAgent source)
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value || (source != null && source != m_player))
             {
                 return;
             }
@@ -354,21 +361,21 @@ namespace GTFO_VR.Core.PlayerBehaviours
 			}
         }
 
-        private void FlashlightToggledHaptics(bool enabled)
+        private void FlashlightToggledHaptics()
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
                 return;
             }
 
-			if (Controllers.mainControllerType == HandType.Left)
-			{
-				m_hapticPlayer.SubmitRegistered(ARMS_FLASHLIGHT_TOGGLE_L_KEY);
-			}
-			else
-			{
-				m_hapticPlayer.SubmitRegistered(ARMS_FLASHLIGHT_TOGGLE_R_KEY);
-			}
+            if (Controllers.mainControllerType == HandType.Left)
+            {
+                m_hapticPlayer.SubmitRegistered(ARMS_FLASHLIGHT_TOGGLE_L_KEY);
+            }
+            else
+            {
+                m_hapticPlayer.SubmitRegistered(ARMS_FLASHLIGHT_TOGGLE_R_KEY);
+            }
         }
 
         private void PlayerChangedItemHaptics(ItemEquippable item)
@@ -387,21 +394,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 			else
             {
                 m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_R_KEY);
-            }
-        }
-
-        private void HealthGainedHaptics(float amountRel)
-        {
-            if (!VRConfig.configUseBhaptics.Value)
-            {
-                return;
-            }
-
-            m_hapticPlayer.SubmitRegistered(VEST_GAIN_HEALTH_KEY);
-
-            if (!m_player.NeedHealth() && m_nextHeartbeatPatternTime > 0f)
-            {
-                m_nextHeartbeatPatternTime = 0f;
             }
         }
 
@@ -435,8 +427,14 @@ namespace GTFO_VR.Core.PlayerBehaviours
             else if (health > LOW_HEALTH && m_nextHeartbeatPatternTime > 0)
             {
                 m_nextHeartbeatPatternTime = 0;
-                m_hapticPlayer.TurnOff(VEST_NEED_HEALTH_KEY);
             }
+
+            if (health - m_lastHealth > MIN_HEALTH_GAIN_FOR_HAPTIC) // Gained some health
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_GAIN_HEALTH_KEY);
+            }
+
+            m_lastHealth = health;
         }
 
         private void OnAmmoUpdate(InventorySlotAmmo item, int clipleft)
@@ -483,9 +481,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             HammerEvents.OnHammerFullyCharged -= HammerFullyChargedHaptics;
             FocusStateEvents.OnFocusStateChange -= FocusStateChangedHaptics;
             ItemInteractEvents.OnItemInteracted -= ItemInteractedHaptics;
-            ItemInteractEvents.OnFlashlightToggled -= FlashlightToggledHaptics;
             ItemEquippableEvents.OnPlayerWieldItem -= PlayerChangedItemHaptics;
-            ResourceUpdatedEvents.OnHealthGained -= HealthGainedHaptics;
             ResourceUpdatedEvents.OnAmmoGained -= AmmoGainedHaptics;
             ResourceUpdatedEvents.OnDisinfectionGained -= DisinfectionGainedHaptics;
             ResourceUpdatedEvents.OnHealthUpdated -= OnHealthUpdated;
