@@ -70,6 +70,12 @@ namespace GTFO_VR.Core.PlayerBehaviours
         public void Setup(PlayerAgent player)
         {
             m_player = player;
+            m_nextReloadHapticPatternTime = 0;
+            m_nextHeartbeatPatternTime = 0;
+            m_lastHealth = 1f;
+            m_lastFlashlightEnabledState = player.Inventory.FlashlightEnabled;
+            m_lastDamageRotationOption = null;
+            m_cameraYRotation = 0;
 
             m_hapticPlayer = new HapticPlayer();
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_DAMAGE_KEY);
