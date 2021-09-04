@@ -315,7 +315,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void TentacleAttackHaptics(float dmg, Agents.Agent sourceAgent, Vector3 position)
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value || sourceAgent != m_player)
             {
                 return;
             }
