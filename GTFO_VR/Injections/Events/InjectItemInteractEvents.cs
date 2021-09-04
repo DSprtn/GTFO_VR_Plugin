@@ -7,15 +7,12 @@ using UnityEngine;
 
 namespace GTFO_VR.Injections.Events
 {
-    [HarmonyPatch(typeof(LG_Door_Sync), nameof(LG_Door_Sync.AttemptInteract))]
-    internal class InjectAttemptInteractDoorEvents
+    [HarmonyPatch(typeof(LG_DoorButton), nameof(LG_DoorButton.Interact))]
+    internal class InjectDoorButtonInteract
     {
-        private static void Postfix(pDoorInteraction interaction)
+        private static void Postfix(PlayerAgent source)
         {
-            if (interaction.user.TryGetPlayer(out var player) && player.IsLocal)
-            {
-                ItemInteractEvents.ItemInteracted();
-            }
+            ItemInteractEvents.ItemInteracted(source);
         }
     }
 
@@ -31,8 +28,8 @@ namespace GTFO_VR.Injections.Events
         }
     }
     
-    [HarmonyPatch(typeof(LG_ResourceContainer_Sync), nameof(LG_ResourceContainer_Sync.AttemptInteract))]
-    internal class InjectAttemptInteractResourceContainerEvents
+    [HarmonyPatch(typeof(LG_ResourceContainer_Storage), nameof(LG_ResourceContainer_Storage.EnablePickupInteractions))]
+    internal class InjectContainerStoragePickupInteract
     {
         private static void Postfix()
         {
