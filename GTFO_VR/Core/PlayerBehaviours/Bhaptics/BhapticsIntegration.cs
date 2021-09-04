@@ -26,6 +26,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string VEST_GAIN_AMMO_KEY = "vest_gain_ammo";
         private static readonly string VEST_GAIN_DISINFECTION_KEY = "vest_gain_disinfection";
         private static readonly string VEST_NEED_HEALTH_KEY = "vest_need_health";
+        private static readonly string VEST_DEATH_KEY = "vest_death";
 
         private static readonly string ARMS_FIRE_R_KEY = "arms_fire_r";
         private static readonly string ARMS_FIRE_L_KEY = "arms_fire_l";
@@ -95,6 +96,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_AMMO_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_DISINFECTION_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_NEED_HEALTH_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_DEATH_KEY);
 
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_R_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_L_KEY);
@@ -438,6 +440,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
             if (health - m_lastHealth > MIN_HEALTH_GAIN_FOR_HAPTIC) // Gained some health
             {
                 m_hapticPlayer.SubmitRegistered(VEST_GAIN_HEALTH_KEY);
+            }
+            
+            if (health <= 0 && m_lastHealth > 0)
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_DEATH_KEY);
             }
 
             m_lastHealth = health;
