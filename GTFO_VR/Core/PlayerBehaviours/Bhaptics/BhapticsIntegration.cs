@@ -446,19 +446,23 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnAmmoUpdate(InventorySlotAmmo item, int clipleft)
         {
-            AmmoType ammoType = item.AmmoType;
-            if (ammoType == AmmoType.Standard || ammoType == AmmoType.Special)
+            if (ItemEquippableEvents.IsCurrentItemShootableWeapon() &&
+                ItemEquippableEvents.currentItem.ItemDataBlock.inventorySlot.Equals(item.Slot))
             {
-                if (clipleft == 0)
+                AmmoType ammoType = item.AmmoType;
+                if (ammoType == AmmoType.Standard || ammoType == AmmoType.Special)
                 {
-                    if (Controllers.mainControllerType == HandType.Left || Controllers.aimingTwoHanded)
+                    if (clipleft == 0)
                     {
-                        m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_L_KEY);
-                    }
+                        if (Controllers.mainControllerType == HandType.Left || Controllers.aimingTwoHanded)
+                        {
+                            m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_L_KEY);
+                        }
 
-                    if (Controllers.mainControllerType == HandType.Right || Controllers.aimingTwoHanded)
-                    {
-                        m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_R_KEY);
+                        if (Controllers.mainControllerType == HandType.Right || Controllers.aimingTwoHanded)
+                        {
+                            m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_R_KEY);
+                        }
                     }
                 }
             }
