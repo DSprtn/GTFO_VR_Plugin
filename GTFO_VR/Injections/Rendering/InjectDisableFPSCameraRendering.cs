@@ -46,8 +46,6 @@ namespace GTFO_VR.Injections.Rendering
             GuiManager.Current.AfterCameraUpdate();
             __instance.m_owner.Interaction.AfterCameraUpdate();
 
-            Core.PlayerBehaviours.BhapticsIntegration.SetCameraYRotation(__instance.Rotation.eulerAngles.y);
-
             return false;
         }
     }

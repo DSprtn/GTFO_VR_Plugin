@@ -57,7 +57,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private float m_lastHealth;
         private bool m_lastFlashlightEnabledState;
         private RotationOption m_lastDamageRotationOption;
-        public static float m_cameraYRotation;
 
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
         private static readonly float HEARTBEAT_REPEAT_DELAY = 1.0f;
@@ -76,7 +75,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_lastHealth = 1f;
             m_lastFlashlightEnabledState = player.Inventory.FlashlightEnabled;
             m_lastDamageRotationOption = null;
-            m_cameraYRotation = 0;
 
             m_hapticPlayer = new HapticPlayer();
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_DAMAGE_KEY);
@@ -170,11 +168,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 FlashlightToggledHaptics();
                 m_lastFlashlightEnabledState = m_player.Inventory.FlashlightEnabled;
             }
-        }
-
-        public static void SetCameraYRotation(float cameraYRotation)
-        {
-            m_cameraYRotation = cameraYRotation;
         }
 
         private void HammerSmackHaptics(float dmg)
@@ -296,7 +289,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
              */
             float angleRadians = (float)Math.Atan2(direction.z, direction.x);
             float angleDegrees = (float)(angleRadians * 180 / Math.PI);
-            float offsetAngleX = NormalizeOrientation(angleDegrees + m_cameraYRotation + 90f);
+            float cameraYRotation = m_player.FPSCamera.Rotation.eulerAngles.y;
+            float offsetAngleX = NormalizeOrientation(angleDegrees + cameraYRotation + 90f);
             float offsetY = BhapticsUtils.Clamp(0.5f - (direction.y * 2), -0.5f, 0.5f);
             return new RotationOption(offsetAngleX, offsetY);
         }
