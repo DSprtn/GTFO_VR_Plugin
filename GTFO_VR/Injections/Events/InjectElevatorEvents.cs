@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace GTFO_VR.Injections.Events
 {
+    /// <summary>
+    /// Add event calls for elevator sequence
+    /// </summary>
+
     [HarmonyPatch(typeof(ElevatorRide), nameof(ElevatorRide.Update))]
     internal class InjectElevatorRideUpdateEvents
     {

@@ -5,6 +5,10 @@ using Player;
 
 namespace GTFO_VR.Injections.Events
 {
+    /// <summary>
+    /// Add event calls for player interactions
+    /// </summary>
+
     [HarmonyPatch(typeof(LG_DoorButton), nameof(LG_DoorButton.Interact))]
     internal class InjectDoorButtonInteract
     {

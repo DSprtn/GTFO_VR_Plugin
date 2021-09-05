@@ -4,7 +4,11 @@ using Player;
 
 namespace GTFO_VR.Injections.Events
 {
-   [HarmonyPatch(typeof(PlayerBackpackManager), nameof(PlayerBackpackManager.ReceiveAmmoGive))]
+    /// <summary>
+    /// Add event calls for player resource gains
+    /// </summary>
+
+    [HarmonyPatch(typeof(PlayerBackpackManager), nameof(PlayerBackpackManager.ReceiveAmmoGive))]
     internal class InjectGiveAmmoEvent
     {
         private static void Postfix(pAmmoGive data)
