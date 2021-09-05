@@ -64,7 +64,7 @@
     <Compile Include="Events\FocusStateEvents.cs" />
     <Compile Include="Events\HammerEvents.cs" />
     <Compile Include="Events\InventoryAmmoEvents.cs" />
-    <Compile Include="Events\ItemInteractEvents.cs" />
+    <Compile Include="Events\PlayerInteractionEvents.cs" />
     <Compile Include="Events\PlayerLocomotionEvents.cs" />
     <Compile Include="Events\PlayerReloadEvents.cs" />
     <Compile Include="Events\GlueGunEvents.cs" />
