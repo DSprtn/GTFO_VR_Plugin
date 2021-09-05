@@ -126,7 +126,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             HammerEvents.OnHammerSmack += HammerSmackHaptics;
             HammerEvents.OnHammerFullyCharged += HammerFullyChargedHaptics;
             FocusStateEvents.OnFocusStateChange += FocusStateChangedHaptics;
-            ItemInteractEvents.OnItemInteracted += ItemInteractedHaptics;
+            PlayerInteractionEvents.OnPlayerInteracted += PlayerInteractedHaptics;
             ItemEquippableEvents.OnPlayerWieldItem += PlayerChangedItemHaptics;
             ResourceUpdatedEvents.OnAmmoGained += AmmoGainedHaptics;
             ResourceUpdatedEvents.OnDisinfectionGained += DisinfectionGainedHaptics;
@@ -346,7 +346,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
-        private void ItemInteractedHaptics(PlayerAgent source)
+        private void PlayerInteractedHaptics(PlayerAgent source)
         {
             if (!VRConfig.configUseBhaptics.Value || (source != null && source != m_player))
             {
@@ -491,7 +491,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             HammerEvents.OnHammerSmack -= HammerSmackHaptics;
             HammerEvents.OnHammerFullyCharged -= HammerFullyChargedHaptics;
             FocusStateEvents.OnFocusStateChange -= FocusStateChangedHaptics;
-            ItemInteractEvents.OnItemInteracted -= ItemInteractedHaptics;
+            PlayerInteractionEvents.OnPlayerInteracted -= PlayerInteractedHaptics;
             ItemEquippableEvents.OnPlayerWieldItem -= PlayerChangedItemHaptics;
             ResourceUpdatedEvents.OnAmmoGained -= AmmoGainedHaptics;
             ResourceUpdatedEvents.OnDisinfectionGained -= DisinfectionGainedHaptics;

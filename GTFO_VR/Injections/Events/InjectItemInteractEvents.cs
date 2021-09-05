@@ -1,9 +1,7 @@
 ﻿using HarmonyLib;
 using LevelGeneration;
 using GTFO_VR.Events;
-using GTFO_VR.Core;
 using Player;
-using UnityEngine;
 
 namespace GTFO_VR.Injections.Events
 {
@@ -12,37 +10,19 @@ namespace GTFO_VR.Injections.Events
     {
         private static void Postfix(PlayerAgent source)
         {
-            ItemInteractEvents.ItemInteracted(source);
+            PlayerInteractionEvents.PlayerInteracted(source);
         }
     }
 
-    [HarmonyPatch(typeof(LG_PickupItem_Sync), nameof(LG_PickupItem_Sync.AttemptInteract))]
-    internal class InjectAttemptInteractPickupItemEvents
+    [HarmonyPatch(typeof(PUI_InteractionPrompt), nameof(PUI_InteractionPrompt.SetTimerFill))]
+    internal class InjectTimerFilledInteract
     {
-        private static void Postfix(pPickupItemInteraction interaction)
+        private static void Postfix(float fill)
         {
-            if (interaction.pPlayer.TryGetPlayer(out var player) && player.IsLocal)
+            if (fill >= 1.0f)
             {
-                ItemInteractEvents.ItemInteracted();
+                PlayerInteractionEvents.PlayerInteracted();
             }
-        }
-    }
-    
-    [HarmonyPatch(typeof(LG_ResourceContainer_Storage), nameof(LG_ResourceContainer_Storage.EnablePickupInteractions))]
-    internal class InjectContainerStoragePickupInteract
-    {
-        private static void Postfix()
-        {
-            ItemInteractEvents.ItemInteracted();
-        }
-    }
-
-    [HarmonyPatch(typeof(LG_ComputerTerminal), nameof(LG_ComputerTerminal.OnInteract))]
-    internal class InjectAttemptInteractComputerTerminalEvents
-    {
-        private static void Postfix(PlayerAgent interactionSource)
-        {
-            ItemInteractEvents.ItemInteracted(interactionSource);
         }
     }
 }
