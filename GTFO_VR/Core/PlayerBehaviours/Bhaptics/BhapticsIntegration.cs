@@ -61,7 +61,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
         private static readonly float HEARTBEAT_REPEAT_DELAY = 1.0f;
         private static readonly float LOW_HEALTH = 0.20f;
-        private static readonly float MIN_HEALTH_GAIN_FOR_HAPTIC = 0.10f;
+        private static readonly float MIN_HEALTH_GAIN_FOR_HAPTIC = 0.05f;
 
         public BhapticsIntegration(IntPtr value) : base(value)
         {
