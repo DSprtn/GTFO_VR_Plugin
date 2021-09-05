@@ -196,6 +196,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void ResubmitCompletedHapticPatterns()
         {
+            if (!VRConfig.configUseBhaptics.Value)
+            {
+                return;
+            }
+
             var m_nextHapticPatternTimesClone = new Dictionary<string, float>(m_nextHapticPatternTimes); // to avoid modifying original dictionary while looping on it
 
             foreach (KeyValuePair<string, float> pair in m_nextHapticPatternTimesClone)

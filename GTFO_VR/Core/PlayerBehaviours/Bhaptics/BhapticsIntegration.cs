@@ -139,6 +139,14 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         void Update()
         {
+            if (VRConfig.configUseBhaptics.Value)
+            {
+                UpdateBhapticsState();
+            }
+        }
+
+        private void UpdateBhapticsState()
+        {
             float currentTime = Time.time;
 
             bool isReloading = (m_nextReloadHapticPatternTime > 0);
@@ -422,23 +430,26 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnHealthUpdated(float health)
         {
-            if (health <= LOW_HEALTH && m_nextHeartbeatPatternTime <= 0)
+            if (VRConfig.configUseBhaptics.Value)
             {
-                m_nextHeartbeatPatternTime = Time.time;
-            }
-            else if (health > LOW_HEALTH && m_nextHeartbeatPatternTime > 0)
-            {
-                m_nextHeartbeatPatternTime = 0;
-            }
+                if (health <= LOW_HEALTH && m_nextHeartbeatPatternTime <= 0)
+                {
+                    m_nextHeartbeatPatternTime = Time.time;
+                }
+                else if (health > LOW_HEALTH && m_nextHeartbeatPatternTime > 0)
+                {
+                    m_nextHeartbeatPatternTime = 0;
+                }
 
-            if (health - m_lastHealth > MIN_HEALTH_GAIN_FOR_HAPTIC) // Gained some health
-            {
-                m_hapticPlayer.SubmitRegistered(VEST_GAIN_HEALTH_KEY);
-            }
-            
-            if (health <= 0 && m_lastHealth > 0)
-            {
-                m_hapticPlayer.SubmitRegistered(VEST_DEATH_KEY);
+                if (health - m_lastHealth > MIN_HEALTH_GAIN_FOR_HAPTIC) // Gained some health
+                {
+                    m_hapticPlayer.SubmitRegistered(VEST_GAIN_HEALTH_KEY);
+                }
+
+                if (health <= 0 && m_lastHealth > 0)
+                {
+                    m_hapticPlayer.SubmitRegistered(VEST_DEATH_KEY);
+                }
             }
 
             m_lastHealth = health;
@@ -446,6 +457,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnAmmoUpdate(InventorySlotAmmo item, int clipleft)
         {
+            if (!VRConfig.configUseBhaptics.Value)
+            {
+                return;
+            }
+
             if (ItemEquippableEvents.IsCurrentItemShootableWeapon() &&
                 ItemEquippableEvents.currentItem.ItemDataBlock.inventorySlot.Equals(item.Slot))
             {
