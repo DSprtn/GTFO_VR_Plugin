@@ -81,7 +81,7 @@
     <Compile Include="Injections\Events\InjectInventoryAmmoUpdateEvent.cs" />
     <Compile Include="Injections\Events\InjectItemEquippableEvents.cs" />
     <Compile Include="Injections\Events\InjectHeldItemEvents.cs" />
-    <Compile Include="Injections\Events\InjectItemInteractEvents.cs" />
+    <Compile Include="Injections\Events\InjectPlayerInteractionEvents.cs" />
     <Compile Include="Injections\Events\InjectPlayerReloadEvents.cs" />
     <Compile Include="Injections\Events\InjectGlueGunEvents.cs" />
     <Compile Include="Injections\Events\InjectPlayerTriggerReloadEvents.cs" />
