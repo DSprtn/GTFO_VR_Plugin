@@ -28,6 +28,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string VEST_GAIN_DISINFECTION_KEY = "vest_gain_disinfection";
         private static readonly string VEST_NEED_HEALTH_KEY = "vest_need_health";
         private static readonly string VEST_DEATH_KEY = "vest_death";
+        private static readonly string VEST_CROUCH_KEY = "vest_crouch";
+        private static readonly string VEST_STAND_KEY = "vest_stand";
 
         private static readonly string ARMS_FIRE_R_KEY = "arms_fire_r";
         private static readonly string ARMS_FIRE_L_KEY = "arms_fire_l";
@@ -59,6 +61,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private float m_lastHealth;
         private bool m_lastFlashlightEnabledState;
         private RotationOption m_lastDamageRotationOption;
+        private PlayerLocomotion.PLOC_State m_lastLocState;
 
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
         private static readonly float HEARTBEAT_REPEAT_DELAY = 1.0f;
@@ -77,6 +80,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_lastHealth = 1f;
             m_lastFlashlightEnabledState = player.Inventory.FlashlightEnabled;
             m_lastDamageRotationOption = null;
+            m_lastLocState = player.Locomotion.m_currentStateEnum;
 
             m_hapticPlayer = new HapticPlayer();
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_DAMAGE_KEY);
@@ -98,6 +102,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_DISINFECTION_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_NEED_HEALTH_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_DEATH_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_CROUCH_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_STAND_KEY);
 
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_R_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_L_KEY);
@@ -136,6 +142,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ResourceUpdatedEvents.OnDisinfectionGained += DisinfectionGainedHaptics;
             ResourceUpdatedEvents.OnHealthUpdated += OnHealthUpdated;
             InventoryAmmoEvents.OnInventoryAmmoUpdate += OnAmmoUpdate;
+            PlayerLocomotionEvents.OnStateChange += OnPlayerLocomotionStateChanged;
 
             var elevatorSequence = gameObject.AddComponent<BhapticsElevatorSequence>();
             elevatorSequence.Setup(m_player, m_hapticPlayer);
@@ -496,6 +503,25 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
+        private void OnPlayerLocomotionStateChanged(PlayerLocomotion.PLOC_State state)
+        {
+            if (!VRConfig.configUseBhaptics.Value)
+            {
+                return;
+            }
+
+            if (state == PlayerLocomotion.PLOC_State.Crouch && m_lastLocState == PlayerLocomotion.PLOC_State.Stand)
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_CROUCH_KEY);
+            }
+            else if (state == PlayerLocomotion.PLOC_State.Stand && m_lastLocState == PlayerLocomotion.PLOC_State.Crouch)
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_STAND_KEY);
+            }
+
+            m_lastLocState = state;
+        }
+
         private float NormalizeOrientation(float orientation)
         {
             float result = orientation % 360;
@@ -525,6 +551,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ResourceUpdatedEvents.OnDisinfectionGained -= DisinfectionGainedHaptics;
             ResourceUpdatedEvents.OnHealthUpdated -= OnHealthUpdated;
             InventoryAmmoEvents.OnInventoryAmmoUpdate -= OnAmmoUpdate;
+            PlayerLocomotionEvents.OnStateChange -= OnPlayerLocomotionStateChanged;
         }
     }
 }
