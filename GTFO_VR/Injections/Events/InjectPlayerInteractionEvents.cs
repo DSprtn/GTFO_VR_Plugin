@@ -1,7 +1,11 @@
 ﻿using HarmonyLib;
 using LevelGeneration;
 using GTFO_VR.Events;
+using GTFO_VR.Core;
 using Player;
+using ChainedPuzzles;
+using UnityEngine;
+using Il2CppSystem.Collections.Generic;
 
 namespace GTFO_VR.Injections.Events
 {
@@ -27,6 +31,15 @@ namespace GTFO_VR.Injections.Events
             {
                 PlayerInteractionEvents.PlayerInteracted();
             }
+        }
+    }
+
+    [HarmonyPatch(typeof(CP_Bioscan_Sync), nameof(CP_Bioscan_Sync.SetStateData))]
+    internal class InjectBioscanStateInteract
+    {
+        private static void Postfix(eBioscanStatus status, float progress, List<PlayerAgent> playersInScan)
+        {
+            PlayerInteractionEvents.SetBioscanState(status, progress, playersInScan);
         }
     }
 }

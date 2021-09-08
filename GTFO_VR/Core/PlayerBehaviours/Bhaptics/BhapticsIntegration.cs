@@ -4,6 +4,8 @@ using GTFO_VR.Events;
 using GTFO_VR.Core.VR_Input;
 using System;
 using Player;
+using ChainedPuzzles;
+using Il2CppSystem.Collections.Generic;
 
 namespace GTFO_VR.Core.PlayerBehaviours
 {
@@ -30,6 +32,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string VEST_DEATH_KEY = "vest_death";
         private static readonly string VEST_CROUCH_KEY = "vest_crouch";
         private static readonly string VEST_STAND_KEY = "vest_stand";
+        private static readonly string VEST_BODY_SCAN_KEY = "vest_body_scan";
 
         private static readonly string ARMS_FIRE_R_KEY = "arms_fire_r";
         private static readonly string ARMS_FIRE_L_KEY = "arms_fire_l";
@@ -58,6 +61,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private float m_nextReloadHapticPatternTime;
         private float m_nextHeartbeatPatternTime;
+        private float m_nextBodyscanPatternTime;
         private float m_lastHealth;
         private bool m_lastFlashlightEnabledState;
         private RotationOption m_lastDamageRotationOption;
@@ -65,6 +69,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
         private static readonly float HEARTBEAT_REPEAT_DELAY = 1.0f;
+        private static readonly float BODY_SCAN_REPEAT_DELAY = 10.0f;
         private static readonly float LOW_HEALTH = 0.20f;
         private static readonly float MIN_HEALTH_GAIN_FOR_HAPTIC = 0.05f;
 
@@ -77,6 +82,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_player = player;
             m_nextReloadHapticPatternTime = 0;
             m_nextHeartbeatPatternTime = 0;
+            m_nextBodyscanPatternTime = 0;
             m_lastHealth = 1f;
             m_lastFlashlightEnabledState = player.Inventory.FlashlightEnabled;
             m_lastDamageRotationOption = null;
@@ -104,6 +110,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_DEATH_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_CROUCH_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_STAND_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_BODY_SCAN_KEY);
 
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_R_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_L_KEY);
@@ -137,6 +144,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             HammerEvents.OnHammerFullyCharged += HammerFullyChargedHaptics;
             FocusStateEvents.OnFocusStateChange += FocusStateChangedHaptics;
             PlayerInteractionEvents.OnPlayerInteracted += PlayerInteractedHaptics;
+            PlayerInteractionEvents.OnBioscanSetState += PlayerBioscanSetStateHaptics;
             ItemEquippableEvents.OnPlayerWieldItem += PlayerChangedItemHaptics;
             ResourceUpdatedEvents.OnAmmoGained += AmmoGainedHaptics;
             ResourceUpdatedEvents.OnDisinfectionGained += DisinfectionGainedHaptics;
@@ -180,6 +188,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 m_hapticPlayer.SubmitRegistered(VEST_NEED_HEALTH_KEY);
                 m_nextHeartbeatPatternTime += HEARTBEAT_REPEAT_DELAY;
+            }
+            
+            if (m_nextBodyscanPatternTime > 0f && currentTime >= m_nextBodyscanPatternTime)
+            {
+                Log.Info("Play bodyscan pattern at " + Time.time);
+                m_hapticPlayer.SubmitRegistered(VEST_BODY_SCAN_KEY);
+                m_nextBodyscanPatternTime += BODY_SCAN_REPEAT_DELAY;
             }
 
             if (m_lastFlashlightEnabledState != m_player.Inventory.FlashlightEnabled)
@@ -382,6 +397,29 @@ namespace GTFO_VR.Core.PlayerBehaviours
 			}
         }
 
+        private void PlayerBioscanSetStateHaptics(eBioscanStatus status, float progress, List<PlayerAgent> playersInScan)
+        {
+            if (!VRConfig.configUseBhaptics.Value)
+            {
+                return;
+            }
+
+            if (status == eBioscanStatus.Scanning && playersInScan.Contains(m_player))
+            {
+                if (m_nextBodyscanPatternTime <= 0)
+                {
+                    Log.Info("Set next bodyscan pattern time to " + Time.time);
+                    m_nextBodyscanPatternTime = Time.time;
+                }
+            }
+            else if (m_nextBodyscanPatternTime > 0)
+            {
+                Log.Info("Stop bodyscan at " + Time.time);
+                m_nextBodyscanPatternTime = 0f;
+                m_hapticPlayer.TurnOff(VEST_BODY_SCAN_KEY);
+            }
+        }
+
         private void FlashlightToggledHaptics()
         {
             if (!VRConfig.configUseBhaptics.Value)
@@ -546,6 +584,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             HammerEvents.OnHammerFullyCharged -= HammerFullyChargedHaptics;
             FocusStateEvents.OnFocusStateChange -= FocusStateChangedHaptics;
             PlayerInteractionEvents.OnPlayerInteracted -= PlayerInteractedHaptics;
+            PlayerInteractionEvents.OnBioscanSetState -= PlayerBioscanSetStateHaptics;
             ItemEquippableEvents.OnPlayerWieldItem -= PlayerChangedItemHaptics;
             ResourceUpdatedEvents.OnAmmoGained -= AmmoGainedHaptics;
             ResourceUpdatedEvents.OnDisinfectionGained -= DisinfectionGainedHaptics;
