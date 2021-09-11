@@ -12,7 +12,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string VEST_ELEVATOR_RIDE_NOISE_KEY = "vest_elevator_ride_noise";
         private static readonly string VEST_ELEVATOR_RIDE_WAVE_KEY = "vest_elevator_ride_wave";
         private static readonly string VEST_ELEVATOR_DEPLOYING_KEY = "vest_elevator_deploying";
-        private static readonly string VEST_ELEVATOR_DOOR_PRE_OPENING_KEY = "vest_elevator_door_pre_opening";
         private static readonly string VEST_ELEVATOR_DOOR_OPENING_KEY = "vest_elevator_door_opening";
 
         private static readonly string ARMS_ELEVATOR_RIDE_WAVE_KEY = "arms_elevator_ride_wave";
@@ -32,8 +31,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly float ELEVATOR_DEPLOYING_FEEDBACK_DURATION = 1.0f;
 
         private static readonly float PENDING_DOOR_PRE_OPENING_DURATION = 3.5f;
-        private static readonly float PENDING_DOOR_OPENING_DURATION = 3f;
-        private static readonly float PENDING_TOP_DEPLOYING_DURATION = 4f;
+        private static readonly float PENDING_TOP_DEPLOYING_DURATION = 7f;
         private static readonly float TOP_DEPLOYING_STATE_DURATION = 5f;
         private static readonly float ELEVATOR_END_PATTERN_FLOOR_DISTANCE = 100f;
 
@@ -44,7 +42,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             FirstMovement,
             PendingCageRotating,
             CageRotating,
-            PendingDoorPreOpening,
             PendingDoorOpening,
             PendingTopDeploying,
             TopDeploying,
@@ -75,7 +72,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_RIDE_NOISE_KEY);
             BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_RIDE_WAVE_KEY);
             BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_DEPLOYING_KEY);
-            BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_DOOR_PRE_OPENING_KEY);
             BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_DOOR_OPENING_KEY);
 
             BhapticsUtils.RegisterArmsTactKey(hapticPlayer, ARMS_ELEVATOR_RIDE_WAVE_KEY);
@@ -138,15 +134,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
             else if (m_elevatorState == ElevatorState.CageRotating && HasJustStoppedMoving())
             {
-                ChangeElevatorState(ElevatorState.PendingDoorPreOpening);
+                ChangeElevatorState(ElevatorState.PendingDoorOpening);
                 TurnOffHapticPatterns();
             }
-            else if (m_elevatorState == ElevatorState.PendingDoorPreOpening && timeSinceStateStart >= PENDING_DOOR_PRE_OPENING_DURATION) // timing-based since player moves/stops multiple times in a row starting from here
-            {
-                m_hapticPlayer.SubmitRegistered(VEST_ELEVATOR_DOOR_PRE_OPENING_KEY);
-                ChangeElevatorState(ElevatorState.PendingDoorOpening);
-            }
-            else if (m_elevatorState == ElevatorState.PendingDoorOpening && timeSinceStateStart >= PENDING_DOOR_OPENING_DURATION)
+            else if (m_elevatorState == ElevatorState.PendingDoorOpening && timeSinceStateStart >= PENDING_DOOR_PRE_OPENING_DURATION)
             {
                 m_hapticPlayer.SubmitRegistered(VEST_ELEVATOR_DOOR_OPENING_KEY);
                 ChangeElevatorState(ElevatorState.PendingTopDeploying);
