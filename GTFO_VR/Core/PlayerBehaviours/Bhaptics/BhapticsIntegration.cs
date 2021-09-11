@@ -563,7 +563,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-            if (m_lastLocState == PlayerLocomotion.PLOC_State.Fall && (state == PlayerLocomotion.PLOC_State.Stand || state == PlayerLocomotion.PLOC_State.Crouch))
+            if ((m_lastLocState == PlayerLocomotion.PLOC_State.Fall || m_lastLocState == PlayerLocomotion.PLOC_State.Jump)
+                && (state == PlayerLocomotion.PLOC_State.Stand || state == PlayerLocomotion.PLOC_State.Crouch))
             {
                 m_hapticPlayer.SubmitRegistered(VEST_LANDING_SMALL_KEY);
             }
