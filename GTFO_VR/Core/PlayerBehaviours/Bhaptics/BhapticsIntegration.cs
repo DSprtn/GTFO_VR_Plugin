@@ -574,6 +574,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void CrouchToggleHaptics(bool isCrouched)
         {
+            if (!VRConfig.configUseBhaptics.Value || m_lastLocState == PlayerLocomotion.PLOC_State.InElevator)
+            {
+                return;
+            }
+
             if (isCrouched)
             {
                 m_hapticPlayer.SubmitRegistered(VEST_CROUCH_KEY);
