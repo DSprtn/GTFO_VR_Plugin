@@ -72,7 +72,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
         private static readonly float HEARTBEAT_REPEAT_DELAY = 1.0f;
-        private static readonly float BODY_SCAN_REPEAT_DELAY = 10.0f;
+        private static readonly float BODY_SCAN_REPEAT_DELAY = 13.5f;
         private static readonly float LOW_HEALTH = 0.20f;
         private static readonly float MIN_HEALTH_GAIN_FOR_HAPTIC = 0.05f;
         private static readonly float MIN_DISINFECTION_GAIN_FOR_HAPTIC = 0.05f;
