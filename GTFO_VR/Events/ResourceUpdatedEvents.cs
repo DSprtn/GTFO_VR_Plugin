@@ -5,7 +5,7 @@ namespace GTFO_VR.Events
     public static class ResourceUpdatedEvents
     {
         public static event Action<float, float, float> OnAmmoGained;
-        public static event Action<float> OnDisinfectionGained;
+        public static event Action<float> OnInfectionUpdated;
         public static event Action<float> OnHealthUpdated;
 
         public static void AmmoGained(float ammoStandardRel, float ammoSpecialRel, float ammoClassRel)
@@ -13,9 +13,9 @@ namespace GTFO_VR.Events
             OnAmmoGained?.Invoke(ammoStandardRel, ammoSpecialRel, ammoClassRel);
         }
 
-        public static void DisinfectionGained(float amountRel)
+        public static void InfectionUpdated(float infection)
         {
-            OnDisinfectionGained?.Invoke(amountRel);
+            OnInfectionUpdated?.Invoke(infection);
         }
 
         public static void HealthUpdated(float health)

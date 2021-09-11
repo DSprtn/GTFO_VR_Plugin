@@ -1,10 +1,8 @@
 ﻿using HarmonyLib;
 using LevelGeneration;
 using GTFO_VR.Events;
-using GTFO_VR.Core;
 using Player;
 using ChainedPuzzles;
-using UnityEngine;
 using Il2CppSystem.Collections.Generic;
 
 namespace GTFO_VR.Injections.Events

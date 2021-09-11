@@ -63,6 +63,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private float m_nextReloadHapticPatternTime;
         private float m_nextHeartbeatPatternTime;
         private float m_nextBodyscanPatternTime;
+        private float m_lastInfection;
         private float m_lastHealth;
         private bool m_lastFlashlightEnabledState;
         private RotationOption m_lastDamageRotationOption;
@@ -74,6 +75,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly float BODY_SCAN_REPEAT_DELAY = 10.0f;
         private static readonly float LOW_HEALTH = 0.20f;
         private static readonly float MIN_HEALTH_GAIN_FOR_HAPTIC = 0.05f;
+        private static readonly float MIN_DISINFECTION_GAIN_FOR_HAPTIC = 0.05f;
 
         public BhapticsIntegration(IntPtr value) : base(value)
         {
@@ -85,6 +87,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_nextReloadHapticPatternTime = 0;
             m_nextHeartbeatPatternTime = 0;
             m_nextBodyscanPatternTime = 0;
+            m_lastInfection = 0f;
             m_lastHealth = 1f;
             m_lastFlashlightEnabledState = player.Inventory.FlashlightEnabled;
             m_lastDamageRotationOption = null;
@@ -151,7 +154,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerInteractionEvents.OnBioscanSetState += PlayerBioscanSetStateHaptics;
             ItemEquippableEvents.OnPlayerWieldItem += PlayerChangedItemHaptics;
             ResourceUpdatedEvents.OnAmmoGained += AmmoGainedHaptics;
-            ResourceUpdatedEvents.OnDisinfectionGained += DisinfectionGainedHaptics;
+            ResourceUpdatedEvents.OnInfectionUpdated += InfectionUpdatedHaptics;
             ResourceUpdatedEvents.OnHealthUpdated += OnHealthUpdated;
             InventoryAmmoEvents.OnInventoryAmmoUpdate += OnAmmoUpdate;
             PlayerLocomotionEvents.OnStateChange += OnPlayerLocomotionStateChanged;
@@ -489,14 +492,19 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
-        private void DisinfectionGainedHaptics(float amountRel)
+        private void InfectionUpdatedHaptics(float infection)
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
                 return;
             }
 
-            m_hapticPlayer.SubmitRegistered(VEST_GAIN_DISINFECTION_KEY);
+            if (m_lastInfection - infection > MIN_DISINFECTION_GAIN_FOR_HAPTIC) // Gained some disinfection
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_GAIN_DISINFECTION_KEY);
+            }
+
+            m_lastInfection = infection;
         }
 
         private void OnHealthUpdated(float health)
@@ -609,7 +617,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerInteractionEvents.OnBioscanSetState -= PlayerBioscanSetStateHaptics;
             ItemEquippableEvents.OnPlayerWieldItem -= PlayerChangedItemHaptics;
             ResourceUpdatedEvents.OnAmmoGained -= AmmoGainedHaptics;
-            ResourceUpdatedEvents.OnDisinfectionGained -= DisinfectionGainedHaptics;
+            ResourceUpdatedEvents.OnInfectionUpdated -= InfectionUpdatedHaptics;
             ResourceUpdatedEvents.OnHealthUpdated -= OnHealthUpdated;
             InventoryAmmoEvents.OnInventoryAmmoUpdate -= OnAmmoUpdate;
             PlayerLocomotionEvents.OnStateChange -= OnPlayerLocomotionStateChanged;

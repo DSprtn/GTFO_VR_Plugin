@@ -34,6 +34,8 @@ namespace GTFO_VR.Injections.UI
         private static void Postfix(float infection, float infectionHealthRel)
         {
             Watch.Current?.UpdateInfection(infection);
+
+            ResourceUpdatedEvents.InfectionUpdated(infection);
         }
     }
 }
