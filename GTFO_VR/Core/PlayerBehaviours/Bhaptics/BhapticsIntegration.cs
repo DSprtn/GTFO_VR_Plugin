@@ -24,6 +24,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string VEST_HAMMER_FULLY_CHARGED_R_KEY = "vest_hammer_fully_charged_r";
         private static readonly string VEST_HAMMER_FULLY_CHARGED_L_KEY = "vest_hammer_fully_charged_l";
         private static readonly string VEST_LANDING_KEY = "vest_landing";
+        private static readonly string VEST_LANDING_SMALL_KEY = "vest_landing_small";
         private static readonly string VEST_GAIN_HEALTH_KEY = "vest_gain_health";
         private static readonly string VEST_GAIN_AMMO_KEY = "vest_gain_ammo";
         private static readonly string VEST_GAIN_TOOL_AMMO_KEY = "vest_gain_tool_ammo";
@@ -104,6 +105,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_SMACK_R_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_SMACK_L_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_LANDING_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_LANDING_SMALL_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_HEALTH_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_AMMO_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_TOOL_AMMO_KEY);
@@ -422,13 +424,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 if (m_nextBodyscanPatternTime <= 0)
                 {
-                    Log.Info("Set next bodyscan pattern time to " + Time.time);
                     m_nextBodyscanPatternTime = Time.time;
                 }
             }
             else if (m_nextBodyscanPatternTime > 0)
             {
-                Log.Info("Stop bodyscan at " + Time.time);
                 m_nextBodyscanPatternTime = 0f;
                 m_hapticPlayer.TurnOff(VEST_BODY_SCAN_KEY);
             }
@@ -562,6 +562,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
+            if (m_lastLocState == PlayerLocomotion.PLOC_State.Fall && (state == PlayerLocomotion.PLOC_State.Stand || state == PlayerLocomotion.PLOC_State.Crouch))
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_LANDING_SMALL_KEY);
+            }
 
             m_lastLocState = state;
         }
