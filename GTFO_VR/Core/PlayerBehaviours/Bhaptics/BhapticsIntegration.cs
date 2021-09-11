@@ -192,7 +192,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             
             if (m_nextBodyscanPatternTime > 0f && currentTime >= m_nextBodyscanPatternTime)
             {
-                Log.Info("Play bodyscan pattern at " + Time.time);
                 m_hapticPlayer.SubmitRegistered(VEST_BODY_SCAN_KEY);
                 m_nextBodyscanPatternTime += BODY_SCAN_REPEAT_DELAY;
             }
