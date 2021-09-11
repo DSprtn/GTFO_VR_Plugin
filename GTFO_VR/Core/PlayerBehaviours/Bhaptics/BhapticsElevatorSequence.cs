@@ -62,10 +62,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_player = player;
             m_hapticPlayer = hapticPlayer;
 
-            m_movingFramesCount = 0;
             m_lastPlayerPosition = m_player.transform.position;
             m_elevatorState = ElevatorState.None;
-            m_currentStateStartTime = 0;
             m_nextHapticPatternTimes.Clear();
             m_elevatorPosition = Vector3.zero;
 

@@ -64,7 +64,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private float m_nextHeartbeatPatternTime;
         private float m_nextBodyscanPatternTime;
         private float m_lastInfection;
-        private float m_lastHealth;
+        private float m_lastHealth = 1f;
         private bool m_lastFlashlightEnabledState;
         private RotationOption m_lastDamageRotationOption;
         private PlayerLocomotion.PLOC_State m_lastLocState;
@@ -84,15 +84,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
         public void Setup(PlayerAgent player)
         {
             m_player = player;
-            m_nextReloadHapticPatternTime = 0;
-            m_nextHeartbeatPatternTime = 0;
-            m_nextBodyscanPatternTime = 0;
-            m_lastInfection = 0f;
-            m_lastHealth = 1f;
             m_lastFlashlightEnabledState = player.Inventory.FlashlightEnabled;
-            m_lastDamageRotationOption = null;
             m_lastLocState = player.Locomotion.m_currentStateEnum;
-            m_lastIsCrouchedPhysically = false;
 
             m_hapticPlayer = new HapticPlayer();
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_DAMAGE_KEY);
