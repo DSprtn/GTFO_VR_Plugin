@@ -66,6 +66,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private bool m_lastFlashlightEnabledState;
         private RotationOption m_lastDamageRotationOption;
         private PlayerLocomotion.PLOC_State m_lastLocState;
+        private bool m_lastIsCrouchedPhysically;
 
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
         private static readonly float HEARTBEAT_REPEAT_DELAY = 1.0f;
@@ -87,6 +88,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_lastFlashlightEnabledState = player.Inventory.FlashlightEnabled;
             m_lastDamageRotationOption = null;
             m_lastLocState = player.Locomotion.m_currentStateEnum;
+            m_lastIsCrouchedPhysically = false;
 
             m_hapticPlayer = new HapticPlayer();
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_DAMAGE_KEY);
@@ -202,6 +204,18 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 FlashlightToggledHaptics();
                 m_lastFlashlightEnabledState = m_player.Inventory.FlashlightEnabled;
             }
+
+            bool isCrouchedPhysically = IsCrouchedPhysically();
+            if (m_lastIsCrouchedPhysically != isCrouchedPhysically)
+            {
+                CrouchToggleHaptics(isCrouchedPhysically);
+                m_lastIsCrouchedPhysically = isCrouchedPhysically;
+            }
+        }
+
+        private bool IsCrouchedPhysically()
+        {
+            return HMD.Hmd.transform.localPosition.y + VRConfig.configFloorOffset.Value / 100f < VRConfig.configCrouchHeight.Value / 100f;
         }
 
         private void HammerSmackHaptics(float dmg)
@@ -548,16 +562,20 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-            if (state == PlayerLocomotion.PLOC_State.Crouch && m_lastLocState == PlayerLocomotion.PLOC_State.Stand)
+
+            m_lastLocState = state;
+        }
+
+        private void CrouchToggleHaptics(bool isCrouched)
+        {
+            if (isCrouched)
             {
                 m_hapticPlayer.SubmitRegistered(VEST_CROUCH_KEY);
             }
-            else if (state == PlayerLocomotion.PLOC_State.Stand && m_lastLocState == PlayerLocomotion.PLOC_State.Crouch)
+            else
             {
                 m_hapticPlayer.SubmitRegistered(VEST_STAND_KEY);
             }
-
-            m_lastLocState = state;
         }
 
         private float NormalizeOrientation(float orientation)
