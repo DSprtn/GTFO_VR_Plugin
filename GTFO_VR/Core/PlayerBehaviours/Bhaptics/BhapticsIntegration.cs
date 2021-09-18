@@ -273,6 +273,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_R_KEY, scaleOption);
 			}
         }
+
         private void StopWeaponReloadHaptics()
         {
             m_nextReloadHapticPatternTime = 0;
@@ -415,7 +416,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-            if (status == eBioscanStatus.Scanning && playersInScan.Contains(m_player))
+            if (status == eBioscanStatus.Scanning && playersInScan.Contains(m_player) && m_player.Alive)
             {
                 if (m_nextBodyscanPatternTime <= 0)
                 {
@@ -431,7 +432,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void FlashlightToggledHaptics()
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value || !m_player.Alive)
             {
                 return;
             }
@@ -519,6 +520,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
                 if (health <= 0 && m_lastHealth > 0)
                 {
+                    StopWeaponReloadHaptics();
+                    m_nextBodyscanPatternTime = 0;
+                    m_hapticPlayer.TurnOff(VEST_BODY_SCAN_KEY);
+
                     m_hapticPlayer.SubmitRegistered(VEST_DEATH_KEY);
                 }
             }
