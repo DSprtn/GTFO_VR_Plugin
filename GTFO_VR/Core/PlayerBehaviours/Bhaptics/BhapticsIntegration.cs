@@ -69,6 +69,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private RotationOption m_lastDamageRotationOption;
         private PlayerLocomotion.PLOC_State m_lastLocState;
         private bool m_lastIsCrouchedPhysically;
+        private int m_bioscanStopFramesCount;
 
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
         private static readonly float HEARTBEAT_REPEAT_DELAY = 1.0f;
@@ -156,7 +157,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             elevatorSequence.Setup(m_player, m_hapticPlayer);
         }
 
-        void Update()
+        void FixedUpdate()
         {
             if (VRConfig.configUseBhaptics.Value)
             {
@@ -207,6 +208,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 CrouchToggleHaptics(isCrouchedPhysically);
                 m_lastIsCrouchedPhysically = isCrouchedPhysically;
+            }
+
+            if (m_bioscanStopFramesCount > 0 && ++m_bioscanStopFramesCount >= 5)
+            {
+                m_nextBodyscanPatternTime = 0f;
+                m_hapticPlayer.TurnOff(VEST_BODY_SCAN_KEY);
+                m_bioscanStopFramesCount = 0;
             }
         }
 
@@ -422,11 +430,15 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 {
                     m_nextBodyscanPatternTime = Time.time;
                 }
+                
+                m_bioscanStopFramesCount = 0;
             }
-            else if (m_nextBodyscanPatternTime > 0)
+            else if (m_bioscanStopFramesCount == 0)
             {
-                m_nextBodyscanPatternTime = 0f;
-                m_hapticPlayer.TurnOff(VEST_BODY_SCAN_KEY);
+                // Indicate that bioscan stopped, and stop haptic pattern only after a few FixedUpdate() calls if we don't receive any other scan activations until then.
+                // When multiple players are in different single-person scans, we receive this event every fixed frame for *each* currently scanned player,
+                // and m_player is only in a single playersInScan list, so we don't want to stop the scan right when we receive the scan of someone else.
+                m_bioscanStopFramesCount = 1;
             }
         }
 
