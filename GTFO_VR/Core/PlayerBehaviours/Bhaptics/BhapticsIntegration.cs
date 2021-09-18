@@ -34,6 +34,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string VEST_CROUCH_KEY = "vest_crouch";
         private static readonly string VEST_STAND_KEY = "vest_stand";
         private static readonly string VEST_BODY_SCAN_KEY = "vest_body_scan";
+        private static readonly string VEST_EXPLOSION_KEY = "vest_explosion";
 
         private static readonly string ARMS_FIRE_R_KEY = "arms_fire_r";
         private static readonly string ARMS_FIRE_L_KEY = "arms_fire_l";
@@ -56,6 +57,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string ARMS_LANDING_KEY = "arms_landing";
         private static readonly string ARMS_GAIN_AMMO_KEY = "arms_gain_ammo";
         private static readonly string ARMS_GAIN_TOOL_AMMO_KEY = "arms_gain_tool_ammo";
+        private static readonly string ARMS_EXPLOSION_KEY = "arms_explosion";
 
         private PlayerAgent m_player;
         private HapticPlayer m_hapticPlayer;
@@ -112,6 +114,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_CROUCH_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_STAND_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_BODY_SCAN_KEY);
+            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_EXPLOSION_KEY);
 
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_R_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_L_KEY);
@@ -134,8 +137,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_LANDING_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_GAIN_AMMO_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_GAIN_TOOL_AMMO_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_EXPLOSION_KEY);
 
             PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
+            PlayerReceivedDamageEvents.OnMineExplosion += MineExplosionHaptics;
             TentacleAttackEvents.OnTentacleAttack += TentacleAttackHaptics;
             PlayerFireWeaponEvents.OnPlayerFireWeapon += PlayWeaponFireHaptics;
             PlayerReloadEvents.OnPlayerReloaded += PlayWeaponReloadedHaptics;
@@ -365,6 +370,30 @@ namespace GTFO_VR.Core.PlayerBehaviours
 			m_hapticPlayer.SubmitRegisteredVestRotation(VEST_DAMAGE_KEY, "", rotationOption, scaleOption);
 
 			m_lastDamageRotationOption = rotationOption;
+        }
+
+        private void MineExplosionHaptics(Vector3 explosionPosition)
+        {
+            if (!VRConfig.configUseBhaptics.Value)
+            {
+                return;
+            }
+
+            const float MAX_DISTANCE = 20f;
+            Vector3 playerPosition = m_player.transform.position;
+            playerPosition.y = 1f; // for directional haptic (a mine height of 1 will hit horizontally)
+            Vector3 direction = playerPosition - explosionPosition;
+            float distance = direction.magnitude;
+
+            if (distance < MAX_DISTANCE)
+            {
+                var rotationOption = GetRotationOptionFromDirection(direction);
+                float intensity = 1 - (distance / MAX_DISTANCE);
+                var scaleOption = new ScaleOption(intensity, 1f);
+
+                m_hapticPlayer.SubmitRegisteredVestRotation(VEST_EXPLOSION_KEY, "", rotationOption, scaleOption);
+                m_hapticPlayer.SubmitRegistered(ARMS_EXPLOSION_KEY);
+            }
         }
 
         private void TentacleAttackHaptics(float dmg, Agents.Agent sourceAgent, Vector3 position)
@@ -620,6 +649,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private void OnDestroy()
         {
             PlayerReceivedDamageEvents.OnPlayerTakeDamage -= PlayReceiveDamageHaptics;
+            PlayerReceivedDamageEvents.OnMineExplosion -= MineExplosionHaptics;
             TentacleAttackEvents.OnTentacleAttack -= TentacleAttackHaptics;
             PlayerFireWeaponEvents.OnPlayerFireWeapon -= PlayWeaponFireHaptics;
             PlayerReloadEvents.OnPlayerReloaded -= PlayWeaponReloadedHaptics;
