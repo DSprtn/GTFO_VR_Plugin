@@ -392,7 +392,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 var scaleOption = new ScaleOption(intensity, 1f);
 
                 m_hapticPlayer.SubmitRegisteredVestRotation(VEST_EXPLOSION_KEY, "", rotationOption, scaleOption);
-                m_hapticPlayer.SubmitRegistered(ARMS_EXPLOSION_KEY);
+                m_hapticPlayer.SubmitRegistered(ARMS_EXPLOSION_KEY, scaleOption);
             }
         }
 
