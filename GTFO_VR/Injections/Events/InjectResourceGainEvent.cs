@@ -19,14 +19,4 @@ namespace GTFO_VR.Injections.Events
             }
         }
     }
-
-    // TODO find method that is called when *receiving* disinfection (instead of when giving it)
-    /*[HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.GiveDisinfection))]
-    internal class InjectGiveDisinfectionEvent
-    {
-        private static void Postfix(float amountRel)
-        {
-            ResourceUpdatedEvents.DisinfectionGained(amountRel);
-        }
-    }*/
 }
