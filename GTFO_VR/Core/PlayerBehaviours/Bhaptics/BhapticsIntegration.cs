@@ -379,7 +379,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-            const float MAX_DISTANCE = 20f;
+            const float MAX_DISTANCE = 30f;
             Vector3 playerPosition = m_player.transform.position;
             playerPosition.y = 1f; // for directional haptic (a mine height of 1 will hit horizontally)
             Vector3 direction = playerPosition - explosionPosition;
