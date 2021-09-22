@@ -388,7 +388,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             if (distance < MAX_DISTANCE)
             {
                 var rotationOption = GetRotationOptionFromDirection(direction);
-                float intensity = 1 - (distance / MAX_DISTANCE);
+                float intensity = 1 - (Math.Max(0, distance - 5) / MAX_DISTANCE);
                 var scaleOption = new ScaleOption(intensity, 1f);
 
                 m_hapticPlayer.SubmitRegisteredVestRotation(VEST_EXPLOSION_KEY, "", rotationOption, scaleOption);
