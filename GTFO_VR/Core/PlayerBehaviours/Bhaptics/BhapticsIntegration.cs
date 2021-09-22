@@ -448,7 +448,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void PlayerBioscanSetStateHaptics(eBioscanStatus status, float progress, List<PlayerAgent> playersInScan)
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!VRConfig.configUseBhaptics.Value || playersInScan == null)
             {
                 return;
             }
@@ -462,7 +462,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 
                 m_bioscanStopFramesCount = 0;
             }
-            else if (m_bioscanStopFramesCount == 0)
+            else if (m_bioscanStopFramesCount == 0 && m_nextBodyscanPatternTime > 0)
             {
                 // Indicate that bioscan stopped, and stop haptic pattern only after a few FixedUpdate() calls if we don't receive any other scan activations until then.
                 // When multiple players are in different single-person scans, we receive this event every fixed frame for *each* currently scanned player,
