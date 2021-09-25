@@ -16,7 +16,7 @@ namespace GTFO_VR.Injections.Gameplay
     {
         private static void Postfix(PlayerAgent __instance, Vector3 dir, float distance, ref float __result)
         {
-            if(!VRConfig.configUseControllers.Value)
+            if(!VRConfig.configUseControllers.Value || !__instance.IsLocallyOwned)
             {
                 return;
             }

@@ -35,7 +35,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public void Setup(FPSCamera camera, PlayerAgent agent)
         {
-
             FpsCamera = camera;
             PlayerAgent = agent;
 

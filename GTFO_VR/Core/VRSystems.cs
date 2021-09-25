@@ -74,6 +74,10 @@ namespace GTFO_VR.Core
 
         public static void OnPlayerSpawned(FPSCamera fpsCamera, PlayerAgent playerAgent)
         {
+            if(!playerAgent.IsLocallyOwned)
+            {
+                Log.Error("Got playerAgent spawn but we aren't the owner!?");
+            }
             Log.Info("Player and fpscamera have been spawned, references have been set...");
             m_currentFPSCameraRef = fpsCamera;
             m_currentPlayerAgentRef = playerAgent;

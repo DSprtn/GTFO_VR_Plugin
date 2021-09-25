@@ -13,9 +13,12 @@ namespace GTFO_VR.Injections.Gameplay
     [HarmonyPatch(typeof(FirstPersonItemHolder), nameof(FirstPersonItemHolder.Update))]
     internal class InjectControllerAimAlign
     {
-        private static void Postfix()
+        private static void Postfix(FirstPersonItemHolder __instance)
         {
-            VRPlayer.UpdateHeldItemTransform();
+            if(__instance.m_owner.IsLocallyOwned)
+            {
+                VRPlayer.UpdateHeldItemTransform();
+            }
         }
     }
 
@@ -25,8 +28,12 @@ namespace GTFO_VR.Injections.Gameplay
     [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateInfectionLocal))]
     internal class InjectAimFlashlightFixBegin
     {
-        private static void Postfix()
+        private static void Postfix(PlayerAgent __instance)
         {
+            if(!__instance.IsLocallyOwned)
+            {
+                return;
+            }
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
@@ -35,14 +42,22 @@ namespace GTFO_VR.Injections.Gameplay
     [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateGlobalInput))]
     internal class InjectGlobalInteractionTweakFix
     {
-        private static void Prefix()
+        private static void Prefix(PlayerAgent __instance)
         {
+            if (!__instance.IsLocallyOwned)
+            {
+                return;
+            }
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
-        private static void Postfix()
+        private static void Postfix(PlayerAgent __instance)
         {
+            if (!__instance.IsLocallyOwned)
+            {
+                return;
+            }
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
         }
