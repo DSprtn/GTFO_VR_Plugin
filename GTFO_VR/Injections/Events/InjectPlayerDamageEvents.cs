@@ -16,4 +16,13 @@ namespace GTFO_VR.Injections.Events
             PlayerReceivedDamageEvents.DamageTaken(damage, direction);
         }
     }
+
+    [HarmonyPatch(typeof(MineDeployerInstance_Detonate_Explosive), nameof(MineDeployerInstance_Detonate_Explosive.DoExplode))]
+    internal class InjectMineExplosionEvents
+    {
+        private static void Postfix(MineDeployerInstance_Detonate_Explosive __instance)
+        {
+            PlayerReceivedDamageEvents.MineExplosion(__instance.transform.position);
+        }
+    }
 }

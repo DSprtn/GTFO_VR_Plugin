@@ -26,6 +26,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private LaserPointer m_pointer;
         private CollisionFade m_fade;
         private Haptics m_haptics;
+        private BhapticsIntegration m_bhapticsIntegration;
         private MovementVignette m_movementVignette;
         private WeaponRadialMenu m_weaponRadial;
         private WeaponAmmoHologram m_weaponAmmoHolo;
@@ -71,6 +72,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             m_haptics = gameObject.AddComponent<Haptics>();
             m_haptics.Setup();
+
+            m_bhapticsIntegration = gameObject.AddComponent<BhapticsIntegration>();
+            m_bhapticsIntegration.Setup(agent);
 
             PlayerLocomotionEvents.OnPlayerEnterLadder += PlayerEnteredLadder;
             SteamVR_Events.NewPosesApplied.Listen(new Action(OnNewPoses));

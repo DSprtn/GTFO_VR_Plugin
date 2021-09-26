@@ -25,6 +25,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
             HammerEvents.OnHammerSmack += HammerSmackHaptics;
         }
 
+        public static float GetFireHapticStrength(Weapon weapon, float intensityFactor = 1f)
+        {
+            // Remap -1,1 to 0,1
+            float intensity = Mathf.Pow(Mathf.Max(1 / Mathf.Abs(weapon.RecoilData.horizontalScale.Max), 1 / Mathf.Abs(weapon.RecoilData.verticalScale.Max)), 2);
+            return intensity.RemapClamped(0, 8, 0.10f, intensityFactor);
+        }
+
         private void HammerSmackHaptics(float dmg)
         {
             if (!VRConfig.configUseWeaponHaptics.Value)
@@ -129,13 +136,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 return;
             }
-            // Remap -1,1 to 0,1
-            float intensity = Mathf.Pow(Mathf.Max(1 / Mathf.Abs(weapon.RecoilData.horizontalScale.Max), 1 / Mathf.Abs(weapon.RecoilData.verticalScale.Max)), 2);
+            
+            float intensity = GetFireHapticStrength(weapon, VRConfig.configShootingHapticsStrength.Value);
 
             float duration = 0.03f;
             float frequency = 40f;
-
-            intensity = intensity.RemapClamped(0, 8, 0.10f, VRConfig.configShootingHapticsStrength.Value);
 
             if (Controllers.aimingTwoHanded)
             {
