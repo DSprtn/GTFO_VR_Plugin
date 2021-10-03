@@ -30,7 +30,7 @@ namespace GTFO_VR.Core.VR_Input
 
         public static bool aimingTwoHanded;
 
-        private float m_doubleHandStartDistance = .08f;
+        private float m_doubleHandStartDistance = .1f;
 
         private float m_doubleHandLeaveDistance = .55f;
 

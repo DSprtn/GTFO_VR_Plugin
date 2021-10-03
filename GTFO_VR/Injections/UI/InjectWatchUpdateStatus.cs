@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.UI;
+using GTFO_VR.Events;
 using HarmonyLib;
 
 namespace GTFO_VR.Injections.UI
@@ -13,6 +14,8 @@ namespace GTFO_VR.Injections.UI
         private static void Postfix(float health)
         {
             Watch.Current?.UpdateHealth(health);
+
+            ResourceUpdatedEvents.HealthUpdated(health);
         }
     }
 
@@ -31,6 +34,8 @@ namespace GTFO_VR.Injections.UI
         private static void Postfix(float infection, float infectionHealthRel)
         {
             Watch.Current?.UpdateInfection(infection);
+
+            ResourceUpdatedEvents.InfectionUpdated(infection);
         }
     }
 }

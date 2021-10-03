@@ -14,8 +14,6 @@ namespace GTFO_VR.Core.UI
 {
     public class WeaponRadialMenu : MonoBehaviour
     {
-
-
         public WeaponRadialMenu(IntPtr value)
 : base(value) { }
 

@@ -14,6 +14,9 @@ Try to get used to the game in Non-VR mode first before using!
 
 ## Installation: 
 
+	Installing GTFO VR/any GTFO mods for the first time? Use the First-Install archive, extract it into 
+	"SteamLibrary\steamapps\common\GTFO\", then skip to the 4th step.
+
 	Consult the installation video here if you're having trouble: 
 	https://www.youtube.com/watch?v=EH7CsLs3GlQ (Thanks Alabaster!)
 
@@ -97,6 +100,7 @@ Try to get used to the game in Non-VR mode first before using!
 	-	Laser pointer - Toggle, color
 	-	Hammer - Visual charge indicator, 'Old hammer' (auto-swing with animations)
 	-	Watch - Scale, color, number display for ammo
+	- 	Holographic ammo display - Toggle
 	-	Two handed aiming - Toggle, always on mode
 	-	No motion controller mode (You can play with a gamepad!)
 	-	etc. - Have a look in the menu!

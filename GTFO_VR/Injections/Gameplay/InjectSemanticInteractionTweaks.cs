@@ -82,14 +82,22 @@ namespace GTFO_VR.Injections.Gameplay
     [HarmonyPatch(typeof(PlayerLocomotion), nameof(PlayerLocomotion.FixedUpdate))]
     internal class InjectFlashlightSyncAimTweak
     {
-        private static void Prefix(PlayerInteraction __instance)
+        private static void Prefix(PlayerLocomotion __instance)
         {
+            if(!__instance.LocallyOwned)
+            {
+                return;
+            }
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
-        private static void Postfix(PlayerInteraction __instance)
+        private static void Postfix(PlayerLocomotion __instance)
         {
+            if (!__instance.LocallyOwned)
+            {
+                return;
+            }
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
         }
@@ -98,13 +106,13 @@ namespace GTFO_VR.Injections.Gameplay
     [HarmonyPatch(typeof(ResourcePackFirstPerson), nameof(ResourcePackFirstPerson.UpdateInteraction))]
     internal class InjectResourcePackInteractionTweak
     {
-        private static void Prefix(PlayerInteraction __instance)
+        private static void Prefix()
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
-        private static void Postfix(PlayerInteraction __instance)
+        private static void Postfix()
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
@@ -114,13 +122,13 @@ namespace GTFO_VR.Injections.Gameplay
     [HarmonyPatch(typeof(LockMelterFirstPerson), nameof(LockMelterFirstPerson.UpdateApplyActionInput))]
     internal class InjectLockMelterInteractionTweak
     {
-        private static void Prefix(PlayerInteraction __instance)
+        private static void Prefix()
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
-        private static void Postfix(PlayerInteraction __instance)
+        private static void Postfix()
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
@@ -130,13 +138,13 @@ namespace GTFO_VR.Injections.Gameplay
     [HarmonyPatch(typeof(CarryItemEquippableFirstPerson), nameof(CarryItemEquippableFirstPerson.UpdateInsertOrDropItem))]
     internal class InjectCarryItemInteractionTweak
     {
-        private static void Prefix(PlayerInteraction __instance)
+        private static void Prefix()
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = true;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
-        private static void Postfix(PlayerInteraction __instance)
+        private static void Postfix()
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
@@ -150,12 +158,13 @@ namespace GTFO_VR.Injections.Gameplay
         public static bool useVRInteractionForward = false;
         public static bool useVRControllerForward = false;
 
-        private static void Postfix(PlayerInteraction __instance, ref Vector3 __result)
+        private static void Postfix(FPSCamera __instance, ref Vector3 __result)
         {
             if(!VRConfig.configUseControllers.Value)
             {
                 return;
             }
+
             if (useVRInteractionForward)
             {
                 __result = HMD.GetVRInteractionLookDir();
@@ -175,7 +184,7 @@ namespace GTFO_VR.Injections.Gameplay
         public static bool useInteractionControllersPosition = false;
         public static bool useControllerPosition = false;
 
-        private static void Postfix(PlayerInteraction __instance, ref Vector3 __result)
+        private static void Postfix(FPSCamera __instance, ref Vector3 __result)
         {
             if (!VRConfig.configUseControllers.Value)
             {
