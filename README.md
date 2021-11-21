@@ -20,7 +20,8 @@ Try to get used to the game in Non-VR mode first before using!
 	2. Locate your GTFO folder using the steam library 
 		Right click GTFO in your Steam library, go into Properties->Local Files->Browse
 		
-	3. Copy all the files in the first-install zip archive to the root directory of GTFO, not inside the GTFO_data folder.
+	3. Copy all the files in the first-install zip archive to the root directory of GTFO, 
+	not inside the GTFO_data folder.
 	
 	5. Ensure the Steam option "Use Desktop Game Theatre while SteamVR is active" is unchecked.
 		Right click GTFO in your Steam library, go into Properties->General
@@ -28,7 +29,8 @@ Try to get used to the game in Non-VR mode first before using!
 	4. While SteamVR is running, launch the game from the library or from within SteamVR and you're in!
 		Ignore the "GTFO does not support VR" warning, just click OK
 	
-	5. Tweak or setup your controls under SteamVR -> Settings -> Controllers -> Manage Controller Bindings -> GTFO VR
+	5. Tweak or setup your controls under SteamVR -> Settings -> Controllers -> 
+	Manage Controller Bindings -> GTFO VR
 	
 	6. Tweak all VR config options inside GTFO game under Settings -> VR Settings
 	
@@ -40,7 +42,8 @@ Try to get used to the game in Non-VR mode first before using!
 	If you are upgrading to R5 or have an old Bepinex/GTFO_VR installation, delete it! 
 		Removing the bepinex folder should suffice. You'll have to redo your config!
 	
-	1. Follow the Install Instructions above, replacing any conflicting files with what is in the first-install zip archive.
+	1. Follow the Install Instructions above, replacing any conflicting files 
+	with what is in the first-install zip archive.
 </details>
 
 
@@ -48,7 +51,8 @@ Try to get used to the game in Non-VR mode first before using!
 <details>
   <summary>Expand</summary>
 	
-	Consult the installation video here if you're having trouble: https://www.youtube.com/watch?v=EH7CsLs3GlQ (Thanks Alabaster!)
+	Consult the installation video here if you're having trouble: 
+	https://www.youtube.com/watch?v=EH7CsLs3GlQ (Thanks Alabaster!)
 		Video may be out of date, follow at your own risk!
 	
  	1. Download and extract BepInEx 6.0.0b363 into your GTFO game folder (SteamLibrary\steamapps\common\GTFO\)
