@@ -119,7 +119,7 @@ namespace GTFO_VR.Injections
             }
             else
             {
-                HammerEvents.HammerSmacked(__instance.m_damageToDeal / __instance.m_damageHeavy);
+                HammerEvents.HammerSmacked(__instance.m_damageToDeal / __instance.MeleeArchetypeData.ChargedAttackDamage);
             }
         }
     }

@@ -27,7 +27,6 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<int> configWeaponRotationOffset;
 
         internal static ConfigEntry<bool> configPostVignette;
-        internal static ConfigEntry<bool> configPostBloom;
         internal static ConfigEntry<bool> configPostEyeAdaptation;
         internal static ConfigEntry<bool> configOculusCrashWorkaround;
         internal static ConfigEntry<float> configRenderResolutionMultiplier;
@@ -50,13 +49,15 @@ namespace GTFO_VR.Core
 
         private static List<BepinGTFOSettingBase> VRSettings = new List<BepinGTFOSettingBase>();
 
-        private static int baseVRConfigID = 11000;
+        private static uint baseVRConfigID = 110000;
 
         private static Dictionary<eCellSettingID, ConfigEntryBase> configBindings = new Dictionary<eCellSettingID, ConfigEntryBase>();
 
         internal static ConfigEntry<bool> configDebugShowTwoHHitboxes;
         internal static ConfigEntry<bool> configDebugShowHammerHitbox;
         internal static ConfigEntry<float> configDebugHammersizeMult;
+
+        public static Dictionary<uint, string> VRTextMappings = new Dictionary<uint, string>();
 
 
         internal static void SetupConfig(ConfigFile file)
@@ -129,7 +130,6 @@ namespace GTFO_VR.Core
             configRenderResolutionMultiplier = BindFloat(file, "Rendering", "Render resolution multiplier", 1f, 0.2f, 2.5f, "Global rendering resolution multiplier", "Rendering resolution multiplier");
 
             configPostVignette = BindBool(file, "Rendering - PostProcessing", "Use vignette effect? (Darkened edges of screen)", false, "If false, will disable the vignette effect in-game.", "Vignette");
-            configPostBloom = BindBool(file, "Rendering - PostProcessing", "Use bloom effect? (Glow on bright lights)", false, "If false, will disable the bloom effect in-game. Gives a VERY nice performance boost if it's disabled! (1.5-2.0 ms!)", "Bloom");
             configPostEyeAdaptation = BindBool(file, "Rendering - PostProcessing", "Use eye adaptation? (Simulate the way a human eye adapts to light changes)", true,
                 "If false, will disable eye adaptation. Gives a very slight performance boost if disabled (0.1-0.2ms.) Will make dark areas much darker though!", "Eye adaptation");
 
@@ -242,8 +242,8 @@ namespace GTFO_VR.Core
 
             internal virtual iSettingsFieldData Register(Dictionary<eCellSettingID, ConfigEntryBase> configs)
             {
-                CellSettingGlobals.m_titles.Add(settingID, title);
-
+                VRTextMappings.Add((uint)settingID, title);
+                CellSettingGlobals.m_titles.Add(settingID, (uint)settingID);
                 SettingsFieldData settingData = new SettingsFieldData
                 {
                     Type = inputType,

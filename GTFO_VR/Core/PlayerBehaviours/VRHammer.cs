@@ -104,14 +104,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-            if (GTFO_VR_Plugin.DEBUG_ENABLED)
-            {
-                m_weapon._DEBUG_TARGETING_ENABLED_k__BackingField = VRConfig.configDebugShowHammerHitbox.Value;
-                m_weapon._DEBUG_TARGETING_ENABLED_k__BackingField = VRConfig.configDebugShowHammerHitbox.Value;
-
-                hammerSizeMult = VRConfig.configDebugHammersizeMult.Value;
-            }
-
             if (m_weapon.Owner && m_weapon.Owner.IsLocallyOwned)
             {
                 if (FocusStateEvents.currentState == eFocusState.FPS)

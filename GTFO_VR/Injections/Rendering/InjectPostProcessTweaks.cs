@@ -9,17 +9,16 @@ using UnityEngine.PostProcessing;
 namespace GTFO_VR.Injections.Rendering
 {
 
-    [HarmonyPatch(typeof(PostProcessingBehaviour), nameof(PostProcessingBehaviour.OnRenderImage))]
-    internal class InjectPostProcessTweaks
+    [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.RefreshPostEffectsEnabled))]
+    internal class InjectPostProcessTweaksInit
     {
-        private static void Prefix(PostProcessingBehaviour __instance)
+        private static void Postfix(FPSCamera __instance)
         {
-            if (__instance.profile != null)
-            {
-                __instance.m_Bloom.model.enabled = VRConfig.configPostBloom.Value;
-                __instance.m_EyeAdaptation.model.enabled = VRConfig.configPostEyeAdaptation.Value;
-                __instance.m_Vignette.model.enabled = VRConfig.configPostVignette.Value || VRConfig.configUseVignetteWhenMoving.Value;
-            }
+            //__instance.m_postProcessing.m_autoExposure.active = VRConfig.configPostEyeAdaptation.Value;
+            __instance.m_postProcessing.m_vignette.active = VRConfig.configPostVignette.Value || VRConfig.configUseVignetteWhenMoving.Value;
+            __instance.m_postProcessing.m_motionBlur.active = false;
         }
     }
+
+
 }

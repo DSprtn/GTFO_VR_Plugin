@@ -15,7 +15,7 @@ namespace GTFO_VR.Injections.Gameplay
     {
         private static void Postfix(FirstPersonItemHolder __instance)
         {
-            if(__instance.m_owner.IsLocallyOwned)
+            if(__instance.m_owner.IsLocallyOwned && __instance.m_owner.FPSCamera != null)
             {
                 VRPlayer.UpdateHeldItemTransform();
             }
@@ -25,10 +25,10 @@ namespace GTFO_VR.Injections.Gameplay
     /// <summary>
     /// This is probably obsolete, TODO - test
     /// </summary>
-    [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateInfectionLocal))]
+    [HarmonyPatch(typeof(LocalPlayerAgent), nameof(LocalPlayerAgent.UpdateInfectionLocal))]
     internal class InjectAimFlashlightFixBegin
     {
-        private static void Postfix(PlayerAgent __instance)
+        private static void Postfix(LocalPlayerAgent __instance)
         {
             if(!__instance.IsLocallyOwned)
             {
@@ -39,10 +39,10 @@ namespace GTFO_VR.Injections.Gameplay
         }
     }
 
-    [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateGlobalInput))]
+    [HarmonyPatch(typeof(LocalPlayerAgent), nameof(LocalPlayerAgent.UpdateGlobalInput))]
     internal class InjectGlobalInteractionTweakFix
     {
-        private static void Prefix(PlayerAgent __instance)
+        private static void Prefix(LocalPlayerAgent __instance)
         {
             if (!__instance.IsLocallyOwned)
             {
@@ -52,7 +52,7 @@ namespace GTFO_VR.Injections.Gameplay
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
-        private static void Postfix(PlayerAgent __instance)
+        private static void Postfix(LocalPlayerAgent __instance)
         {
             if (!__instance.IsLocallyOwned)
             {

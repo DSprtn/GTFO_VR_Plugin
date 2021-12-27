@@ -7,10 +7,10 @@ namespace GTFO_VR.Events
 {
     public static class PlayerInteractionEvents
     {
-        public static event Action<PlayerAgent> OnPlayerInteracted;
+        public static event Action<LocalPlayerAgent> OnPlayerInteracted;
         public static event Action<eBioscanStatus, float, List<PlayerAgent>> OnBioscanSetState;
 
-        public static void PlayerInteracted(PlayerAgent source = null)
+        public static void PlayerInteracted(LocalPlayerAgent source = null)
         {
             OnPlayerInteracted?.Invoke(source);
         }

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.PostProcessing;
 using GTFO_VR.Util;
 using Valve.VR.InteractionSystem;
+using UnityEngine.Rendering.PostProcessing;
 
 namespace GTFO_VR.Core.PlayerBehaviours
 {
@@ -13,15 +14,26 @@ namespace GTFO_VR.Core.PlayerBehaviours
         public MovementVignette(IntPtr value)
 : base(value) { }
 
-        public static PostProcessingBehaviour postProcessing;
+        private FPSCamera m_fpsCamera;
 
         private PlayerLocomotion m_playerLocomotion;
+
+        private Vignette vignettePost;
 
         private float targetIntensity = 0.25f;
 
         private void Update()
         {
-            VignetteModel vignettePost = postProcessing.m_Vignette.model;
+            if(vignettePost == null)
+            {
+                if(m_fpsCamera.m_postProcessing != null)
+                {
+                    vignettePost = m_fpsCamera.m_postProcessing.m_vignette;
+                }
+                return;
+            }
+            vignettePost.active = VRConfig.configUseVignetteWhenMoving.Value;
+
             if (vignettePost == null || !VRConfig.configUseVignetteWhenMoving.Value)
             {
                 return;
@@ -29,19 +41,14 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             targetIntensity = GetVignetteIntensityForVelocityPerGamestate();
 
-            VignetteModel.Settings newSettings = vignettePost.settings;
-
-
             // Lerp to vignette intensity. Ramp up faster and ramp down slower.
-            if(newSettings.intensity <= targetIntensity)
+            if(vignettePost.intensity <= targetIntensity)
             {
-                newSettings.intensity = Mathf.Lerp(vignettePost.settings.intensity, targetIntensity, 20f * Time.deltaTime);
+                vignettePost.intensity.Override(Mathf.Lerp(vignettePost.intensity.value, targetIntensity, 20f * Time.deltaTime));
             } else
             {
-                newSettings.intensity = Mathf.Lerp(vignettePost.settings.intensity, targetIntensity, 8f * Time.deltaTime);
+                vignettePost.intensity.Override(Mathf.Lerp(vignettePost.intensity.value, targetIntensity, 8f * Time.deltaTime));
             }
-            
-            vignettePost.settings = newSettings;
         }
 
         private float GetVignetteIntensityForVelocityPerGamestate()
@@ -52,7 +59,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return VRConfig.configMovementVignetteIntensity.Value;
             }
 
-
             if (FocusStateEvents.currentState == eFocusState.FPS)
             {
                 intensity = Mathf.Clamp(m_playerLocomotion.HorizontalVelocity.magnitude, 0.25f, 3f);
@@ -62,10 +68,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
             return intensity;
         }
 
-        public void Setup(PlayerLocomotion agentLocomotion, PostProcessingBehaviour postprocess)
+        public void Setup(PlayerLocomotion agentLocomotion, FPSCamera cam)
         {
             m_playerLocomotion = agentLocomotion;
-            postProcessing = postprocess;
+            m_fpsCamera = cam;
         }
     }
 }

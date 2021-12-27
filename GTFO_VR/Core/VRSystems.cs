@@ -23,7 +23,7 @@ namespace GTFO_VR.Core
         private VRPlayer m_player;
 
         private static FPSCamera m_currentFPSCameraRef;
-        private static PlayerAgent m_currentPlayerAgentRef;
+        private static LocalPlayerAgent m_currentPlayerAgentRef;
 
         private void Awake()
         {
@@ -72,7 +72,7 @@ namespace GTFO_VR.Core
             Invoke(nameof(VRSystems.SetupOverlay), .5f);
         }
 
-        public static void OnPlayerSpawned(FPSCamera fpsCamera, PlayerAgent playerAgent)
+        public static void OnPlayerSpawned(FPSCamera fpsCamera, LocalPlayerAgent playerAgent)
         {
             if(!playerAgent.IsLocallyOwned)
             {

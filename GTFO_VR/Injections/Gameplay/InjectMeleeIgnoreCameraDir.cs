@@ -12,7 +12,10 @@ namespace GTFO_VR.Injections.Gameplay
     {
         private static void Postfix(MeleeWeaponFirstPerson __instance)
         {
-            __instance.m_cameraDamageRayLength = 0f;
+            if(__instance.MeleeArchetypeData != null) 
+            {
+                __instance.MeleeArchetypeData.CameraDamageRayLength = 0f;
+            }
         }
     }
 }

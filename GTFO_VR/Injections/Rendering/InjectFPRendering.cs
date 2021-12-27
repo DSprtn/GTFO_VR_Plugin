@@ -49,22 +49,14 @@ namespace GTFO_VR.Injections.Rendering
     /// Disables FPS arms rendering, it's really wonky in VR so it's better to not see it at all
     /// </summary>
 
-    [HarmonyPatch(typeof(FirstPersonItemHolder), nameof(FirstPersonItemHolder.SetupFPSRig))]
+    [HarmonyPatch(typeof(PlayerFPSBody), nameof(PlayerFPSBody.Setup))]
     internal class InjectDisableFPSArms
     {
-        private static void Postfix(FirstPersonItemHolder __instance)
+        private static void Postfix(PlayerFPSBody __instance)
         {
-            foreach (Renderer renderer in __instance.FPSArms.GetComponentsInChildren<Renderer>())
+            foreach (GameObject g in __instance.m_gfxArms)
             {
-                renderer.enabled = false;
-                /*
-                 * ToDO - Fix hand IK and rendering and enable this
-                 *  if (!renderer.name.Contains("gloves"))
-                {
-                    renderer.enabled = false;
-                }
-                 * 
-                 */
+                g.SetActive(false);
             }
         }
     }

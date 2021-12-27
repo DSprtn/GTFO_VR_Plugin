@@ -10,7 +10,7 @@ namespace GTFO_VR.Injections.Rendering
     [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateGoodNodeAndArea))]
     internal class InjectScreenLiquidVRTweak
     {
-        private static void Postfix(PlayerAgent __instance)
+        private static void Postfix(LocalPlayerAgent __instance)
         {
             if(__instance.IsLocallyOwned)
             {

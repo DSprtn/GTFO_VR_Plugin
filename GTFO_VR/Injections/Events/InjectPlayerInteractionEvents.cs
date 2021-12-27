@@ -14,7 +14,7 @@ namespace GTFO_VR.Injections.Events
     [HarmonyPatch(typeof(LG_DoorButton), nameof(LG_DoorButton.Interact))]
     internal class InjectDoorButtonInteract
     {
-        private static void Postfix(PlayerAgent source)
+        private static void Postfix(LocalPlayerAgent source)
         {
             PlayerInteractionEvents.PlayerInteracted(source);
         }

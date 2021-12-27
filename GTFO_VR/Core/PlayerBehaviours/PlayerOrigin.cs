@@ -16,7 +16,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public static event Action OnOriginShift;
 
-        private PlayerAgent m_agent;
+        private LocalPlayerAgent m_agent;
 
         private Vector3 m_offsetFromPlayerToHMD = Vector3.zero;
 
@@ -27,7 +27,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             Log.Info("Origin created");
         }
 
-        public void Setup(PlayerAgent agent)
+        public void Setup(LocalPlayerAgent agent)
         {
             m_agent = agent;
             FocusStateEvents.OnFocusStateChange += FocusStateChanged;

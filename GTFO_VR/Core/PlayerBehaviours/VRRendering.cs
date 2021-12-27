@@ -17,26 +17,53 @@ namespace GTFO_VR.Core.PlayerBehaviours
         }
 
         private FPSCamera m_fpsCamera;
+        private FPS_Render m_fpsRender;
         private UI_Apply m_uiBlitter;
         private static bool m_skipLeftEye;
 
+        public float FOV;
+
         private void Awake()
         {
+            FOV = SteamVR.instance.fieldOfView;
             m_fpsCamera = GetComponent<FPSCamera>();
             m_uiBlitter = GetComponent<UI_Apply>();
+            m_fpsRender = GetComponent<FPS_Render>();
+            SteamVR_Render.preRenderBothEyesCallback += PreRenderUpdate;
             SteamVR_Render.eyePreRenderCallback += PrepareFrameForEye;
+        }
+
+        private void PreRenderUpdate()
+        {
+            if (m_fpsCamera.m_owner == null || m_fpsCamera.m_holder == (UnityEngine.Object)null)
+                return;
+            if (!m_fpsCamera.m_cameraTransition.IsActive())
+            {
+                if (!m_fpsCamera.m_holder.m_connectedToPlayer && m_fpsCamera.PlayerMoveEnabled)
+                    m_fpsCamera.Position = m_fpsCamera.m_owner.PlayerCharacterController.SmoothPosition + m_fpsCamera.m_posOffset;
+                if (m_fpsCamera.MouseLookEnabled)
+                {
+                    m_fpsCamera.RotationUpdate();
+                    if (!m_fpsCamera.m_holder.m_connectedToPlayer)
+                        m_fpsCamera.m_owner.transform.rotation = Quaternion.Euler(0.0f, m_fpsCamera.Rotation.eulerAngles.y, 0.0f);
+                }
+            }
+            m_fpsCamera.UpdateLookatTeammates();
+
+            DoUglyCameraHack();
+
+            WeaponShellManager.EjectFPSShells();
+            m_fpsCamera.m_owner.PositionHasBeenUpdated();
+
+            GuiManager.Current.AfterCameraUpdate();
+            m_fpsCamera.m_owner.Interaction.AfterCameraUpdate();
+
+            m_fpsRender.ForceMatrixUpdate();
         }
 
         private void PrepareFrameForEye(EVREye eye)
         {
-            if (Time.frameCount % 2 == 0)
-            {
-                m_skipLeftEye = true;
-            }
-            else
-            {
-                m_skipLeftEye = false;
-            }
+            m_skipLeftEye = Time.frameCount % 2 == 0;
 
             DoUglyCameraHack();
 
@@ -63,35 +90,49 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void FixHeadAttachedFlashlightPos()
         {
-            if(FocusStateEvents.currentState == eFocusState.FPS && !ItemEquippableEvents.CurrentItemHasFlashlight())
+            if(FocusStateEvents.currentState == eFocusState.FPS)
             {
-                Transform flashlight = m_fpsCamera.m_owner.Inventory.m_flashlight.transform;
-                flashlight.position = HMD.Hmd.transform.TransformPoint(m_fpsCamera.m_owner.Inventory.m_flashlightCameraOffset + new Vector3(0,0,-.1f));
+                var inv = m_fpsCamera.m_owner.Inventory;
+                if(inv.m_currentGearPartFlashlight == null)
+                {
+                    return;
+                }
+
+                if (!ItemEquippableEvents.CurrentItemHasFlashlight())
+                {
+                    inv.m_flashlightCLight.m_position = HMD.Hmd.transform.TransformPoint(m_fpsCamera.m_owner.Inventory.m_flashlightCameraOffset);
+                    //inv.m_flashlightCLight.m_forward = HMD.Hmd.transform.forward;
+                } else
+                {
+                    var lightAlign = inv.m_currentGearPartFlashlight.m_lightAlign;
+                    inv.m_flashlightCLight.m_forward = lightAlign.forward;
+                    inv.m_flashlightCLight.m_position = lightAlign.position;
+                }
+
+                inv.m_flashlightCLight.UpdateTransformData();
             }
         }
 
         private void PrepareFrame()
         {
-
             UI_Core.RenderUI();
             
-
             if (ScreenLiquidManager.LiquidSystem != null)
                 ScreenLiquidManager.LiquidSystem.CollectCommands(m_fpsCamera.m_preRenderCmds);
             if (AirParticleSystem.AirParticleSystem.Current != null)
                 AirParticleSystem.AirParticleSystem.Current.CollectCommands(m_fpsCamera.m_preRenderCmds, m_fpsCamera.m_beforeForwardAlpahCmds);
 
-            if (m_fpsCamera.m_collectCommandsClustered)
+            if (m_fpsCamera.CollectCommandsClustered)
             {
                 ClusteredRendering.Current.CollectCommands(m_fpsCamera.m_preRenderCmds);
             }
 
-            if (m_fpsCamera.m_collectCommandsGUIX)
+            if (m_fpsCamera.CollectCommandsGUIX && GUIX_Manager.isSetup)
             {
                 GUIX_Manager.Current.CollectCommands(m_fpsCamera.m_preRenderCmds);
             }
 
-            if (MapDetails.s_isSetup && m_fpsCamera.m_collectCommandsMap)
+            if (MapDetails.s_isSetup && MapDetails.s_isSetup)
             {
                 MapDetails.Current.CollectCommands(m_fpsCamera.m_preRenderCmds);
             }
@@ -100,6 +141,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
             Vector4 zbufferParams = ClusteredRendering.GetZBufferParams(ClusteredRendering.Current.m_camera);
             m_fpsCamera.m_preRenderCmds.SetGlobalVector(ClusteredRendering.ID_ProjectionParams, projectionParams);
             m_fpsCamera.m_preRenderCmds.SetGlobalVector(ClusteredRendering.ID_ZBufferParams, zbufferParams);
+
+            Shader.SetGlobalMatrix("_MATRIX_V", m_fpsCamera.m_camera.worldToCameraMatrix);
+            Shader.SetGlobalMatrix("_MATRIX_VP", GL.GetGPUProjectionMatrix(m_fpsCamera.m_camera.projectionMatrix, false) * m_fpsCamera.m_camera.worldToCameraMatrix);
+            Shader.SetGlobalMatrix("_MATRIX_IV", this.transform.worldToLocalMatrix);
+            Shader.SetGlobalInt("_FrameIndex", m_fpsCamera.m_frameIndex++);
         }
 
         // Force FOV/Aspects and position match up for all relevant game cameras
@@ -115,11 +161,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             if (m_fpsCamera != null && m_fpsCamera.m_camera != null)
             {
-                m_fpsCamera.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
+                m_fpsCamera.m_camera.fieldOfView = FOV;
                 m_fpsCamera.m_camera.aspect = SteamVR.instance.aspect;
                 if (m_fpsCamera.m_itemCamera != null)
                 {
-                    m_fpsCamera.m_itemCamera.fieldOfView = SteamVR.instance.fieldOfView;
+                    m_fpsCamera.m_itemCamera.fieldOfView = FOV;
                     m_fpsCamera.m_itemCamera.aspect = SteamVR.instance.aspect;
                 }
             }
@@ -127,13 +173,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
             if (ClusteredRendering.Current != null && ClusteredRendering.Current.m_lightBufferCamera != null)
             {
                 // ToDO - Do we need to set the light buffer camera's properties?
-                ClusteredRendering.Current.m_lightBufferCamera.fieldOfView = SteamVR.instance.fieldOfView;
+                ClusteredRendering.Current.m_lightBufferCamera.fieldOfView = FOV;
                 ClusteredRendering.Current.m_lightBufferCamera.aspect = SteamVR.instance.aspect;
                 ClusteredRendering.Current.m_lightBufferCamera.transform.position = m_fpsCamera.m_camera.transform.position;
                 ClusteredRendering.Current.m_lightBufferCamera.transform.rotation = m_fpsCamera.m_camera.transform.rotation;
 
 
-                ClusteredRendering.Current.m_camera.fieldOfView = SteamVR.instance.fieldOfView;
+                ClusteredRendering.Current.m_camera.fieldOfView = FOV;
                 ClusteredRendering.Current.m_camera.aspect = SteamVR.instance.aspect;
                 ClusteredRendering.Current.m_camera.transform.position = m_fpsCamera.m_camera.transform.position;
                 ClusteredRendering.Current.m_camera.transform.rotation = m_fpsCamera.m_camera.transform.rotation;
@@ -156,6 +202,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
+            SteamVR_Render.preRenderBothEyesCallback -= PreRenderUpdate;
             SteamVR_Render.eyePreRenderCallback -= PrepareFrameForEye;
         }
     }

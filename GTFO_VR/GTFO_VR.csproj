@@ -92,6 +92,7 @@
     <Compile Include="Injections\Events\InjectTentacleAttackEvents.cs" />
     <Compile Include="Injections\GameHooks\InjectPlayerGUIRef.cs" />
     <Compile Include="Injections\GameHooks\InjectVRStart.cs" />
+    <Compile Include="Injections\Rendering\InjectDisableFPSCameraRenderUpdate.cs" />
     <Compile Include="Injections\Rendering\InjectPostProcessTweaks.cs" />
     <Compile Include="Injections\Input\InjectAimCursorWithVRControllerInOverlay.cs" />
     <Compile Include="Injections\Gameplay\InjectBioscannerFixes.cs" />
@@ -101,7 +102,7 @@
     <Compile Include="Injections\Rendering\InjectForceVRResolution.cs" />
     <Compile Include="Injections\Rendering\InjectScreenLiquidVRTweak.cs" />
     <Compile Include="Injections\UI\InjectChatMsgEvents.cs" />
-    <Compile Include="Injections\Rendering\InjectDisableFPSCameraRendering.cs" />
+    <Compile Include="Injections\Rendering\InjectDisableFPSRenderPreCull.cs" />
     <Compile Include="Injections\Gameplay\InjectDisableHipFireAimSpreadInVR.cs" />
     <Compile Include="Injections\Gameplay\InjectDisableRecoilCameraOffset.cs" />
     <Compile Include="Injections\Gameplay\InjectFireFromMuzzle.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="Injections\GameHooks\InjectInteractionPromptRef.cs" />
     <Compile Include="Injections\Gameplay\InjectSemanticInteractionTweaks.cs" />
     <Compile Include="Injections\Gameplay\InjectMeleeIgnoreCameraDir.cs" />
+    <Compile Include="Injections\UI\InjectLocalizedVRText.cs" />
     <Compile Include="Injections\UI\InjectMenuConfigUI.cs" />
     <Compile Include="Injections\UI\InjectNavMarkerWorldSpace.cs" />
     <Compile Include="Injections\Gameplay\InjectNoVRCamHIjack.cs" />
@@ -335,6 +337,9 @@
     </Reference>
     <Reference Include="UnhollowerRuntimeLib">
       <HintPath>$(GTFO_PATH)\BepInEx\core\UnhollowerRuntimeLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Postprocessing.Runtime">
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Unity.Postprocessing.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Unity.TextMeshPro.dll</HintPath>

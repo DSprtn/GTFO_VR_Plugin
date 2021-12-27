@@ -59,7 +59,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string ARMS_GAIN_TOOL_AMMO_KEY = "arms_gain_tool_ammo";
         private static readonly string ARMS_EXPLOSION_KEY = "arms_explosion";
 
-        private PlayerAgent m_player;
+        private LocalPlayerAgent m_player;
         private HapticPlayer m_hapticPlayer;
 
         private float m_nextReloadHapticPatternTime;
@@ -84,7 +84,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
         }
 
-        public void Setup(PlayerAgent player)
+        public void Setup(LocalPlayerAgent player)
         {
             m_player = player;
             m_lastFlashlightEnabledState = player.Inventory.FlashlightEnabled;

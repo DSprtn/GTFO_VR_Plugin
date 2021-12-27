@@ -10,10 +10,10 @@ namespace GTFO_VR.Injections.GameHooks
     /// </summary>
 
     [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.Setup))]
-    [HarmonyPatch(new Type[] { typeof(PlayerAgent) })]
+    [HarmonyPatch(new Type[] { typeof(LocalPlayerAgent) })]
     internal class InjectGetLocalPlayerAgentRef
     {
-        private static void Postfix(FPSCamera __instance, PlayerAgent owner)
+        private static void Postfix(FPSCamera __instance, LocalPlayerAgent owner)
         {
             VRSystems.OnPlayerSpawned(__instance, owner);
         }

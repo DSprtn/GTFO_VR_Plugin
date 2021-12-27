@@ -31,10 +31,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private WeaponRadialMenu m_weaponRadial;
         private WeaponAmmoHologram m_weaponAmmoHolo;
 
-        public static PlayerAgent PlayerAgent;
+        public static LocalPlayerAgent PlayerAgent;
         public static FPSCamera FpsCamera;
 
-        public void Setup(FPSCamera camera, PlayerAgent agent)
+        public void Setup(FPSCamera camera, LocalPlayerAgent agent)
         {
             FpsCamera = camera;
             PlayerAgent = agent;
@@ -47,7 +47,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             gameObject.AddComponent<VRWorldSpaceUI>();
 
             m_movementVignette = gameObject.AddComponent<MovementVignette>();
-            m_movementVignette.Setup(agent.Locomotion, GetComponent<PostProcessingBehaviour>());
+            m_movementVignette.Setup(agent.Locomotion, camera);
 
             m_weaponRadial = gameObject.AddComponent<WeaponRadialMenu>();
             m_weaponRadial.Setup(m_origin.transform);
@@ -139,7 +139,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public static void UpdateHeldItemTransform()
         {
-            if (!VRConfig.configUseControllers.Value)
+            if (!VRConfig.configUseControllers.Value || !PlayerAgent)
             {
                 return;
             }

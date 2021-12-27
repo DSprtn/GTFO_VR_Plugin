@@ -19,9 +19,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private bool m_playerAgentToHMDPositionBlocked;
         private bool m_wasFadedLastFrame;
 
-        private PlayerAgent m_agent;
+        private LocalPlayerAgent m_agent;
 
-        public void Setup(PlayerAgent agent)
+        public void Setup(LocalPlayerAgent agent)
         {
             m_agent = agent;
         }

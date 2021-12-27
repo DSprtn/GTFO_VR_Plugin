@@ -17,6 +17,11 @@ namespace GTFO_VR.Injections.Rendering
     {
         private static void Prefix(ref Resolution res)
         {
+            GetClusteredResolutionTweak(ref res);
+        }
+
+        public static Resolution GetClusteredResolutionTweak(ref Resolution res)
+        {
             Resolution HMDRes = SteamVR_Camera.GetSceneResolution();
             if (VRConfig.configLightResMode.Value.Equals("75%"))
             {
@@ -30,11 +35,12 @@ namespace GTFO_VR.Injections.Rendering
             }
             else if (VRConfig.configLightResMode.Value.Equals("30%"))
             {
-                HMDRes.width =  Mathf.FloorToInt(HMDRes.width * .3f);
+                HMDRes.width = Mathf.FloorToInt(HMDRes.width * .3f);
                 HMDRes.height = Mathf.FloorToInt(HMDRes.height * .3f);
             }
             res.width = HMDRes.width;
             res.height = HMDRes.height;
+            return res;
         }
     }
 }

@@ -13,34 +13,20 @@ namespace GTFO_VR.Injections.UI
     [HarmonyPatch(typeof(PlayerGuiLayer), nameof(PlayerGuiLayer.UpdateObjectives))]
     internal class InjectWatchObjectives
     {
-        private static void Postfix(LG_LayerType layer,
-    string mainObjective,
-    WardenObjectiveDataBlock data,
-    eWardenSubObjectiveStatus sub,
-    bool visible = true,
-    bool isAdditionalHelp = false)
+        private static void Postfix(LG_LayerType layer,string mainObjective)
         {
             Watch.Current?.UpdateMainObjective(mainObjective);
             Log.Debug($"Got new objective! - {mainObjective}");
         }
     }
 
-    [HarmonyPatch(typeof(PUI_GameObjectives), nameof(PUI_GameObjectives.SetSubObjective))]
+    [HarmonyPatch(typeof(PUI_GameObjectives), nameof(PUI_GameObjectives.SetMainSubObjective))]
     internal class InjectWatchSubObjectives
     {
-        /// <summary>
-        /// Do not show done objectives
-        /// </summary>
-        /// <param name="showPrevious"></param>
-        private static void Prefix(ref bool showPrevious)
+        private static void Postfix(string txt)
         {
-            showPrevious = false;
-        }
-
-        private static void Postfix(PUI_GameObjectives __instance)
-        {
-            Watch.Current?.UpdateSubObjective(__instance.m_subObjective.text);
-            Log.Debug($"Got new subobjective! - {__instance.m_subObjective.text}");
+            Watch.Current?.UpdateSubObjective(txt);
+            Log.Debug($"Got new subobjective! - {txt}");
         }
     }
 }
