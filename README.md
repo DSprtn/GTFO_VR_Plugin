@@ -12,22 +12,54 @@ Grab the newest version from here! https://github.com/DSprtn/GTFO_VR_Plugin/rele
 
 Try to get used to the game in Non-VR mode first before using! 
 
-## Installation: 
+## Install Instructions: 
 
-	Installing GTFO VR/any GTFO mods for the first time? Use the First-Install archive, extract it into 
-	"SteamLibrary\steamapps\common\GTFO\", then skip to the 4th step.
+	1. Download the first-install zip archive from https://github.com/DSprtn/GTFO_VR_Plugin/releases
+		This contains the all the files needed to install the plugin.
+		
+	2. Locate your GTFO folder using the steam library 
+		Right click GTFO in your Steam library, go into Properties->Local Files->Browse
+		
+	3. Copy all the files in the first-install zip archive to the root directory of GTFO, 
+	not inside the GTFO_data folder.
+	
+	5. Ensure the Steam option "Use Desktop Game Theatre while SteamVR is active" is unchecked.
+		Right click GTFO in your Steam library, go into Properties->General
+	
+	4. While SteamVR is running, launch the game from the library or from within SteamVR and you're in!
+		Ignore the "GTFO does not support VR" warning, just click OK
+	
+	5. Tweak or setup your controls under SteamVR -> Settings -> Controllers -> 
+	Manage Controller Bindings -> GTFO VR
+	
+	6. Tweak all VR config options inside GTFO game under Settings -> VR Settings
+	
 
+## Upgrade Instructions: 
+<details>
+  <summary>Expand</summary>
+	
+	If you are upgrading to R5 or have an old Bepinex/GTFO_VR installation, delete it! 
+		Removing the bepinex folder should suffice. You'll have to redo your config!
+	
+	1. Follow the Install Instructions above, replacing any conflicting files 
+	with what is in the first-install zip archive.
+</details>
+
+
+## DIY Install Instructions:
+<details>
+  <summary>Expand</summary>
+	
 	Consult the installation video here if you're having trouble: 
 	https://www.youtube.com/watch?v=EH7CsLs3GlQ (Thanks Alabaster!)
-
-	If you are upgrading to R5 or have an old Bepinex/GTFO_VR installation, delete it! 
-	Removing the bepinex folder should suffice. You'll have to redo your config!
+		Video may be out of date, follow at your own risk!
 	
  	1. Download and extract BepInEx 6.0.0b363 into your GTFO game folder (SteamLibrary\steamapps\common\GTFO\)
 	from https://builds.bepis.io/projects/bepinex_be/363/BepInEx_UnityIL2CPP_x64_086d2f8_6.0.0-be.363.zip
 	
-	You can also find the GTFO game path by doing the following:
-	Right click GTFO in your Steam library, go into Properties->Local Files->Browse
+		You can also find the GTFO game path by doing the following:
+		Right click GTFO in your Steam library, go into Properties->Local Files->Browse
 	
 	2. Download the latest version of the GTFO_VR plugin from https://github.com/DSprtn/GTFO_VR_Plugin/releases 
 	and extract it into the same folder (SteamLibrary\steamapps\common\GTFO\)
@@ -82,7 +114,7 @@ Try to get used to the game in Non-VR mode first before using!
 	To enable tracking or change the angle at which the weapons are being held you must set an action pose 
 	within the binding menu. Tip seems to be the most intuitive. Remember to set all required actions or the 
 	binding won't get saved!
-	
+</details>
 	
 ## Usage notes:
 
@@ -239,6 +271,9 @@ Try to get used to the game in Non-VR mode first before using!
 	Customized melee mechanics for VR
 	
 ## Known issues: 
+	Joining a game in progress can result in a black screen while still being able to move/shoot:
+		Open/close your map a dozen times or so, this can bring the game back.
+
 	SteamVR games crash often on v28 of Oculus. There's a workaround in the config that should
 	reduce crashing with some small side effects (Oculus Crash workaround.)
 
