@@ -98,7 +98,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 return;
             }
-
             m_origin.UpdateOrigin();
             UpdateVRCameraTransform(FpsCamera);
             UpdateHeldItemTransform();

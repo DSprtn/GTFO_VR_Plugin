@@ -15,5 +15,5 @@ namespace GTFO_VR.Injections.Rendering
         {
             return false;
         }
-    }
+    }    
 }

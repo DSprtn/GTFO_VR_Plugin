@@ -54,10 +54,7 @@ namespace GTFO_VR.Injections.Rendering
     {
         private static void Postfix(PlayerFPSBody __instance)
         {
-            foreach (GameObject g in __instance.m_gfxArms)
-            {
-                g.SetActive(false);
-            }
+            __instance.SetGFXVisible(__instance.m_gfxArms, false);
         }
     }
 }

@@ -35,7 +35,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void PreRenderUpdate()
         {
-            if (m_fpsCamera.m_owner == null || m_fpsCamera.m_holder == (UnityEngine.Object)null)
+            if (m_fpsCamera.m_owner == null || m_fpsCamera.m_holder == null)
                 return;
             if (!m_fpsCamera.m_cameraTransition.IsActive())
             {
@@ -67,7 +67,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             DoUglyCameraHack();
 
-            FixHeadAttachedFlashlightPos();
+            FixHeadAttachedFlashlightPos(eye);
 
             m_fpsCamera.m_cullingCamera.RunVisibilityOnPreCull();
             m_fpsCamera.m_preRenderCmds.Clear();
@@ -88,7 +88,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PrepareFrame();
         }
 
-        private void FixHeadAttachedFlashlightPos()
+        private void FixHeadAttachedFlashlightPos(EVREye eye)
         {
             if(FocusStateEvents.currentState == eFocusState.FPS)
             {
@@ -100,8 +100,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
                 if (!ItemEquippableEvents.CurrentItemHasFlashlight())
                 {
-                    inv.m_flashlightCLight.m_position = HMD.Hmd.transform.TransformPoint(m_fpsCamera.m_owner.Inventory.m_flashlightCameraOffset);
-                    //inv.m_flashlightCLight.m_forward = HMD.Hmd.transform.forward;
+                    var vr = SteamVR.instance;
+                    int i = (int)eye;
+                    inv.m_flashlightCLight.m_position = HMD.Hmd.transform.TransformPoint(m_fpsCamera.m_owner.Inventory.m_flashlightCameraOffset - vr.eyes[i].pos);
                 } else
                 {
                     var lightAlign = inv.m_currentGearPartFlashlight.m_lightAlign;
