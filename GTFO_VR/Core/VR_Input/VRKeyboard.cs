@@ -85,6 +85,10 @@ namespace GTFO_VR.Core.VR_Input
                 for (; inputBytes[len] != 0 && len < 7; len++) ;
                 input = Encoding.UTF8.GetString(inputBytes, 0, len);
                 input = HandleSpecialConversionAndShortcuts(input);
+                if (input != "\r" && input != "\n")
+                {
+                    input = input.ToUpper();
+                }
                 CurrentFrameInput = input;
             } else
             {
