@@ -146,8 +146,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerReloadEvents.OnPlayerReloaded += PlayWeaponReloadedHaptics;
             PlayerTriggerReloadEvents.OnTriggerWeaponReloaded += PlayTriggerWeaponReloadHaptics;
             HeldItemEvents.OnItemCharging += HammerChargingHaptics;
-            HammerEvents.OnHammerSmack += HammerSmackHaptics;
-            HammerEvents.OnHammerFullyCharged += HammerFullyChargedHaptics;
+            VRMeleeWeaponEvents.OnHammerSmack += HammerSmackHaptics;
+            VRMeleeWeaponEvents.OnHammerFullyCharged += HammerFullyChargedHaptics;
             FocusStateEvents.OnFocusStateChange += FocusStateChangedHaptics;
             PlayerInteractionEvents.OnPlayerInteracted += PlayerInteractedHaptics;
             PlayerInteractionEvents.OnBioscanSetState += PlayerBioscanSetStateHaptics;
@@ -655,8 +655,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerReloadEvents.OnPlayerReloaded -= PlayWeaponReloadedHaptics;
             PlayerTriggerReloadEvents.OnTriggerWeaponReloaded -= PlayTriggerWeaponReloadHaptics;
             HeldItemEvents.OnItemCharging -= HammerChargingHaptics;
-            HammerEvents.OnHammerSmack -= HammerSmackHaptics;
-            HammerEvents.OnHammerFullyCharged -= HammerFullyChargedHaptics;
+            VRMeleeWeaponEvents.OnHammerSmack -= HammerSmackHaptics;
+            VRMeleeWeaponEvents.OnHammerFullyCharged -= HammerFullyChargedHaptics;
             FocusStateEvents.OnFocusStateChange -= FocusStateChangedHaptics;
             PlayerInteractionEvents.OnPlayerInteracted -= PlayerInteractedHaptics;
             PlayerInteractionEvents.OnBioscanSetState -= PlayerBioscanSetStateHaptics;

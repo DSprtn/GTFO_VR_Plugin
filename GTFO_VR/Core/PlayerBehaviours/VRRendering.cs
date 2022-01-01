@@ -107,7 +107,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 {
                     var vr = SteamVR.instance;
                     int i = (int)eye;
-                    inv.m_flashlightCLight.m_position = HMD.Hmd.transform.TransformPoint(m_fpsCamera.m_owner.Inventory.m_flashlightCameraOffset - vr.eyes[i].pos);
+                    inv.m_flashlightCLight.m_position = HMD.Hmd.transform.TransformPoint(m_fpsCamera.m_owner.Inventory.m_flashlightCameraOffset + vr.eyes[i].pos);
                 } else
                 {
                     var lightAlign = inv.m_currentGearPartFlashlight.m_lightAlign;

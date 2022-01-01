@@ -9,9 +9,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
     /// <summary>
     /// Disable animations, tweak hitbox size and position
     /// </summary>
-    public class VRHammer : MonoBehaviour
+    public class VRMeleeWeapon : MonoBehaviour
     {
-        public VRHammer(IntPtr value) : base(value)
+        public VRMeleeWeapon(IntPtr value) : base(value)
         {
         }
 
@@ -21,17 +21,20 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private Transform m_animatorRoot;
         private Light m_chargeupIndicatorLight;
 
+
+        // ToDO - Change melee Z Offset, change hitbox size mult? Change melee weapon rotation offset
+
         public void Setup(MeleeWeaponFirstPerson weapon)
         {
             m_weapon = weapon;
             m_animatorRoot = m_weapon.ModelData.m_damageRefAttack.parent;
-            m_chargeupIndicatorLight = new GameObject("VR_Hammer_Chargeup_Light").AddComponent<Light>();
+            m_chargeupIndicatorLight = new GameObject("VR_Weapon_Chargeup_Light").AddComponent<Light>();
             m_chargeupIndicatorLight.color = Color.white;
 
             m_chargeupIndicatorLight.enabled = false;
             m_chargeupIndicatorLight.shadows = LightShadows.None;
-            HammerEvents.OnHammerFullyCharged += HammerFullyCharged;
-            HammerEvents.OnHammerHalfCharged += HammerHalfCharged;
+            VRMeleeWeaponEvents.OnHammerFullyCharged += HammerFullyCharged;
+            VRMeleeWeaponEvents.OnHammerHalfCharged += HammerHalfCharged;
         }
 
         private void HammerHalfCharged()
@@ -47,7 +50,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 m_chargeupIndicatorLight.intensity = .75f;
                 m_chargeupIndicatorLight.enabled = true;
             }
-            Invoke(nameof(VRHammer.TurnChargeLightOff), 0.10f);
+            Invoke(nameof(VRMeleeWeapon.TurnChargeLightOff), 0.10f);
         }
 
         private void HammerFullyCharged()
@@ -63,7 +66,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 m_chargeupIndicatorLight.intensity = 1.75f;
                 m_chargeupIndicatorLight.enabled = true;
             }
-            Invoke(nameof(VRHammer.TurnChargeLightOff), 0.15f);
+            Invoke(nameof(VRMeleeWeapon.TurnChargeLightOff), 0.15f);
         }
 
         private void TurnChargeLightOff()
@@ -116,8 +119,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
-            HammerEvents.OnHammerHalfCharged -= HammerHalfCharged;
-            HammerEvents.OnHammerFullyCharged -= HammerFullyCharged;
+            VRMeleeWeaponEvents.OnHammerHalfCharged -= HammerHalfCharged;
+            VRMeleeWeaponEvents.OnHammerFullyCharged -= HammerFullyCharged;
         }
     }
 }

@@ -22,7 +22,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerReloadEvents.OnPlayerReloaded += PlayWeaponReloadHaptics;
             GlueGunEvents.OnPressureUpdate += GlueGunPressureHaptics;
             HeldItemEvents.OnItemCharging += HammerChargingHaptics;
-            HammerEvents.OnHammerSmack += HammerSmackHaptics;
+            VRMeleeWeaponEvents.OnHammerSmack += HammerSmackHaptics;
         }
 
         public static float GetFireHapticStrength(Weapon weapon, float intensityFactor = 1f)
@@ -187,7 +187,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             PlayerReloadEvents.OnPlayerReloaded -= PlayWeaponReloadHaptics;
             GlueGunEvents.OnPressureUpdate -= GlueGunPressureHaptics;
             HeldItemEvents.OnItemCharging -= HammerChargingHaptics;
-            HammerEvents.OnHammerSmack -= HammerSmackHaptics;
+            VRMeleeWeaponEvents.OnHammerSmack -= HammerSmackHaptics;
         }
     }
 }

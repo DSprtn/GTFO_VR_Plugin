@@ -43,7 +43,7 @@
     <Compile Include="Core\PlayerBehaviours\MovementVignette.cs" />
     <Compile Include="Core\UI\RadialItem.cs" />
     <Compile Include="Core\UI\RadialMenu.cs" />
-    <Compile Include="Core\PlayerBehaviours\VRHammer.cs" />
+    <Compile Include="Core\PlayerBehaviours\VRMeleeWeapon.cs" />
     <Compile Include="Core\UI\WeaponAmmoHologram.cs" />
     <Compile Include="Core\UI\WeaponRadialMenu.cs" />
     <Compile Include="Core\VRConfig.cs" />
@@ -62,7 +62,7 @@
     <Compile Include="Events\ChatMsgEvents.cs" />
     <Compile Include="Events\ElevatorEvents.cs" />
     <Compile Include="Events\FocusStateEvents.cs" />
-    <Compile Include="Events\HammerEvents.cs" />
+    <Compile Include="Events\VRMeleeWeaponEvents.cs" />
     <Compile Include="Events\InventoryAmmoEvents.cs" />
     <Compile Include="Events\PlayerInteractionEvents.cs" />
     <Compile Include="Events\PlayerLocomotionEvents.cs" />
