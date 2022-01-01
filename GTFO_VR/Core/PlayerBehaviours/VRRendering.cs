@@ -39,16 +39,21 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             if (!m_fpsCamera.m_cameraTransition.IsActive())
             {
-                if (!m_fpsCamera.m_holder.m_connectedToPlayer && m_fpsCamera.PlayerMoveEnabled)
-                    m_fpsCamera.Position = m_fpsCamera.m_owner.PlayerCharacterController.SmoothPosition + m_fpsCamera.m_posOffset;
-                if (m_fpsCamera.MouseLookEnabled)
-                {
-                    m_fpsCamera.RotationUpdate();
-                    if (!m_fpsCamera.m_holder.m_connectedToPlayer)
-                        m_fpsCamera.m_owner.transform.rotation = Quaternion.Euler(0.0f, m_fpsCamera.Rotation.eulerAngles.y, 0.0f);
-                }
+                m_fpsCamera.RotationUpdate();
+                if (!m_fpsCamera.m_holder.m_connectedToPlayer)
+                    m_fpsCamera.m_owner.transform.rotation = Quaternion.Euler(0.0f, m_fpsCamera.Rotation.eulerAngles.y, 0.0f);
             }
+            if (!FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
+            {
+                m_fpsCamera.transform.position = HMD.GetWorldPosition();
+            }
+
+            m_fpsCamera.m_camera.transform.parent.localRotation = Quaternion.Euler(HMD.GetVRCameraEulerRelativeToFPSCameraParent());
+            m_fpsCamera.UpdateCameraRay();
+
             m_fpsCamera.UpdateLookatTeammates();
+
+            VRPlayer.UpdateHeldItemTransform();
 
             DoUglyCameraHack();
 

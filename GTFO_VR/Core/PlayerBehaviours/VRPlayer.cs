@@ -66,6 +66,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             FpsCamera.gameObject.AddComponent<VRRendering>();
             FpsCamera.gameObject.AddComponent<SteamVR_Fade>();
 
+            FpsCamera.UpdateUI = false;
+
             m_watch = Instantiate(VRAssets.GetWatchPrefab(), Vector3.zero, Quaternion.identity, null).AddComponent<Watch>();
             m_watch.Setup(m_origin.transform);
 
@@ -92,7 +94,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ClusteredRendering.Current.OnResolutionChange(new Resolution());
         }
 
-        private void OnNewPoses()
+        public void OnNewPoses()
         {
             if (!FpsCamera || !m_origin)
             {
@@ -126,7 +128,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public static void UpdateVRCameraTransform(FPSCamera fpsCamera)
         {
-
             if (!FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 fpsCamera.transform.position = HMD.GetWorldPosition();
