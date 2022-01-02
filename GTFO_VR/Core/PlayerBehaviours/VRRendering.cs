@@ -102,6 +102,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
                 if (!ItemEquippableEvents.CurrentItemHasFlashlight())
                 {
+                    inv.m_flashlightCLight.m_unityLight.transform.forward = HMD.GetWorldForward();
                     inv.m_flashlightCLight.m_unityLight.transform.position = HMD.Hmd.transform.TransformPoint(m_fpsCamera.m_owner.Inventory.m_flashlightCameraOffset);
                 }
                 else
