@@ -15,11 +15,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
         }
 
-        public static float hammerSizeMult = .61f;
+        public static float WeaponSizeMult = .61f;
 
         private MeleeWeaponFirstPerson m_weapon;
         private Transform m_animatorRoot;
         private Light m_chargeupIndicatorLight;
+
+        public Vector3 m_offset = new Vector3(0, .68f, .45f);
 
 
         // ToDO - Change melee Z Offset, change hitbox size mult? Change melee weapon rotation offset
@@ -33,11 +35,35 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             m_chargeupIndicatorLight.enabled = false;
             m_chargeupIndicatorLight.shadows = LightShadows.None;
-            VRMeleeWeaponEvents.OnHammerFullyCharged += HammerFullyCharged;
-            VRMeleeWeaponEvents.OnHammerHalfCharged += HammerHalfCharged;
+            VRMeleeWeaponEvents.OnHammerFullyCharged += WeaponFullyCharged;
+            VRMeleeWeaponEvents.OnHammerHalfCharged += WeaponHalfCharged;
+
+            Vector3 baseOffset = new Vector3(0, .68f, .45f);
+            switch (weapon.ArchetypeName)
+            {
+                case "Spear":
+                    m_offset = baseOffset * 1.5f;
+                    WeaponSizeMult = 0.2f;
+                    break;
+                case "Knife":
+                    m_offset = baseOffset * .2f;
+                    WeaponSizeMult = 0.2f;
+                    break;
+                case "Bat":
+                    WeaponSizeMult = 0.35f;
+                    m_offset = baseOffset * .6f;
+                    break;
+                case "Sledgehammer":
+                    WeaponSizeMult = .61f;
+                    m_offset = baseOffset;
+                    break;
+                default:
+                    Log.Warning($"Unknown melee weapon detected {weapon.name}");
+                    return;
+            }
         }
 
-        private void HammerHalfCharged()
+        private void WeaponHalfCharged()
         {
             if (!VRConfig.configUseVisualHammerIndicator.Value)
             {
@@ -53,7 +79,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             Invoke(nameof(VRMeleeWeapon.TurnChargeLightOff), 0.10f);
         }
 
-        private void HammerFullyCharged()
+        private void WeaponFullyCharged()
         {
             if (!VRConfig.configUseVisualHammerIndicator.Value)
             {
@@ -93,9 +119,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 if (m_weapon.ModelData != null)
                 {
-                    float YOffset = .68f;
-                    float zOffset = .45f;
-                    m_weapon.ModelData.m_damageRefAttack.transform.position = Controllers.mainController.transform.TransformPoint(new Vector3(0, YOffset, zOffset));
+                    m_weapon.ModelData.m_damageRefAttack.transform.position = Controllers.mainController.transform.TransformPoint(new Vector3(0, m_offset.y, m_offset.z));
                 }
             }
         }
@@ -119,8 +143,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
-            VRMeleeWeaponEvents.OnHammerHalfCharged -= HammerHalfCharged;
-            VRMeleeWeaponEvents.OnHammerFullyCharged -= HammerFullyCharged;
+            VRMeleeWeaponEvents.OnHammerHalfCharged -= WeaponHalfCharged;
+            VRMeleeWeaponEvents.OnHammerFullyCharged -= WeaponFullyCharged;
         }
     }
 }

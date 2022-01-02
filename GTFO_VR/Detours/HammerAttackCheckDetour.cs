@@ -32,7 +32,7 @@ namespace GTFO_VR.Detours
 
         private unsafe static bool OurAttackCheck(IntPtr thisPtr, IntPtr attackData, float sphereRad, float elapsedTime, out IntPtr hits)
         {
-            bool result = OriginalHammerMethod(thisPtr, attackData, sphereRad * VRMeleeWeapon.hammerSizeMult, elapsedTime, out hits);
+            bool result = OriginalHammerMethod(thisPtr, attackData, sphereRad * VRMeleeWeapon.WeaponSizeMult, elapsedTime, out hits);
 
             if ((!VRConfig.configUseOldHammer.Value || !VRConfig.configUseControllers.Value) && Controllers.mainControllerPose.GetVelocity().magnitude < 0.4f)
             {
