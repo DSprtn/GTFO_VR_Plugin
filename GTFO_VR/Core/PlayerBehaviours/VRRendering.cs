@@ -21,11 +21,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private UI_Apply m_uiBlitter;
         private static bool m_skipLeftEye;
 
-        public float FOV;
-
         private void Awake()
         {
-            FOV = SteamVR.instance.fieldOfView;
             m_fpsCamera = GetComponent<FPSCamera>();
             m_uiBlitter = GetComponent<UI_Apply>();
             m_fpsRender = GetComponent<FPS_Render>();
@@ -95,24 +92,23 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void FixHeadAttachedFlashlightPos(EVREye eye)
         {
-            if(FocusStateEvents.currentState == eFocusState.FPS)
+            if (FocusStateEvents.currentState == eFocusState.FPS)
             {
                 var inv = m_fpsCamera.m_owner.Inventory;
-                if(inv.m_currentGearPartFlashlight == null)
+                if (inv.m_flashlightCLight == null)
                 {
                     return;
                 }
 
                 if (!ItemEquippableEvents.CurrentItemHasFlashlight())
                 {
-                    var vr = SteamVR.instance;
-                    int i = (int)eye;
-                    inv.m_flashlightCLight.m_position = HMD.Hmd.transform.TransformPoint(m_fpsCamera.m_owner.Inventory.m_flashlightCameraOffset + vr.eyes[i].pos);
-                } else
+                    inv.m_flashlightCLight.m_unityLight.transform.position = HMD.Hmd.transform.TransformPoint(m_fpsCamera.m_owner.Inventory.m_flashlightCameraOffset);
+                }
+                else
                 {
                     var lightAlign = inv.m_currentGearPartFlashlight.m_lightAlign;
-                    inv.m_flashlightCLight.m_forward = lightAlign.forward;
-                    inv.m_flashlightCLight.m_position = lightAlign.position;
+                    inv.m_flashlightCLight.m_unityLight.transform.forward = lightAlign.forward;
+                    inv.m_flashlightCLight.m_unityLight.transform.position = lightAlign.position;
                 }
 
                 inv.m_flashlightCLight.UpdateTransformData();
@@ -122,7 +118,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private void PrepareFrame()
         {
             UI_Core.RenderUI();
-            
+
             if (ScreenLiquidManager.LiquidSystem != null)
                 ScreenLiquidManager.LiquidSystem.CollectCommands(m_fpsCamera.m_preRenderCmds);
             if (AirParticleSystem.AirParticleSystem.Current != null)
@@ -157,11 +153,12 @@ namespace GTFO_VR.Core.PlayerBehaviours
         // Force FOV/Aspects and position match up for all relevant game cameras
         private void DoUglyCameraHack()
         {
-            if(m_uiBlitter != null)
+            float FOV = SteamVR.instance.fieldOfView;
+            if (m_uiBlitter != null)
             {
                 m_uiBlitter.enabled = VRConfig.configCameraBlood.Value;
             }
-            
+
             m_fpsCamera.PlayerMoveEnabled = true;
             m_fpsCamera.MouseLookEnabled = true;
 
