@@ -118,8 +118,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void PrepareFrame()
         {
-            UI_Core.RenderUI();
-
             if (ScreenLiquidManager.LiquidSystem != null)
                 ScreenLiquidManager.LiquidSystem.CollectCommands(m_fpsCamera.m_preRenderCmds);
             if (AirParticleSystem.AirParticleSystem.Current != null)
