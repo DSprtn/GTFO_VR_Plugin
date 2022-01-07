@@ -15,7 +15,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
         }
 
-        public static float WeaponSizeMult = .61f;
+        public static float WeaponHitDetectionSphereSize = .61f;
 
         private MeleeWeaponFirstPerson m_weapon;
         private Transform m_animatorRoot;
@@ -23,11 +23,12 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public Vector3 m_offset = new Vector3(0, .68f, .45f);
 
-
-        // ToDO - Change melee Z Offset, change hitbox size mult? Change melee weapon rotation offset
-
         public void Setup(MeleeWeaponFirstPerson weapon)
         {
+
+            MeleeWeaponFirstPerson.DEBUG_ENABLED = VRConfig.configDebugShowHammerHitbox.Value;
+            VRConfig.configDebugShowHammerHitbox.SettingChanged += ToggleDebug;
+
             m_weapon = weapon;
             m_animatorRoot = m_weapon.ModelData.m_damageRefAttack.parent;
             m_chargeupIndicatorLight = new GameObject("VR_Weapon_Chargeup_Light").AddComponent<Light>();
@@ -43,24 +44,29 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 case "Spear":
                     m_offset = baseOffset * 1.5f;
-                    WeaponSizeMult = 0.2f;
+                    WeaponHitDetectionSphereSize = 0.2f;
                     break;
                 case "Knife":
-                    m_offset = baseOffset * .2f;
-                    WeaponSizeMult = 0.2f;
+                    m_offset = baseOffset * .25f;
+                    WeaponHitDetectionSphereSize = 0.2f;
                     break;
                 case "Bat":
-                    WeaponSizeMult = 0.35f;
-                    m_offset = baseOffset * .6f;
+                    WeaponHitDetectionSphereSize = 0.35f;
+                    m_offset = baseOffset * .7f;
                     break;
                 case "Sledgehammer":
-                    WeaponSizeMult = .61f;
+                    WeaponHitDetectionSphereSize = .61f;
                     m_offset = baseOffset;
                     break;
                 default:
                     Log.Warning($"Unknown melee weapon detected {weapon.name}");
                     return;
             }
+        }
+
+        private void ToggleDebug(object sender, EventArgs e)
+        {
+            MeleeWeaponFirstPerson.DEBUG_ENABLED = VRConfig.configDebugShowHammerHitbox.Value;
         }
 
         private void WeaponHalfCharged()
@@ -143,6 +149,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
+            VRConfig.configDebugShowHammerHitbox.SettingChanged -= ToggleDebug;
             VRMeleeWeaponEvents.OnHammerHalfCharged -= WeaponHalfCharged;
             VRMeleeWeaponEvents.OnHammerFullyCharged -= WeaponFullyCharged;
         }

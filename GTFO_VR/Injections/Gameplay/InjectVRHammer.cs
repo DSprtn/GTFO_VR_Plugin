@@ -1,4 +1,5 @@
 ﻿using Agents;
+using GameData;
 using Gear;
 using GTFO_VR.Core;
 using GTFO_VR.Core.PlayerBehaviours;
@@ -38,19 +39,20 @@ namespace GTFO_VR.Injections
 
             if (Controllers.mainControllerPose.GetVelocity().magnitude > 0.5f)
             {
-               
-                Collider[] enemyColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponSizeMult * .75f, LayerManager.MASK_ENEMY_DAMAGABLE);
-                bool shouldReleaseCharge = enemyColliders.Length > 0;
                 if (GTFO_VR_Plugin.DEBUG_ENABLED)
                 {
-                    if(VRConfig.configDebugShowHammerHitbox.Value)
+                    if (VRConfig.configDebugShowHammerHitbox.Value)
                     {
-                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponSizeMult * .75f, ColorExt.Blue(0.2f));
-                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponSizeMult * .25f, ColorExt.Red(0.2f));
+                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereSize * .75f, ColorExt.Blue(0.2f));
+                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereSize * .1f, ColorExt.Red(0.2f));
                     }
                 }
+
+                Collider[] enemyColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereSize * .75f, LayerManager.MASK_ENEMY_DAMAGABLE);
+                bool shouldReleaseCharge = enemyColliders.Length > 0;
+
                 if(Controllers.mainControllerPose.GetVelocity().magnitude > 1.2f) {
-                    Collider[] staticColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponSizeMult * .25f, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC);
+                    Collider[] staticColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereSize * .25f, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC);
                     shouldReleaseCharge = shouldReleaseCharge || staticColliders.Length > 0;
                 }
 
@@ -62,8 +64,9 @@ namespace GTFO_VR.Injections
         }
     }
 
+
     /// <summary>
-    /// Sort hits to prioritize them based on proximity to hammer center (only first enemy hit counts)
+    /// Patch animation data to remove attack delay --- attacks in VR should always hit instantly because the player is swinging the weapon physically instead of with an animation
     /// </summary>
     [HarmonyPatch(typeof(MWS_AttackSwingBase), nameof(MWS_AttackSwingBase.Update))]
     static class InjectAllowInstantDamageInVRSwing
@@ -71,8 +74,10 @@ namespace GTFO_VR.Injections
 
         static void Prefix(MWS_AttackSwingBase __instance)
         {
-            // Allow weapons to deal damage instantly after being swung
             __instance.m_data.m_damageStartTime = 0f;
+
+            // Do not check for hits from camera
+            __instance.m_weapon.MeleeArchetypeData.CameraDamageRayLength = 0f;
         }
     }
 

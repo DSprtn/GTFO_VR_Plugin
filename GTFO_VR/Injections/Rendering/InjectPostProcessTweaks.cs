@@ -17,6 +17,12 @@ namespace GTFO_VR.Injections.Rendering
             //__instance.m_postProcessing.m_autoExposure.active = VRConfig.configPostEyeAdaptation.Value;
             __instance.m_postProcessing.m_vignette.active = VRConfig.configPostVignette.Value || VRConfig.configUseVignetteWhenMoving.Value;
             __instance.m_postProcessing.m_motionBlur.active = false;
+
+
+            var bloomSettings = __instance.m_postProcessing.m_bloomModel.settings.bloom;
+            bloomSettings.intensity *= .5f;
+            bloomSettings.radius *= .7f;
+            __instance.m_postProcessing.m_bloomModel.settings.bloom = bloomSettings;
         }
     }
 
