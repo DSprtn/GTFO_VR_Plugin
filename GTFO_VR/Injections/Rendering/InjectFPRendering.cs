@@ -55,6 +55,24 @@ namespace GTFO_VR.Injections.Rendering
         private static void Postfix(PlayerFPSBody __instance)
         {
             __instance.SetGFXVisible(__instance.m_gfxArms, false);
+            foreach (GameObject gfxArm in __instance.m_gfxArms)
+                PlayerBackpackManager.SetFPSRendering(gfxArm, false);
+        }
+    }
+
+
+    /// <summary>
+    /// Disables FPS arms rendering, it's really wonky in VR so it's better to not see it at all
+    /// </summary>
+
+    [HarmonyPatch(typeof(PlayerFPSBody), nameof(PlayerFPSBody.UpdateModel))]
+    internal class InjectDisableFPSArmsUpdate
+    {
+        private static void Postfix(PlayerFPSBody __instance)
+        {
+            __instance.SetGFXVisible(__instance.m_gfxArms, false);
+            foreach (GameObject gfxArm in __instance.m_gfxArms)
+                PlayerBackpackManager.SetFPSRendering(gfxArm, false);
         }
     }
 }
