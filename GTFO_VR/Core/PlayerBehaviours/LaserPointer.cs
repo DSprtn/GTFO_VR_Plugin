@@ -139,6 +139,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_dot.transform.localRotation = Quaternion.identity;
             Material material = new Material(Shader.Find("Unlit/Color"));
             material.SetColor("_Color", ExtensionMethods.FromString(VRConfig.configLaserPointerColor.Value));
+            material.renderQueue = 3001;
             m_pointer.GetComponent<MeshRenderer>().material = material;
             m_dot.GetComponent<MeshRenderer>().material = material;
 
