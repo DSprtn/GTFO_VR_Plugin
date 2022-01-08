@@ -59,8 +59,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             GuiManager.Current.AfterCameraUpdate();
             m_fpsCamera.m_owner.Interaction.AfterCameraUpdate();
-
-            m_fpsRender.ForceMatrixUpdate();
         }
 
         private void PrepareFrameForEye(EVREye eye)
@@ -74,6 +72,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_fpsCamera.m_cullingCamera.RunVisibilityOnPreCull();
             m_fpsCamera.m_preRenderCmds.Clear();
             m_fpsCamera.m_beforeForwardAlpahCmds.Clear();
+
+            m_fpsRender.ForceMatrixUpdate();
 
             if (VRConfig.configAlternateEyeRendering.Value)
             {
