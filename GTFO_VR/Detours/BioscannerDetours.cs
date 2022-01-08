@@ -45,17 +45,18 @@ namespace GTFO_VR.Detours
             }
         }
 
-        private unsafe static bool OurScannerMethod(IntPtr thisPtr, int maxTags, out IntPtr enemies)
+        private unsafe static bool OurScannerMethod(IntPtr thisPtr, int maxTags, bool onAim, out IntPtr enemies)
         {
             cachedControllerRotation = Controllers.GetControllerAimRotation();
             inBioScannerFunction = true;
-            bool result = OriginalScannerMethod(thisPtr, maxTags, out enemies);
+            // Always behave as if aiming or we will tag only single enemies
+            bool result = OriginalScannerMethod(thisPtr, maxTags, false, out enemies);
             inBioScannerFunction = false;
             return result;
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private unsafe delegate bool EnemyScannerDelegate(IntPtr thisPtr, int maxTaggable, out IntPtr enemies);
+        private unsafe delegate bool EnemyScannerDelegate(IntPtr thisPtr, int maxTaggable, bool onAim, out IntPtr enemies);
 
         private static EnemyScannerDelegate OriginalScannerMethod;
 
