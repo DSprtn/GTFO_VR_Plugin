@@ -26,9 +26,12 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public void Setup(MeleeWeaponFirstPerson weapon)
         {
+            if(GTFO_VR_Plugin.DEBUG_ENABLED)
+            {
+                MeleeWeaponFirstPerson.DEBUG_ENABLED = VRConfig.configDebugShowHammerHitbox.Value;
+                VRConfig.configDebugShowHammerHitbox.SettingChanged += ToggleDebug;
+            }
 
-            MeleeWeaponFirstPerson.DEBUG_ENABLED = VRConfig.configDebugShowHammerHitbox.Value;
-            VRConfig.configDebugShowHammerHitbox.SettingChanged += ToggleDebug;
 
             m_weapon = weapon;
             m_animatorRoot = m_weapon.ModelData.m_damageRefAttack.parent;
@@ -153,7 +156,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
-            VRConfig.configDebugShowHammerHitbox.SettingChanged -= ToggleDebug;
+            if (GTFO_VR_Plugin.DEBUG_ENABLED)
+            {
+                VRConfig.configDebugShowHammerHitbox.SettingChanged -= ToggleDebug;
+            }
+
             VRMeleeWeaponEvents.OnHammerHalfCharged -= WeaponHalfCharged;
             VRMeleeWeaponEvents.OnHammerFullyCharged -= WeaponFullyCharged;
         }

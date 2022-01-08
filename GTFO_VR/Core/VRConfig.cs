@@ -54,7 +54,6 @@ namespace GTFO_VR.Core
 
         internal static ConfigEntry<bool> configDebugShowTwoHHitboxes;
         internal static ConfigEntry<bool> configDebugShowHammerHitbox;
-        internal static ConfigEntry<float> configDebugHammersizeMult;
 
         public static Dictionary<uint, string> VRTextMappings = new Dictionary<uint, string>();
 
@@ -66,7 +65,6 @@ namespace GTFO_VR.Core
                 BindHeader("DEBUG");
                 configDebugShowTwoHHitboxes = BindBool(file, "Debug - If you see this, I screwed up!", "Show 2H hitboxes", false, "Shows two handed weapon hitboxes", "Show 2H hitboxes");
                 configDebugShowHammerHitbox = BindBool(file, "Debug - If you see this, I screwed up!", "Show hammer hitbox", false, "Shows hammer hitbox", "Hammer hitbox debug");
-                configDebugHammersizeMult = BindFloat(file, "Debug - If you see this, I screwed up!", "Hammer hitbox size mult", 1f, 0.5f, 3f, "Hammer hitbox size multiplier", "Hammer hitbox size");
             }
 
 
