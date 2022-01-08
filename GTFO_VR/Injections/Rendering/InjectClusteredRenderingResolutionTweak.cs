@@ -7,7 +7,7 @@ using Valve.VR;
 namespace GTFO_VR.Injections.Rendering
 {
     /// <summary>
-    /// [Deprecated] - Gives more artifacts than performance now
+    /// [Deprecated] - Gives more artifacts than performance now, instead this corrects the HMD 
     /// Experimental performance tweak - changes light rendering resolution (with none to little visual difference, but a pretty good performance increase!)
     /// </summary>
     ///
@@ -18,15 +18,19 @@ namespace GTFO_VR.Injections.Rendering
     {
         private static void Prefix(ref Resolution res)
         {
-            GetClusteredResolutionTweak(ref res);
+            res = SteamVR_Camera.GetSceneResolution();
         }
+    }
 
-        public static Resolution GetClusteredResolutionTweak(ref Resolution res)
+    [HarmonyPatch(typeof(PreLitVolume), nameof(PreLitVolume.OnResolutionChange))]
+    internal class InjectPreLitVolumeResolutionTweak
+    {
+        private static void Prefix(ref int width, ref int height)
         {
-            Resolution HMDRes = SteamVR_Camera.GetSceneResolution();
-            res.width = HMDRes.width;
-            res.height = HMDRes.height;
-            return res;
+            Resolution res = SteamVR_Camera.GetSceneResolution();
+
+            width = res.width;
+            height = res.height;
         }
     }
 }

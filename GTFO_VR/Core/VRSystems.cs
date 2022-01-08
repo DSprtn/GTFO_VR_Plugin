@@ -43,7 +43,9 @@ namespace GTFO_VR.Core
 
             // Disable crouch toggle because it doesn't work in VR
             CellSettingsApply.ApplyCrouchToggle(false);
+            SteamVR_Camera.sceneResolutionScaleMultiplier = VRConfig.configRenderResolutionMultiplier.Value;
             VRConfig.configRenderResolutionMultiplier.SettingChanged += VRResolutionChanged;
+            GuiManager.ForceOnResolutionChange();
         }
 
         private void VRResolutionChanged(object sender, EventArgs e)

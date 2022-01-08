@@ -19,10 +19,6 @@ namespace GTFO_VR.Injections.Rendering
     {
         private static void Prefix(ref Resolution res)
         {
-            if (!VRSystems.Current)
-            {
-                return;
-            }
             Log.Info("Updating global resolution to 16:9 HMD res...");
             // We use a scaled 16:9 resolution because that's the best aspect for rendering the UI of GTFO
             Resolution scaledHMDRes = SteamVR_Camera.GetResolutionForAspect(16, 9);
@@ -36,10 +32,6 @@ namespace GTFO_VR.Injections.Rendering
     {
         private static void Postfix(GuiManager __instance)
         {
-            if (!VRSystems.Current)
-            {
-                return;
-            }
             Log.Info("Updating menu page resolution to HMD res...");
             Resolution scaledHMDResolution = SteamVR_Camera.GetResolutionForAspect(16, 9);
             GuiManager.ScreenRes = scaledHMDResolution;

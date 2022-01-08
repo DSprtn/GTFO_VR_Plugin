@@ -92,11 +92,11 @@
     <Compile Include="Injections\Events\InjectTentacleAttackEvents.cs" />
     <Compile Include="Injections\GameHooks\InjectPlayerGUIRef.cs" />
     <Compile Include="Injections\GameHooks\InjectVRStart.cs" />
+    <Compile Include="Injections\Rendering\InjectClusteredRenderingResolutionTweak.cs" />
     <Compile Include="Injections\Rendering\InjectDisableFPSCameraRenderUpdate.cs" />
     <Compile Include="Injections\Rendering\InjectPostProcessTweaks.cs" />
     <Compile Include="Injections\Input\InjectAimCursorWithVRControllerInOverlay.cs" />
     <Compile Include="Injections\Gameplay\InjectBioscannerFixes.cs" />
-    <Compile Include="Injections\Rendering\InjectClusteredRenderingResolutionTweak.cs" />
     <Compile Include="Injections\Gameplay\InjectControllerAim.cs" />
     <Compile Include="Injections\Gameplay\InjectCrouchHeight.cs" />
     <Compile Include="Injections\Rendering\InjectForceVRResolution.cs" />
