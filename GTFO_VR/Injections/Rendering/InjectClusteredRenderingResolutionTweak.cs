@@ -7,6 +7,7 @@ using Valve.VR;
 namespace GTFO_VR.Injections.Rendering
 {
     /// <summary>
+    /// [Deprecated] - Gives more artifacts than performance now
     /// Experimental performance tweak - changes light rendering resolution (with none to little visual difference, but a pretty good performance increase!)
     /// </summary>
     ///
@@ -23,21 +24,6 @@ namespace GTFO_VR.Injections.Rendering
         public static Resolution GetClusteredResolutionTweak(ref Resolution res)
         {
             Resolution HMDRes = SteamVR_Camera.GetSceneResolution();
-            if (VRConfig.configLightResMode.Value.Equals("75%"))
-            {
-                HMDRes.width = Mathf.FloorToInt(HMDRes.width * .75f);
-                HMDRes.height = Mathf.FloorToInt(HMDRes.height * .75f);
-            }
-            else if (VRConfig.configLightResMode.Value.Equals("50%"))
-            {
-                HMDRes.width = Mathf.FloorToInt(HMDRes.width * .5f);
-                HMDRes.height = Mathf.FloorToInt(HMDRes.height * .5f);
-            }
-            else if (VRConfig.configLightResMode.Value.Equals("30%"))
-            {
-                HMDRes.width = Mathf.FloorToInt(HMDRes.width * .3f);
-                HMDRes.height = Mathf.FloorToInt(HMDRes.height * .3f);
-            }
             res.width = HMDRes.width;
             res.height = HMDRes.height;
             return res;

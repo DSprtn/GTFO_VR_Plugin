@@ -79,7 +79,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             PlayerLocomotionEvents.OnPlayerEnterLadder += PlayerEnteredLadder;
             SteamVR_Events.NewPosesApplied.Listen(new Action(OnNewPoses));
-            VRConfig.configLightResMode.SettingChanged += LightResChanged;
 
             RefreshClusteredRenderingResolution();
         }
@@ -167,7 +166,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
-            VRConfig.configLightResMode.SettingChanged -= LightResChanged;
             PlayerLocomotionEvents.OnPlayerEnterLadder -= PlayerEnteredLadder;
             SteamVR_Events.NewPosesApplied.Remove(OnNewPoses);
 

@@ -10,7 +10,6 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configUseControllers;
         internal static ConfigEntry<bool> configIRLCrouch;
         internal static ConfigEntry<bool> configUseLeftHand;
-        internal static ConfigEntry<string> configLightResMode;
         internal static ConfigEntry<bool> configAlternateEyeRendering;
         internal static ConfigEntry<bool> configUseTwoHanded;
         internal static ConfigEntry<bool> configAlwaysDoubleHanded;
@@ -120,12 +119,6 @@ namespace GTFO_VR.Core
 
 
             BindHeader("Rendering");
-
-            configLightResMode = BindStringDropdown(file, "Rendering - Experimental", "Light/fog render resolution tweak - the lower the resolution the greater the performance gain!", "75%",
-    "0 = Native HMD resolution, looks great but requires a beastly PC" +
-    "\n1 = 75% resolution (Almost unnoticeable light shimmering on fog, good performance increase)" +
-    "\n2 = 50% resolution (Medium shimmering, small light artifacts, big performance increase)" +
-    "\n3 = 30% resolution (Small artifacting on lights/shadows, shimmering on fog, great performance increase)", "Light/Fog Resolution", new string[] { "NATIVE", "75%", "50%", "30%" });
 
             configRenderResolutionMultiplier = BindFloat(file, "Rendering", "Render resolution multiplier", 1f, 0.2f, 2.5f, "Global rendering resolution multiplier", "Rendering resolution multiplier");
 
