@@ -26,7 +26,7 @@ namespace GTFO_VR.Core
             VERSION = "1.1.9.1";
 
 
-        public static bool DEBUG_ENABLED = true;
+        public static bool DEBUG_ENABLED = false;
 
         public override void Load()
         {
