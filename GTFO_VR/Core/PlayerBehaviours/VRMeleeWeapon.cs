@@ -15,7 +15,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
         }
 
-        public static float WeaponHitDetectionSphereSize = .61f;
+        public static float WeaponHitboxSize = .61f;
+        public static float WeaponHitDetectionSphereCollisionSize = .61f;
 
         private MeleeWeaponFirstPerson m_weapon;
         private Transform m_animatorRoot;
@@ -44,22 +45,25 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 case "Spear":
                     m_offset = baseOffset * 1.5f;
-                    WeaponHitDetectionSphereSize = 0.2f;
+                    WeaponHitDetectionSphereCollisionSize = 0.2f;
+                    WeaponHitboxSize = .25f;
                     break;
                 case "Knife":
                     m_offset = baseOffset * .25f;
-                    WeaponHitDetectionSphereSize = 0.2f;
+                    WeaponHitDetectionSphereCollisionSize = 0.2f;
+                    WeaponHitboxSize = .2f;
                     break;
                 case "Bat":
-                    WeaponHitDetectionSphereSize = 0.35f;
+                    WeaponHitDetectionSphereCollisionSize = 0.35f;
+                    WeaponHitboxSize = .45f;
                     m_offset = baseOffset * .7f;
                     break;
                 case "Sledgehammer":
-                    WeaponHitDetectionSphereSize = .61f;
+                    WeaponHitDetectionSphereCollisionSize = .61f;
                     m_offset = baseOffset;
                     break;
                 default:
-                    Log.Warning($"Unknown melee weapon detected {weapon.name}");
+                    Log.Error($"Unknown melee weapon detected {weapon.name}");
                     return;
             }
         }

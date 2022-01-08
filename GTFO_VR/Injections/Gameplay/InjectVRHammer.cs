@@ -43,16 +43,16 @@ namespace GTFO_VR.Injections
                 {
                     if (VRConfig.configDebugShowHammerHitbox.Value)
                     {
-                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereSize * .75f, ColorExt.Blue(0.2f));
-                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereSize * .1f, ColorExt.Red(0.2f));
+                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .75f, ColorExt.Blue(0.2f));
+                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .1f, ColorExt.Red(0.2f));
                     }
                 }
 
-                Collider[] enemyColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereSize * .75f, LayerManager.MASK_ENEMY_DAMAGABLE);
+                Collider[] enemyColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .75f, LayerManager.MASK_ENEMY_DAMAGABLE);
                 bool shouldReleaseCharge = enemyColliders.Length > 0;
 
                 if(Controllers.mainControllerPose.GetVelocity().magnitude > 1.2f) {
-                    Collider[] staticColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereSize * .25f, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC);
+                    Collider[] staticColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .25f, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC);
                     shouldReleaseCharge = shouldReleaseCharge || staticColliders.Length > 0;
                 }
 
