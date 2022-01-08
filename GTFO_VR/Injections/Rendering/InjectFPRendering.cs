@@ -32,6 +32,35 @@ namespace GTFO_VR.Injections.Rendering
     }
 
     /// <summary>
+    /// Set zeroing to work better up close/midrange
+    /// Note: Might make sniper overshoot on long range shots, need to test this
+    /// </summary>
+    [HarmonyPatch(typeof(PlayerBackpackManager), nameof(PlayerBackpackManager.SetFPSRendering))]
+    internal class InjectTweakSightZeroing
+    {
+        private static void Prefix(ref bool enable, GameObject go)
+        {
+            foreach (var m in go.GetComponentsInChildren<MeshRenderer>(true))
+            {
+                if (m == null || m.sharedMaterials == null)
+                {
+                    continue;
+                }
+                foreach (Material mat in m.sharedMaterials)
+                {
+                    if (mat != null)
+                    {
+                        if(mat.HasProperty("_ZeroOffset"))
+                        {
+                            mat.SetFloat("_ZeroOffset", .75f);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /// <summary>
     /// Makes the hacking tool render normally instead of in 2D
     /// </summary>
     [HarmonyPatch(typeof(HologramGraphics), nameof(HologramGraphics.AddHoloPart))]
