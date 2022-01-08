@@ -92,13 +92,13 @@ Try to get used to the game in Non-VR mode first before using!
 	-	Left handed mode 
 	- 	Snap turn - Amount, smooth turn
 	-  	Radial menus - Extra text info, quickswitch weapon to last used 
-	-	Rendering tweaks - Post-processing, resolution and other performance tweaks/hacks
+	-	Rendering tweaks - Resolution
 	- 	Floor height offset (for seated mode and height adjustment!)
 	-	Movement vignette - Toggle, intensity
 	- 	Shooting haptics - Toggle, strength
 	- 	IRL Crouching - Toggle, height tweak
 	-	Laser pointer - Toggle, color
-	-	Hammer - Visual charge indicator, 'Old hammer' (auto-swing with animations)
+	-	Melee weapons - Visual charge indicator, 'Old melee' (auto-swing with animations)
 	-	Watch - Scale, color, number display for ammo
 	- 	Holographic ammo display - Toggle
 	-	Two handed aiming - Toggle, always on mode
@@ -111,18 +111,9 @@ Try to get used to the game in Non-VR mode first before using!
 
 #### PERFORMANCE
 
-	Lower your render resolution (under Settings->VR Settings) and the quality of the in-game settings! 
-	GTFO VR is a BIG resource hog!
-	
-	You can disable post processing effects like bloom or eye adaptation in the config to 
-	gain a good bit of performance.
-	
-	If you don't mind small artifacting on lights and fog in exchange for a bit of extra performance
-	set light rendering mode to '2' or '3' in GTFO\BepInEx\config\com.Spartan.GTFO_VR_Plugin.cfg
-	
-	There is now also a setting to alternate rendering of lights and shadows per eye, per frame. This WILL
-	look janky as all hell if you move your head around fast but it will boost performance greatly. I would
-	only recommend using this if nothing else works to make the game run in VR for you.
+	The game is very performance hungry, even moreso this update, so I recommend lowering your in-game settings greatly!
+	Turn off SSAO, bloom, subsurface scattering, depth of field, motion blur etc.
+	Lower texture resolution, fog resolution and fog diffusion quality
 	
 ### MISC IN-GAME ACTIONS
 
@@ -134,14 +125,14 @@ Try to get used to the game in Non-VR mode first before using!
 	
 	Remember to bind the menus if they aren't bound in your current input config!
 
-#### HAMMER
+#### Melee weapons
 
-	You have to charge the hammer just like in non-VR GTFO. You can only hit with it while it's charging/charged.
-	Haptics and sound indicate the charging level. A flash of light indicates the hammer is 50% charged, and a bigger 
+	You have to charge any melee weapon just like in non-VR GTFO. You can only hit with it while it's charging/charged.
+	Haptics and sound indicate the charging level. A flash of light indicates the weapon is 50% charged, and a bigger 
 	one indicates it's fully charged.
 	
 	The flash of light and haptics can be turned off.
-	There is also a config option to use the 'old' VR hammer which swings by itself.
+	There is also a config option to use the 'old' VR melee system which swings by itself.
 
 
 #### AIMING
@@ -244,6 +235,11 @@ Try to get used to the game in Non-VR mode first before using!
 
 	If a crash occurs send me the output log from the path given below (before starting another game!):
 	SteamApps/GTFO/Bepinex/LogOutput.log
+	
+	R6 is very VRAM hungry! If your texture or render resolution settings are too high and you're using too much VRAM your game will be very unstable!
+	changing resolution in-game or even playing some maps might cause crashes!
+	
+	Vignette effect is broken at the moment
 	
 
 ## Want to contribute?
