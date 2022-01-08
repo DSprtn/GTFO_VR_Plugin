@@ -20,8 +20,9 @@ namespace GTFO_VR.Injections.Rendering
 
 
             var bloomSettings = __instance.m_postProcessing.m_bloomModel.settings.bloom;
-            bloomSettings.intensity *= .5f;
-            bloomSettings.radius *= .7f;
+            bloomSettings.intensity *= .25f;
+            bloomSettings.radius *= .5f;
+            bloomSettings.threshold *= 1.2f;
             __instance.m_postProcessing.m_bloomModel.settings.bloom = bloomSettings;
         }
     }
