@@ -49,8 +49,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 return;
             }
-            m_pointer.GetComponent<MeshRenderer>().material.color = ExtensionMethods.FromString(VRConfig.configLaserPointerColor.Value);
-            m_dot.GetComponent<MeshRenderer>().material.color = ExtensionMethods.FromString(VRConfig.configLaserPointerColor.Value);
+            Color c = ExtensionMethods.FromString(VRConfig.configLaserPointerColor.Value);
+            c *= .28f;
+            m_pointer.GetComponent<MeshRenderer>().material.color = c;
+            m_dot.GetComponent<MeshRenderer>().material.color = c;
         }
 
         private void LaserPointerToggled(object sender, EventArgs e)
@@ -138,7 +140,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_pointer.transform.localRotation = Quaternion.identity;
             m_dot.transform.localRotation = Quaternion.identity;
             Material material = new Material(Shader.Find("Unlit/Color"));
-            material.SetColor("_Color", ExtensionMethods.FromString(VRConfig.configLaserPointerColor.Value));
+            Color c = ExtensionMethods.FromString(VRConfig.configLaserPointerColor.Value);
+            c *= .28f;
+            material.SetColor("_Color", c);
             material.renderQueue = 3001;
             m_pointer.GetComponent<MeshRenderer>().material = material;
             m_dot.GetComponent<MeshRenderer>().material = material;
