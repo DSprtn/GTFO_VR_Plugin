@@ -57,11 +57,28 @@ namespace GTFO_VR.Injections.UI
 
             if(stringValues != null) {
                 __instance.m_values = stringValues;
-
+                __instance.m_displayValues = stringValues;
                 __instance.UpdateValueWithSelected();
             }
         }
     }
+
+    /// <summary>
+    /// "Display" gets prefixed on all string dropdowns, for some reason so we remove it
+    /// </summary>
+    [HarmonyPatch(typeof(CM_SettingsStringArrayDropdownButton), nameof(CM_SettingsStringArrayDropdownButton.UpdateValueWithSelected))]
+    internal class InjectStringDropdownValueRemoveDisplayString
+    {
+        private static void Postfix(CM_SettingsStringArrayDropdownButton __instance)
+        {
+            if(__instance.m_specialDataType != eSettingSpecialDataType.Displays)
+            {
+                __instance.m_currentValue.text = __instance.m_currentValue.text.Replace("Display ", "");
+            }
+        }
+    }
+
+
 
     /// <summary>
     /// Add config menu for VR stuff
