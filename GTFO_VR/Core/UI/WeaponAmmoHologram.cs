@@ -162,7 +162,7 @@ namespace GTFO_VR.Core.UI
 
             SpriteRenderer holoBG = spriteHolder.AddComponent<SpriteRenderer>();
             holoBG.sprite = VRAssets.holoBG;
-            holoBG.color = m_defaultHoloColor * new Vector4(1, 1, 1, 0.04f);
+            holoBG.color = m_defaultHoloColor * new Vector4(1, 1, 1, 0.025f);
             m_holoBGs.Add(holoBG);
 
 
