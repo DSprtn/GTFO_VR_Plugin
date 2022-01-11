@@ -52,9 +52,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
                     WeaponHitboxSize = .25f;
                     break;
                 case "Knife":
-                    m_offset = baseOffset * .25f;
-                    WeaponHitDetectionSphereCollisionSize = 0.2f;
-                    WeaponHitboxSize = .2f;
+                    m_offset = baseOffset * .35f;
+                    WeaponHitDetectionSphereCollisionSize = 0.22f;
+                    WeaponHitboxSize = .22f;
                     break;
                 case "Bat":
                     WeaponHitDetectionSphereCollisionSize = 0.35f;
