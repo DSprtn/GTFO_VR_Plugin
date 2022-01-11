@@ -65,10 +65,10 @@ namespace GTFO_VR.UI
 
         private void Setup()
         {
-            SetupElement(statusBar.transform, m_statusBarHolder.transform, 0.0018f);
-            SetupElement(interactionBar.transform, m_interactionBarHolder.transform, 0.0018f);
-            SetupElement(compass.transform, m_compassHolder.transform, 0.0036f, false);
-            SetupElement(intel.transform, m_intelHolder.transform, 0.0018f);
+            SetupElement(statusBar.transform, m_statusBarHolder.transform, 0.0018f, holderScale:1.6f);
+            SetupElement(interactionBar.transform, m_interactionBarHolder.transform, 0.0018f, holderScale:1.1f);
+            SetupElement(compass.transform, m_compassHolder.transform, 0.0036f, false, holderScale:1.35f);
+            SetupElement(intel.transform, m_intelHolder.transform, 0.0018f, holderScale:1f);
 
             SetTextShader(compass.transform, VRAssets.TextSphereClip);
             SetSpriteRendererShader(compass.transform, VRAssets.SpriteSphereClip);
@@ -257,8 +257,9 @@ namespace GTFO_VR.UI
             rect.transform.localPosition = Vector3.zero;
         }
 
-        private static void SetupElement(Transform ui, Transform holder, float scale, bool replaceShaders = true)
+        private static void SetupElement(Transform ui, Transform holder, float scale, bool replaceShaders = true, float holderScale = 1f)
         {
+            holder.transform.localScale *= holderScale;
             ui.SetParent(holder);
             SetTransformHierarchyLayer(ui);
             if (replaceShaders)
