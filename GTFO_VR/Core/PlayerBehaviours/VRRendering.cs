@@ -94,8 +94,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
             if (FocusStateEvents.currentState == eFocusState.FPS)
             {
-                var inv = m_fpsCamera.m_owner.Inventory;
-                if (inv.m_flashlightCLight == null)
+                PlayerInventoryBase inv = m_fpsCamera.m_owner.Inventory;
+                if (inv.m_flashlightCLight == null || inv.m_flashlightCLight.m_unityLight == null)
                 {
                     return;
                 }
@@ -107,6 +107,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 }
                 else
                 {
+                    // No flashlight when you're downed so we need to check this or the whole render loop bugs out
+                    if(inv.m_currentGearPartFlashlight == null || inv.m_currentGearPartFlashlight.m_lightAlign == null)
+                    {
+                        return;
+                    }
                     var lightAlign = inv.m_currentGearPartFlashlight.m_lightAlign;
                     inv.m_flashlightCLight.m_unityLight.transform.forward = lightAlign.forward;
                     inv.m_flashlightCLight.m_unityLight.transform.position = lightAlign.position;
