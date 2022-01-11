@@ -18,4 +18,16 @@ namespace GTFO_VR.Injections.GameHooks
             VRSystems.OnPlayerSpawned(__instance, owner);
         }
     }
+
+    /// <summary>
+    /// Some events like checkpoints are hard to properly handle in events. That's why we use this hack to reset the VR player if necessary.
+    /// </summary>
+    [HarmonyPatch(typeof(LocalPlayerAgent), nameof(LocalPlayerAgent.Update))]
+    internal class InjectLocalPlayerAgentHeartbeat
+    {
+        private static void Postfix(LocalPlayerAgent __instance)
+        {
+            VRSystems.Heartbeat(__instance);
+        }
+    }
 }

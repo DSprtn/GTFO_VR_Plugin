@@ -48,6 +48,24 @@ namespace GTFO_VR.Core
             GuiManager.ForceOnResolutionChange();
         }
 
+        /// <summary>
+        /// Some events like the checkpoint respawn are hard to handle in events. That's why we make do with this hack.
+        /// </summary>
+        /// <param name="__instance"></param>
+        internal static void Heartbeat(LocalPlayerAgent __instance)
+        {
+            if(Current.m_player == null)
+            {
+                if(FocusStateEvents.currentState.Equals(eFocusState.FPS))
+                {
+                    m_currentPlayerAgentRef = __instance;
+                    m_currentFPSCameraRef = __instance.FPSCamera;
+                    Current.AppendVRComponents();
+                    Current.HandleIngameFocus();
+                }
+            }
+        }
+
         private void VRResolutionChanged(object sender, EventArgs e)
         {
             SteamVR_Camera.sceneResolutionScaleMultiplier = VRConfig.configRenderResolutionMultiplier.Value;
