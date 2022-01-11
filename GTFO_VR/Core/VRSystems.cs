@@ -60,8 +60,11 @@ namespace GTFO_VR.Core
         private void Setup()
         {
             DontDestroyOnLoad(gameObject);
-
-            SteamVR.Initialize(false);
+            if(!SteamVR.active)
+            {
+                Log.Info("Starting SteamVR...");
+                SteamVR.Initialize(false);
+            }
             var res = SteamVR_Camera.GetSceneResolution();
             Log.Info($"SteamVR Setup - HMD Res: {res.width}x{res.height}");
             WeaponArchetypeVRData.Setup();
