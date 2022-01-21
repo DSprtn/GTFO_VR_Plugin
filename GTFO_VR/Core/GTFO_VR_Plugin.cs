@@ -5,10 +5,12 @@ using GTFO_VR.Core.UI;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Detours;
 using GTFO_VR.UI;
+using GTFO_VR.Util;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnhollowerRuntimeLib;
+using UnityEngine;
 using static GTFO_VR.Util.ExtensionMethods;
 
 namespace GTFO_VR.Core
@@ -34,6 +36,14 @@ namespace GTFO_VR.Core
             Core.Log.Info($"Loading VR plugin {VERSION}");
 
             VRConfig.SetupConfig(Config);
+
+            ApplicationManifestHelper.UpdateManifest(Application.streamingAssetsPath + "gtfo.vrmanifest",
+                                        "steam.app.493520",
+                                        "https://steamcdn-a.akamaihd.net/steam/apps/493520/header.jpg",
+                                        "GTFO VR",
+                                        "VR mod for GTFO",
+                                        steamBuild: SteamManager.Initialized,
+                                        steamAppId: 493520);
 
             if (SteamVRRunningCheck())
             {
