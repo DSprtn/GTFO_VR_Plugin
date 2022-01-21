@@ -234,12 +234,14 @@ Try to get used to the game in Non-VR mode first before using!
 	reduce crashing with some small side effects (Oculus Crash workaround.)
 
 	If a crash occurs send me the output log from the path given below (before starting another game!):
-	SteamApps/GTFO/Bepinex/LogOutput.log
+	C:\Users\$USER\AppData\LocalLow\10 Chambers Collective\GTFO\player.log OR player-prev.log if you already played another game.
 	
 	R6 is very VRAM hungry! If your texture or render resolution settings are too high and you're using too much VRAM your game will be very unstable!
 	changing resolution in-game or even playing some maps might cause crashes!
 	
 	Vignette effect is broken at the moment
+	
+	Random crashing may occur. Be sure to send logs! (See above)
 	
 
 ## Want to contribute?
