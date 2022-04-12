@@ -144,7 +144,6 @@
     <Compile Include="Core\VRSystems.cs" />
     <Compile Include="Core\PlayerBehaviours\VRPlayer.cs" />
     <Compile Include="Core\VR_Input\SteamVR_InputHandler.cs" />
-    <Compile Include="Util\ApplicationManifestHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
