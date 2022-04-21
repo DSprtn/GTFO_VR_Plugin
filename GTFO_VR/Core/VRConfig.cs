@@ -13,6 +13,7 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configAlternateEyeRendering;
         internal static ConfigEntry<bool> configUseTwoHanded;
         internal static ConfigEntry<bool> configAlwaysDoubleHanded;
+        internal static ConfigEntry<bool> configEarlyTransparentRendererFix;
 
         internal static ConfigEntry<float> configWatchScaling;
         internal static ConfigEntry<bool> configUseNumbersForAmmoDisplay;
@@ -129,7 +130,11 @@ namespace GTFO_VR.Core
             configAlternateEyeRendering = BindBool(file, "Rendering - Experimental", "Alternate eye rendering (janky!)", false,
     "If true will alternate between eyes when drawing lights and shadows each frame, \n might look really janky so only use this if you absolutely want to play this in VR but don't have the rig for it!",
     "Alternate rendering per eye");
-
+            
+            configEarlyTransparentRendererFix = BindBool(file, "Rendering", "Use water performance fix?", true,
+"If true, water surfaces and water tanks will be modified to not degrade performance. Should be toggled before cage drop. Disable if transparent objects suddenly stop rendering.",
+"Water performance fix");
+            
             BindHeader("Misc");
             configOculusCrashWorkaround = BindBool(file, "Misc", "Use Oculus crash workaround?", false, "If true, map and menu might look a little janky but it should crash less. Blame Zuck!", "Oculus crash workaround");
             configUseControllers = BindBool(file, "Input", "Use VR Controllers?", true, "If true, will use VR controllers. You can play with a gamepad and head aiming if you set this to false", "Motion Controllers (Restart if turning off!)");
