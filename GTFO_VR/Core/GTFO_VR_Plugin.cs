@@ -5,6 +5,7 @@ using GTFO_VR.Core.UI;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Detours;
 using GTFO_VR.UI;
+using GTFO_VR.UI.CANVAS;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -82,6 +83,9 @@ namespace GTFO_VR.Core
             ClassInjector.RegisterTypeInIl2Cpp<RadialItem>();
             ClassInjector.RegisterTypeInIl2Cpp<WeaponRadialMenu>();
             ClassInjector.RegisterTypeInIl2Cpp<WeaponAmmoHologram>();
+
+            ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardInterface>();
+            ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardCanvas>();
         }
 
         private bool SteamVRRunningCheck()
