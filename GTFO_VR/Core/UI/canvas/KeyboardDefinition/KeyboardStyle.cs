@@ -37,7 +37,7 @@ namespace Assets.scripts.KeyboardDefinition
 
            fontColor = new Color(1, 1, 1) * ( colorBrightnessMultiplier * 3) ;
 
-           highlightColor = new Color(0, 0.20f, 0.23f) * colorBrightnessMultiplier;
+           highlightColor = new Color(1.5f, 1.5f, 1.5f) * colorBrightnessMultiplier;
            highlightColor.a = 1;
     }
 

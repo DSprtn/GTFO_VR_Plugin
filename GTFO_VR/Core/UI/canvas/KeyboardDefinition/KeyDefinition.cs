@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Assets.scripts.KeyboardDefinition
@@ -30,7 +31,7 @@ namespace Assets.scripts.KeyboardDefinition
         EMPTY,
     }
 
-    class KeyDefinition : KeyboardLayout
+    public class KeyDefinition : KeyboardLayout
     {
         KeyType KeyType = KeyType.INPUT;
         string Input;       // if character or input
@@ -71,7 +72,7 @@ namespace Assets.scripts.KeyboardDefinition
             buttonRoot.name = GetName();
 
             // Temporary until I can figure out a better way of adding borders
-            buttonRoot.transform.localScale = new Vector3(0.99f, 0.99f, 0.99f);
+            //buttonRoot.transform.localScale = new Vector3(0.99f, 0.99f, 0.99f);
 
             Image image = buttonRoot.AddComponent<Image>();
             image.color = style.keyColor;
@@ -104,17 +105,35 @@ namespace Assets.scripts.KeyboardDefinition
 
             //textMesh.fontSharedMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always);
             textMesh.fontSharedMaterial.shader = Shader.Find("TextMeshPro/Distance Field Overlay"); // Not rendering ontop otherwise?
-            textMesh.fontSharedMaterial.renderQueue = 3003;
+            textMesh.fontSharedMaterial.renderQueue = 3002;
 
             // Some of these buttons have their sizes resolved at runtime, so have them grow to fit their content
             ContentSizeFitter sizeFitter = textObject.AddComponent<ContentSizeFitter>();
             sizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             sizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-               
-            
+
+
+            /////////////////////
+            // Click listener
+            /////////////////////
+
+            // When does a mouse button react? when you press down the button.
+            // When does a keyboard button react? when you press down the button.
+            // When does unity call a button's onClick? when you RELEASE the button. idiots.
+            EventTrigger evTrigger = buttonRoot.AddComponent<EventTrigger>();
+            EventTrigger.Entry entry = new EventTrigger.Entry();
+            entry.eventID = EventTriggerType.PointerDown;
+            entry.callback.AddListener((data) => handleClick(keyboardRoot));
+            evTrigger.triggers.Add(entry);
+
+
             return buttonRoot;
         }
 
+        public void handleClick( TerminalKeyboardInterface keyboardRoot )
+        {
+            keyboardRoot.HandleInput(this);
+        }
 
         public void AddChild(KeyboardLayout layout)
         {

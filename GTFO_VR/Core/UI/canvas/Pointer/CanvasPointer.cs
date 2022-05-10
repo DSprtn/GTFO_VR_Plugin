@@ -11,6 +11,7 @@ namespace Assets.scripts.Pointer
     class CanvasPointer : MonoBehaviour
     {
         public float m_DefaultLength = 100.0f;
+        public float m_LengthPadding = 0.01f;
         public GameObject m_Dot;
         public Camera m_Camera;
 
@@ -51,13 +52,19 @@ namespace Assets.scripts.Pointer
             m_LineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             m_LineRenderer.widthMultiplier = 0.003f;
 
+            Material lineMaterial = m_LineRenderer.material;
+            lineMaterial.renderQueue = 3002;
+
             ///////////////////
             // End dot
             ///////////////////
             m_Dot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            m_Dot.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
+            m_Dot.transform.localScale = new Vector3(0.01f, 0.01f, 0.001f);
             UnityEngine.Object.Destroy(m_Dot.GetComponent<SphereCollider>());
             m_Dot.transform.SetParent(gameObject.transform);
+
+            Material dotMat = m_Dot.GetComponent<MeshRenderer>().sharedMaterial;
+            dotMat.renderQueue = 3003;
 
             ////////////////
             // Input module
@@ -100,6 +107,8 @@ namespace Assets.scripts.Pointer
             // Treat as disabled, so something with this later.
             if (targetLength < 0)
                 targetLength = 0;
+            else
+                targetLength += m_LengthPadding;
 
             Vector3 endPosition = transform.position + (transform.forward * targetLength);
 

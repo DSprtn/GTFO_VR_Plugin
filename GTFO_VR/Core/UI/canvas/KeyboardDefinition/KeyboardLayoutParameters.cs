@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Assets.scripts.KeyboardDefinition
 {
-    class KeyboardLayoutParameters
+    public class KeyboardLayoutParameters
     {
         public float width = 1;     // Size of element multiplied by tile size defined in KeyboardStyle.
         public float height = 1;    

@@ -18,6 +18,9 @@ namespace Assets.scripts.Pointer
         public SteamVR_Action_Boolean m_ClickR = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/GrabPinch");
         public SteamVR_Action_Boolean m_ClickL = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/GrabPinch");
 
+        public SteamVR_Action_Boolean m_ReleaseR = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/GrabPinch");
+        public SteamVR_Action_Boolean m_ReleaseL = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/GrabPinch");
+
         private GameObject m_CurrentObject = null;
         private PointerEventData m_Data = null;
 
@@ -102,6 +105,7 @@ namespace Assets.scripts.Pointer
 
             HandlePointerExitAndEnter(m_Data, m_CurrentObject);
 
+            /*
             if (m_ClickR.GetStateDown(SteamVR_Input_Sources.RightHand))
             {
                 if ( mCurrentPointer.m_InputSource == SteamVR_Input_Sources.RightHand )
@@ -128,17 +132,40 @@ namespace Assets.scripts.Pointer
                     // Switch to the right pointer, don't do anything until next down
                     setPointer(getPointerForInputSource(SteamVR_Input_Sources.LeftHand));
                 }
-            }
+            }*/
 
+            handleDown(SteamVR_Input_Sources.LeftHand, m_ClickL, true);
+            handleDown(SteamVR_Input_Sources.RightHand, m_ClickR, true);
 
-            /*
-            if (m_ClickR.GetStateUp(m_InputSourceR))
+            handleDown(SteamVR_Input_Sources.LeftHand, m_ReleaseL, false);
+            handleDown(SteamVR_Input_Sources.RightHand, m_ReleaseR,false);
+        }
+
+        private void handleDown( SteamVR_Input_Sources inputSource, SteamVR_Action_Boolean action, bool isDown )
+        {
+            bool validAction = isDown ? action.GetStateDown(inputSource) : action.GetStateUp(inputSource);
+
+            if (validAction)
             {
-                ProcessRelease(m_Data);
+                if (mCurrentPointer.m_InputSource == inputSource)
+                {
+                    if (isDown)
+                    {
+                        ProcessPress(m_Data);
+                    }
+                    else
+                    {
+                        ProcessRelease(m_Data);
+                    }
+                   
+                }
+                else
+                {
+                    // Switch to the right pointer, don't do anything until next down
+                    if (isDown)
+                        setPointer(getPointerForInputSource(inputSource));
+                }
             }
-            */
-
-
         }
 
         public PointerEventData GetData()
@@ -148,11 +175,46 @@ namespace Assets.scripts.Pointer
 
         private void ProcessPress( PointerEventData data )
         {
+            if (!m_CurrentObject)
+                return;
+
+            GameObject newPointerPress = ExecuteEvents.ExecuteHierarchy(m_CurrentObject, data, ExecuteEvents.pointerDownHandler);
+
+            if (newPointerPress == null)
+                newPointerPress = ExecuteEvents.GetEventHandler<IPointerClickHandler>(m_CurrentObject);
+
+            data.pressPosition = data.position;
+            data.pointerPress = newPointerPress;
+            data.rawPointerPress = m_CurrentObject;
+
             Debug.Log("Press");
         }
 
         private void ProcessRelease(PointerEventData data )
         {
+
+            //if (!m_CurrentObject)
+            //    return;
+
+            ExecuteEvents.Execute(data.pointerPress, data, ExecuteEvents.pointerUpHandler);
+
+            GameObject pointerUpHandler = ExecuteEvents.GetEventHandler<IPointerClickHandler>(m_CurrentObject);
+
+            if (data.pointerPress == pointerUpHandler)
+            {
+                ExecuteEvents.Execute(data.pointerPress, data, ExecuteEvents.pointerClickHandler);
+            }
+
+            // Will this mess with game stuff?
+            eventSystem.SetSelectedGameObject(null);
+
+            data.pressPosition = Vector2.zero;
+            data.pointerPress = null;
+            data.rawPointerPress = null;
+
+
+
+
             Debug.Log("Release");
         }
 

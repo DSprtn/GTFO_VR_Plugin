@@ -196,6 +196,11 @@ namespace GTFO_VR.UI.CANVAS
 
         }
 
+        public void HandleInput( KeyDefinition key )
+        {
+            Debug.Log("Key press: " + key.GetName());
+        }
+       
         // Update is called once per frame
         void Update()
         {

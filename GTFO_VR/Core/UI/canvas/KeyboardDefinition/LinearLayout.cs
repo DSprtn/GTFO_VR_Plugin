@@ -11,7 +11,7 @@ namespace Assets.scripts.KeyboardDefinition
 {
     public enum LinearOrientation { VERTICAL, HORIZONTAL };
 
-    class LinearLayout : KeyboardLayout
+    public class LinearLayout : KeyboardLayout
     {
         private KeyboardLayoutParameters m_layoutParameters;
         private LinearOrientation m_orientation;
