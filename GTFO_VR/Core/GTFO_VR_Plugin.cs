@@ -6,6 +6,7 @@ using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Detours;
 using GTFO_VR.UI;
 using GTFO_VR.UI.CANVAS;
+using GTFO_VR.UI.CANVAS.POINTER;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -86,6 +87,7 @@ namespace GTFO_VR.Core
 
             ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardInterface>();
             ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardCanvas>();
+            ClassInjector.RegisterTypeInIl2Cpp<CanvasPointer>();
         }
 
         private bool SteamVRRunningCheck()

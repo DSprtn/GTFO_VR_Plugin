@@ -34,17 +34,18 @@ namespace GTFO_VR.Core.VR_Input
         {
             if (state.Equals(eFocusState.ComputerTerminal))
             {
+                /*
                 SteamVR_Render.unfocusedRenderResolution = 1f;
                 SteamVR.instance.overlay.ShowKeyboard(0, 0, "Terminal input", 256, "", true, 0);
                 m_chatMode = false;
 
-                OrientKeyboard();
+                OrientKeyboard();*/
             } else if (state.Equals(eFocusState.FPS_TypingInChat))
-            {
+            {/*
                 SteamVR_Render.unfocusedRenderResolution = 1f;
                 SteamVR.instance.overlay.ShowKeyboard(0, 0, "Chat input", 256, "", false, 0);
                 OrientKeyboard();
-                m_chatMode = true;
+                m_chatMode = true;*/
             }
             else
             {

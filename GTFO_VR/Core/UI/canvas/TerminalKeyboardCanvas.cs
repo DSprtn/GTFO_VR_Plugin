@@ -1,5 +1,5 @@
 ﻿using Assets.scripts.KeyboardDefinition;
-using Assets.scripts.Pointer;
+using GTFO_VR.UI.CANVAS.POINTER;
 using System.Collections;
 using System.Collections.Generic;
 using UnhollowerBaseLib.Attributes;
@@ -49,13 +49,13 @@ namespace GTFO_VR.UI.CANVAS
 
         private void Start()
         {
-            VRInputModule.m_TargetCanvases.Add(m_canvas);
-            m_canvas.worldCamera = VRInputModule.getOrCreate().m_Camera;
+            //VRInputModule.AddCanvas(m_canvas);
+            //m_canvas.worldCamera = VRInputModule.getOrCreate().m_Camera;
         }
 
         private void OnDisable()
         {
-            VRInputModule.m_TargetCanvases.Remove(m_canvas);
+            //VRInputModule.RemoveCanvas(m_canvas);
         }
     }
 

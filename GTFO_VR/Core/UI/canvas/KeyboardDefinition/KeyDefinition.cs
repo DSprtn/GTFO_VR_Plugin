@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 namespace Assets.scripts.KeyboardDefinition
@@ -76,7 +77,7 @@ namespace Assets.scripts.KeyboardDefinition
 
             Image image = buttonRoot.AddComponent<Image>();
             image.color = style.keyColor;
-            image.material.renderQueue = 3002;  // But still need to render underneath our text
+            image.material.renderQueue = (int)RenderQueue.Overlay;  // But still need to render underneath our text
             image.material.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
             
             Button button = buttonRoot.AddComponent<Button>();
@@ -104,8 +105,8 @@ namespace Assets.scripts.KeyboardDefinition
 
 
             //textMesh.fontSharedMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always);
-            textMesh.fontSharedMaterial.shader = Shader.Find("TextMeshPro/Distance Field Overlay"); // Not rendering ontop otherwise?
-            textMesh.fontSharedMaterial.renderQueue = 3002;
+            //textMesh.fontSharedMaterial.shader = Shader.Find("TextMeshPro/Distance Field Overlay"); // Not rendering ontop otherwise?
+            textMesh.fontSharedMaterial.renderQueue = (int)RenderQueue.Overlay;
 
             // Some of these buttons have their sizes resolved at runtime, so have them grow to fit their content
             ContentSizeFitter sizeFitter = textObject.AddComponent<ContentSizeFitter>();
@@ -117,15 +118,28 @@ namespace Assets.scripts.KeyboardDefinition
             // Click listener
             /////////////////////
 
+
+            button.onClick.AddListener( () => handleClick(keyboardRoot) );
+
+            /*
             // When does a mouse button react? when you press down the button.
             // When does a keyboard button react? when you press down the button.
             // When does unity call a button's onClick? when you RELEASE the button. idiots.
             EventTrigger evTrigger = buttonRoot.AddComponent<EventTrigger>();
             EventTrigger.Entry entry = new EventTrigger.Entry();
             entry.eventID = EventTriggerType.PointerDown;
-            entry.callback.AddListener((data) => handleClick(keyboardRoot));
+            entry.callback.AddListener((data) => handleClick(keyboardRoot)); //TODO fix me
             evTrigger.triggers.Add(entry);
+            */
 
+            ////////////////////
+            /// Box collider
+            /// /////////////////
+
+            BoxCollider collider = buttonRoot.AddComponent<BoxCollider>();
+            collider.size = new Vector3(element.preferredWidth, element.preferredHeight, 0.01f);
+
+            //collider.attachedRigidbody
 
             return buttonRoot;
         }

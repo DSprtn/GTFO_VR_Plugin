@@ -1,6 +1,7 @@
 ﻿using Assets.scripts.KeyboardDefinition;
 using GTFO_VR.Core;
 using GTFO_VR.Core.UI;
+using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
 using GTFO_VR.UI.CANVAS;
 using HarmonyLib;
@@ -13,8 +14,8 @@ using UnityEngine;
 
 namespace GTFO_VR.Injections.UI
 {
-    [HarmonyPatch(typeof(LevelGeneration.LG_ComputerTerminal), nameof(LevelGeneration.LG_ComputerTerminal.OnProximityEnter))]
-    internal class InjectProximityEnter
+    [HarmonyPatch(typeof(LevelGeneration.LG_ComputerTerminal), nameof(LevelGeneration.LG_ComputerTerminal.EnterFPSView))]
+    internal class InjectProximityExit
     {
         private static void Postfix(LevelGeneration.LG_ComputerTerminal __instance)
         {
@@ -40,11 +41,13 @@ namespace GTFO_VR.Injections.UI
 
             KeyboardStyle.colorBrightnessMultiplier = 0.1f;
             TerminalKeyboardInterface.attach(keyboardRoot, terminalCanvas);
+
+            Controllers.setupCanvasPointers();
         }
     }
 
-    [HarmonyPatch(typeof(LevelGeneration.LG_ComputerTerminal), nameof(LevelGeneration.LG_ComputerTerminal.OnProximityExit))]
-    internal class InjectProximityExit
+    [HarmonyPatch(typeof(LevelGeneration.LG_ComputerTerminal), nameof(LevelGeneration.LG_ComputerTerminal.ExitFPSView))]
+    internal class InjectProximityExit2
     {
         private static void Postfix(LevelGeneration.LG_ComputerTerminal __instance)
         {
@@ -52,7 +55,7 @@ namespace GTFO_VR.Injections.UI
             if (keyboardRoot != null)
             {
                 GameObject.Destroy(keyboardRoot.gameObject);
-            }        
+            }
         }
     }
 }

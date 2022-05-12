@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.Events;
+using GTFO_VR.UI.CANVAS.POINTER;
 using System;
 using UnityEngine;
 using Valve.VR;
@@ -119,7 +120,28 @@ namespace GTFO_VR.Core.VR_Input
             steamVR_Behaviour_Pose.inputSource = source;
             steamVR_Behaviour_Pose.broadcastDeviceChanges = true;
             steamVR_Behaviour_Pose.rotationOffset = Quaternion.Euler(VRConfig.configWeaponRotationOffset.Value, 0, 0);
+
             return controller;
+        }
+
+        public static void setupCanvasPointers()
+        {
+            if (!RightController || !LeftController)
+                return;
+
+            if (RightController.transform.Find("CanvasPointer"))
+            {
+                Debug.Log("Pointers already exist, skipping.");
+            }
+
+            addCanvasPointer(RightController, SteamVR_Input_Sources.RightHand);
+            addCanvasPointer(LeftController, SteamVR_Input_Sources.LeftHand);
+        }
+
+        private static void addCanvasPointer(GameObject hand, SteamVR_Input_Sources source )
+        {
+            GameObject pointer = CanvasPointer.create(source);
+            pointer.transform.SetParent(hand.transform);
         }
 
         private void HandleDoubleHandedChecks()
