@@ -21,7 +21,6 @@ namespace GTFO_VR.UI.CANVAS.POINTER
         private static readonly float LINE_WIDTH = 0.003f;
 
         public float m_DefaultLength = 0.5f;
-        public float m_LengthPadding = 0.0f;
         public GameObject m_Dot;
 
         private AnimationCurve mFarCurve = new AnimationCurve();
@@ -192,23 +191,20 @@ namespace GTFO_VR.UI.CANVAS.POINTER
         public void updateLine()
         {
             bool hit = m_currentHit.collider != null;
-            
-            float targetLength = m_DefaultLength;
-            if (m_currentHit.collider != null)
-            {
-                targetLength = m_currentHit.distance;
-            }
-            
-            // Treat as disabled, so something with this later.
-            if (targetLength < 0)
-                targetLength = 0;
+
+            Vector3 endPosition;
+            if (hit)
+                endPosition = m_currentHit.point;
             else
-                targetLength += m_LengthPadding;
+                endPosition = transform.position + (transform.forward * m_DefaultLength);
 
-            Vector3 endPosition = transform.position + (transform.forward * targetLength);
-
-            if (m_currentHit.collider != null)
+            if (hit)
+            {
                 m_Dot.transform.position = endPosition;
+
+                //Align with surface
+                m_Dot.transform.rotation = m_currentHit.collider.transform.rotation;
+            }
             else
                 m_Dot.transform.position = Vector3.zero;
 
