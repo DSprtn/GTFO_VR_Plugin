@@ -36,8 +36,6 @@ namespace GTFO_VR.UI.CANVAS.POINTER
         static MethodInfo s_Selectable_DoStateTransition = typeof(Selectable).GetMethod("DoStateTransition",
     BindingFlags.NonPublic | BindingFlags.Instance);
 
-        //static Type s_Selectable_StateEnum = typeof(Selectable).GetNestedTypes().FirstOrDefault(x => x.IsEnum && x.Name.Equals("SelectionState" ));
-
         private enum SelectionState
         {
             Normal = 0,
@@ -46,7 +44,6 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             Selected = 3,
             Disabled = 4
         }
-
 
         public static GameObject create(SteamVR_Input_Sources inputSource )
         {
@@ -127,38 +124,57 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             handleInput();
         }
 
+        private static bool isButton(RaycastHit hit)
+        {
+            if (hit.collider == null)
+                return false;
+
+            Button button = hit.collider.gameObject.GetComponent<Button>();
+            return button != null;
+        }
+
+        private static bool isCollider(RaycastHit hit)
+        {
+            return hit.collider != null;
+        }
+
         private void handleInput()
         {
-            if (m_currentHit.collider == null)
-                return;
-
             bool down = m_click.GetStateDown(m_InputSource);
             bool up = m_click.GetStateUp(m_InputSource);
 
-            Selectable selectable = m_prevHit.collider.gameObject.GetComponent<Selectable>();
-            Button button = m_prevHit.collider.gameObject.GetComponent<Button>();
-
-            if (down)
+            if (up || down)
             {
-                //Debug.Log("Down");
-                m_ButtonPressHit = m_currentHit;
-                button.onClick.Invoke();
-                setSelectableState(selectable, SelectionState.Pressed);
-            }
-
-            if (up)
-            {
-                //Debug.Log("Up");
-                // Restore state to highlighted if we are still hovering over the same button, 
-                // otherwise return state of the button we clicked on to normal.
-                if ( m_currentHit.collider == m_ButtonPressHit.collider)
-                    setSelectableState(selectable, SelectionState.Highlighted);
-                else if ( m_ButtonPressHit.collider != null )
+                if (down)
                 {
-                    Selectable oldSelectable = m_ButtonPressHit.collider.gameObject.GetComponent<Selectable>();
-                    setSelectableState(oldSelectable, SelectionState.Normal);
+                    if ( isButton( m_currentHit ))
+                    {
+                        Selectable selectable = m_currentHit.collider.gameObject.GetComponent<Selectable>();
+                        Button button = m_currentHit.collider.gameObject.GetComponent<Button>();
+
+                        m_ButtonPressHit = m_currentHit;
+                        button.onClick.Invoke();
+                        setSelectableState(selectable, SelectionState.Pressed);
+                    }
                 }
-                   
+
+                if (up)
+                {
+                    // Restore state to highlighted if we are still hovering over the same button, 
+                    // otherwise return state of the button we clicked on to normal.
+                    if (isButton(m_currentHit) && m_currentHit.collider == m_ButtonPressHit.collider )
+                    {
+                        Selectable selectable = m_currentHit.collider.gameObject.GetComponent<Selectable>();
+                        setSelectableState(selectable, SelectionState.Highlighted);
+                    }
+                    else if (m_ButtonPressHit.collider != null)
+                    {
+                        Selectable oldSelectable = m_ButtonPressHit.collider.gameObject.GetComponent<Selectable>();
+                        setSelectableState(oldSelectable, SelectionState.Normal);
+                    }
+
+                    m_ButtonPressHit = new RaycastHit();
+                }
             }
         }
 
@@ -169,28 +185,29 @@ namespace GTFO_VR.UI.CANVAS.POINTER
 
             m_prevHit = m_currentHit;
             m_currentHit = hit;
-
-            
         }
 
         private void handleHighlight()
         {
             if (m_currentHit.collider != m_prevHit.collider)
             {
-                if (m_prevHit.collider != null)
+                if ( isButton(m_prevHit))
                 {
                     Selectable prevButton = m_prevHit.collider.gameObject.GetComponent<Selectable>();
                     setSelectableState(prevButton, SelectionState.Normal);
                 }
 
-                Selectable button = m_currentHit.collider.gameObject.GetComponent<Selectable>();
-                setSelectableState(button, SelectionState.Highlighted);
+                if (isButton(m_currentHit))
+                {
+                    Selectable button = m_currentHit.collider.gameObject.GetComponent<Selectable>();
+                    setSelectableState(button, SelectionState.Highlighted);
+                }
             }
         }
 
         public void updateLine()
         {
-            bool hit = m_currentHit.collider != null;
+            bool hit = isCollider(m_currentHit);
 
             Vector3 endPosition;
             if (hit)
@@ -210,11 +227,7 @@ namespace GTFO_VR.UI.CANVAS.POINTER
 
             m_LineRenderer.SetPosition(0, transform.position);
             m_LineRenderer.SetPosition(1, endPosition);
-
-
         }
-
-
 
         private void OnDestroy()
         {
