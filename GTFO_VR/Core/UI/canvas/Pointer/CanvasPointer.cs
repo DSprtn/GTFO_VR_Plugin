@@ -17,7 +17,8 @@ namespace GTFO_VR.UI.CANVAS.POINTER
     {
 
 
-        private SteamVR_Action_Boolean m_click = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/GrabPinch");
+        //private SteamVR_Action_Boolean m_click = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/GrabPinch");
+        private SteamVR_Action_Boolean m_click = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/Shoot");
 
         private static readonly float LINE_WIDTH = 0.003f;
 
