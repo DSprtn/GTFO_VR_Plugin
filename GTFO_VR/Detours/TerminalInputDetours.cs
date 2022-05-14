@@ -4,6 +4,7 @@ using BepInEx.IL2CPP.Hook;
 using System.Runtime.InteropServices;
 using GTFO_VR.Core;
 using GTFO_VR.Core.VR_Input;
+using GTFO_VR.UI.CANVAS;
 
 namespace GTFO_VR.Detours
 {
@@ -27,14 +28,16 @@ namespace GTFO_VR.Detours
         private unsafe static IntPtr OurGetInputString()
         {
             string input = IL2CPP.Il2CppStringToManaged(originalInputStringGetter());
-            IntPtr vr_input = IL2CPP.ManagedStringToIl2Cpp(VRKeyboard.GetKeyboardInput() + input);
+            IntPtr vr_input = IL2CPP.ManagedStringToIl2Cpp(VRKeyboard.GetKeyboardInput() + TerminalKeyboardInterface.getKeyboardInput()  + input);
+
             return vr_input;
         }
 
         private unsafe static bool OurGetAnyInput()
         {
             bool vr_input = VRKeyboard.GetKeyboardInput() != "";
-            return vr_input || originalAnyInputDownGetter();
+            bool terminal_vr_input = TerminalKeyboardInterface.getKeyboardInput() != "";
+            return vr_input || terminal_vr_input || originalAnyInputDownGetter();
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]

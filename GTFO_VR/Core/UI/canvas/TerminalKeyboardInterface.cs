@@ -20,6 +20,10 @@ namespace GTFO_VR.UI.CANVAS
         public static readonly float CANVAS_SCALE = 0.045f; // Same scaling used by GTFO, because otherwise units are silly.
         private static readonly float SECTION_PADDING = 0f * CANVAS_SCALE;
 
+        public static string currentFrameInput = "";
+
+        bool m_dataDirty = false;
+
 
         public static GameObject create(GameObject terminalCanvas)
         {
@@ -30,6 +34,17 @@ namespace GTFO_VR.UI.CANVAS
             inf.m_terminalCanvas = terminalCanvas;
             return go;
         }
+
+        private void LateUpdate()
+        {
+           m_dataDirty = true;
+        }
+
+        public static string getKeyboardInput()
+        {
+            return currentFrameInput;
+        }
+
 
         [HideFromIl2Cpp]
         private static KeyboardLayout getBottomKeyboardLayout()
@@ -218,13 +233,39 @@ namespace GTFO_VR.UI.CANVAS
 
         public void HandleInput( KeyDefinition key )
         {
+            checkDirty();
+
             Debug.Log("Key press: " + key.GetName());
+
+            if (key.hasInput())
+            {
+                currentFrameInput += key.Input;
+            }
         }
-       
+
+        public void HandleInput(string str)
+        {
+            checkDirty();
+
+            Debug.Log("String input: " + str);
+
+            currentFrameInput += str;
+            
+        }
+
+        private void checkDirty()
+        {
+            if (m_dataDirty)
+            {
+                currentFrameInput = "";
+                m_dataDirty = false;
+            }
+        }
+
         // Update is called once per frame
         void Update()
         {
-
+            checkDirty();
         }
 
         private void OnDestroy()

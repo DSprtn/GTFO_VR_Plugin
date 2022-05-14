@@ -31,16 +31,16 @@ namespace Assets.scripts.KeyboardDefinition
         DOWN,
         LEFT,
         RIGHT,
-        EMPTY,
+        EMPTY
     }
 
     public class KeyDefinition : KeyboardLayout
     {
-        KeyType KeyType = KeyType.INPUT;
-        string Input;       // if character or input
-        string Label;
-        KeyboardLayoutParameters layoutParameters;
-        KeyboardStyle style;
+        public KeyType KeyType = KeyType.INPUT;
+        public string Input;       // if character or input
+        public string Label;
+        public KeyboardLayoutParameters layoutParameters;
+        public KeyboardStyle style;
 
         public KeyDefinition(string input) : this(input, input) { }
 
@@ -51,6 +51,7 @@ namespace Assets.scripts.KeyboardDefinition
             this.Input = input;
             this.Label = label;
             this.layoutParameters = layoutParameters;
+            populateInput();
         }
 
         public KeyDefinition(KeyType type, string label) : this(type, label, new KeyboardLayoutParameters() ){ }
@@ -63,6 +64,42 @@ namespace Assets.scripts.KeyboardDefinition
             this.KeyType = type;
             this.Label = label;
             this.layoutParameters = layoutParameters;
+            populateInput();
+        }
+
+        public bool hasInput()
+        {
+            return this.Input != null;
+        }
+
+        private void populateInput()
+        {
+            if (this.Input != null)
+                return;
+
+            switch (this.KeyType)
+            {
+                case KeyType.SPACE:
+                    {
+                        this.Input = " ";
+                        break;
+                    }
+                case KeyType.ENTER:
+                    {
+                        this.Input = "\r";
+                        break;
+                    }
+                case KeyType.TAB:
+                    {
+                        this.Input = "\t";
+                        break;
+                    }
+                default:
+                    {
+                        this.Input = "";
+                        break;
+                    }
+            }
         }
 
         public GameObject GenerateLayout(TerminalKeyboardInterface keyboardRoot, KeyboardStyle style)
@@ -121,19 +158,7 @@ namespace Assets.scripts.KeyboardDefinition
             // Click listener
             /////////////////////
 
-
             button.onClick.AddListener( (UnityAction) (() => handleClick(keyboardRoot)) );
-
-            /*
-            // When does a mouse button react? when you press down the button.
-            // When does a keyboard button react? when you press down the button.
-            // When does unity call a button's onClick? when you RELEASE the button. idiots.
-            EventTrigger evTrigger = buttonRoot.AddComponent<EventTrigger>();
-            EventTrigger.Entry entry = new EventTrigger.Entry();
-            entry.eventID = EventTriggerType.PointerDown;
-            entry.callback.AddListener((data) => handleClick(keyboardRoot)); //TODO fix me
-            evTrigger.triggers.Add(entry);
-            */
 
             ////////////////////
             /// Box collider
@@ -145,7 +170,8 @@ namespace Assets.scripts.KeyboardDefinition
             //collider.size = new Vector3(trans.sizeDelta.x, trans.sizeDelta.y, 0.01f);
             if (element.flexibleWidth >= 0 || element.flexibleHeight >= 0)
             {
-                // Size not known yet, add measuring thing
+                // Size not known yet, add measuring thing too, but also set size because we'll keep the z axis
+                collider.size = new Vector3(element.preferredWidth, element.preferredHeight, 0.01f);
                 buttonRoot.AddComponent<RectColliderSizer>();
             }
             else
@@ -181,5 +207,6 @@ namespace Assets.scripts.KeyboardDefinition
         {
             throw new NotImplementedException();
         }
+        
     }
 }
