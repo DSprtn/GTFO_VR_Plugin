@@ -113,7 +113,10 @@ namespace Assets.scripts.KeyboardDefinition
             buttonRoot.name = GetName();
 
             // Temporary until I can figure out a better way of adding borders
-            //buttonRoot.transform.localScale = new Vector3(0.99f, 0.99f, 0.99f);
+            buttonRoot.transform.localScale = new Vector3(
+                TerminalKeyboardInterface.KEY_SCALE,
+                TerminalKeyboardInterface.KEY_SCALE,
+                TerminalKeyboardInterface.KEY_SCALE);
 
             Image image = buttonRoot.AddComponent<Image>();
             image.color = style.keyColor;
@@ -171,15 +174,14 @@ namespace Assets.scripts.KeyboardDefinition
             if (element.flexibleWidth >= 0 || element.flexibleHeight >= 0)
             {
                 // Size not known yet, add measuring thing too, but also set size because we'll keep the z axis
-                collider.size = new Vector3(element.preferredWidth, element.preferredHeight, 0.01f);
+                collider.size = new Vector3(element.preferredWidth * TerminalKeyboardInterface.HITBOX_SCALE, element.preferredHeight * TerminalKeyboardInterface.HITBOX_SCALE, 0.01f);
                 buttonRoot.AddComponent<RectColliderSizer>();
             }
             else
             {
                 // Constant size, just set
-                collider.size = new Vector3(element.preferredWidth, element.preferredHeight, 0.01f);
+                collider.size = new Vector3(element.preferredWidth * TerminalKeyboardInterface.HITBOX_SCALE, element.preferredHeight * TerminalKeyboardInterface.HITBOX_SCALE, 0.01f);
             }
-
 
             //collider.attachedRigidbody
 
