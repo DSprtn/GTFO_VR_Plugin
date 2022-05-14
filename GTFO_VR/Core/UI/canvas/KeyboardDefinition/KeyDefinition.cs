@@ -1,4 +1,5 @@
-﻿using GTFO_VR.UI.CANVAS;
+﻿using GTFO_VR.Core.UI.canvas.KeyboardDefinition;
+using GTFO_VR.UI.CANVAS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -138,13 +139,27 @@ namespace Assets.scripts.KeyboardDefinition
             /// Box collider
             /// /////////////////
 
+            RectTransform trans = buttonRoot.GetComponent<RectTransform>();
             BoxCollider collider = buttonRoot.AddComponent<BoxCollider>();
-            collider.size = new Vector3(element.preferredWidth, element.preferredHeight, 0.01f);
+
+            //collider.size = new Vector3(trans.sizeDelta.x, trans.sizeDelta.y, 0.01f);
+            if (element.flexibleWidth >= 0 || element.flexibleHeight >= 0)
+            {
+                // Size not known yet, add measuring thing
+                buttonRoot.AddComponent<RectColliderSizer>();
+            }
+            else
+            {
+                // Constant size, just set
+                collider.size = new Vector3(element.preferredWidth, element.preferredHeight, 0.01f);
+            }
+
 
             //collider.attachedRigidbody
 
             return buttonRoot;
         }
+
 
         public void handleClick( TerminalKeyboardInterface keyboardRoot )
         {

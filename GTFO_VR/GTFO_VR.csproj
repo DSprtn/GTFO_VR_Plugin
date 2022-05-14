@@ -41,8 +41,9 @@
     <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsIntegration.cs" />
     <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsUtils.cs" />
     <Compile Include="Core\PlayerBehaviours\MovementVignette.cs" />
+    <Compile Include="Core\UI\canvas\KeyboardDefinition\RectColliderSizer.cs" />
     <Compile Include="Core\UI\canvas\Pointer\CanvasPointer.cs" />
-	<Compile Include="Core\UI\canvas\TerminalReader.cs" />
+    <Compile Include="Core\UI\canvas\TerminalReader.cs" />
     <Compile Include="Core\UI\RadialItem.cs" />
     <Compile Include="Core\UI\RadialMenu.cs" />
     <Compile Include="Core\PlayerBehaviours\VRMeleeWeapon.cs" />
