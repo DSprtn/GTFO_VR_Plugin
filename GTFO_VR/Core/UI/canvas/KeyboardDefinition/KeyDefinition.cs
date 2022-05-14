@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -70,6 +71,7 @@ namespace Assets.scripts.KeyboardDefinition
                 style = this.style;
 
             GameObject buttonRoot = new GameObject();
+            buttonRoot.layer = TerminalKeyboardInterface.LAYER;
             buttonRoot.name = GetName();
 
             // Temporary until I can figure out a better way of adding borders
@@ -119,7 +121,7 @@ namespace Assets.scripts.KeyboardDefinition
             /////////////////////
 
 
-            button.onClick.AddListener( () => handleClick(keyboardRoot) );
+            button.onClick.AddListener( (UnityAction) (() => handleClick(keyboardRoot)) );
 
             /*
             // When does a mouse button react? when you press down the button.

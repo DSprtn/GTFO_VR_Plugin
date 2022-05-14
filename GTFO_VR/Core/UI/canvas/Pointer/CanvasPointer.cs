@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GTFO_VR.Core.UI.canvas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -33,8 +34,24 @@ namespace GTFO_VR.UI.CANVAS.POINTER
 
         private LineRenderer m_LineRenderer = null;
 
-        static MethodInfo s_Selectable_DoStateTransition = typeof(Selectable).GetMethod("DoStateTransition",
-    BindingFlags.NonPublic | BindingFlags.Instance);
+        static MethodInfo s_Selectable_DoStateTransition;
+
+        static CanvasPointer()
+        {
+            // GetMethod() doesn't find it, GetRuntimeMethod() requires parameters.
+            Type clazz = typeof(Selectable);
+            IEnumerable<MethodInfo> methods = clazz.GetRuntimeMethods();
+            foreach(MethodInfo method in methods)
+            {
+                if (method.Name.Equals("DoStateTransition"))
+                {
+                    Debug.Log("Found the method");
+                    s_Selectable_DoStateTransition = method;
+                    break;
+                }
+            }
+        }
+
 
         private enum SelectionState
         {
@@ -66,9 +83,10 @@ namespace GTFO_VR.UI.CANVAS.POINTER
         // 0 normal, 1 highlighted, rest we don't care about.
         private void setSelectableState( Selectable selectable, SelectionState state)
         {
-           // Debug.Log("Setting state to: " + state);
+            if (s_Selectable_DoStateTransition == null)
+                return;
 
-            s_Selectable_DoStateTransition.Invoke(selectable, new object[]{(int)state, false});
+            s_Selectable_DoStateTransition.Invoke(selectable, new object[]{(int)state, true});
         }
 
         private void Awake()
@@ -138,6 +156,14 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             return hit.collider != null;
         }
 
+        private static bool isTextCanvas(RaycastHit hit)
+        {
+            if (hit.collider == null)
+                return false;
+
+            return hit.collider?.gameObject.GetComponent<TerminalReader>() != null;
+        }
+
         private void handleInput()
         {
             bool down = m_click.GetStateDown(m_InputSource);
@@ -181,10 +207,26 @@ namespace GTFO_VR.UI.CANVAS.POINTER
         private void doRaycast()
         {
             RaycastHit hit;
-            bool hitSomething = Physics.Raycast(this.transform.position, this.transform.forward, out hit, 500);
+            bool hitSomething = Physics.Raycast(
+                this.transform.position, 
+                this.transform.forward, 
+                out hit, 
+                500, 
+                TerminalKeyboardInterface.LAYER_MASK);
+
+
 
             m_prevHit = m_currentHit;
             m_currentHit = hit;
+
+            if (m_prevHit.collider != m_currentHit.collider)
+            {
+                if ( isCollider(m_currentHit) )
+                {
+                    Debug.Log("New target: " + m_currentHit.collider.gameObject.name);
+                }
+            } 
+               
         }
 
         private void handleHighlight()
@@ -202,6 +244,12 @@ namespace GTFO_VR.UI.CANVAS.POINTER
                     Selectable button = m_currentHit.collider.gameObject.GetComponent<Selectable>();
                     setSelectableState(button, SelectionState.Highlighted);
                 }
+            }
+
+            if ( isTextCanvas(m_currentHit) )
+            {
+                TerminalReader reader = m_currentHit.collider.gameObject.GetComponent<TerminalReader>();
+                reader.findNearestCharacter(m_currentHit.point);
             }
         }
 

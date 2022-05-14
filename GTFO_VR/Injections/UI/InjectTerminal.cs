@@ -32,15 +32,11 @@ namespace GTFO_VR.Injections.UI
                 Log.Error("Could not find [text FPS] canvas in terminal!");
                 return;
             }
-            GameObject keyboardRoot = new GameObject();
-            keyboardRoot.name = "keyboardRoot";
-
-            keyboardRoot.transform.position = terminalCanvas.transform.position;
-            keyboardRoot.transform.rotation = terminalCanvas.transform.rotation;
-            keyboardRoot.transform.SetParent(__instance.transform);
 
             KeyboardStyle.colorBrightnessMultiplier = 0.1f;
-            TerminalKeyboardInterface.attach(keyboardRoot, terminalCanvas);
+            GameObject keyboardRoot = TerminalKeyboardInterface.create(terminalCanvas);
+
+          
 
             Controllers.setupCanvasPointers();
         }
@@ -51,11 +47,14 @@ namespace GTFO_VR.Injections.UI
     {
         private static void Postfix(LevelGeneration.LG_ComputerTerminal __instance)
         {
-            Transform keyboardRoot = __instance.gameObject.transform.Find("keyboardRoot");
+            GameObject keyboardRoot = GameObject.Find("keyboardRoot");
             if (keyboardRoot != null)
             {
-                GameObject.Destroy(keyboardRoot.gameObject);
+                GameObject.Destroy(keyboardRoot);
             }
+
+            Controllers.removeCanvasPointers();
+
         }
     }
 }

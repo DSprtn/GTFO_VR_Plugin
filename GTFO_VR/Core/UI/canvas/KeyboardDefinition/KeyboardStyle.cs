@@ -37,7 +37,8 @@ namespace Assets.scripts.KeyboardDefinition
 
            fontColor = new Color(1, 1, 1) * ( colorBrightnessMultiplier * 3) ;
 
-           highlightColor = new Color(1.5f, 1.5f, 1.5f) * colorBrightnessMultiplier;
+           // Button tints multiply the existing color so don't need to be adjusted?
+           highlightColor = new Color(1.5f, 1.5f, 1.5f);
            highlightColor.a = 1;
     }
 

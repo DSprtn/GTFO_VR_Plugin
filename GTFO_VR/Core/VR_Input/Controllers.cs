@@ -120,10 +120,8 @@ namespace GTFO_VR.Core.VR_Input
             steamVR_Behaviour_Pose.inputSource = source;
             steamVR_Behaviour_Pose.broadcastDeviceChanges = true;
             steamVR_Behaviour_Pose.rotationOffset = Quaternion.Euler(VRConfig.configWeaponRotationOffset.Value, 0, 0);
-
             return controller;
         }
-
         public static void setupCanvasPointers()
         {
             if (!RightController || !LeftController)
@@ -132,10 +130,23 @@ namespace GTFO_VR.Core.VR_Input
             if (RightController.transform.Find("CanvasPointer"))
             {
                 Debug.Log("Pointers already exist, skipping.");
+                return;
             }
 
             addCanvasPointer(RightController, SteamVR_Input_Sources.RightHand);
             addCanvasPointer(LeftController, SteamVR_Input_Sources.LeftHand);
+        }
+
+        public static void removeCanvasPointers()
+        {
+
+            GameObject rightPointer = RightController.transform.Find("CanvasPointer")?.gameObject;
+            GameObject leftPointer = LeftController.transform.Find("CanvasPointer")?.gameObject;
+
+            if (rightPointer != null)
+                GameObject.Destroy(rightPointer);
+            if (leftPointer != null)
+                GameObject.Destroy(leftPointer);
         }
 
         private static void addCanvasPointer(GameObject hand, SteamVR_Input_Sources source )
@@ -143,7 +154,6 @@ namespace GTFO_VR.Core.VR_Input
             GameObject pointer = CanvasPointer.create(source);
             pointer.transform.SetParent(hand.transform);
         }
-
         private void HandleDoubleHandedChecks()
         {
             bool isInDoubleHandPos = false;

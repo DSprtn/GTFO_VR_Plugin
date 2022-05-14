@@ -1,4 +1,5 @@
 ﻿using Assets.scripts.KeyboardDefinition;
+using GTFO_VR.Core.UI.canvas;
 using System.Collections;
 using System.Collections.Generic;
 using UnhollowerBaseLib.Attributes;
@@ -14,15 +15,20 @@ namespace GTFO_VR.UI.CANVAS
         private KeyboardStyle m_keyboardStyle = new KeyboardStyle(2, 1);
         private Material keyboardMaterial;
 
+        public static readonly int LAYER = 5;
+        public static readonly int LAYER_MASK = 1 << LAYER;
         public static readonly float CANVAS_SCALE = 0.045f; // Same scaling used by GTFO, because otherwise units are silly.
         private static readonly float SECTION_PADDING = 0f * CANVAS_SCALE;
 
 
-        public static TerminalKeyboardInterface attach(GameObject go, GameObject terminalCanvas)
+        public static GameObject create(GameObject terminalCanvas)
         {
+            GameObject go = new GameObject();
+            go.name = "keyboardRoot";
+            go.layer = LAYER;
             TerminalKeyboardInterface inf = go.AddComponent<TerminalKeyboardInterface>();
             inf.m_terminalCanvas = terminalCanvas;
-            return inf;
+            return go;
         }
 
         [HideFromIl2Cpp]
@@ -131,6 +137,8 @@ namespace GTFO_VR.UI.CANVAS
 
         private void Start()
         {
+            this.transform.position = m_terminalCanvas.transform.position;
+            this.transform.rotation = m_terminalCanvas.transform.rotation;
 
             m_keyboardStyle.TileSize = 1;
             m_keyboardStyle.FontSize = 0.5f;
@@ -147,6 +155,18 @@ namespace GTFO_VR.UI.CANVAS
             m_keyboardStyle.fontMaterial = new Material(uiShader);
             m_keyboardStyle.fontMaterial.renderQueue = 3003;
             */
+
+            /////////////////////////
+            // terminal text canvas
+            /////////////////////////
+
+            GameObject terminalReaderRoot = TerminalReader.Create(m_terminalCanvas);
+            terminalReaderRoot.transform.SetParent(this.transform);
+
+
+            ///////////////////////
+            // Bottom keyboard
+            ///////////////////////
 
             GameObject bottomKeyboard = new GameObject();
             bottomKeyboard.name = "bottomKeyboard";
