@@ -69,12 +69,12 @@ namespace Assets.scripts.KeyboardDefinition
 
         public bool hasInput()
         {
-            return this.Input != null;
+            return Input != null;
         }
 
         private void populateInput()
         {
-            if (this.Input != null)
+            if (Input != null)
                 return;
 
             switch (this.KeyType)
@@ -92,11 +92,6 @@ namespace Assets.scripts.KeyboardDefinition
                 case KeyType.TAB:
                     {
                         this.Input = "\t";
-                        break;
-                    }
-                default:
-                    {
-                        this.Input = "";
                         break;
                     }
             }

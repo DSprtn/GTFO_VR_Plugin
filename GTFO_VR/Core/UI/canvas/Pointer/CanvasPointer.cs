@@ -236,7 +236,7 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             {
                 if ( isCollider(m_currentHit) )
                 {
-                    Debug.Log("New target: " + m_currentHit.collider.gameObject.name);
+                    //Debug.Log("New target: " + m_currentHit.collider.gameObject.name);
                 }
             } 
                

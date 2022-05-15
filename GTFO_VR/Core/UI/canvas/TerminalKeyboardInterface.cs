@@ -1,5 +1,6 @@
 ﻿using Assets.scripts.KeyboardDefinition;
 using GTFO_VR.Core.UI.canvas;
+using GTFO_VR.Core.VR_Input;
 using System.Collections;
 using System.Collections.Generic;
 using UnhollowerBaseLib.Attributes;
@@ -246,6 +247,23 @@ namespace GTFO_VR.UI.CANVAS
             if (key.hasInput())
             {
                 currentFrameInput += key.Input;
+            }
+            else
+            {
+                switch(key.KeyType)
+                {
+                    case KeyType.BACKPSPACE:
+                    {
+                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalDel);
+                        break;
+                    }
+
+                    case KeyType.ESC:
+                    {
+                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalExit);
+                        break;
+                    }
+                }
             }
         }
 

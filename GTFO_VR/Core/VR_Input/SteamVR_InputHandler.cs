@@ -48,6 +48,11 @@ namespace GTFO_VR.Core.VR_Input
 
         private static Dictionary<InputAction, SteamVR_Action_Boolean> boolActions;
 
+        private static DummyAction m_terminalDeleteAction= new DummyAction(InputAction.TerminalDel, true);
+        private static DummyAction m_terminalExitAction = new DummyAction(InputAction.TerminalExit, true);
+
+        private static Dictionary<InputAction, DummyAction> dummyBoolActions;
+
         public static void Setup()
         {
             if(Initialized)
@@ -95,12 +100,25 @@ namespace GTFO_VR.Core.VR_Input
             hapticAction.Execute(0.0f, duration, frequency, amplitude, controller);
         }
 
+        public static void triggerDummyAction(InputAction action )
+        {
+            DummyAction dummyAction = GetDummyBoolActionMapping(action);
+            if (dummyAction != null )
+            {
+                dummyAction.requestPress();
+            }
+        }
+
         public static bool GetActionDown(InputAction action)
         {
             if (!Initialized)
             {
                 return false;
             }
+
+            DummyAction dummyAction = GetDummyBoolActionMapping(action);
+            if (dummyAction != null && dummyAction.getDown())
+                return true;
 
             SteamVR_Action_Boolean boolActionMapping = GetBoolActionMapping(action);
             if (IsIRLCrouchValid(action))
@@ -126,6 +144,10 @@ namespace GTFO_VR.Core.VR_Input
                 return false;
             }
 
+            //DummyAction dummyAction = GetDummyBoolActionMapping(action);
+            //if (dummyAction != null && dummyAction.getDown())
+            //    return true;
+
             SteamVR_Action_Boolean boolActionMapping = SteamVR_InputHandler.GetBoolActionMapping(action);
             if (IsIRLCrouchValid(action))
             {
@@ -140,6 +162,10 @@ namespace GTFO_VR.Core.VR_Input
             {
                 return false;
             }
+
+            DummyAction dummyAction = GetDummyBoolActionMapping(action);
+            if (dummyAction != null && dummyAction.getUp())
+                return true;
 
             SteamVR_Action_Boolean boolActionMapping = GetBoolActionMapping(action);
             if (IsIRLCrouchValid(action))
@@ -208,6 +234,13 @@ namespace GTFO_VR.Core.VR_Input
                 { InputAction.ToggleMap, m_openMapAction },
                 { InputAction.Flashlight, m_flashlightAction },
             };
+
+            dummyBoolActions = new Dictionary<InputAction, DummyAction>
+            {
+                { InputAction.TerminalDel, m_terminalDeleteAction },
+                { InputAction.TerminalExit, m_terminalExitAction }
+            };
+
         }
 
         private static SteamVR_Action_Boolean GetBoolActionMapping(InputAction action)
@@ -215,6 +248,16 @@ namespace GTFO_VR.Core.VR_Input
             if (boolActions.ContainsKey(action))
             {
                 return boolActions[action];
+            }
+
+            return null;
+        }
+
+        private static DummyAction GetDummyBoolActionMapping(InputAction action)
+        {
+            if (dummyBoolActions.ContainsKey(action))
+            {
+                return dummyBoolActions[action];
             }
             return null;
         }

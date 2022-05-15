@@ -115,7 +115,7 @@ namespace GTFO_VR.Core.UI.canvas
         private void drawHighlight( int start, int end)
         {
             // Sanity check
-            if (start < 0 || end > m_textMesh.textInfo.characterInfo.Length)
+            if (start < 0 || end >= m_textMesh.textInfo.characterInfo.Length)
                 return;
 
             TMP_CharacterInfo first = m_textMesh.textInfo.characterInfo[start];
@@ -124,8 +124,8 @@ namespace GTFO_VR.Core.UI.canvas
             Vector3 firstVec = m_textMesh.transform.TransformPoint(first.bottomLeft);
             Vector3 lastVec = m_textMesh.transform.TransformPoint(last.bottomRight);
 
-            firstVec -= this.transform.forward * 0.01f;
-            lastVec -= this.transform.forward * 0.01f;
+            firstVec -= this.transform.forward * 0.05f;
+            lastVec -= this.transform.forward * 0.05f;
 
             m_LineRenderer.SetPosition(0, firstVec);
             m_LineRenderer.SetPosition(1, lastVec);
@@ -179,7 +179,7 @@ namespace GTFO_VR.Core.UI.canvas
             int firstIndex = nearestOriginalIndex;
             int lastIndex = nearestOriginalIndex;
 
-            for (int i = nearestOriginalIndex; i < text.Length; i++ )
+            for (int i = nearestOriginalIndex; i < rawText.Length; i++ )
             {
                 if (DELIMITERS.Contains((rawText[i])) )
                 {
@@ -227,14 +227,12 @@ namespace GTFO_VR.Core.UI.canvas
             /// Extract text
             /////////////////
 
-            m_currentSelection = ""; //= text.Substring(firstIndex, (lastIndex +1 ) - firstIndex);
+            m_currentSelection = "";
 
             for (int i = firstIndex; i < lastIndex + 1; i++)
             {
                 m_currentSelection += rawText[i];
             }
-
-            Debug.Log("Text: " + m_currentSelection);
 
             m_lastLastIndex = lastIndex;
             m_lastFirstIndex = firstIndex;
