@@ -24,10 +24,13 @@ namespace Assets.scripts.KeyboardDefinition
 
         public static Color pointerLineColor = new Color(0, 0.20f, 0.23f);
         public static Color pointerColor = new Color(0, 0.20f, 0.23f);
+        public Color textHighlightColor = new Color(0f, 0.075f, 0.075f);
 
-        //public Material keyboardMaterial;
-        //public Material fontMaterial;
+        public Material keyMaterial;
+        public Material fontMaterial;
         //public Material pointerMaterial;
+
+        public Material underlineMaterial;
 
         public KeyboardStyle(float tileSize = 1, float fontSize = 0.5f, float spacing = 0.1f)
         {

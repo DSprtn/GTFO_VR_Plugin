@@ -27,7 +27,7 @@ namespace GTFO_VR.Core.UI.canvas
 
         private string m_currentSelection = "";
 
-        private LineRenderer m_LineRenderer;
+        private GameObject m_highlight;
 
         private static readonly float MAX_DISTANCE = 0.1f * TerminalKeyboardInterface.CANVAS_SCALE;
 
@@ -59,15 +59,25 @@ namespace GTFO_VR.Core.UI.canvas
             // Underline
             ////////////////
 
-            m_LineRenderer = gameObject.AddComponent<LineRenderer>();
-            m_LineRenderer.receiveShadows = false;
-            m_LineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            // Line renderer doesn't want to display in-game here, so a quad it is.
 
-            Material lineMaterial = new Material(Shader.Find("Unlit/Color"));
-            m_LineRenderer.material = lineMaterial;
-            lineMaterial.renderQueue = (int)RenderQueue.Overlay + 2;
-            lineMaterial.color = KeyboardStyle.getPointerColor();
-            m_LineRenderer.widthMultiplier = 0.001f;
+            m_highlight = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            GameObject.Destroy(m_highlight.GetComponent<MeshCollider>());
+
+            if (m_keyboardRoot.m_keyboardStyle.underlineMaterial == null)
+            {
+                Material lineMaterial = new Material(Shader.Find("Unlit/Color"));
+               // lineMaterial.renderQueue = (int)RenderQueue.Overlay + 3;
+                lineMaterial.color = m_keyboardRoot.m_keyboardStyle.textHighlightColor;
+
+                m_keyboardRoot.m_keyboardStyle.underlineMaterial = lineMaterial;
+            }
+
+            m_highlight.GetComponent<MeshRenderer>().sharedMaterial = m_keyboardRoot.m_keyboardStyle.underlineMaterial;
+
+            m_highlight.transform.SetParent(this.gameObject.transform);
+            m_highlight.transform.localRotation = new Quaternion();
+            m_highlight.transform.localScale = new Vector3(0, 0, 0);
         }
 
         private float getDistanceToCharacter( Vector3 from, TMP_CharacterInfo chrInfo )
@@ -79,7 +89,7 @@ namespace GTFO_VR.Core.UI.canvas
             Vector3 center = (chrInfo.topLeft + chrInfo.bottomRight) / 2;
             center = m_textMesh.transform.TransformPoint(center);
 
-            Debug.DrawLine(from, center);
+            //Debug.DrawLine(from, center);
 
             float distanceToCenter = (from - center).sqrMagnitude;
 
@@ -114,6 +124,8 @@ namespace GTFO_VR.Core.UI.canvas
 
         private void drawHighlight( int start, int end)
         {
+
+
             // Sanity check
             if (start < 0 || end >= m_textMesh.textInfo.characterInfo.Length)
                 return;
@@ -121,14 +133,22 @@ namespace GTFO_VR.Core.UI.canvas
             TMP_CharacterInfo first = m_textMesh.textInfo.characterInfo[start];
             TMP_CharacterInfo last = m_textMesh.textInfo.characterInfo[end];
 
-            Vector3 firstVec = m_textMesh.transform.TransformPoint(first.bottomLeft);
-            Vector3 lastVec = m_textMesh.transform.TransformPoint(last.bottomRight);
+            float lineHeight = m_textMesh.textInfo.lineInfo[first.lineNumber].lineHeight;
 
-            firstVec -= this.transform.forward * 0.05f;
-            lastVec -= this.transform.forward * 0.05f;
+            Vector3 topLeft = first.topLeft;
+            Vector3 bottomRight = last.bottomRight;
 
-            m_LineRenderer.SetPosition(0, firstVec);
-            m_LineRenderer.SetPosition(1, lastVec);
+            float width = Vector3.Distance(topLeft, bottomRight);
+
+            width += Vector3.Distance(first.bottomLeft, first.bottomRight);
+            lineHeight *= 1.1f;
+
+            Vector3 center = (topLeft + bottomRight) * 0.5f;
+
+            m_highlight.transform.position = m_textMesh.transform.TransformPoint( center );
+            m_highlight.transform.position += this.transform.forward * 0.001f;
+
+            m_highlight.transform.localScale = new Vector3(width, lineHeight, 0.03f);
         }
 
         private static HashSet<Char> DELIMITERS = new HashSet<char>() { '\"', '\\', ' ', '\r', '\n', '\t', '\f', '\v', '<', '>' };
@@ -146,7 +166,6 @@ namespace GTFO_VR.Core.UI.canvas
 
         public void hoverPointer(Vector3 position)
         {
-
             int nearestChar = findNearestCharacter(position, MAX_DISTANCE);
 
             // Out of range

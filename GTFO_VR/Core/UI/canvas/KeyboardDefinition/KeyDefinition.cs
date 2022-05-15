@@ -46,6 +46,8 @@ namespace Assets.scripts.KeyboardDefinition
 
         public KeyDefinition(string input, string label) : this(input, label, new KeyboardLayoutParameters() ){ }
 
+        public KeyDefinition(string input, string label, int width) : this(input, label, new KeyboardLayoutParameters(width)) { }
+
         public KeyDefinition(string input, string label, KeyboardLayoutParameters layoutParameters)
         {
             this.Input = input;
@@ -115,8 +117,15 @@ namespace Assets.scripts.KeyboardDefinition
 
             Image image = buttonRoot.AddComponent<Image>();
             image.color = style.keyColor;
-            image.material.renderQueue = (int)RenderQueue.Overlay;  // But still need to render underneath our text
-            image.material.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
+
+            if (style.keyMaterial == null)
+            {
+                style.keyMaterial = image.material;
+                style.keyMaterial.renderQueue = (int)RenderQueue.Overlay;  // But still need to render underneath our text
+                style.keyMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
+            }
+
+            image.material = style.keyMaterial;
             
             Button button = buttonRoot.AddComponent<Button>();
             ColorBlock cb = button.colors;
@@ -144,7 +153,14 @@ namespace Assets.scripts.KeyboardDefinition
 
             //textMesh.fontSharedMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always);
             //textMesh.fontSharedMaterial.shader = Shader.Find("TextMeshPro/Distance Field Overlay"); // Not rendering ontop otherwise?
-            textMesh.fontSharedMaterial.renderQueue = (int)RenderQueue.Overlay;
+            if(style.fontMaterial == null)
+            {
+                style.fontMaterial = textMesh.fontMaterial;
+                style.fontMaterial.renderQueue = (int)RenderQueue.Overlay + 1;
+            }
+
+            textMesh.fontSharedMaterial = style.fontMaterial; 
+            
 
             // Some of these buttons have their sizes resolved at runtime, so have them grow to fit their content
             ContentSizeFitter sizeFitter = textObject.AddComponent<ContentSizeFitter>();

@@ -116,7 +116,7 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             // End dot
             ///////////////////
             m_Dot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            m_Dot.transform.localScale = new Vector3(0.01f, 0.01f, 0.001f);
+            m_Dot.transform.localScale = new Vector3(0.005f, 0.005f, 0.001f);
             UnityEngine.Object.Destroy(m_Dot.GetComponent<SphereCollider>());
             m_Dot.transform.SetParent(gameObject.transform);
 

@@ -9,12 +9,14 @@ using UnityEngine;
 namespace GTFO_VR.UI.CANVAS
 {
 
-
+    enum CanvasPosition
+    {
+        left, right, bottom
+    }
     public class TerminalKeyboardInterface : MonoBehaviour
     {
         private GameObject m_terminalCanvas;
-        private KeyboardStyle m_keyboardStyle = new KeyboardStyle(2, 1);
-        private Material keyboardMaterial;
+        public KeyboardStyle m_keyboardStyle = new KeyboardStyle(2, 1);
 
 
         // Workaround for spacing while maintainig hitboxes
@@ -52,6 +54,358 @@ namespace GTFO_VR.UI.CANVAS
             return currentFrameInput;
         }
 
+        private void Start()
+        {
+            this.transform.position = m_terminalCanvas.transform.position;
+            this.transform.rotation = m_terminalCanvas.transform.rotation;
+
+            m_keyboardStyle.TileSize = 1;
+            m_keyboardStyle.FontSize = 0.5f;
+            m_keyboardStyle.SpacingHorizontal = 0.00f;
+            m_keyboardStyle.SpacingVertical = 0.00f;
+            m_keyboardStyle.keyPadding = 0.01f;
+
+            RectTransform terminalCanvasRect = m_terminalCanvas.GetComponent<RectTransform>();
+
+            /////////////////////////
+            // terminal text canvas
+            /////////////////////////
+
+            GameObject terminalReaderRoot = TerminalReader.Create(m_terminalCanvas, this);
+            terminalReaderRoot.transform.SetParent(this.transform);
+
+
+
+            ///////////////////////
+            // Bottom keyboard
+            ///////////////////////
+
+            {
+                GameObject bottomKeyboard = new GameObject();
+                bottomKeyboard.name = "bottomKeyboard";
+
+                bottomKeyboard.transform.SetParent(this.gameObject.transform);
+
+                float bottomKeyboardHeight = 14;
+                float bottomKeyboardWidth = 16;
+
+                generateCanvas(bottomKeyboard, terminalCanvasRect, bottomKeyboardHeight, bottomKeyboardWidth, TextAnchor.UpperCenter, getBottomKeyboardLayout(), m_keyboardStyle, CanvasPosition.bottom);
+            }
+
+            {
+                GameObject leftKeyboard = new GameObject();
+                leftKeyboard.name = "leftKeyboard";
+
+                leftKeyboard.transform.SetParent(this.gameObject.transform);
+
+                float bottomKeyboardHeight = terminalCanvasRect.sizeDelta.y;
+                float bottomKeyboardWidth = 16;
+
+                generateCanvas(leftKeyboard, terminalCanvasRect, bottomKeyboardHeight, bottomKeyboardWidth, TextAnchor.LowerRight, getLeftKeyboardLayout(), m_keyboardStyle, CanvasPosition.left);
+            }
+
+            {
+                GameObject rightKeyboard = new GameObject();
+                rightKeyboard.name = "rightKeyboard";
+
+                rightKeyboard.transform.SetParent(this.gameObject.transform);
+
+                float bottomKeyboardHeight = terminalCanvasRect.sizeDelta.y;
+                float bottomKeyboardWidth = 16;
+
+                generateCanvas(rightKeyboard, terminalCanvasRect, bottomKeyboardHeight, bottomKeyboardWidth, TextAnchor.LowerLeft, getRightKeyboard(), m_keyboardStyle, CanvasPosition.right);
+            }
+
+        }
+
+        private void generateCanvas(  GameObject go, RectTransform terminalCanvasRect, float rawHeight, float rawWidth, TextAnchor gravity, KeyboardLayout layout, KeyboardStyle style, CanvasPosition position)
+        {
+            TerminalKeyboardCanvas newKeyboardCanvas = TerminalKeyboardCanvas.attach(go, rawWidth, rawHeight, TextAnchor.MiddleCenter);
+
+            float terminalHeight = terminalCanvasRect.rect.height * CANVAS_SCALE;
+            float terminalWidth = terminalCanvasRect.rect.width * CANVAS_SCALE;
+
+            float keyboardCanvasHeight = rawHeight * CANVAS_SCALE;
+            float keyboardCanvasWidth = rawWidth * CANVAS_SCALE;
+
+            //////////////////////////////////////////
+            // Align with bottom of terminal canvas
+            //////////////////////////////////////////
+
+            switch (position)
+            {
+                case CanvasPosition.left:
+                    float leftKeyboardOffset = terminalWidth / 2; // distance to edge of monitor
+                    leftKeyboardOffset += keyboardCanvasWidth / 2;                // half of keyboard height so top aligns with bottom edge
+                    go.transform.localPosition = new Vector3(-leftKeyboardOffset, 0 , 0); ;
+                    break;
+
+                case CanvasPosition.right:
+                    float RightKeyboardOffset = terminalWidth / 2; // distance to edge of monitor
+                    RightKeyboardOffset += keyboardCanvasWidth / 2;                // half of keyboard height so top aligns with bottom edge
+                    go.transform.localPosition = new Vector3(RightKeyboardOffset, 0, 0); ;
+                    break;
+
+                case CanvasPosition.bottom:
+                    float bottomKeyboardOffset = terminalHeight / 2; // distance to edge of monitor
+                    bottomKeyboardOffset += keyboardCanvasHeight / 2;                // half of keyboard height so top aligns with bottom edge
+                    go.transform.localPosition = new Vector3(0, -bottomKeyboardOffset, 0); ;
+                    break;
+            }
+
+
+
+            ////////////////////////////////
+            // Add a bit of extra spacing
+            ////////////////////////////////
+
+            float horizontalSpacing = 0.01f;
+            float verticalSpacing = 0.1f;
+
+            switch (position)
+            {
+                case CanvasPosition.left:
+                    go.transform.localPosition += new Vector3(-horizontalSpacing, 0, 0);
+                    break;
+
+                case CanvasPosition.right:
+                    go.transform.localPosition += new Vector3(horizontalSpacing, 0, 0);
+                    break;
+
+                case CanvasPosition.bottom:
+                    go.transform.localPosition += new Vector3(0, -verticalSpacing, 0);
+                    break;
+            }
+
+
+
+
+            /////////////////////
+            // Rotate upwards
+            /////////////////////
+
+            switch (position)
+            {
+                case CanvasPosition.left:
+                    Vector3 leftAnchorLocal = this.transform.TransformPoint(new Vector3(-terminalWidth * 0.5f, 0, 0));
+                    go.transform.RotateAround(leftAnchorLocal, transform.up, -45);
+                    break;
+
+                case CanvasPosition.right:
+                    Vector3 rightAnchorLocal = this.transform.TransformPoint(new Vector3(terminalWidth * 0.5f, 0, 0));
+                    go.transform.RotateAround(rightAnchorLocal, transform.up, 45);
+                    break;
+
+                case CanvasPosition.bottom:
+                    Vector3 bottomAnchorLocal = this.transform.TransformPoint(new Vector3(0, -terminalHeight * 0.5f, 0));
+                    go.transform.RotateAround(bottomAnchorLocal, transform.right, 45);
+                    break;
+            }
+
+
+            
+            ////////////////////
+            // Project forward
+            ////////////////////
+            
+            switch (position)
+            {
+                case CanvasPosition.left:
+                    break;
+
+                case CanvasPosition.right:
+                    break;
+
+                case CanvasPosition.bottom:
+                    go.transform.localPosition += (-go.transform.forward) * 0.05f;
+                    break;
+            } 
+
+            newKeyboardCanvas.inflateLayout(this, layout, style);
+        }
+
+        public void HandleInput( KeyDefinition key )
+        {
+            checkDirty();
+
+            Debug.Log("Key press: " + key.GetName());
+
+            if (key.hasInput())
+            {
+                currentFrameInput += key.Input;
+            }
+            else
+            {
+                switch(key.KeyType)
+                {
+                    case KeyType.BACKPSPACE:
+                    {
+                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalDel);
+                        break;
+                    }
+
+                    case KeyType.ESC:
+                    {
+                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalExit);
+                        break;
+                    }
+                }
+            }
+        }
+
+        public void HandleInput(string str)
+        {
+            checkDirty();
+
+            Debug.Log("String input: " + str);
+
+            currentFrameInput += str;
+            
+        }
+
+        private void checkDirty()
+        {
+            if (m_dataDirty)
+            {
+                currentFrameInput = "";
+                m_dataDirty = false;
+            }
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            checkDirty();
+        }
+
+        private void OnDestroy()
+        {
+
+        }
+
+        [HideFromIl2Cpp]
+        private static KeyboardLayout getRightKeyboard()
+        {
+            LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.LowerLeft);
+
+            KeyboardLayoutParameters rowParams = new KeyboardLayoutParameters(15, 1, false, false);
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
+
+                keyboardRow.AddChild(new KeyDefinition("TERMINAL ", "TERMINAL", 4));
+
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
+
+                keyboardRow.AddChild(new KeyDefinition("BULKHEAD ", "BULKHEAD", 4));
+
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
+
+                keyboardRow.AddChild(new KeyDefinition("FOG ", "FOG", 2));
+                keyboardRow.AddChild(new KeyDefinition("GENERATOR ", "GEN", 2));
+
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
+
+                keyboardRow.AddChild(new KeyDefinition("POWER_CELL ", "CELL", 2));
+                keyboardRow.AddChild(new KeyDefinition("KEY ", "KEY", 2));
+
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
+
+                keyboardRow.AddChild(new KeyDefinition("DISINFECT ", "DISIN", 2));
+                keyboardRow.AddChild(new KeyDefinition("MEDI ", "MEDI", 2));
+
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
+
+                keyboardRow.AddChild(new KeyDefinition("AMMO ", "AMMO ", 2));
+                keyboardRow.AddChild(new KeyDefinition("TOOL ", "TOOL ", 2));
+
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
+
+                keyboardRow.AddChild(new KeyDefinition("RESOURCE ", "RESOURCE", 4));
+
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            return bottomKeyboardLayout;
+        }
+
+        [HideFromIl2Cpp]
+        private static KeyboardLayout getLeftKeyboardLayout()
+        {
+            LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.LowerRight);
+
+            KeyboardLayoutParameters rowParams = new KeyboardLayoutParameters(15, 1, false, false);
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
+
+                keyboardRow.AddChild(new KeyDefinition("ZONE_", "ZONE_", 3));
+                keyboardRow.AddChild(new KeyDefinition("-T", "-T", 1));
+
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
+
+                keyboardRow.AddChild(new KeyDefinition("LOGS\r", "LOGS", 2));
+                keyboardRow.AddChild(new KeyDefinition("READ ", "READ", 2));
+
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
+
+                keyboardRow.AddChild(new KeyDefinition("INFO\r", "INFO", 2));
+                keyboardRow.AddChild(new KeyDefinition("LIST ", "LIST", 2));
+
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
+
+                keyboardRow.AddChild(new KeyDefinition("QUERY ", "QUERY", 2));
+                keyboardRow.AddChild(new KeyDefinition("PING ", "PING", 2));
+
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
+
+                keyboardRow.AddChild(new KeyDefinition("COMMANDS\r", "COMMANDS", 4));
+
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            return bottomKeyboardLayout;
+        }
 
         [HideFromIl2Cpp]
         private static KeyboardLayout getBottomKeyboardLayout()
@@ -156,146 +510,6 @@ namespace GTFO_VR.UI.CANVAS
             return bottomKeyboardLayout;
         }
 
-
-        private void Start()
-        {
-            this.transform.position = m_terminalCanvas.transform.position;
-            this.transform.rotation = m_terminalCanvas.transform.rotation;
-
-            m_keyboardStyle.TileSize = 1;
-            m_keyboardStyle.FontSize = 0.5f;
-            m_keyboardStyle.SpacingHorizontal = 0.00f;
-            m_keyboardStyle.SpacingVertical = 0.00f;
-            m_keyboardStyle.keyPadding = 0.01f;
-
-            /*
-            Shader uiShader = Shader.Find("UI/Unlit/Detail");
-            m_keyboardStyle.keyboardMaterial = new Material(uiShader);
-            m_keyboardStyle.keyboardMaterial.renderQueue = 3002;
-
-            Shader textShader = Shader.Find("TextMeshPro/Distance Field Overlay");
-            m_keyboardStyle.fontMaterial = new Material(uiShader);
-            m_keyboardStyle.fontMaterial.renderQueue = 3003;
-            */
-
-            /////////////////////////
-            // terminal text canvas
-            /////////////////////////
-
-            GameObject terminalReaderRoot = TerminalReader.Create(m_terminalCanvas, this);
-            terminalReaderRoot.transform.SetParent(this.transform);
-
-
-            ///////////////////////
-            // Bottom keyboard
-            ///////////////////////
-
-            GameObject bottomKeyboard = new GameObject();
-            bottomKeyboard.name = "bottomKeyboard";
-
-            bottomKeyboard.transform.SetParent(this.gameObject.transform);
-            //bottomKeyboard.transform.localPosition = new Vector3();
-            //bottomKeyboard.transform.localRotation = new Quaternion() ;
-
-            RectTransform terminalCanvasRect = m_terminalCanvas.GetComponent<RectTransform>();
-            float bottomKeyboardHeight = 14;
-            float bottomKeyboardWidth = 16;
-
-            TerminalKeyboardCanvas bottomKeyboardCanvas = TerminalKeyboardCanvas.attach(bottomKeyboard, bottomKeyboardWidth, bottomKeyboardHeight, TextAnchor.MiddleCenter);
-
-            float terminalCanvasRectHeightAdjusted = terminalCanvasRect.rect.height * CANVAS_SCALE;
-            float bottomKeyboardCanvasHeightAdjusted = bottomKeyboardHeight * CANVAS_SCALE;
-
-            //////////////////////////////////////////
-            // Align with bottom of terminal canvas
-            //////////////////////////////////////////
-
-            float bottomKeyboardOffset = terminalCanvasRectHeightAdjusted / 2; // distance to edge of monitor
-            bottomKeyboardOffset += bottomKeyboardCanvasHeightAdjusted / 2;                // half of keyboard height so top aligns with bottom edge
-
-            Vector3 offset = new Vector3(0,-bottomKeyboardOffset,0);
-            bottomKeyboard.transform.localPosition = offset;
-
-            ////////////////////////////////
-            // Add a bit of extra spacing
-            ////////////////////////////////
-            bottomKeyboard.transform.localPosition += new Vector3(0, -0.1f, 0);
-
-            /////////////////////
-            // Rotate upwards
-            /////////////////////
-            Vector3 bottomAnchorLocal = this.transform.TransformPoint(new Vector3(0, -terminalCanvasRectHeightAdjusted * 0.5f, 0));
-            bottomKeyboard.transform.RotateAround(bottomAnchorLocal, transform.right, 45);
-
-            ////////////////////
-            // Project forward
-            ////////////////////
-            bottomKeyboard.transform.localPosition += (-bottomKeyboard.transform.forward) * 0.05f;
-
-            KeyboardLayout bottomKeyboardLayout = getBottomKeyboardLayout();
-
-            bottomKeyboardCanvas.inflateLayout(this, bottomKeyboardLayout, m_keyboardStyle);
-
-        }
-
-        public void HandleInput( KeyDefinition key )
-        {
-            checkDirty();
-
-            Debug.Log("Key press: " + key.GetName());
-
-            if (key.hasInput())
-            {
-                currentFrameInput += key.Input;
-            }
-            else
-            {
-                switch(key.KeyType)
-                {
-                    case KeyType.BACKPSPACE:
-                    {
-                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalDel);
-                        break;
-                    }
-
-                    case KeyType.ESC:
-                    {
-                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalExit);
-                        break;
-                    }
-                }
-            }
-        }
-
-        public void HandleInput(string str)
-        {
-            checkDirty();
-
-            Debug.Log("String input: " + str);
-
-            currentFrameInput += str;
-            
-        }
-
-        private void checkDirty()
-        {
-            if (m_dataDirty)
-            {
-                currentFrameInput = "";
-                m_dataDirty = false;
-            }
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            checkDirty();
-        }
-
-        private void OnDestroy()
-        {
-
-        }
     }
 
 }
