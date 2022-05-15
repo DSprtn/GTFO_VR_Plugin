@@ -159,6 +159,27 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
+        public static void hideWielded(bool hide)
+        {
+            if (!VRConfig.configUseControllers.Value || !PlayerAgent)
+            {
+                return;
+            }
+
+            ItemEquippable heldItem = PlayerAgent.FPItemHolder.WieldedItem;
+            if (heldItem != null)
+            {
+                if (hide)
+                {
+                    heldItem.gameObject.SetActive(false);
+                }
+                else
+                {
+                    heldItem.gameObject.SetActive(true);
+                }
+            }
+        }
+
         private void PlayerEnteredLadder(LG_Ladder ladder)
         {
             m_snapTurn.DoSnapTurnTowards(Quaternion.LookRotation(ladder.transform.forward).eulerAngles, 2f);

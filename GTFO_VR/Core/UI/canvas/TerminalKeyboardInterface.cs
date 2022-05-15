@@ -73,7 +73,7 @@ namespace GTFO_VR.UI.CANVAS
                 keyboardRow.AddChild(new KeyDefinition("8"));
                 keyboardRow.AddChild(new KeyDefinition("9"));
                 keyboardRow.AddChild(new KeyDefinition("0"));
-                keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, ""));
+                keyboardRow.AddChild(new KeyDefinition("."));   // For typing ip addresses
                 keyboardRow.AddChild(new KeyDefinition(KeyType.BACKPSPACE, "backspace", new KeyboardLayoutParameters(1, true)));
 
                 bottomKeyboardLayout.AddChild(keyboardRow);
@@ -93,7 +93,7 @@ namespace GTFO_VR.UI.CANVAS
                 keyboardRow.AddChild(new KeyDefinition("i"));
                 keyboardRow.AddChild(new KeyDefinition("o"));
                 keyboardRow.AddChild(new KeyDefinition("p"));
-                keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "_"));
+                keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "-"));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", new KeyboardLayoutParameters(1f, true)));
 
                 bottomKeyboardLayout.AddChild(keyboardRow);
@@ -113,7 +113,7 @@ namespace GTFO_VR.UI.CANVAS
                 keyboardRow.AddChild(new KeyDefinition("j"));
                 keyboardRow.AddChild(new KeyDefinition("k"));
                 keyboardRow.AddChild(new KeyDefinition("l"));
-                keyboardRow.AddChild(new KeyDefinition("-"));
+                keyboardRow.AddChild(new KeyDefinition("_"));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.ENTER, "enter", new KeyboardLayoutParameters(1f, true)));
 
                 bottomKeyboardLayout.AddChild(keyboardRow);
@@ -181,7 +181,7 @@ namespace GTFO_VR.UI.CANVAS
             // terminal text canvas
             /////////////////////////
 
-            GameObject terminalReaderRoot = TerminalReader.Create(m_terminalCanvas);
+            GameObject terminalReaderRoot = TerminalReader.Create(m_terminalCanvas, this);
             terminalReaderRoot.transform.SetParent(this.transform);
 
 

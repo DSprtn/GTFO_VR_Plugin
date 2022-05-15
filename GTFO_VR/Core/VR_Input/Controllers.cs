@@ -134,19 +134,19 @@ namespace GTFO_VR.Core.VR_Input
             }
 
             addCanvasPointer(RightController, SteamVR_Input_Sources.RightHand);
-            addCanvasPointer(LeftController, SteamVR_Input_Sources.LeftHand);
+            //addCanvasPointer(LeftController, SteamVR_Input_Sources.LeftHand);
         }
 
         public static void removeCanvasPointers()
         {
 
             GameObject rightPointer = RightController.transform.Find("CanvasPointer")?.gameObject;
-            GameObject leftPointer = LeftController.transform.Find("CanvasPointer")?.gameObject;
+            //GameObject leftPointer = LeftController.transform.Find("CanvasPointer")?.gameObject;
 
             if (rightPointer != null)
                 GameObject.Destroy(rightPointer);
-            if (leftPointer != null)
-                GameObject.Destroy(leftPointer);
+            //if (leftPointer != null)
+                //GameObject.Destroy(leftPointer);
         }
 
         private static void addCanvasPointer(GameObject hand, SteamVR_Input_Sources source )

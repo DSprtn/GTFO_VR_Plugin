@@ -21,9 +21,13 @@ namespace Assets.scripts.KeyboardDefinition
         public Color fontColor = new Color(1, 1, 1);
         public Color highlightColor = new Color(0, 0.20f, 0.23f);
 
-        public Material keyboardMaterial;
-        public Material fontMaterial;
-        public Material pointerMaterial;
+
+        public static Color pointerLineColor = new Color(0, 0.20f, 0.23f);
+        public static Color pointerColor = new Color(0, 0.20f, 0.23f);
+
+        //public Material keyboardMaterial;
+        //public Material fontMaterial;
+        //public Material pointerMaterial;
 
         public KeyboardStyle(float tileSize = 1, float fontSize = 0.5f, float spacing = 0.1f)
         {
@@ -40,7 +44,23 @@ namespace Assets.scripts.KeyboardDefinition
            // Button tints multiply the existing color so don't need to be adjusted?
            highlightColor = new Color(1.5f, 1.5f, 1.5f);
            highlightColor.a = 1;
-    }
+        }
+
+        public static Color getPointerLineColor()
+        {
+            pointerLineColor = new Color(0f, 1f, 1f);// * colorBrightnessMultiplier;
+            pointerLineColor.a = 1;
+
+            return pointerLineColor;
+        }
+
+        public static Color getPointerColor()
+        {
+            pointerColor = new Color(1f, 1f, 1f);// * colorBrightnessMultiplier;
+            pointerColor.a = 1;
+
+            return pointerColor;
+        }
 
     }
 }

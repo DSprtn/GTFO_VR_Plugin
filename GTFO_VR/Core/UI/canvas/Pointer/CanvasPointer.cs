@@ -1,4 +1,5 @@
-﻿using GTFO_VR.Core.UI.canvas;
+﻿using Assets.scripts.KeyboardDefinition;
+using GTFO_VR.Core.UI.canvas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -101,9 +102,11 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             m_LineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             //m_LineRenderer.widthMultiplier = 0.003f;
 
-            Material lineMaterial = m_LineRenderer.material;
+            Material lineMaterial = new Material(Shader.Find("Unlit/Color"));
+            m_LineRenderer.material = lineMaterial;
             lineMaterial.renderQueue = (int)RenderQueue.Overlay + 1;
-            lineMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
+            //lineMaterial.shader = Shader.Find("Standard");
+            lineMaterial.color = KeyboardStyle.getPointerLineColor();
 
             mFarCurve.AddKey(0, LINE_WIDTH);
             mFarCurve.AddKey(1, 0);
@@ -117,8 +120,11 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             UnityEngine.Object.Destroy(m_Dot.GetComponent<SphereCollider>());
             m_Dot.transform.SetParent(gameObject.transform);
 
-            Material dotMat = m_Dot.GetComponent<MeshRenderer>().sharedMaterial;
+            Material dotMat = new Material(Shader.Find("Unlit/Color") );
+            m_Dot.GetComponent<MeshRenderer>().material = dotMat;
             dotMat.renderQueue = (int)RenderQueue.Overlay +1;
+            //dotMat.shader = Shader.Find("Standard");
+            dotMat.color = KeyboardStyle.getPointerColor();
         }
 
         private void Start()
@@ -182,6 +188,12 @@ namespace GTFO_VR.UI.CANVAS.POINTER
                         m_ButtonPressHit = m_currentHit;
                         button.onClick.Invoke();
                         setSelectableState(selectable, SelectionState.Pressed);
+                    }
+
+                    if (isTextCanvas(m_currentHit))
+                    {
+                        TerminalReader reader = m_currentHit.collider.gameObject.GetComponent<TerminalReader>();
+                        reader.submitSelection(true);
                     }
                 }
 
@@ -250,7 +262,7 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             if ( isTextCanvas(m_currentHit) )
             {
                 TerminalReader reader = m_currentHit.collider.gameObject.GetComponent<TerminalReader>();
-                reader.findNearestCharacter(m_currentHit.point);
+                reader.hoverPointer(m_currentHit.point);
             }
         }
 

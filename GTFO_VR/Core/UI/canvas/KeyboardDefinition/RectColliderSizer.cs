@@ -11,7 +11,7 @@ namespace GTFO_VR.Core.UI.canvas.KeyboardDefinition
 {
     class RectColliderSizer : UIBehaviour
     {
-        protected override void OnRectTransformDimensionsChange()
+        public override void OnRectTransformDimensionsChange()
         {
             BoxCollider collider = GetComponent<BoxCollider>();
             RectTransform trans = GetComponent<RectTransform>();

@@ -1,5 +1,6 @@
 ﻿using Assets.scripts.KeyboardDefinition;
 using GTFO_VR.Core;
+using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.UI;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
@@ -19,6 +20,8 @@ namespace GTFO_VR.Injections.UI
     {
         private static void Postfix(LevelGeneration.LG_ComputerTerminal __instance)
         {
+            KeyboardStyle.colorBrightnessMultiplier = 0.1f;
+
             GameObject graphics = __instance.gameObject.transform.Find("Graphics").gameObject;
             if (graphics == null)
             {
@@ -33,12 +36,10 @@ namespace GTFO_VR.Injections.UI
                 return;
             }
 
-            KeyboardStyle.colorBrightnessMultiplier = 0.1f;
+           
             GameObject keyboardRoot = TerminalKeyboardInterface.create(terminalCanvas);
-
-          
-
             Controllers.setupCanvasPointers();
+            VRPlayer.hideWielded(true);
         }
     }
 
@@ -47,6 +48,8 @@ namespace GTFO_VR.Injections.UI
     {
         private static void Postfix(LevelGeneration.LG_ComputerTerminal __instance)
         {
+            VRPlayer.hideWielded(false);
+
             GameObject keyboardRoot = GameObject.Find("keyboardRoot");
             if (keyboardRoot != null)
             {
