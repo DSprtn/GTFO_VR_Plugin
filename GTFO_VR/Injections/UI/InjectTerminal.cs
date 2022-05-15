@@ -22,22 +22,9 @@ namespace GTFO_VR.Injections.UI
         {
             KeyboardStyle.colorBrightnessMultiplier = 0.1f;
 
-            GameObject graphics = __instance.gameObject.transform.Find("Graphics").gameObject;
-            if (graphics == null)
-            {
-                Log.Error("Could not find [Graphics] in terminal!");
-                return;
-            }
+            GameObject terminalCanvas = __instance.m_text.gameObject;
 
-            GameObject terminalCanvas = graphics.transform.Find("text FPS").gameObject;
-            if (terminalCanvas == null)
-            {
-                Log.Error("Could not find [text FPS] canvas in terminal!");
-                return;
-            }
-
-           
-            GameObject keyboardRoot = TerminalKeyboardInterface.create(terminalCanvas);
+            TerminalKeyboardInterface.create(terminalCanvas);
             Controllers.setupCanvasPointers();
             VRPlayer.hideWielded(true);
         }
