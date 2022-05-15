@@ -15,11 +15,12 @@ namespace GTFO_VR.UI.CANVAS
     }
     public class TerminalKeyboardInterface : MonoBehaviour
     {
+        private LevelGeneration.LG_ComputerTerminal m_terminal;
         private GameObject m_terminalCanvas;
         public KeyboardStyle m_keyboardStyle = new KeyboardStyle(2, 1);
 
 
-        // Workaround for spacing while maintainig hitboxes
+        // Workaround for spacing without there being hitbox gaps between keys
         public static readonly float KEY_SCALE = 0.96f;
         public static readonly float HITBOX_SCALE = 1.04f;
 
@@ -34,13 +35,14 @@ namespace GTFO_VR.UI.CANVAS
         bool m_dataDirty = false;
 
 
-        public static GameObject create(GameObject terminalCanvas)
+        public static GameObject create(LevelGeneration.LG_ComputerTerminal terminal)
         {
             GameObject go = new GameObject();
             go.name = "keyboardRoot";
             go.layer = LAYER;
             TerminalKeyboardInterface inf = go.AddComponent<TerminalKeyboardInterface>();
-            inf.m_terminalCanvas = terminalCanvas;
+            inf.m_terminalCanvas = terminal.m_text.gameObject;
+            inf.m_terminal = terminal;
             return go;
         }
 
@@ -113,9 +115,14 @@ namespace GTFO_VR.UI.CANVAS
                 float bottomKeyboardHeight = terminalCanvasRect.sizeDelta.y;
                 float bottomKeyboardWidth = 16;
 
-                generateCanvas(rightKeyboard, terminalCanvasRect, bottomKeyboardHeight, bottomKeyboardWidth, TextAnchor.LowerLeft, getRightKeyboard(), m_keyboardStyle, CanvasPosition.right);
+                generateCanvas(rightKeyboard, terminalCanvasRect, bottomKeyboardHeight, bottomKeyboardWidth, TextAnchor.LowerLeft, getRightKeyboard(getZone()), m_keyboardStyle, CanvasPosition.right);
             }
 
+        }
+
+        private string getZone()
+        {
+            return m_terminal.m_terminalItem.FloorItemLocation;
         }
 
         private void generateCanvas(  GameObject go, RectTransform terminalCanvasRect, float rawHeight, float rawWidth, TextAnchor gravity, KeyboardLayout layout, KeyboardStyle style, CanvasPosition position)
@@ -284,7 +291,7 @@ namespace GTFO_VR.UI.CANVAS
         }
 
         [HideFromIl2Cpp]
-        private static KeyboardLayout getRightKeyboard()
+        private static KeyboardLayout getRightKeyboard(string zoneName)
         {
             LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.LowerLeft);
 
@@ -338,6 +345,14 @@ namespace GTFO_VR.UI.CANVAS
 
                 keyboardRow.AddChild(new KeyDefinition("AMMO ", "AMMO ", 2));
                 keyboardRow.AddChild(new KeyDefinition("TOOL ", "TOOL ", 2));
+
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
+
+                keyboardRow.AddChild(new KeyDefinition( zoneName + " ", zoneName, 4));
 
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }

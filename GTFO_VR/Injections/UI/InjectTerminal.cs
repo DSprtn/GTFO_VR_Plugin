@@ -24,7 +24,7 @@ namespace GTFO_VR.Injections.UI
 
             GameObject terminalCanvas = __instance.m_text.gameObject;
 
-            TerminalKeyboardInterface.create(terminalCanvas);
+            TerminalKeyboardInterface.create(__instance);
             Controllers.setupCanvasPointers();
             VRPlayer.hideWielded(true);
         }
