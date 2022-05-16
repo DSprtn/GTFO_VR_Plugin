@@ -51,6 +51,11 @@ namespace GTFO_VR.Core.VR_Input
         private static DummyAction m_terminalDeleteAction= new DummyAction(InputAction.TerminalDel, true);
         private static DummyAction m_terminalExitAction = new DummyAction(InputAction.TerminalExit, true);
 
+        private static DummyAction m_terminalLeftAction = new DummyAction(InputAction.TerminalLeft, true);
+        private static DummyAction m_terminalUpAction = new DummyAction(InputAction.TerminalUp, true);
+        private static DummyAction m_terminalRightAction = new DummyAction(InputAction.TerminalRight, true);
+        private static DummyAction m_terminalDownAction = new DummyAction(InputAction.TerminalDown, true);
+
         private static Dictionary<InputAction, DummyAction> dummyBoolActions;
 
         public static void Setup()
@@ -238,7 +243,12 @@ namespace GTFO_VR.Core.VR_Input
             dummyBoolActions = new Dictionary<InputAction, DummyAction>
             {
                 { InputAction.TerminalDel, m_terminalDeleteAction },
-                { InputAction.TerminalExit, m_terminalExitAction }
+                { InputAction.TerminalExit, m_terminalExitAction },
+
+                { InputAction.TerminalLeft, m_terminalLeftAction },
+                { InputAction.TerminalUp, m_terminalUpAction },
+                { InputAction.TerminalRight, m_terminalRightAction },
+                { InputAction.TerminalDown, m_terminalDownAction }
             };
 
         }

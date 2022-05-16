@@ -235,8 +235,6 @@ namespace GTFO_VR.UI.CANVAS
         {
             checkDirty();
 
-            Debug.Log("Key press: " + key.GetName());
-
             if (key.hasInput())
             {
                 currentFrameInput += key.Input;
@@ -256,6 +254,30 @@ namespace GTFO_VR.UI.CANVAS
                         SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalExit);
                         break;
                     }
+
+                    case KeyType.LEFT:
+                    {
+                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalLeft);
+                        break;
+                    }
+
+                    case KeyType.UP:
+                    {
+                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalUp);
+                        break;
+                    }
+
+                    case KeyType.RIGHT:
+                    {
+                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalRight);
+                        break;
+                    }
+
+                    case KeyType.DOWN:
+                    {
+                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalDown);
+                        break;
+                    }
                 }
             }
         }
@@ -263,9 +285,6 @@ namespace GTFO_VR.UI.CANVAS
         public void HandleInput(string str)
         {
             checkDirty();
-
-            Debug.Log("String input: " + str);
-
             currentFrameInput += str;
             
         }

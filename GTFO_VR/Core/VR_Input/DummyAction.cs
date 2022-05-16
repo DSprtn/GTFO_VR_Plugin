@@ -9,12 +9,10 @@ namespace GTFO_VR.Core.VR_Input
 {
     class DummyAction
     {
-        InputAction m_action;
-
-        bool m_autoUp = false;
-
-        bool m_down = false;
-        bool m_up = false;
+        private readonly InputAction m_action;
+        private bool m_autoUp = false;
+        private bool m_down = false;
+        private bool m_up = false;
 
         public DummyAction( InputAction action, bool autoUp )
         {
@@ -24,7 +22,6 @@ namespace GTFO_VR.Core.VR_Input
 
         public void requestPress()
         {
-            Debug.Log("requesting press: " + m_action);
 
             m_down = true;
         }
@@ -35,8 +32,6 @@ namespace GTFO_VR.Core.VR_Input
             {
                 m_up = m_autoUp;
                 m_down = false;
-
-                Debug.Log("Down for action " + m_action);
 
                 return true;
             }
