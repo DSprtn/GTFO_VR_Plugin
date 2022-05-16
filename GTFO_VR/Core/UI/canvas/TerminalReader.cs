@@ -122,7 +122,7 @@ namespace GTFO_VR.Core.UI.canvas
 
         }
 
-        private void drawHighlight( int start, int end)
+        private void drawHighlight( TMP_CharacterInfo[] characters, int start, int end)
         {
 
 
@@ -151,7 +151,7 @@ namespace GTFO_VR.Core.UI.canvas
             m_highlight.transform.localScale = new Vector3(width, lineHeight, 0.03f);
         }
 
-        private static HashSet<Char> DELIMITERS = new HashSet<char>() { '\"', '\\', ' ', '\r', '\n', '\t', '\f', '\v', '<', '>' };
+        private static HashSet<Char> DELIMITERS = new HashSet<char>() { '\'','\"', '\\', ' ', '\r', '\n', '\t', '\f', '\v', '<', '>', ',' };
 
         public string getSelection()
         {
@@ -186,21 +186,23 @@ namespace GTFO_VR.Core.UI.canvas
             // The index returned is per character, excluding any extra formatting text like <b> </b>
             // Unfortunately, this does not include any whitespace or separating characters when text
             // is indented. Get the corresponding index in the original string and treat < > as delimiters.
+
             TMP_CharacterInfo[] text = m_textMesh.textInfo.characterInfo;
             string rawText = m_textMesh.text;
 
-            ///////////////////////////////////////////
-            // Get first and list char of selection
-            /////////////////////////////////////////
-
             int nearestOriginalIndex = text[nearestChar].index;
+
+            // This will often be out of range when the pointer is near the bottom of the terminal
+            // when a bunch of text is dumped into it.
+            if (nearestOriginalIndex >= rawText.Length || nearestOriginalIndex < 0)
+                return;
 
             int firstIndex = nearestOriginalIndex;
             int lastIndex = nearestOriginalIndex;
 
             for (int i = nearestOriginalIndex; i < rawText.Length; i++ )
             {
-                if (DELIMITERS.Contains((rawText[i])) )
+                if (DELIMITERS.Contains(rawText[i]) )
                 {
                     break;
                 }
@@ -208,9 +210,9 @@ namespace GTFO_VR.Core.UI.canvas
                 lastIndex = i;
             }
 
-            for (int i = nearestOriginalIndex; i > -1; i--)
+            for (int i = nearestOriginalIndex; i >= 0; i--)
             {
-                if (DELIMITERS.Contains((rawText[i])))
+                if (DELIMITERS.Contains(rawText[i]))
                 {
                     break;
                 }
@@ -229,7 +231,7 @@ namespace GTFO_VR.Core.UI.canvas
             //////////////////////////////////////////
 
             // Sanity check
-            if (firstIndex < 0 || lastIndex > rawText.Length)
+            if (firstIndex < 0 || lastIndex >= rawText.Length)
                 return;
 
             clearSelection();
@@ -239,8 +241,7 @@ namespace GTFO_VR.Core.UI.canvas
             // so we can just math it.
             int charIndexStart = (nearestChar) + (firstIndex - nearestOriginalIndex);
             int charIndexEnd =   (nearestChar) + (lastIndex - nearestOriginalIndex);
-
-            drawHighlight(charIndexStart, charIndexEnd);
+            drawHighlight(text, charIndexStart, charIndexEnd);
 
             /////////////////
             /// Extract text
