@@ -122,7 +122,17 @@ namespace GTFO_VR.UI.CANVAS
 
         private string getZone()
         {
-            return m_terminal.m_terminalItem.FloorItemLocation;
+            // Do terminals outside have these values?
+            if (m_terminal?.m_terminalItem?.FloorItemLocation != null)
+            {
+                return m_terminal.m_terminalItem.FloorItemLocation;
+            }
+            else
+            {
+                return "ZONE_0";
+            }
+
+           
         }
 
         private void generateCanvas(  GameObject go, RectTransform terminalCanvasRect, float rawHeight, float rawWidth, TextAnchor gravity, KeyboardLayout layout, KeyboardStyle style, CanvasPosition position)
