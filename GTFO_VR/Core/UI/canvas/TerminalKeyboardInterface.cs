@@ -469,63 +469,73 @@ namespace GTFO_VR.UI.CANVAS
             }
 
             {
-                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperCenter, rowParams);
+                LinearLayout shortRowHorizontal = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperCenter, new KeyboardLayoutParameters(15, 3, false, false));
+                LinearLayout shortRowVertical = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.UpperLeft, new KeyboardLayoutParameters(12.5f, 3, false, false));
+                KeyboardLayoutParameters shortRowParams = new KeyboardLayoutParameters(12.5f, 1, false, false);
 
-                keyboardRow.AddChild(new KeyDefinition(KeyType.TAB, "tab", 1.5f));
-                keyboardRow.AddChild(new KeyDefinition("q"));
-                keyboardRow.AddChild(new KeyDefinition("w"));
-                keyboardRow.AddChild(new KeyDefinition("e"));
-                keyboardRow.AddChild(new KeyDefinition("r"));
-                keyboardRow.AddChild(new KeyDefinition("t"));
-                keyboardRow.AddChild(new KeyDefinition("y"));
-                keyboardRow.AddChild(new KeyDefinition("u"));
-                keyboardRow.AddChild(new KeyDefinition("i"));
-                keyboardRow.AddChild(new KeyDefinition("o"));
-                keyboardRow.AddChild(new KeyDefinition("p"));
-                keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "-"));
-                keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", new KeyboardLayoutParameters(1f, true)));
+                {
+                    LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperLeft, shortRowParams);
 
-                bottomKeyboardLayout.AddChild(keyboardRow);
-            }
+                    keyboardRow.AddChild(new KeyDefinition(KeyType.TAB, "tab", 1.5f));
+                    keyboardRow.AddChild(new KeyDefinition("q"));
+                    keyboardRow.AddChild(new KeyDefinition("w"));
+                    keyboardRow.AddChild(new KeyDefinition("e"));
+                    keyboardRow.AddChild(new KeyDefinition("r"));
+                    keyboardRow.AddChild(new KeyDefinition("t"));
+                    keyboardRow.AddChild(new KeyDefinition("y"));
+                    keyboardRow.AddChild(new KeyDefinition("u"));
+                    keyboardRow.AddChild(new KeyDefinition("i"));
+                    keyboardRow.AddChild(new KeyDefinition("o"));
+                    keyboardRow.AddChild(new KeyDefinition("p"));
+                    keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "-"));
+                    //keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", new KeyboardLayoutParameters(1f, true)));
 
-
-            {
-                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperCenter, rowParams);
-
-                keyboardRow.AddChild(new KeyDefinition(KeyType.CAPS_LOCK, "", 1.85f));
-                keyboardRow.AddChild(new KeyDefinition("a"));
-                keyboardRow.AddChild(new KeyDefinition("s"));
-                keyboardRow.AddChild(new KeyDefinition("d"));
-                keyboardRow.AddChild(new KeyDefinition("f"));
-                keyboardRow.AddChild(new KeyDefinition("g"));
-                keyboardRow.AddChild(new KeyDefinition("h"));
-                keyboardRow.AddChild(new KeyDefinition("j"));
-                keyboardRow.AddChild(new KeyDefinition("k"));
-                keyboardRow.AddChild(new KeyDefinition("l"));
-                keyboardRow.AddChild(new KeyDefinition("_"));
-                keyboardRow.AddChild(new KeyDefinition(KeyType.ENTER, "enter", new KeyboardLayoutParameters(1f, true)));
-
-                bottomKeyboardLayout.AddChild(keyboardRow);
-            }
+                    shortRowVertical.AddChild(keyboardRow);
+                }
 
 
-            {
-                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperCenter, rowParams);
+                {
+                    LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperLeft, shortRowParams);
 
-                keyboardRow.AddChild(new KeyDefinition(KeyType.SHIFT, "", 2.4f));
-                keyboardRow.AddChild(new KeyDefinition("z"));
-                keyboardRow.AddChild(new KeyDefinition("x"));
-                keyboardRow.AddChild(new KeyDefinition("c"));
-                keyboardRow.AddChild(new KeyDefinition("v"));
-                keyboardRow.AddChild(new KeyDefinition("b"));
-                keyboardRow.AddChild(new KeyDefinition("n"));
-                keyboardRow.AddChild(new KeyDefinition("m"));
-                keyboardRow.AddChild(new KeyDefinition(","));
-                keyboardRow.AddChild(new KeyDefinition("."));
-                keyboardRow.AddChild(new KeyDefinition(KeyType.UP, "^"));
-                keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", new KeyboardLayoutParameters(1f, true)));
+                    keyboardRow.AddChild(new KeyDefinition(KeyType.CAPS_LOCK, "", 1.85f));
+                    keyboardRow.AddChild(new KeyDefinition("a"));
+                    keyboardRow.AddChild(new KeyDefinition("s"));
+                    keyboardRow.AddChild(new KeyDefinition("d"));
+                    keyboardRow.AddChild(new KeyDefinition("f"));
+                    keyboardRow.AddChild(new KeyDefinition("g"));
+                    keyboardRow.AddChild(new KeyDefinition("h"));
+                    keyboardRow.AddChild(new KeyDefinition("j"));
+                    keyboardRow.AddChild(new KeyDefinition("k"));
+                    keyboardRow.AddChild(new KeyDefinition("l"));
+                    keyboardRow.AddChild(new KeyDefinition("_"));
+                    keyboardRow.AddChild(new KeyDefinition(KeyType.ENTER, "", new KeyboardLayoutParameters(0.01f, true)));
 
-                bottomKeyboardLayout.AddChild(keyboardRow);
+                    shortRowVertical.AddChild(keyboardRow);
+                }
+
+
+                {
+                    LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperLeft, rowParams);
+
+                    keyboardRow.AddChild(new KeyDefinition(KeyType.SHIFT, "", 2.4f));
+                    keyboardRow.AddChild(new KeyDefinition("z"));
+                    keyboardRow.AddChild(new KeyDefinition("x"));
+                    keyboardRow.AddChild(new KeyDefinition("c"));
+                    keyboardRow.AddChild(new KeyDefinition("v"));
+                    keyboardRow.AddChild(new KeyDefinition("b"));
+                    keyboardRow.AddChild(new KeyDefinition("n"));
+                    keyboardRow.AddChild(new KeyDefinition("m"));
+                    keyboardRow.AddChild(new KeyDefinition(","));
+                    keyboardRow.AddChild(new KeyDefinition("."));
+                    keyboardRow.AddChild(new KeyDefinition(KeyType.UP, "^", 1.1f));
+                    //keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", new KeyboardLayoutParameters(1f, true)));
+
+                    shortRowVertical.AddChild(keyboardRow);
+                }
+
+                shortRowHorizontal.AddChild(shortRowVertical);
+                shortRowHorizontal.AddChild(new KeyDefinition(KeyType.ENTER, "enter", new KeyboardLayoutParameters(1f, 3f, true, false)));
+                bottomKeyboardLayout.AddChild(shortRowHorizontal);
             }
 
             {
@@ -534,7 +544,7 @@ namespace GTFO_VR.UI.CANVAS
                 keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", 3.2f));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.SPACE, "space", 7.2f));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.LEFT, "<"));
-                keyboardRow.AddChild(new KeyDefinition(KeyType.DOWN, "v"));
+                keyboardRow.AddChild(new KeyDefinition(KeyType.DOWN, "v", 1.1f));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.RIGHT, ">"));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", new KeyboardLayoutParameters(1f, true)));
 
