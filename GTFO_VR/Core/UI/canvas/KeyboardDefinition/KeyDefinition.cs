@@ -120,13 +120,13 @@ namespace Assets.scripts.KeyboardDefinition
 
             if (style.keyMaterial == null)
             {
-                style.keyMaterial = image.material;
-                style.keyMaterial.renderQueue = (int)RenderQueue.Overlay;  // But still need to render underneath our text
+                style.keyMaterial = new Material(image.material);
+                image.material.renderQueue = (int)RenderQueue.Overlay;  // But still need to render underneath our text
                 style.keyMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
             }
 
-            image.material = style.keyMaterial;      
-            
+            image.material = style.keyMaterial;
+
             Button button = buttonRoot.AddComponent<Button>();
             ColorBlock cb = button.colors;
             cb.highlightedColor = style.highlightColor;
@@ -155,12 +155,13 @@ namespace Assets.scripts.KeyboardDefinition
             //textMesh.fontSharedMaterial.shader = Shader.Find("TextMeshPro/Distance Field Overlay"); // Not rendering ontop otherwise?
             if(style.fontMaterial == null)
             {
-                style.fontMaterial = textMesh.fontMaterial;
+                style.fontMaterial = new Material(textMesh.fontMaterial);
+                style.fontMaterial.shader = Shader.Find("TextMeshPro/Distance Field Overlay"); // Not rendering ontop otherwise?
                 style.fontMaterial.renderQueue = (int)RenderQueue.Overlay + 1;
             }
 
-            textMesh.fontSharedMaterial = style.fontMaterial; 
-            
+            textMesh.fontSharedMaterial = style.fontMaterial;
+
 
             // Some of these buttons have their sizes resolved at runtime, so have them grow to fit their content
             ContentSizeFitter sizeFitter = textObject.AddComponent<ContentSizeFitter>();

@@ -106,7 +106,7 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             m_LineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
             m_pointerMaterial = new Material(Shader.Find("Unlit/Color"));
-            m_pointerMaterial.renderQueue = (int)RenderQueue.Overlay + 1;
+            m_pointerMaterial.renderQueue = (int)RenderQueue.Overlay + 2;
             m_pointerMaterial.color = KeyboardStyle.getPointerLineColor();
             m_LineRenderer.material = m_pointerMaterial;
 
@@ -123,7 +123,7 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             m_Dot.transform.SetParent(gameObject.transform);
 
             m_dotMaterial = new Material(Shader.Find("Unlit/Color") );
-            m_dotMaterial.renderQueue = (int)RenderQueue.Overlay +1;
+            m_dotMaterial.renderQueue = (int)RenderQueue.Overlay +2;
             m_dotMaterial.color = KeyboardStyle.getPointerColor();
             m_Dot.GetComponent<MeshRenderer>().material = m_dotMaterial;
         }
