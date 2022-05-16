@@ -38,6 +38,10 @@ namespace GTFO_VR.UI.CANVAS.POINTER
 
         static MethodInfo s_Selectable_DoStateTransition;
 
+        private Material m_pointerMaterial;
+        private Material m_dotMaterial;
+
+
         static CanvasPointer()
         {
             // GetMethod() doesn't find it, GetRuntimeMethod() requires parameters.
@@ -100,13 +104,11 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             m_LineRenderer = GetComponent<LineRenderer>();
             m_LineRenderer.receiveShadows = false;
             m_LineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            //m_LineRenderer.widthMultiplier = 0.003f;
 
-            Material lineMaterial = new Material(Shader.Find("Unlit/Color"));
-            m_LineRenderer.material = lineMaterial;
-            lineMaterial.renderQueue = (int)RenderQueue.Overlay + 1;
-            //lineMaterial.shader = Shader.Find("Standard");
-            lineMaterial.color = KeyboardStyle.getPointerLineColor();
+            m_pointerMaterial = new Material(Shader.Find("Unlit/Color"));
+            m_pointerMaterial.renderQueue = (int)RenderQueue.Overlay + 1;
+            m_pointerMaterial.color = KeyboardStyle.getPointerLineColor();
+            m_LineRenderer.material = m_pointerMaterial;
 
             mFarCurve.AddKey(0, LINE_WIDTH);
             mFarCurve.AddKey(1, 0);
@@ -120,11 +122,10 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             UnityEngine.Object.Destroy(m_Dot.GetComponent<SphereCollider>());
             m_Dot.transform.SetParent(gameObject.transform);
 
-            Material dotMat = new Material(Shader.Find("Unlit/Color") );
-            m_Dot.GetComponent<MeshRenderer>().material = dotMat;
-            dotMat.renderQueue = (int)RenderQueue.Overlay +1;
-            //dotMat.shader = Shader.Find("Standard");
-            dotMat.color = KeyboardStyle.getPointerColor();
+            m_dotMaterial = new Material(Shader.Find("Unlit/Color") );
+            m_dotMaterial.renderQueue = (int)RenderQueue.Overlay +1;
+            m_dotMaterial.color = KeyboardStyle.getPointerColor();
+            m_Dot.GetComponent<MeshRenderer>().material = m_dotMaterial;
         }
 
         private void Start()
@@ -292,7 +293,10 @@ namespace GTFO_VR.UI.CANVAS.POINTER
 
         private void OnDestroy()
         {
-          
+            if (m_pointerMaterial != null)
+                UnityEngine.Object.Destroy(m_pointerMaterial);
+            if (m_dotMaterial != null)
+                UnityEngine.Object.Destroy(m_dotMaterial);
         }
     }
 }

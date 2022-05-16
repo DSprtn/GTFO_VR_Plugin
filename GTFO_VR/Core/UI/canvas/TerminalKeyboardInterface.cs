@@ -314,11 +314,6 @@ namespace GTFO_VR.UI.CANVAS
             checkDirty();
         }
 
-        private void OnDestroy()
-        {
-
-        }
-
         [HideFromIl2Cpp]
         private static KeyboardLayout getRightKeyboard(string zoneName)
         {
@@ -556,6 +551,14 @@ namespace GTFO_VR.UI.CANVAS
             return bottomKeyboardLayout;
         }
 
+        private void OnDestroy()
+        {
+            // Let's not leak materials
+            m_keyboardStyle.cleanup();
+
+        }
+
     }
+
 
 }

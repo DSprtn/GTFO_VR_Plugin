@@ -125,7 +125,7 @@ namespace Assets.scripts.KeyboardDefinition
                 style.keyMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
             }
 
-            image.material = style.keyMaterial;
+            image.material = style.keyMaterial;      
             
             Button button = buttonRoot.AddComponent<Button>();
             ColorBlock cb = button.colors;

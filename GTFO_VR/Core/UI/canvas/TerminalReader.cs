@@ -67,9 +67,7 @@ namespace GTFO_VR.Core.UI.canvas
             if (m_keyboardRoot.m_keyboardStyle.underlineMaterial == null)
             {
                 Material lineMaterial = new Material(Shader.Find("Unlit/Color"));
-               // lineMaterial.renderQueue = (int)RenderQueue.Overlay + 3;
                 lineMaterial.color = m_keyboardRoot.m_keyboardStyle.textHighlightColor;
-
                 m_keyboardRoot.m_keyboardStyle.underlineMaterial = lineMaterial;
             }
 

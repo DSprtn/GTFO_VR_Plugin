@@ -28,9 +28,19 @@ namespace Assets.scripts.KeyboardDefinition
 
         public Material keyMaterial;
         public Material fontMaterial;
-        //public Material pointerMaterial;
 
         public Material underlineMaterial;
+
+        public void cleanup()
+        {
+            if (keyMaterial != null)
+                UnityEngine.Object.Destroy(keyMaterial);
+            if (fontMaterial != null)
+                UnityEngine.Object.Destroy(fontMaterial);
+            if (underlineMaterial != null)
+                UnityEngine.Object.Destroy(underlineMaterial);
+        }
+
 
         public KeyboardStyle(float tileSize = 1, float fontSize = 0.5f, float spacing = 0.1f)
         {
