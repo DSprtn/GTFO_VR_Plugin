@@ -45,6 +45,8 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configWeaponInfoText;
         internal static ConfigEntry<bool> configCheckSteamVR;
 
+        internal static ConfigEntry<bool> configTerminalKeyboard;
+
         internal static ConfigEntry<bool> configWeaponAmmoHoloText;
 
         private static List<BepinGTFOSettingBase> VRSettings = new List<BepinGTFOSettingBase>();
@@ -128,13 +130,17 @@ namespace GTFO_VR.Core
             configCameraBlood = BindBool(file, "Rendering - Postprocessing", "Enable Camera liquid effects?", true, "If false, will disable camera liquid effects. Will give a little FPS boost.", "Camera liquid effects");
 
             configAlternateEyeRendering = BindBool(file, "Rendering - Experimental", "Alternate eye rendering (janky!)", false,
-    "If true will alternate between eyes when drawing lights and shadows each frame, \n might look really janky so only use this if you absolutely want to play this in VR but don't have the rig for it!",
-    "Alternate rendering per eye");
+                "If true will alternate between eyes when drawing lights and shadows each frame, \n might look really janky so only use this if you absolutely want to play this in VR but don't have the rig for it!",
+                "Alternate rendering per eye");
             
             configEarlyTransparentRendererFix = BindBool(file, "Rendering", "Use water performance fix?", true,
-"If true, water surfaces and water tanks will be modified to not degrade performance. Should be toggled before cage drop. Disable if transparent objects suddenly stop rendering.",
-"Water performance fix");
-            
+                "If true, water surfaces and water tanks will be modified to not degrade performance. Should be toggled before cage drop. Disable if transparent objects suddenly stop rendering.",
+                "Water performance fix");
+
+            configTerminalKeyboard = BindBool(file, "Input", "Use terminal keyboard?", true,
+                "If true, a fancy in-game keyboard will be displayed when using the terminal, instead of the SteamVR overlay keyboard.",
+                "Use terminal keyboard");
+
             BindHeader("Misc");
             configOculusCrashWorkaround = BindBool(file, "Misc", "Use Oculus crash workaround?", false, "If true, map and menu might look a little janky but it should crash less. Blame Zuck!", "Oculus crash workaround");
             configUseControllers = BindBool(file, "Input", "Use VR Controllers?", true, "If true, will use VR controllers. You can play with a gamepad and head aiming if you set this to false", "Motion Controllers (Restart if turning off!)");

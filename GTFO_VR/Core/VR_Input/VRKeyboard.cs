@@ -31,15 +31,19 @@ namespace GTFO_VR.Core.VR_Input
         }
 
         private void FocusStateChanged(eFocusState state)
-        {/*
+        {
             if (state.Equals(eFocusState.ComputerTerminal))
             {
-                SteamVR_Render.unfocusedRenderResolution = 1f;
-                SteamVR.instance.overlay.ShowKeyboard(0, 0, "Terminal input", 256, "", true, 0);
-                m_chatMode = false;
+                if (!VRConfig.configTerminalKeyboard.Value)
+                {
+                    SteamVR_Render.unfocusedRenderResolution = 1f;
+                    SteamVR.instance.overlay.ShowKeyboard(0, 0, "Terminal input", 256, "", true, 0);
+                    m_chatMode = false;
 
-                OrientKeyboard();
-            } else if (state.Equals(eFocusState.FPS_TypingInChat))
+                    OrientKeyboard();
+                }
+            } 
+            else if (state.Equals(eFocusState.FPS_TypingInChat))
             {
                 SteamVR_Render.unfocusedRenderResolution = 1f;
                 SteamVR.instance.overlay.ShowKeyboard(0, 0, "Chat input", 256, "", false, 0);
@@ -51,7 +55,7 @@ namespace GTFO_VR.Core.VR_Input
                 SteamVR.instance.overlay.HideKeyboard();
                 SteamVR_Render.unfocusedRenderResolution = .5f;
             }
-            */
+            
         }
 
         public void OnKeyboardDone(VREvent_t arg0)

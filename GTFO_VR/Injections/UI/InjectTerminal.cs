@@ -20,13 +20,16 @@ namespace GTFO_VR.Injections.UI
     {
         private static void Postfix(LevelGeneration.LG_ComputerTerminal __instance)
         {
-            KeyboardStyle.colorBrightnessMultiplier = 0.1f;
+            if (VRConfig.configTerminalKeyboard.Value)
+            {
+                KeyboardStyle.colorBrightnessMultiplier = 0.1f;
 
-            GameObject terminalCanvas = __instance.m_text.gameObject;
+                GameObject terminalCanvas = __instance.m_text.gameObject;
 
-            TerminalKeyboardInterface.create(__instance);
-            Controllers.setupCanvasPointers();
-            VRPlayer.hideWielded(true);
+                TerminalKeyboardInterface.create(__instance);
+                Controllers.setupCanvasPointers();
+                VRPlayer.hideWielded(true);
+            }
         }
     }
 
@@ -35,16 +38,18 @@ namespace GTFO_VR.Injections.UI
     {
         private static void Postfix(LevelGeneration.LG_ComputerTerminal __instance)
         {
-            VRPlayer.hideWielded(false);
-
-            GameObject keyboardRoot = GameObject.Find("keyboardRoot");
-            if (keyboardRoot != null)
+            if (VRConfig.configTerminalKeyboard.Value)
             {
-                GameObject.Destroy(keyboardRoot);
+                VRPlayer.hideWielded(false);
+
+                GameObject keyboardRoot = GameObject.Find("keyboardRoot");
+                if (keyboardRoot != null)
+                {
+                    GameObject.Destroy(keyboardRoot);
+                }
+
+                Controllers.removeCanvasPointers();
             }
-
-            Controllers.removeCanvasPointers();
-
         }
     }
 }
