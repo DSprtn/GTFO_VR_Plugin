@@ -318,69 +318,53 @@ namespace GTFO_VR.UI.CANVAS
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-
                 keyboardRow.AddChild(new KeyDefinition("TERMINAL ", "TERMINAL", 4));
-
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-
                 keyboardRow.AddChild(new KeyDefinition("BULKHEAD ", "BULKHEAD", 4));
-
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-
                 keyboardRow.AddChild(new KeyDefinition("FOG ", "FOG", 2));
                 keyboardRow.AddChild(new KeyDefinition("GENERATOR ", "GEN", 2));
-
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-
                 keyboardRow.AddChild(new KeyDefinition("POWER_CELL ", "CELL", 2));
                 keyboardRow.AddChild(new KeyDefinition("KEY ", "KEY", 2));
-
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-
                 keyboardRow.AddChild(new KeyDefinition("DISINFECT ", "DISIN", 2));
                 keyboardRow.AddChild(new KeyDefinition("MEDI ", "MEDI", 2));
-
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-
                 keyboardRow.AddChild(new KeyDefinition("AMMO ", "AMMO ", 2));
                 keyboardRow.AddChild(new KeyDefinition("TOOL ", "TOOL ", 2));
-
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-
                 keyboardRow.AddChild(new KeyDefinition( zoneName + " ", zoneName, 4));
-
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-
                 keyboardRow.AddChild(new KeyDefinition("RESOURCE ", "RESOURCE", 4));
-
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
@@ -396,45 +380,53 @@ namespace GTFO_VR.UI.CANVAS
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
+                keyboardRow.AddChild(new KeyDefinition("REACTOR_VERIFY ", "REACTOR_VERIFY", 5));
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
 
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
+                keyboardRow.AddChild(new KeyDefinition("UPLINK_VERIFY ", "UPLINK_VERIFY", 5));
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
+                keyboardRow.AddChild(new KeyDefinition("UPLINK_CONNECT ", "UPLINK_CONNECT", 5));
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
                 keyboardRow.AddChild(new KeyDefinition("ZONE_", "ZONE_", 3));
                 keyboardRow.AddChild(new KeyDefinition("-T", "-T", 1));
-
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
-
                 keyboardRow.AddChild(new KeyDefinition("LOGS\r", "LOGS", 2));
                 keyboardRow.AddChild(new KeyDefinition("READ ", "READ", 2));
-
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
-
                 keyboardRow.AddChild(new KeyDefinition("INFO\r", "INFO", 2));
                 keyboardRow.AddChild(new KeyDefinition("LIST ", "LIST", 2));
-
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
-
                 keyboardRow.AddChild(new KeyDefinition("QUERY ", "QUERY", 2));
                 keyboardRow.AddChild(new KeyDefinition("PING ", "PING", 2));
-
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
-
                 keyboardRow.AddChild(new KeyDefinition("COMMANDS\r", "COMMANDS", 4));
-
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
