@@ -137,7 +137,6 @@
     <Compile Include="Core\UI\VRWorldSpaceUI.cs" />
     <Compile Include="Core\VR_Input\HandType.cs" />
     <Compile Include="Injections\Rendering\InjectEarlyTransparentRendererFix.cs" />
-    <Compile Include="Injections\UI\InjectTerminal.cs" />
     <Compile Include="Util\ExtensionMethods.cs" />
     <Compile Include="Core\WeaponArchetypeVRData.cs" />
     <Compile Include="Core\VR_Input\Controllers.cs" />

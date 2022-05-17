@@ -159,6 +159,32 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
+        public static LevelGeneration.LG_ComputerTerminal getInteractingTerminal()
+        {
+            // There are a number of interaction references, including "m_currentInteractionObj", but they're all null.
+            // camera ray probably depends on where you're looking, so proximity it is.
+            Il2CppSystem.Collections.Generic.List<IInteractable> interactables = PlayerAgent?.Interaction?.m_proximityInteracts;
+
+            if (interactables == null)
+            {
+                return null;
+            }
+
+            Interact_ComputerTerminal terminalInteract = null;
+            foreach( IInteractable interactable in interactables)
+            {
+
+                terminalInteract = interactable.TryCast<Interact_ComputerTerminal>();
+                if (terminalInteract != null)
+                    break;
+            }
+
+            if (terminalInteract == null)
+                return null;
+
+            return terminalInteract.m_terminal;
+        }
+
         public static void hideWielded(bool hide)
         {
             if (!VRConfig.configUseControllers.Value || !PlayerAgent)

@@ -1,4 +1,7 @@
-﻿using GTFO_VR.Events;
+﻿using Assets.scripts.KeyboardDefinition;
+using GTFO_VR.Core.PlayerBehaviours;
+using GTFO_VR.Events;
+using GTFO_VR.UI.CANVAS;
 using System;
 using System.Text;
 using UnityEngine;
@@ -34,7 +37,27 @@ namespace GTFO_VR.Core.VR_Input
         {
             if (state.Equals(eFocusState.ComputerTerminal))
             {
-                if (!VRConfig.configTerminalKeyboard.Value)
+                bool terminalKeyboardDisplayed = false;
+                if (VRConfig.configTerminalKeyboard.Value)
+                {
+                    KeyboardStyle.colorBrightnessMultiplier = 0.1f;
+
+                    LevelGeneration.LG_ComputerTerminal terminal = VRPlayer.getInteractingTerminal();
+                    if (terminal != null)
+                    {
+                        TerminalKeyboardInterface.create(terminal);
+                        Controllers.setupCanvasPointers();
+                        VRPlayer.hideWielded(true);
+                        terminalKeyboardDisplayed = true;
+                    }
+                    else
+                    {
+                        Log.Error("Could not get interacting terminal!");
+                    }
+                }
+                
+                // Fall back to overlay
+                if (!terminalKeyboardDisplayed)
                 {
                     SteamVR_Render.unfocusedRenderResolution = 1f;
                     SteamVR.instance.overlay.ShowKeyboard(0, 0, "Terminal input", 256, "", true, 0);
@@ -54,8 +77,19 @@ namespace GTFO_VR.Core.VR_Input
             {
                 SteamVR.instance.overlay.HideKeyboard();
                 SteamVR_Render.unfocusedRenderResolution = .5f;
+
+                if (VRConfig.configTerminalKeyboard.Value)
+                {
+                    VRPlayer.hideWielded(false); // TODO: Always doing this might be a problem
+                    GameObject keyboardRoot = GameObject.Find("keyboardRoot");
+                    if (keyboardRoot != null)
+                    {
+                        GameObject.Destroy(keyboardRoot);
+                    }
+
+                    Controllers.removeCanvasPointers();
+                }
             }
-            
         }
 
         public void OnKeyboardDone(VREvent_t arg0)
