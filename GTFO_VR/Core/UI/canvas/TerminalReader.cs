@@ -1,5 +1,6 @@
 ﻿using Assets.scripts.KeyboardDefinition;
 using GTFO_VR.UI.CANVAS;
+using GTFO_VR.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,8 +29,6 @@ namespace GTFO_VR.Core.UI.canvas
         private string m_currentSelection = "";
 
         private GameObject m_highlight;
-
-        private static readonly float MAX_DISTANCE = 0.1f * TerminalKeyboardInterface.CANVAS_SCALE;
 
         public static GameObject Create( GameObject textCanvas, TerminalKeyboardInterface keyboardRoot )
         {
@@ -96,23 +95,18 @@ namespace GTFO_VR.Core.UI.canvas
             return distanceToCenter - crossSection;
         }
 
-        public int findNearestCharacter(Vector3 position, float maxDistance  )
+        public int findNearestCharacter(Vector3 position )
         {
             if (m_textMesh == null)
                 return -1;
 
-            int res = TMP_TextUtilities.FindNearestCharacter(m_textMesh, position, null, true);
+            int res = m_textMesh.FindNearestCharacterInWorldSpace(position);
 
             if (res < 0)
                 return -1;
 
-            float distance = getDistanceToCharacter(position, m_textMesh.textInfo.characterInfo[res]);
-
-            if (distance > maxDistance)
-                return -1;
-
             return res;
-        }
+        }   
 
         public void clearSelection()
         {
@@ -129,6 +123,7 @@ namespace GTFO_VR.Core.UI.canvas
                 return;
 
             TMP_CharacterInfo first = m_textMesh.textInfo.characterInfo[start];
+
             TMP_CharacterInfo last = m_textMesh.textInfo.characterInfo[end];
 
             float lineHeight = m_textMesh.textInfo.lineInfo[first.lineNumber].lineHeight;
@@ -164,7 +159,7 @@ namespace GTFO_VR.Core.UI.canvas
 
         public void hoverPointer(Vector3 position)
         {
-            int nearestChar = findNearestCharacter(position, MAX_DISTANCE);
+            int nearestChar = findNearestCharacter(position);
 
             // Out of range
             if (nearestChar < 0)
