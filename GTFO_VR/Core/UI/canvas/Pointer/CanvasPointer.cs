@@ -1,6 +1,8 @@
 ﻿using Assets.scripts.KeyboardDefinition;
 using GTFO_VR.Core.UI.canvas;
+using GTFO_VR.Core.UI.canvas.Pointer;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -41,6 +43,7 @@ namespace GTFO_VR.UI.CANVAS.POINTER
         private Material m_pointerMaterial;
         private Material m_dotMaterial;
 
+        private PointerHistory m_PointerHistory = new PointerHistory();
 
         static CanvasPointer()
         {
@@ -85,8 +88,6 @@ namespace GTFO_VR.UI.CANVAS.POINTER
         {
             return m_InputSource;
         }
-
-        // 0 normal, 1 highlighted, rest we don't care about.
         private void setSelectableState( Selectable selectable, SelectionState state)
         {
             if (s_Selectable_DoStateTransition == null)
@@ -95,8 +96,11 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             s_Selectable_DoStateTransition.Invoke(selectable, new object[]{(int)state, true});
         }
 
+
+
         private void Awake()
         {
+
             ///////////////////////
             // Line 
             ///////////////////////
@@ -228,19 +232,16 @@ namespace GTFO_VR.UI.CANVAS.POINTER
                 500, 
                 TerminalKeyboardInterface.LAYER_MASK);
 
-
-
             m_prevHit = m_currentHit;
             m_currentHit = hit;
 
-            if (m_prevHit.collider != m_currentHit.collider)
+            // Clear history ( and thus smoothing ) when transition from/to hitting something
+            if (hitSomething != isCollider(m_prevHit) )
             {
-                if ( isCollider(m_currentHit) )
-                {
-                    //Debug.Log("New target: " + m_currentHit.collider.gameObject.name);
-                }
-            } 
-               
+                m_PointerHistory.clearPointerHistory();
+            }
+
+            m_PointerHistory.addPointerHistory(hit.point);   
         }
 
         private void handleHighlight()
@@ -263,7 +264,7 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             if ( isTextCanvas(m_currentHit) )
             {
                 TerminalReader reader = m_currentHit.collider.gameObject.GetComponent<TerminalReader>();
-                reader.hoverPointer(m_currentHit.point);
+                reader.hoverPointer(m_PointerHistory.getSmoothenedPointerPosition());
             }
         }
 
@@ -273,7 +274,7 @@ namespace GTFO_VR.UI.CANVAS.POINTER
 
             Vector3 endPosition;
             if (hit)
-                endPosition = m_currentHit.point;
+                endPosition = m_PointerHistory.getSmoothenedPointerPosition();
             else
                 endPosition = transform.position + (transform.forward * m_DefaultLength);
 
