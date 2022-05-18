@@ -25,7 +25,7 @@ namespace GTFO_VR.UI.CANVAS.POINTER
 
         private static readonly float LINE_WIDTH = 0.003f;
 
-        public float m_DefaultLength = 0.5f;
+        public readonly float m_DefaultLength = 0.3f; // Unity not reflecting change unless readonly??
         public GameObject m_Dot;
 
         private AnimationCurve mFarCurve = new AnimationCurve();
