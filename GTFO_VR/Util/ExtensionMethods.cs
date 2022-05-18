@@ -108,6 +108,7 @@ namespace GTFO_VR.Util
             return pointOnLine;
         }
 
+        // This replaces TMP_TextUtilities.FindNearestCharacter(), which will output incorrect data in some situations.
         public static int FindNearestCharacterInWorldSpace(this TextMeshPro textMesh, Vector3 position)
         {
             // Translate our position into the local space of the textmesh

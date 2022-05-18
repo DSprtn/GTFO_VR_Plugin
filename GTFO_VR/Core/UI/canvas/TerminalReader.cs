@@ -1,14 +1,9 @@
-﻿using Assets.scripts.KeyboardDefinition;
-using GTFO_VR.UI.CANVAS;
+﻿using GTFO_VR.UI.CANVAS;
 using GTFO_VR.Util;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace GTFO_VR.Core.UI.canvas
 {
@@ -75,24 +70,6 @@ namespace GTFO_VR.Core.UI.canvas
             m_highlight.transform.SetParent(this.gameObject.transform);
             m_highlight.transform.localRotation = new Quaternion();
             m_highlight.transform.localScale = new Vector3(0, 0, 0);
-        }
-
-        private float getDistanceToCharacter( Vector3 from, TMP_CharacterInfo chrInfo )
-        {
-
-            // Treat character bounds as a sphere, calculate distance to outer bounds
-            Vector3 crossSectionVector = chrInfo.topLeft - chrInfo.bottomRight;
-            float crossSection = m_textMesh.transform.TransformPoint(crossSectionVector).magnitude;
-            Vector3 center = (chrInfo.topLeft + chrInfo.bottomRight) / 2;
-            center = m_textMesh.transform.TransformPoint(center);
-
-            //Debug.DrawLine(from, center);
-
-            float distanceToCenter = (from - center).sqrMagnitude;
-
-            if (distanceToCenter < crossSection)
-                return 0;
-            return distanceToCenter - crossSection;
         }
 
         public int findNearestCharacter(Vector3 position )
