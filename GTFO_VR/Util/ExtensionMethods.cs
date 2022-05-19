@@ -121,7 +121,12 @@ namespace GTFO_VR.Util
             float closestDistance = float.MaxValue;
 
             TMP_CharacterInfo[] characters = textMesh.textInfo.characterInfo;
-            for (int index = 0; index < characters.Length; index++)
+
+            // The CharacterInfo array does not (always?) shrink when fewer characters are displayed.
+            // Anything beyond m_totalCharacterCount will be old data that is not actually displayed.
+            int actualCharacterCount = Mathf.Min(characters.Length, textMesh.m_totalCharacterCount); 
+
+            for (int index = 0; index < actualCharacterCount; index++)
             {
                 TMP_CharacterInfo character = characters[index];
                 if (!character.isVisible)
