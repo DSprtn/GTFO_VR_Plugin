@@ -264,6 +264,7 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             if ( isTextCanvas(m_currentHit) )
             {
                 TerminalReader reader = m_currentHit.collider.gameObject.GetComponent<TerminalReader>();
+                // Text on terminal is tiny. Use smoothened position to make things easier to select.
                 reader.hoverPointer(m_PointerHistory.getSmoothenedPointerPosition());
             }
         }
@@ -274,7 +275,18 @@ namespace GTFO_VR.UI.CANVAS.POINTER
 
             Vector3 endPosition;
             if (hit)
-                endPosition = m_PointerHistory.getSmoothenedPointerPosition();
+            {
+                // Text on terminal is tiny and uses smoothened position to make things easier to select.
+                if (isTextCanvas(m_currentHit))
+                {
+                    endPosition = m_PointerHistory.getSmoothenedPointerPosition();
+                }
+                else
+                {
+                    endPosition = m_currentHit.point;
+                }
+            }
+                
             else
                 endPosition = transform.position + (transform.forward * m_DefaultLength);
 
