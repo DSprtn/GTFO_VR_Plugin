@@ -116,7 +116,8 @@ namespace GTFO_VR.Core.UI.canvas
             Vector3 center = (topLeft + bottomRight) * 0.5f;
 
             m_highlight.transform.position = m_textMesh.transform.TransformPoint( center );
-            m_highlight.transform.position += this.transform.forward * 0.001f;
+            m_highlight.transform.position += this.transform.forward * 0.0001f; // at 0.001f the very bottom will clip into the backgorund.
+                                                                                // maybe check render queue and adjust accordingly.
 
             m_highlight.transform.localScale = new Vector3(width, lineHeight, 0.03f);
         }
