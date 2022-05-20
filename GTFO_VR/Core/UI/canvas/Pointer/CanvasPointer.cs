@@ -129,6 +129,7 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             m_dotMaterial = new Material(Shader.Find("Unlit/Color") );
             m_dotMaterial.renderQueue = (int)RenderQueue.Overlay +2;
             m_dotMaterial.color = KeyboardStyle.getPointerColor();
+            m_dotMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
             m_Dot.GetComponent<MeshRenderer>().material = m_dotMaterial;
         }
 
