@@ -54,13 +54,11 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             {
                 if (method.Name.Equals("DoStateTransition"))
                 {
-                    Debug.Log("Found the method");
                     s_Selectable_DoStateTransition = method;
                     break;
                 }
             }
         }
-
 
         private enum SelectionState
         {

@@ -146,7 +146,7 @@ namespace GTFO_VR.UI.CANVAS
             float keyboardCanvasWidth = rawWidth * CANVAS_SCALE;
 
             //////////////////////////////////////////
-            // Align with bottom of terminal canvas
+            // Align with edge of terminal canvas
             //////////////////////////////////////////
 
             switch (position)

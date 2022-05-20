@@ -150,9 +150,6 @@ namespace Assets.scripts.KeyboardDefinition
             textMesh.alignment = TextAlignmentOptions.Center;
             textMesh.color = style.fontColor;
 
-
-            //textMesh.fontSharedMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always);
-            //textMesh.fontSharedMaterial.shader = Shader.Find("TextMeshPro/Distance Field Overlay"); // Not rendering ontop otherwise?
             if(style.fontMaterial == null)
             {
                 style.fontMaterial = new Material(textMesh.fontMaterial);

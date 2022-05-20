@@ -151,10 +151,8 @@ namespace GTFO_VR.Core.UI.canvas
 
             m_lastIndex = nearestChar;
 
-            // Start from index, find complete word.
-            // Delimieters are space, linebreak, and "". Maybe : ?
-
-            // The index returned is per character, excluding any extra formatting text like <b> </b>
+            // Iterate backwards and forwards from position to find word to select.
+            // The index returned above is per character, excluding any extra formatting text like <b> </b>
             // Unfortunately, this does not include any whitespace or separating characters when text
             // is indented. Get the corresponding index in the original string and treat < > as delimiters.
 

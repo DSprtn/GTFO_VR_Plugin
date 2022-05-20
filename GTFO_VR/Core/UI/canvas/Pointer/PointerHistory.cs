@@ -31,6 +31,9 @@ namespace GTFO_VR.Core.UI.canvas.Pointer
                 count++;
             }
 
+            if (count <= 0)   // Just incase
+                return smoothed;
+
             return smoothed / count;
         }
 
