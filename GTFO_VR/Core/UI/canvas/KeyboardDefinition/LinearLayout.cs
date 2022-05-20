@@ -13,7 +13,7 @@ namespace Assets.scripts.KeyboardDefinition
 
     public class LinearLayout : KeyboardLayout
     {
-        private KeyboardLayoutParameters m_layoutParameters;
+        private LayoutParameters m_layoutParameters;
         private LinearOrientation m_orientation;
         private TextAnchor m_gravity;  // Turns out they reuse this for Auto Layout.
         private string m_name;
@@ -21,15 +21,15 @@ namespace Assets.scripts.KeyboardDefinition
 
         private List<KeyboardLayout> m_children = new List<KeyboardLayout>();
         
-        public LinearLayout(LinearOrientation orientation=LinearOrientation.VERTICAL) : this(orientation, TextAnchor.UpperCenter, new KeyboardLayoutParameters(1, 1, true, true)) { }
+        public LinearLayout(LinearOrientation orientation=LinearOrientation.VERTICAL) : this(orientation, TextAnchor.UpperCenter, LayoutParameters.FillParent() ) { }
 
-        public LinearLayout(LinearOrientation orientation, string name) : this(orientation, TextAnchor.UpperCenter, new KeyboardLayoutParameters(1, 1, true, true), name) { }
+        public LinearLayout(LinearOrientation orientation, string name) : this(orientation, TextAnchor.UpperCenter, LayoutParameters.FillParent(), name) { }
 
-        public LinearLayout(LinearOrientation orientation, TextAnchor gravity) : this(orientation, gravity, new KeyboardLayoutParameters(1,1,true,true)){ }
+        public LinearLayout(LinearOrientation orientation, TextAnchor gravity) : this(orientation, gravity, LayoutParameters.FillParent()) { }
         
-        public LinearLayout(LinearOrientation orientation, TextAnchor gravity, KeyboardLayoutParameters layoutParameters) : this(orientation, gravity, layoutParameters, null) { }
+        public LinearLayout(LinearOrientation orientation, TextAnchor gravity, LayoutParameters layoutParameters) : this(orientation, gravity, layoutParameters, null) { }
 
-        public LinearLayout(LinearOrientation orientation,TextAnchor gravity, KeyboardLayoutParameters layoutParams, string name )
+        public LinearLayout(LinearOrientation orientation,TextAnchor gravity, LayoutParameters layoutParams, string name )
         {
             m_orientation = orientation;
             m_gravity = gravity;

@@ -39,16 +39,16 @@ namespace Assets.scripts.KeyboardDefinition
         public KeyType KeyType = KeyType.INPUT;
         public string Input;       // if character or input
         public string Label;
-        public KeyboardLayoutParameters layoutParameters;
+        public LayoutParameters layoutParameters;
         public KeyboardStyle style;
 
         public KeyDefinition(string input) : this(input, input) { }
 
-        public KeyDefinition(string input, string label) : this(input, label, new KeyboardLayoutParameters() ){ }
+        public KeyDefinition(string input, string label) : this(input, label, new LayoutParameters() ){ }
 
-        public KeyDefinition(string input, string label, int width) : this(input, label, new KeyboardLayoutParameters(width)) { }
+        public KeyDefinition(string input, string label, int width) : this(input, label, new LayoutParameters(width)) { }
 
-        public KeyDefinition(string input, string label, KeyboardLayoutParameters layoutParameters)
+        public KeyDefinition(string input, string label, LayoutParameters layoutParameters)
         {
             this.Input = input;
             this.Label = label;
@@ -56,12 +56,12 @@ namespace Assets.scripts.KeyboardDefinition
             populateInput();
         }
 
-        public KeyDefinition(KeyType type, string label) : this(type, label, new KeyboardLayoutParameters() ){ }
+        public KeyDefinition(KeyType type, string label) : this(type, label, new LayoutParameters() ){ }
 
-        public KeyDefinition(KeyType type, string label, float width) : this(type, label, new KeyboardLayoutParameters(width, false)) { }
+        public KeyDefinition(KeyType type, string label, float width) : this(type, label, new LayoutParameters(width)) { }
 
 
-        public KeyDefinition(KeyType type, string label, KeyboardLayoutParameters layoutParameters)
+        public KeyDefinition(KeyType type, string label, LayoutParameters layoutParameters)
         {
             this.KeyType = type;
             this.Label = label;

@@ -319,7 +319,7 @@ namespace GTFO_VR.UI.CANVAS
         {
             LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.LowerLeft);
 
-            KeyboardLayoutParameters rowParams = new KeyboardLayoutParameters(15, 1, false, false);
+            LayoutParameters rowParams = new LayoutParameters(15, 1);
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
@@ -381,7 +381,7 @@ namespace GTFO_VR.UI.CANVAS
         {
             LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.LowerRight);
 
-            KeyboardLayoutParameters rowParams = new KeyboardLayoutParameters(15, 1, false, false);
+            LayoutParameters rowParams = new LayoutParameters(15, 1);
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
@@ -443,7 +443,7 @@ namespace GTFO_VR.UI.CANVAS
         {
             LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.UpperCenter);
 
-            KeyboardLayoutParameters rowParams = new KeyboardLayoutParameters(15, 1, false, false);
+            LayoutParameters rowParams = new LayoutParameters(15, 1);
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperCenter, rowParams);
@@ -460,15 +460,15 @@ namespace GTFO_VR.UI.CANVAS
                 keyboardRow.AddChild(new KeyDefinition("9"));
                 keyboardRow.AddChild(new KeyDefinition("0"));
                 keyboardRow.AddChild(new KeyDefinition("."));   // For typing ip addresses
-                keyboardRow.AddChild(new KeyDefinition(KeyType.BACKPSPACE, "backspace", new KeyboardLayoutParameters(1, true)));
+                keyboardRow.AddChild(new KeyDefinition(KeyType.BACKPSPACE, "backspace", new LayoutParameters( LayoutParameters.FILL_PARENT )));
 
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
-                LinearLayout shortRowHorizontal = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperCenter, new KeyboardLayoutParameters(15, 3, false, false));
-                LinearLayout shortRowVertical = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.UpperLeft, new KeyboardLayoutParameters(12.5f, 3, false, false));
-                KeyboardLayoutParameters shortRowParams = new KeyboardLayoutParameters(12.5f, 1, false, false);
+                LinearLayout shortRowHorizontal = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperCenter, new LayoutParameters(15, 3));
+                LinearLayout shortRowVertical = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.UpperLeft, new LayoutParameters(12.5f, 3));
+                LayoutParameters shortRowParams = new LayoutParameters(12.5f, 1);
 
                 {
                     LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperLeft, shortRowParams);
@@ -505,7 +505,7 @@ namespace GTFO_VR.UI.CANVAS
                     keyboardRow.AddChild(new KeyDefinition("k"));
                     keyboardRow.AddChild(new KeyDefinition("l"));
                     keyboardRow.AddChild(new KeyDefinition("_"));
-                    keyboardRow.AddChild(new KeyDefinition(KeyType.ENTER, "", new KeyboardLayoutParameters(0.01f, true)));
+                    keyboardRow.AddChild(new KeyDefinition(KeyType.ENTER, "", new LayoutParameters(LayoutParameters.FILL_PARENT, 1, 0.01f)));
 
                     shortRowVertical.AddChild(keyboardRow);
                 }
@@ -531,7 +531,7 @@ namespace GTFO_VR.UI.CANVAS
                 }
 
                 shortRowHorizontal.AddChild(shortRowVertical);
-                shortRowHorizontal.AddChild(new KeyDefinition(KeyType.ENTER, "enter", new KeyboardLayoutParameters(1f, 3f, true, false)));
+                shortRowHorizontal.AddChild(new KeyDefinition(KeyType.ENTER, "enter", new LayoutParameters(LayoutParameters.FILL_PARENT, 3f)));
                 bottomKeyboardLayout.AddChild(shortRowHorizontal);
             }
 
@@ -543,7 +543,7 @@ namespace GTFO_VR.UI.CANVAS
                 keyboardRow.AddChild(new KeyDefinition(KeyType.LEFT, "<"));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.DOWN, "v", 1.1f));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.RIGHT, ">"));
-                keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", new KeyboardLayoutParameters(1f, true)));
+                keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", new LayoutParameters(LayoutParameters.FILL_PARENT)));
 
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
