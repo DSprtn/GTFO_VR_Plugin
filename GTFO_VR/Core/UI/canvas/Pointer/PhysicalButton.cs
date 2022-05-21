@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.scripts.canvas.Pointer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,7 @@ using static UnityEngine.UI.Button;
 
 namespace Assets.scripts.canvas
 {
-    class PhysicalButton : MonoBehaviour
+    class PhysicalButton : MonoBehaviour, PointerEvent.IPointerEvent
     {
         public BoxCollider m_collider;
         public RectTransform m_rectTrans;
@@ -32,5 +33,30 @@ namespace Assets.scripts.canvas
             m_background.setSize(width, height);
         }
 
+        public void OnPointerEnter(PointerEvent ev)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnPointerExit(PointerEvent ev)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void onPointerMove(PointerEvent ev)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void onPointerDown(PointerEvent ev)
+        {
+            onClick.Invoke();
+            //throw new NotImplementedException();
+        }
+
+        public void onPointerUp(PointerEvent ev)
+        {
+            //throw new NotImplementedException();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Assets.scripts.KeyboardDefinition;
+﻿using Assets.scripts.canvas.Pointer;
+using Assets.scripts.KeyboardDefinition;
 using GTFO_VR.Core.UI.canvas;
 using GTFO_VR.Core.UI.canvas.Pointer;
 using System;
@@ -18,8 +19,6 @@ namespace GTFO_VR.UI.CANVAS.POINTER
 {
     class CanvasPointer : MonoBehaviour
     {
-
-
         //private SteamVR_Action_Boolean m_click = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/GrabPinch");
         private SteamVR_Action_Boolean m_click = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/Shoot");
 
@@ -38,27 +37,10 @@ namespace GTFO_VR.UI.CANVAS.POINTER
 
         private LineRenderer m_LineRenderer = null;
 
-        static MethodInfo s_Selectable_DoStateTransition;
-
         private Material m_pointerMaterial;
         private Material m_dotMaterial;
 
         private PointerHistory m_PointerHistory = new PointerHistory();
-
-        static CanvasPointer()
-        {
-            // GetMethod() doesn't find it, GetRuntimeMethod() requires parameters.
-            Type clazz = typeof(Selectable);
-            IEnumerable<MethodInfo> methods = clazz.GetRuntimeMethods();
-            foreach(MethodInfo method in methods)
-            {
-                if (method.Name.Equals("DoStateTransition"))
-                {
-                    s_Selectable_DoStateTransition = method;
-                    break;
-                }
-            }
-        }
 
         private enum SelectionState
         {
@@ -86,15 +68,6 @@ namespace GTFO_VR.UI.CANVAS.POINTER
         {
             return m_InputSource;
         }
-        private void setSelectableState( Selectable selectable, SelectionState state)
-        {
-            if (s_Selectable_DoStateTransition == null)
-                return;
-
-            s_Selectable_DoStateTransition.Invoke(selectable, new object[]{(int)state, true});
-        }
-
-
 
         private void Awake()
         {
@@ -153,26 +126,14 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             handleInput();
         }
 
-        private static bool isButton(RaycastHit hit)
+        private static PointerEvent.IPointerEvent getButton(RaycastHit hit)
         {
-            if (hit.collider == null)
-                return false;
-
-            Button button = hit.collider.gameObject.GetComponent<Button>();
-            return button != null;
+            return hit.collider?.gameObject?.GetComponent<PointerEvent.IPointerEvent>();
         }
 
         private static bool isCollider(RaycastHit hit)
         {
             return hit.collider != null;
-        }
-
-        private static bool isTextCanvas(RaycastHit hit)
-        {
-            if (hit.collider == null)
-                return false;
-
-            return hit.collider?.gameObject.GetComponent<TerminalReader>() != null;
         }
 
         private void handleInput()
@@ -182,38 +143,29 @@ namespace GTFO_VR.UI.CANVAS.POINTER
 
             if (up || down)
             {
+                PointerEvent.IPointerEvent button = getButton(m_currentHit);
+
                 if (down)
                 {
-                    if ( isButton( m_currentHit ))
+                    
+                    if ( button != null)
                     {
-                        Selectable selectable = m_currentHit.collider.gameObject.GetComponent<Selectable>();
-                        Button button = m_currentHit.collider.gameObject.GetComponent<Button>();
-
+                        button.onPointerDown(new PointerEvent(m_currentHit.point));
                         m_ButtonPressHit = m_currentHit;
-                        button.onClick.Invoke();
-                        setSelectableState(selectable, SelectionState.Pressed);
-                    }
-
-                    if (isTextCanvas(m_currentHit))
-                    {
-                        TerminalReader reader = m_currentHit.collider.gameObject.GetComponent<TerminalReader>();
-                        reader.submitSelection(true);
                     }
                 }
 
                 if (up)
                 {
-                    // Restore state to highlighted if we are still hovering over the same button, 
-                    // otherwise return state of the button we clicked on to normal.
-                    if (isButton(m_currentHit) && m_currentHit.collider == m_ButtonPressHit.collider )
+                    if ( m_ButtonPressHit.collider != m_currentHit.collider )
                     {
-                        Selectable selectable = m_currentHit.collider.gameObject.GetComponent<Selectable>();
-                        setSelectableState(selectable, SelectionState.Highlighted);
+                        PointerEvent.IPointerEvent downButton = getButton(m_ButtonPressHit);
+                        downButton?.onPointerUp(new PointerEvent(m_currentHit.point));
                     }
-                    else if (m_ButtonPressHit.collider != null)
+                    else
                     {
-                        Selectable oldSelectable = m_ButtonPressHit.collider.gameObject.GetComponent<Selectable>();
-                        setSelectableState(oldSelectable, SelectionState.Normal);
+                        button?.onPointerUp( new PointerEvent(m_currentHit.point) );
+
                     }
 
                     m_ButtonPressHit = new RaycastHit();
@@ -245,27 +197,19 @@ namespace GTFO_VR.UI.CANVAS.POINTER
 
         private void handleHighlight()
         {
+            PointerEvent.IPointerEvent button = getButton(m_currentHit);
+
             if (m_currentHit.collider != m_prevHit.collider)
             {
-                if ( isButton(m_prevHit))
-                {
-                    Selectable prevButton = m_prevHit.collider.gameObject.GetComponent<Selectable>();
-                    setSelectableState(prevButton, SelectionState.Normal);
-                }
+                PointerEvent.IPointerEvent prevButton = getButton(m_prevHit);
+                prevButton?.OnPointerExit(new PointerEvent(m_prevHit.point));
 
-                if (isButton(m_currentHit))
-                {
-                    Selectable button = m_currentHit.collider.gameObject.GetComponent<Selectable>();
-                    setSelectableState(button, SelectionState.Highlighted);
-                }
+                button?.OnPointerEnter(new PointerEvent(m_prevHit.point));
             }
 
-            if ( isTextCanvas(m_currentHit) )
-            {
-                TerminalReader reader = m_currentHit.collider.gameObject.GetComponent<TerminalReader>();
-                // Text on terminal is tiny. Use smoothened position to make things easier to select.
-                reader.hoverPointer(m_PointerHistory.getSmoothenedPointerPosition());
-            }
+            // Add check to interface if it wants to be smoothened? 
+            // Let reader do the smoothing?
+            button?.onPointerMove(new PointerEvent(m_PointerHistory.getSmoothenedPointerPosition()));
         }
 
         public void updateLine()
@@ -275,29 +219,16 @@ namespace GTFO_VR.UI.CANVAS.POINTER
             Vector3 endPosition;
             if (hit)
             {
-                // Text on terminal is tiny and uses smoothened position to make things easier to select.
-                if (isTextCanvas(m_currentHit))
-                {
-                    endPosition = m_PointerHistory.getSmoothenedPointerPosition();
-                }
-                else
-                {
-                    endPosition = m_currentHit.point;
-                }
-            }
-                
-            else
-                endPosition = transform.position + (transform.forward * m_DefaultLength);
+                endPosition = m_PointerHistory.getSmoothenedPointerPosition();
 
-            if (hit)
-            {
-                m_Dot.transform.position = endPosition;
-
-                //Align with surface
+                m_Dot.transform.position = endPosition; // Position and align dot
                 m_Dot.transform.rotation = m_currentHit.collider.transform.rotation;
             }
             else
+            {
+                endPosition = transform.position + (transform.forward * m_DefaultLength);
                 m_Dot.transform.position = Vector3.zero;
+            }
 
             m_LineRenderer.SetPosition(0, transform.position);
             m_LineRenderer.SetPosition(1, endPosition);

@@ -1,4 +1,5 @@
-﻿using GTFO_VR.UI.CANVAS;
+﻿using Assets.scripts.canvas.Pointer;
+using GTFO_VR.UI.CANVAS;
 using GTFO_VR.Util;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace GTFO_VR.Core.UI.canvas
 {
-    public class TerminalReader : MonoBehaviour
+    public class TerminalReader : MonoBehaviour, PointerEvent.IPointerEvent
     {
         private GameObject m_textCanvas;
 
@@ -99,8 +100,6 @@ namespace GTFO_VR.Core.UI.canvas
 
         private void drawHighlight( TMP_CharacterInfo[] characters, int start, int end)
         {
-
-
             // Sanity check
             if (start < 0 || end >= m_textMesh.textInfo.characterInfo.Length)
                 return;
@@ -135,7 +134,6 @@ namespace GTFO_VR.Core.UI.canvas
             return m_currentSelection;
         }
 
-        // Either the pointer has a reference to the interface, or the reader does.
         public void submitSelection(bool addSpace)
         {
             m_keyboardRoot.HandleInput(getSelection() + (addSpace ? " " : "") );
@@ -239,6 +237,31 @@ namespace GTFO_VR.Core.UI.canvas
             {
                 UnityEngine.Object.Destroy(m_underlineMaterial);
             }
+        }
+
+        public void OnPointerEnter(PointerEvent ev)
+        {
+            //throw new NotImplementedException();
+        }
+
+        public void OnPointerExit(PointerEvent ev)
+        {
+            // Hide highlight?
+        }
+
+        public void onPointerMove(PointerEvent ev)
+        {
+            hoverPointer(ev.position);
+        }
+
+        public void onPointerDown(PointerEvent ev)
+        {
+            submitSelection(true);
+        }
+
+        public void onPointerUp(PointerEvent ev)
+        {
+            //throw new NotImplementedException();
         }
     }
 
