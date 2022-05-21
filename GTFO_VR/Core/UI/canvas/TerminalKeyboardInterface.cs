@@ -131,7 +131,7 @@ namespace GTFO_VR.UI.CANVAS
 
         private void generateCanvas(  GameObject go, RectTransform terminalCanvasRect, float rawHeight, float rawWidth, TextAnchor gravity, KeyboardLayout layout, KeyboardStyle style, CanvasPosition position)
         {
-            TerminalKeyboardCanvas newKeyboardCanvas = TerminalKeyboardCanvas.attach(go, rawWidth, rawHeight, TextAnchor.MiddleCenter);
+            TerminalKeyboardCanvas newKeyboardCanvas = TerminalKeyboardCanvas.attach(go, rawWidth, rawHeight, gravity);
 
             float terminalHeight = terminalCanvasRect.rect.height * CANVAS_SCALE;
             float terminalWidth = terminalCanvasRect.rect.width * CANVAS_SCALE;
@@ -170,7 +170,7 @@ namespace GTFO_VR.UI.CANVAS
             // Add a bit of extra spacing
             ////////////////////////////////
 
-            float horizontalSpacing = 0.01f;
+            float horizontalSpacing = 0.05f;
             float verticalSpacing = 0.1f;
 
             switch (position)
@@ -311,9 +311,10 @@ namespace GTFO_VR.UI.CANVAS
         [HideFromIl2Cpp]
         private static KeyboardLayout getRightKeyboard(string zoneName)
         {
-            LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.LowerLeft);
+            LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.LowerLeft, LayoutParameters.WrapContent());
+            bottomKeyboardLayout.m_showBackground = true;
 
-            LayoutParameters rowParams = new LayoutParameters(15, 1);
+            LayoutParameters rowParams = new LayoutParameters( LayoutParameters.WRAP_CONTENT, 1);
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
@@ -373,9 +374,10 @@ namespace GTFO_VR.UI.CANVAS
         [HideFromIl2Cpp]
         private static KeyboardLayout getLeftKeyboardLayout()
         {
-            LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.LowerRight);
+            LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.LowerRight, LayoutParameters.WrapContent());
+            bottomKeyboardLayout.m_showBackground = true;
 
-            LayoutParameters rowParams = new LayoutParameters(15, 1);
+            LayoutParameters rowParams = new LayoutParameters(LayoutParameters.WRAP_CONTENT, 1);
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
@@ -436,6 +438,7 @@ namespace GTFO_VR.UI.CANVAS
         private static KeyboardLayout getBottomKeyboardLayout()
         {
             LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.UpperCenter, LayoutParameters.WrapContent() );
+            bottomKeyboardLayout.m_showBackground = true;
 
             LayoutParameters rowParams = new LayoutParameters(15, 1);
 

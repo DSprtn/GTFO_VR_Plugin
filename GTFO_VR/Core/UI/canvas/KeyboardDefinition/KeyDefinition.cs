@@ -120,9 +120,9 @@ namespace Assets.scripts.KeyboardDefinition
             /////////////////////
 
 
-            ColorBlock cb = button.colors;
-            cb.highlightedColor = style.highlightColor;
-            button.colors = cb;
+            //ColorBlock cb = button.colors;
+            //cb.highlightedColor = style.highlightColor;
+            //button.colors = cb;
 
             button.m_background.setSize(element.preferredWidth, element.preferredHeight);
             button.m_background.setMaterial(style.getKeyMaterial());
@@ -144,8 +144,6 @@ namespace Assets.scripts.KeyboardDefinition
             // Center all the things
             textMesh.fontSize = style.FontSize;
             textMesh.alignment = TextAlignmentOptions.Center;
-            textMesh.color = style.fontColor;
-
             textMesh.fontSharedMaterial = style.getFontMaterial( textMesh.fontMaterial ); ;
 
             // Some of these buttons have their sizes resolved at runtime, so text object much grow to fit their content

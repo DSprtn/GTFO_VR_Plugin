@@ -33,6 +33,7 @@ namespace GTFO_VR.UI.CANVAS
 
             // Needed to make the child respect its own layout element
             VerticalLayoutGroup layoutGroup = go.AddComponent<VerticalLayoutGroup>();
+            layoutGroup.childAlignment = gravity;
             layoutGroup.childForceExpandHeight = false;
             layoutGroup.childForceExpandWidth = false;
 

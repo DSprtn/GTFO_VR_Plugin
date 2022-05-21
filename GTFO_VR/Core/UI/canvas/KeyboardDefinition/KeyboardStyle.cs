@@ -8,6 +8,13 @@ using UnityEngine.Rendering;
 
 namespace Assets.scripts.KeyboardDefinition
 {
+    public struct BackgroundStyle
+    {
+        public float radius;
+        public int cornerVertices;
+        public float padding;
+    }
+
     public class KeyboardStyle
     {
         public static float colorBrightnessMultiplier = 1;
@@ -18,17 +25,35 @@ namespace Assets.scripts.KeyboardDefinition
         public float SpacingHorizontal = 0.0f;
         public float keyPadding = 0.01f;
 
-        public Color keyColor = new Color(0, 0.45f, 0.43f);
-        public Color fontColor = new Color(1, 1, 1);
-        public Color highlightColor = new Color(0, 0.20f, 0.23f);
+        private Color keyColor = new Color( 13f / 255f, 83f / 255f, 103f / 255f);
+        private Color fontColor = new Color(1, 1, 1);
+        private Color highlightColor = new Color(0, 0.20f, 0.23f);
 
 
         public static Color pointerLineColor = new Color(0, 0.20f, 0.23f);
         public static Color pointerColor = new Color(0, 0.20f, 0.23f);
         public Color textHighlightColor = new Color(0f, 0.075f, 0.075f);
 
+        public Color backgroundColor = new Color(34f / 255f, 34f / 255f, 34f / 255f);
+
         private Material keyMaterial;
         private Material fontMaterial;
+        private Material backgroundMaterial;
+
+        public BackgroundStyle keyboardBackgroundStyle = new BackgroundStyle()
+        {
+            radius = 0.1f,
+            cornerVertices = 4,
+            padding = -0.04f,
+
+        };
+
+        public BackgroundStyle keyBackgroundStyle = new BackgroundStyle()
+        {
+            radius = 0.1f,
+            cornerVertices = 4,
+            padding = 0.04f,
+    };
 
         public void cleanup()
         {
@@ -36,6 +61,12 @@ namespace Assets.scripts.KeyboardDefinition
                 UnityEngine.Object.Destroy(keyMaterial);
             if (fontMaterial != null)
                 UnityEngine.Object.Destroy(fontMaterial);
+            if (backgroundMaterial != null)
+                UnityEngine.Object.Destroy(backgroundMaterial);
+
+            keyMaterial = null;
+            fontMaterial = null;
+            backgroundMaterial = null;
         }
 
 
@@ -45,15 +76,6 @@ namespace Assets.scripts.KeyboardDefinition
             this.FontSize = fontSize;
             this.SpacingVertical = spacing;
             this.SpacingHorizontal = spacing;
-
-           keyColor = new Color(0, 0.30f, 0.30f) * colorBrightnessMultiplier;
-           keyColor.a = 1;
-
-           fontColor = new Color(1, 1, 1) * ( colorBrightnessMultiplier * 3) ;
-
-           // Button tints multiply the existing color so don't need to be adjusted?
-           highlightColor = new Color(1.5f, 1.5f, 1.5f);
-           highlightColor.a = 1;
         }
 
         public Material getKeyMaterial()
@@ -61,12 +83,25 @@ namespace Assets.scripts.KeyboardDefinition
             if (keyMaterial == null)
             {
                 keyMaterial = new Material(Shader.Find("UI/Default"));
-                keyMaterial.renderQueue = (int)RenderQueue.Overlay;  // But still need to render underneath our text
+                keyMaterial.renderQueue = (int)RenderQueue.Overlay +1;  // But still need to render underneath our text
                 keyMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
-                keyMaterial.color = keyColor;
+                keyMaterial.color = keyColor * colorBrightnessMultiplier;
             }
 
             return keyMaterial;
+        }
+
+        public Material getBackgroundMaterial()
+        {
+            if (backgroundMaterial == null)
+            {
+                backgroundMaterial = new Material(Shader.Find("UI/Default"));
+                backgroundMaterial.renderQueue = (int)RenderQueue.Overlay ;  // But still need to render underneath our text
+                backgroundMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
+                backgroundMaterial.color = backgroundColor * colorBrightnessMultiplier;
+            }
+
+            return backgroundMaterial;
         }
 
         public Material getFontMaterial(Material existingMaterial)
@@ -75,7 +110,8 @@ namespace Assets.scripts.KeyboardDefinition
             {
                 fontMaterial = new Material(existingMaterial);
                 fontMaterial.shader = Shader.Find("TextMeshPro/Distance Field Overlay"); // Not rendering ontop otherwise?
-                fontMaterial.renderQueue = (int)RenderQueue.Overlay + 1;
+                fontMaterial.renderQueue = (int)RenderQueue.Overlay + 2;
+                fontMaterial.color = fontColor * (colorBrightnessMultiplier * 3);
             }
 
             return fontMaterial;

@@ -1,4 +1,6 @@
-﻿using GTFO_VR.UI.CANVAS;
+﻿using Assets.scripts.canvas;
+using GTFO_VR.Core.UI.canvas.KeyboardDefinition;
+using GTFO_VR.UI.CANVAS;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +20,7 @@ namespace Assets.scripts.KeyboardDefinition
         private TextAnchor m_gravity;  // Turns out they reuse this for Auto Layout.
         private string m_name;
         private KeyboardStyle m_style;
+        public bool m_showBackground = false;
 
         private List<KeyboardLayout> m_children = new List<KeyboardLayout>();
         
@@ -54,6 +57,18 @@ namespace Assets.scripts.KeyboardDefinition
 
             LayoutElement element = panel.AddComponent<LayoutElement>();
             m_layoutParameters.populateLayoutElement(element, inheritedStyle);
+
+            if ( m_showBackground )
+            {
+                RoundedCubeBackground background = panel.AddComponent<RoundedCubeBackground>();
+                background.setMaterial(inheritedStyle.getBackgroundMaterial());
+                background.radius = inheritedStyle.keyboardBackgroundStyle.radius;
+                background.cornerVertices = inheritedStyle.keyboardBackgroundStyle.cornerVertices;
+                background.padding = inheritedStyle.keyboardBackgroundStyle.padding;
+
+                panel.AddComponent<RectColliderSizer>();
+                background.GetComponent<MeshRenderer>().sharedMaterial = inheritedStyle.getBackgroundMaterial();
+            }
 
             // preferred height/width is only respected in the orientation of the layout.
             // constrain the other direction using a ContentSizeFitter, I guess.
