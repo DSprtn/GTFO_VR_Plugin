@@ -17,10 +17,10 @@ namespace GTFO_VR.Core.UI.canvas
         public TextMeshPro m_textMesh;
         private BoxCollider m_collider;
 
-        private int m_lastIndex = -1;
+        private int m_PreviousIndex = -1;
 
-        private int m_lastFirstIndex = -1;
-        private int m_lastLastIndex = -1;
+        private int m_PreviousIndexStart = -1;
+        private int m_PreviousIndexEnd = -1;
 
         private string m_currentSelection = "";
 
@@ -148,12 +148,12 @@ namespace GTFO_VR.Core.UI.canvas
                 return;
 
             // Same character, don't do anything
-            if (nearestChar == m_lastIndex)
+            if (nearestChar == m_PreviousIndex)
             {
                 return;
             }
 
-            m_lastIndex = nearestChar;
+            m_PreviousIndex = nearestChar;
 
             // Iterate backwards and forwards from position to find word to select.
             // The index returned above is per character, excluding any extra formatting text like <b> </b>
@@ -170,8 +170,8 @@ namespace GTFO_VR.Core.UI.canvas
             if (nearestOriginalIndex >= rawText.Length || nearestOriginalIndex < 0)
                 return;
 
-            int firstIndex = nearestOriginalIndex;
-            int lastIndex = nearestOriginalIndex;
+            int indexStart = nearestOriginalIndex;
+            int indexEnd = nearestOriginalIndex;
 
             for (int i = nearestOriginalIndex; i < rawText.Length; i++ )
             {
@@ -180,7 +180,7 @@ namespace GTFO_VR.Core.UI.canvas
                     break;
                 }
 
-                lastIndex = i;
+                indexEnd = i;
             }
 
             for (int i = nearestOriginalIndex; i >= 0; i--)
@@ -190,11 +190,11 @@ namespace GTFO_VR.Core.UI.canvas
                     break;
                 }
 
-                firstIndex = i;
+                indexStart = i;
             }
 
             // Same word, do nothing.
-            if (firstIndex == m_lastFirstIndex && lastIndex == m_lastLastIndex)
+            if (indexStart == m_PreviousIndexStart && indexEnd == m_PreviousIndexEnd)
             {
                 return;
             }
@@ -204,7 +204,7 @@ namespace GTFO_VR.Core.UI.canvas
             //////////////////////////////////////////
 
             // Sanity check
-            if (firstIndex < 0 || lastIndex >= rawText.Length)
+            if (indexStart < 0 || indexEnd >= rawText.Length)
                 return;
 
             clearSelection();
@@ -212,8 +212,8 @@ namespace GTFO_VR.Core.UI.canvas
             // To draw the highlight we're back to needing the characterInfo indicides
             // index offset should be the same for both the characterinfo array and original string,
             // so we can just math it.
-            int charIndexStart = (nearestChar) + (firstIndex - nearestOriginalIndex);
-            int charIndexEnd =   (nearestChar) + (lastIndex - nearestOriginalIndex);
+            int charIndexStart = (nearestChar) + (indexStart - nearestOriginalIndex);
+            int charIndexEnd =   (nearestChar) + (indexEnd - nearestOriginalIndex);
             drawHighlight(text, charIndexStart, charIndexEnd);
 
             /////////////////
@@ -222,13 +222,13 @@ namespace GTFO_VR.Core.UI.canvas
 
             m_currentSelection = "";
 
-            for (int i = firstIndex; i < lastIndex + 1; i++)
+            for (int i = indexStart; i < indexEnd + 1; i++)
             {
                 m_currentSelection += rawText[i];
             }
 
-            m_lastLastIndex = lastIndex;
-            m_lastFirstIndex = firstIndex;
+            m_PreviousIndexEnd = indexEnd;
+            m_PreviousIndexStart = indexStart;
         }
 
         private void OnDestroy()
@@ -246,7 +246,10 @@ namespace GTFO_VR.Core.UI.canvas
 
         public void OnPointerExit(PointerEvent ev)
         {
-            // Hide highlight?
+            m_highlight.transform.localScale = Vector3.zero;
+            m_PreviousIndexStart = -1;
+            m_PreviousIndex = -1;
+            m_PreviousIndexEnd = -1;
         }
 
         public void onPointerMove(PointerEvent ev)
