@@ -25,6 +25,8 @@ namespace GTFO_VR.Core.UI.canvas
 
         private GameObject m_highlight;
 
+        private Material m_underlineMaterial;
+
         public static GameObject Create( GameObject textCanvas, TerminalKeyboardInterface keyboardRoot )
         {
             GameObject terminalReaderRoot = new GameObject();
@@ -54,22 +56,26 @@ namespace GTFO_VR.Core.UI.canvas
             ////////////////
 
             // Line renderer doesn't want to display in-game here, so a quad it is.
-
             m_highlight = GameObject.CreatePrimitive(PrimitiveType.Quad);
             GameObject.Destroy(m_highlight.GetComponent<MeshCollider>());
 
-            if (m_keyboardRoot.m_keyboardStyle.underlineMaterial == null)
-            {
-                Material lineMaterial = new Material(Shader.Find("Unlit/Color"));
-                lineMaterial.color = m_keyboardRoot.m_keyboardStyle.textHighlightColor;
-                m_keyboardRoot.m_keyboardStyle.underlineMaterial = lineMaterial;
-            }
-
-            m_highlight.GetComponent<MeshRenderer>().sharedMaterial = m_keyboardRoot.m_keyboardStyle.underlineMaterial;
+            m_highlight.GetComponent<MeshRenderer>().sharedMaterial = getUnderlineMaterial();
 
             m_highlight.transform.SetParent(this.gameObject.transform);
             m_highlight.transform.localRotation = new Quaternion();
             m_highlight.transform.localScale = new Vector3(0, 0, 0);
+        }
+
+        private Material getUnderlineMaterial()
+        {
+            if (m_underlineMaterial == null)
+            {
+                Material lineMaterial = new Material(Shader.Find("Unlit/Color"));
+                lineMaterial.color = m_keyboardRoot.m_keyboardStyle.textHighlightColor;
+                m_underlineMaterial = lineMaterial;
+            }
+
+            return m_underlineMaterial;
         }
 
         public int findNearestCharacter(Vector3 position )
@@ -226,5 +232,15 @@ namespace GTFO_VR.Core.UI.canvas
             m_lastLastIndex = lastIndex;
             m_lastFirstIndex = firstIndex;
         }
+
+        private void OnDestroy()
+        {
+            if (m_underlineMaterial != null)
+            {
+                UnityEngine.Object.Destroy(m_underlineMaterial);
+            }
+        }
     }
+
+ 
 }

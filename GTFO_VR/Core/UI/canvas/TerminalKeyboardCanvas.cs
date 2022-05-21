@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace GTFO_VR.UI.CANVAS
 {
@@ -29,6 +30,11 @@ namespace GTFO_VR.UI.CANVAS
 
             RectTransform rect = go.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(width, height);
+
+            // Needed to make the child respect its own layout element
+            VerticalLayoutGroup layoutGroup = go.AddComponent<VerticalLayoutGroup>();
+            layoutGroup.childForceExpandHeight = false;
+            layoutGroup.childForceExpandWidth = false;
 
             return canvas;
         }

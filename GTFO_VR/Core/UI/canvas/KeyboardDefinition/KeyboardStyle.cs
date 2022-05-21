@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Assets.scripts.KeyboardDefinition
 {
@@ -26,10 +27,8 @@ namespace Assets.scripts.KeyboardDefinition
         public static Color pointerColor = new Color(0, 0.20f, 0.23f);
         public Color textHighlightColor = new Color(0f, 0.075f, 0.075f);
 
-        public Material keyMaterial;
-        public Material fontMaterial;
-
-        public Material underlineMaterial;
+        private Material keyMaterial;
+        private Material fontMaterial;
 
         public void cleanup()
         {
@@ -37,8 +36,6 @@ namespace Assets.scripts.KeyboardDefinition
                 UnityEngine.Object.Destroy(keyMaterial);
             if (fontMaterial != null)
                 UnityEngine.Object.Destroy(fontMaterial);
-            if (underlineMaterial != null)
-                UnityEngine.Object.Destroy(underlineMaterial);
         }
 
 
@@ -57,6 +54,31 @@ namespace Assets.scripts.KeyboardDefinition
            // Button tints multiply the existing color so don't need to be adjusted?
            highlightColor = new Color(1.5f, 1.5f, 1.5f);
            highlightColor.a = 1;
+        }
+
+        public Material getKeyMaterial()
+        {
+            if (keyMaterial == null)
+            {
+                keyMaterial = new Material(Shader.Find("UI/Default"));
+                keyMaterial.renderQueue = (int)RenderQueue.Overlay;  // But still need to render underneath our text
+                keyMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
+                keyMaterial.color = keyColor;
+            }
+
+            return keyMaterial;
+        }
+
+        public Material getFontMaterial(Material existingMaterial)
+        {
+            if (fontMaterial == null)
+            {
+                fontMaterial = new Material(existingMaterial);
+                fontMaterial.shader = Shader.Find("TextMeshPro/Distance Field Overlay"); // Not rendering ontop otherwise?
+                fontMaterial.renderQueue = (int)RenderQueue.Overlay + 1;
+            }
+
+            return fontMaterial;
         }
 
         public static Color getPointerLineColor()

@@ -43,6 +43,7 @@
     <Compile Include="Core\PlayerBehaviours\MovementVignette.cs" />
     <Compile Include="Core\UI\canvas\KeyboardDefinition\RectColliderSizer.cs" />
     <Compile Include="Core\UI\canvas\Pointer\CanvasPointer.cs" />
+    <Compile Include="Core\UI\canvas\Pointer\PointerHistory.cs" />
     <Compile Include="Core\UI\canvas\TerminalReader.cs" />
     <Compile Include="Core\UI\RadialItem.cs" />
     <Compile Include="Core\UI\RadialMenu.cs" />

@@ -1,4 +1,5 @@
-﻿using GTFO_VR.Core.UI.canvas.KeyboardDefinition;
+﻿using Assets.scripts.canvas;
+using GTFO_VR.Core.UI.canvas.KeyboardDefinition;
 using GTFO_VR.UI.CANVAS;
 using System;
 using System.Collections.Generic;
@@ -109,39 +110,34 @@ namespace Assets.scripts.KeyboardDefinition
             buttonRoot.layer = TerminalKeyboardInterface.LAYER;
             buttonRoot.name = GetName();
 
-            // Temporary until I can figure out a better way of adding borders
-            buttonRoot.transform.localScale = new Vector3(
-                TerminalKeyboardInterface.KEY_SCALE,
-                TerminalKeyboardInterface.KEY_SCALE,
-                TerminalKeyboardInterface.KEY_SCALE);
-
-            Image image = buttonRoot.AddComponent<Image>();
-            image.color = style.keyColor;
-
-            if (style.keyMaterial == null)
-            {
-                style.keyMaterial = new Material(image.material);
-                image.material.renderQueue = (int)RenderQueue.Overlay;  // But still need to render underneath our text
-                style.keyMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
-            }
-
-            image.material = style.keyMaterial;
-
-            Button button = buttonRoot.AddComponent<Button>();
-            ColorBlock cb = button.colors;
-            cb.highlightedColor = style.highlightColor;
-            button.colors = cb;
+            PhysicalButton button = buttonRoot.AddComponent<PhysicalButton>();
 
             LayoutElement element = buttonRoot.AddComponent<LayoutElement>();
             this.layoutParameters.populateLayoutElement(element, style);
 
-            
-            // Add actual text. bounds same size as parent.
+            /////////////////////
+            // Button itself
+            /////////////////////
+
+
+            ColorBlock cb = button.colors;
+            cb.highlightedColor = style.highlightColor;
+            button.colors = cb;
+
+            button.m_background.setSize(element.preferredWidth, element.preferredHeight);
+            button.m_background.setMaterial(style.getKeyMaterial());
+            button.m_background.radius = 0.1f;
+            button.m_background.cornerVertices = 4;
+            button.m_background.padding = 0.04f;
+            button.m_background.regenerate();
+
+            ///////////////////
+            // Text 
+            ///////////////////
+
             GameObject textObject = new GameObject();
             textObject.transform.SetParent(buttonRoot.transform);
             RectTransform textMeshRect = textObject.AddComponent<RectTransform>();
-
-            
 
             TextMeshProUGUI textMesh = textObject.AddComponent<TextMeshProUGUI>();
             textMesh.text = Label;
@@ -150,17 +146,9 @@ namespace Assets.scripts.KeyboardDefinition
             textMesh.alignment = TextAlignmentOptions.Center;
             textMesh.color = style.fontColor;
 
-            if(style.fontMaterial == null)
-            {
-                style.fontMaterial = new Material(textMesh.fontMaterial);
-                style.fontMaterial.shader = Shader.Find("TextMeshPro/Distance Field Overlay"); // Not rendering ontop otherwise?
-                style.fontMaterial.renderQueue = (int)RenderQueue.Overlay + 1;
-            }
+            textMesh.fontSharedMaterial = style.getFontMaterial( textMesh.fontMaterial ); ;
 
-            textMesh.fontSharedMaterial = style.fontMaterial;
-
-
-            // Some of these buttons have their sizes resolved at runtime, so have them grow to fit their content
+            // Some of these buttons have their sizes resolved at runtime, so text object much grow to fit their content
             ContentSizeFitter sizeFitter = textObject.AddComponent<ContentSizeFitter>();
             sizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             sizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -176,23 +164,13 @@ namespace Assets.scripts.KeyboardDefinition
             /// Box collider
             /// /////////////////
 
-            RectTransform trans = buttonRoot.GetComponent<RectTransform>();
-            BoxCollider collider = buttonRoot.AddComponent<BoxCollider>();
-
-            //collider.size = new Vector3(trans.sizeDelta.x, trans.sizeDelta.y, 0.01f);
+            button.setSize(element.preferredWidth, element.preferredHeight, 0.01f);
             if (element.flexibleWidth >= 0 || element.flexibleHeight >= 0)
             {
-                // Size not known yet, add measuring thing too, but also set size because we'll keep the z axis
-                collider.size = new Vector3(element.preferredWidth * TerminalKeyboardInterface.HITBOX_SCALE, element.preferredHeight * TerminalKeyboardInterface.HITBOX_SCALE, 0.01f);
+                // Size not known yet, add measuring thing.
+                // Shouldn't this be flexible?
                 buttonRoot.AddComponent<RectColliderSizer>();
             }
-            else
-            {
-                // Constant size, just set
-                collider.size = new Vector3(element.preferredWidth * TerminalKeyboardInterface.HITBOX_SCALE, element.preferredHeight * TerminalKeyboardInterface.HITBOX_SCALE, 0.01f);
-            }
-
-            //collider.attachedRigidbody
 
             return buttonRoot;
         }
