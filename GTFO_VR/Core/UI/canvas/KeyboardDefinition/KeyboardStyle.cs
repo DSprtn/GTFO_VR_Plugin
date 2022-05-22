@@ -26,9 +26,9 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
         public float SpacingHorizontal = 0.0f;
         public float keyPadding = 0.01f;
 
-        private Color keyColor =            new Color(13f / 255f, 83f / 255f, 103f / 255f);
-        private Color keyPressedColor =     new Color(6f / 255f, 49f / 255f, 61f / 255f);
-        private Color keyHighlightColor =   new Color(22f / 255f, 160f / 255f, 199f / 255f);
+        private Color keyColor =            new Color(16f / 255f, 83f / 255f, 133f / 255f);
+        private Color keyPressedColor =     new Color(10f / 255f, 54f / 255f, 87f / 255f);
+        private Color keyHighlightColor =   new Color(21f / 255f, 106f / 255f, 171f / 255f);
 
         private Color fontColor = new Color(1, 1, 1);
 
@@ -80,6 +80,11 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             this.SpacingHorizontal = spacing;
         }
 
+        public Color getTextColor()
+        {
+            return fontColor;
+        }
+
         public Material getKeyMaterial()
         {
             if (keyMaterial == null)
@@ -88,7 +93,7 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
                 keyMaterial.renderQueue = (int)RenderQueue.Overlay + 1;  // But still need to render underneath our text
                 keyMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
 
-                Color color = keyColor * colorBrightnessMultiplier;
+                Color color = new Color(1, 1, 1, 1);
                 color.a = 1;
 
                 keyMaterial.color = color;
@@ -139,7 +144,7 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
                 fontMaterial = new Material(existingMaterial);
                 fontMaterial.shader = Shader.Find("TextMeshPro/Distance Field Overlay"); // Not rendering ontop otherwise?
                 fontMaterial.renderQueue = (int)RenderQueue.Overlay + 2;
-                fontMaterial.color = fontColor * (colorBrightnessMultiplier * 3);
+                fontMaterial.color = new Color(1, 1, 1, 1);
             }
 
             return fontMaterial;

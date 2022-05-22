@@ -146,6 +146,7 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             textMesh.fontSize = style.FontSize;
             textMesh.alignment = TextAlignmentOptions.Center;
             textMesh.fontSharedMaterial = style.getFontMaterial( textMesh.fontMaterial ); ;
+            textMesh.color = style.getTextColor();
 
             // Some of these buttons have their sizes resolved at runtime, so text object much grow to fit their content
             ContentSizeFitter sizeFitter = textObject.AddComponent<ContentSizeFitter>();
