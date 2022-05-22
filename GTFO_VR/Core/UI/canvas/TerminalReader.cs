@@ -28,6 +28,8 @@ namespace GTFO_VR.Core.UI.Canvas
 
         private Material m_underlineMaterial;
 
+        private PointerHistory m_pointerHistory = new PointerHistory();
+
         public static GameObject Create( GameObject textCanvas, TerminalKeyboardInterface keyboardRoot )
         {
             GameObject terminalReaderRoot = new GameObject();
@@ -241,7 +243,7 @@ namespace GTFO_VR.Core.UI.Canvas
 
         public override void OnPointerEnter(PointerEvent ev)
         {
-            //throw new NotImplementedException();
+            m_pointerHistory.clearPointerHistory();
         }
 
         public override void OnPointerExit(PointerEvent ev)
@@ -252,9 +254,12 @@ namespace GTFO_VR.Core.UI.Canvas
             m_PreviousIndexEnd = -1;
         }
 
-        public override void onPointerMove(PointerEvent ev)
+        public override Vector3 onPointerMove(PointerEvent ev)
         {
-            hoverPointer(ev.position);
+            m_pointerHistory.addPointerHistory(ev.position);
+            Vector3 smoothed = m_pointerHistory.getSmoothenedPointerPosition();
+            hoverPointer(smoothed);
+            return smoothed;
         }
 
         public override void onPointerDown(PointerEvent ev)

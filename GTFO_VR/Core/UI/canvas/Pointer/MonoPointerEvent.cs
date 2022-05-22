@@ -20,9 +20,12 @@ namespace GTFO_VR.Core.UI.canvas.Pointer
         {
 
         }
-        public virtual void onPointerMove(PointerEvent ev)
-        {
 
+        // Return desired pointer position
+
+        public virtual Vector3 onPointerMove(PointerEvent ev)
+        {
+            return Vector3.zero;
         }
         public virtual void onPointerDown(PointerEvent ev)
         {

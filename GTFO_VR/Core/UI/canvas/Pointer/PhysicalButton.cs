@@ -138,9 +138,9 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             m_currentState = isPressed ? m_ColorStates.pressed : m_ColorStates.normal;
         }
 
-        public override void onPointerMove(PointerEvent ev)
+        public override Vector3 onPointerMove(PointerEvent ev)
         {
-            //throw new NotImplementedException();
+            return ev.position;
         }
 
         public override void onPointerDown(PointerEvent ev)

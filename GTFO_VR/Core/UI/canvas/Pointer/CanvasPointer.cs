@@ -32,7 +32,8 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
         private Material m_pointerMaterial;
         private Material m_dotMaterial;
 
-        private PointerHistory m_PointerHistory = new PointerHistory();
+        // Only valid if a collider has been hit
+        private Vector3 m_PointerEndPosition = Vector3.zero;
 
         private enum SelectionState
         {
@@ -113,9 +114,9 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
         private void Update()
         {
             doRaycast();
-            updateLine();
-            handleHighlight();
+            handleMove();
             handleInput();
+            updateLine();
         }
 
         private static MonoPointerEvent getButton(RaycastHit hit)
@@ -178,16 +179,10 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             m_prevHit = m_currentHit;
             m_currentHit = hit;
 
-            // Clear history ( and thus smoothing ) when transition from/to hitting something
-            if (hitSomething != isCollider(m_prevHit) )
-            {
-                m_PointerHistory.clearPointerHistory();
-            }
-
-            m_PointerHistory.addPointerHistory(hit.point);   
+            m_PointerEndPosition = m_currentHit.point;
         }
 
-        private void handleHighlight()
+        private void handleMove()
         {
             MonoPointerEvent button = getButton(m_currentHit);
 
@@ -199,9 +194,13 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
                 button?.OnPointerEnter(new PointerEvent(m_prevHit.point));
             }
 
-            // Add check to interface if it wants to be smoothened? 
-            // Let reader do the smoothing?
-            button?.onPointerMove(new PointerEvent(m_PointerHistory.getSmoothenedPointerPosition()));
+             // Target may decide to move pointer end somewhere else for smoothing.
+             if ( button != null )
+            {
+                m_PointerEndPosition = button.onPointerMove(new PointerEvent(m_currentHit.point));
+            }
+
+   
         }
 
         public void updateLine()
@@ -211,7 +210,7 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             Vector3 endPosition;
             if (hit)
             {
-                endPosition = m_PointerHistory.getSmoothenedPointerPosition();
+                endPosition = m_PointerEndPosition;
 
                 m_Dot.transform.position = endPosition; // Position and align dot
                 m_Dot.transform.rotation = m_currentHit.collider.transform.rotation;
