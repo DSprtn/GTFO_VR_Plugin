@@ -24,8 +24,6 @@ namespace Assets.scripts.canvas.Pointer
             void onPointerMove(PointerEvent ev);
             void onPointerDown(PointerEvent ev);
             void onPointerUp(PointerEvent ev);
-        };
-
-
+        }
     }
 }

@@ -41,9 +41,13 @@
     <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsIntegration.cs" />
     <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsUtils.cs" />
     <Compile Include="Core\PlayerBehaviours\MovementVignette.cs" />
+    <Compile Include="Core\UI\canvas\KeyboardDefinition\LayoutParameters.cs" />
     <Compile Include="Core\UI\canvas\KeyboardDefinition\RectColliderSizer.cs" />
     <Compile Include="Core\UI\canvas\Pointer\CanvasPointer.cs" />
+    <Compile Include="Core\UI\canvas\Pointer\PhysicalButton.cs" />
+    <Compile Include="Core\UI\canvas\Pointer\PointerEvent.cs" />
     <Compile Include="Core\UI\canvas\Pointer\PointerHistory.cs" />
+    <Compile Include="Core\UI\canvas\RoundedCubeBackground.cs" />
     <Compile Include="Core\UI\canvas\TerminalReader.cs" />
     <Compile Include="Core\UI\RadialItem.cs" />
     <Compile Include="Core\UI\RadialMenu.cs" />
@@ -514,7 +518,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\UI\canvas\KeyboardDefinition\KeyboardLayout.cs" />
-    <Compile Include="Core\UI\canvas\KeyboardDefinition\KeyboardLayoutParameters.cs" />
     <Compile Include="Core\UI\canvas\KeyboardDefinition\KeyboardStyle.cs" />
     <Compile Include="Core\UI\canvas\KeyboardDefinition\KeyDefinition.cs" />
     <Compile Include="Core\UI\canvas\KeyboardDefinition\LinearLayout.cs" />

@@ -1,4 +1,5 @@
 ﻿using Assets.scripts.canvas.Pointer;
+using GTFO_VR.Core.UI.canvas.Pointer;
 using GTFO_VR.UI.CANVAS;
 using GTFO_VR.Util;
 using System;
@@ -72,7 +73,7 @@ namespace GTFO_VR.Core.UI.canvas
             if (m_underlineMaterial == null)
             {
                 Material lineMaterial = new Material(Shader.Find("Unlit/Color"));
-                lineMaterial.color = m_keyboardRoot.m_keyboardStyle.textHighlightColor;
+                lineMaterial.color = m_keyboardRoot.getStyle().textHighlightColor;
                 m_underlineMaterial = lineMaterial;
             }
 

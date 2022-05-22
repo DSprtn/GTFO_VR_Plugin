@@ -131,6 +131,8 @@ namespace Assets.scripts.KeyboardDefinition
             button.m_background.padding = 0.04f;
             button.m_background.regenerate();
 
+            button.setColorStates(style.getButtonColorStates());
+
             ///////////////////
             // Text 
             ///////////////////

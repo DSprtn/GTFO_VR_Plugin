@@ -17,7 +17,7 @@ namespace GTFO_VR.UI.CANVAS
     {
         private LevelGeneration.LG_ComputerTerminal m_terminal;
         private GameObject m_terminalCanvas;
-        public KeyboardStyle m_keyboardStyle = new KeyboardStyle(2, 1);
+        private KeyboardStyle m_keyboardStyle = new KeyboardStyle(2, 1);
 
         public static readonly int LAYER = 5;
         public static readonly int LAYER_MASK = 1 << LAYER;
@@ -38,6 +38,12 @@ namespace GTFO_VR.UI.CANVAS
             inf.m_terminalCanvas = terminal.m_text.gameObject;
             inf.m_terminal = terminal;
             return go;
+        }
+
+        [HideFromIl2Cpp]
+        public KeyboardStyle getStyle()
+        {
+            return m_keyboardStyle;
         }
 
         private void LateUpdate()

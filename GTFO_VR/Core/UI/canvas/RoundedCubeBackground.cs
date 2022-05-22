@@ -1,21 +1,20 @@
-﻿using GTFO_VR.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
-namespace Assets.scripts.canvas
+namespace GTFO_VR.UI.CANVAS
 {
     class RoundedCubeBackground : MonoBehaviour
     {
+        private static readonly float DEGREES_90_IN_RADS = 90f * 0.0174532924F;
+        
         public float width = 10;
         public float height = 10;
         public float radius = 3;
         public float padding = 0.01f;   // Negative padding works too
         public int cornerVertices = 4;
-
+        
         private MeshFilter meshFilter;
         private MeshRenderer meshRenderer;
 
@@ -23,7 +22,7 @@ namespace Assets.scripts.canvas
         {
             ensureInit();
         }
-       
+        
         private void ensureInit()
         {
             if (this.meshFilter == null)
@@ -50,6 +49,7 @@ namespace Assets.scripts.canvas
             this.height = height;
             GenerateMesh();
         }
+
 
         public void regenerate()
         {
@@ -146,7 +146,7 @@ namespace Assets.scripts.canvas
 
             // So we're rotating 90 degrees. 
             // We will add a bunch of vertex along a curve, then draw triangles between them and start/end/center.
-            float degreesPerTriangle = (90 * Mathf.Deg2Rad) / (cornerVertexCount);
+            float degreesPerTriangle = (DEGREES_90_IN_RADS) / (cornerVertexCount);
 
             // We'll be rotating around the center, so translate it to origin, and then start and end by the same amount.
 
@@ -169,7 +169,7 @@ namespace Assets.scripts.canvas
             triangles.Add(end);
             triangles.Add(center);
         }
-
+        
         
     }
 }

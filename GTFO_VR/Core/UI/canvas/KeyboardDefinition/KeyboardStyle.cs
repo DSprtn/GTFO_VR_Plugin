@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.scripts.canvas;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,10 +26,11 @@ namespace Assets.scripts.KeyboardDefinition
         public float SpacingHorizontal = 0.0f;
         public float keyPadding = 0.01f;
 
-        private Color keyColor = new Color( 13f / 255f, 83f / 255f, 103f / 255f);
-        private Color fontColor = new Color(1, 1, 1);
-        private Color highlightColor = new Color(0, 0.20f, 0.23f);
+        private Color keyColor =            new Color(13f / 255f, 83f / 255f, 103f / 255f);
+        private Color keyPressedColor =     new Color(6f / 255f, 49f / 255f, 61f / 255f);
+        private Color keyHighlightColor =   new Color(22f / 255f, 160f / 255f, 199f / 255f);
 
+        private Color fontColor = new Color(1, 1, 1);
 
         public static Color pointerLineColor = new Color(0, 0.20f, 0.23f);
         public static Color pointerColor = new Color(0, 0.20f, 0.23f);
@@ -53,7 +55,7 @@ namespace Assets.scripts.KeyboardDefinition
             radius = 0.1f,
             cornerVertices = 4,
             padding = 0.04f,
-    };
+        };
 
         public void cleanup()
         {
@@ -83,13 +85,26 @@ namespace Assets.scripts.KeyboardDefinition
             if (keyMaterial == null)
             {
                 keyMaterial = new Material(Shader.Find("UI/Default"));
-                keyMaterial.renderQueue = (int)RenderQueue.Overlay +1;  // But still need to render underneath our text
+                keyMaterial.renderQueue = (int)RenderQueue.Overlay + 1;  // But still need to render underneath our text
                 keyMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
                 keyMaterial.color = keyColor * colorBrightnessMultiplier;
             }
 
             return keyMaterial;
         }
+
+        public ColorStates getButtonColorStates()
+        {
+            ColorStates states;
+
+            states.normal =         new ColorTransitionState() { destinationColor = keyColor            * colorBrightnessMultiplier,    transitionTime = 0.5f };
+            states.highlighted =    new ColorTransitionState() { destinationColor = keyHighlightColor   * colorBrightnessMultiplier,    transitionTime = 0f };
+            states.pressed =        new ColorTransitionState() { destinationColor = keyPressedColor     * colorBrightnessMultiplier,    transitionTime = 0f };
+
+            return states;
+        }
+
+
 
         public Material getBackgroundMaterial()
         {
