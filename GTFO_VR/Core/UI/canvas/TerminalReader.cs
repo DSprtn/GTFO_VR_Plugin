@@ -10,6 +10,8 @@ namespace GTFO_VR.Core.UI.Canvas
 {
     public class TerminalReader : MonoPointerEvent
     {
+        private static readonly float READER_SIZE_PADDING = 1;
+
         private GameObject m_textCanvas;
 
         private TerminalKeyboardInterface m_keyboardRoot;
@@ -52,7 +54,7 @@ namespace GTFO_VR.Core.UI.Canvas
             this.m_textMesh = m_textCanvas.GetComponent<TMPro.TextMeshPro>(); ;
 
             RectTransform terminalCanvasRect = m_textCanvas.GetComponent<RectTransform>();
-            m_collider.size = new Vector3(terminalCanvasRect.sizeDelta.x, terminalCanvasRect.sizeDelta.y, 0.1f);
+            m_collider.size = new Vector3(terminalCanvasRect.sizeDelta.x + READER_SIZE_PADDING, terminalCanvasRect.sizeDelta.y + READER_SIZE_PADDING, 0.1f);
 
             ////////////////
             // Underline
