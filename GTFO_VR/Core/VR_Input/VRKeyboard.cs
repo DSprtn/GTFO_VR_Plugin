@@ -25,6 +25,8 @@ namespace GTFO_VR.Core.VR_Input
 
         public static bool KeyboardClosedThisFrame;
 
+        private GameObject m_KeyboardRoot;
+
         private void Awake()
         {
             SteamVR_Events.System(EVREventType.VREvent_KeyboardCharInput).Listen(OnKeyboardInput);
@@ -46,8 +48,8 @@ namespace GTFO_VR.Core.VR_Input
                     LevelGeneration.LG_ComputerTerminal terminal = VRPlayer.getInteractingTerminal();
                     if (terminal != null)
                     {
-                        TerminalKeyboardInterface.create(terminal);
-                        Controllers.setupCanvasPointers();
+                        m_KeyboardRoot = TerminalKeyboardInterface.create(terminal);
+                        Controllers.setupCanvasPointer();
                         VRPlayer.hideWielded(true);
                         terminalKeyboardDisplayed = true;
                     }
@@ -79,16 +81,12 @@ namespace GTFO_VR.Core.VR_Input
                 SteamVR.instance.overlay.HideKeyboard();
                 SteamVR_Render.unfocusedRenderResolution = .5f;
 
-                if (VRConfig.configTerminalKeyboard.Value)
+                if (m_KeyboardRoot)
                 {
-                    VRPlayer.hideWielded(false); // TODO: Always doing this might be a problem
-                    GameObject keyboardRoot = GameObject.Find("keyboardRoot");
-                    if (keyboardRoot != null)
-                    {
-                        GameObject.Destroy(keyboardRoot);
-                    }
-
-                    Controllers.removeCanvasPointers();
+                    Controllers.removeCanvasPointer();
+                    VRPlayer.hideWielded(false);
+                    GameObject.Destroy(m_KeyboardRoot);
+                    m_KeyboardRoot = null;
                 }
             }
         }

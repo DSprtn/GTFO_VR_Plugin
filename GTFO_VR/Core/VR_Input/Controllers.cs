@@ -27,6 +27,8 @@ namespace GTFO_VR.Core.VR_Input
 
         private static GameObject RightController;
 
+        private static GameObject TerminalCanvasPointer;
+
         public static SteamVR_Behaviour_Pose mainControllerPose;
 
         public static bool aimingTwoHanded;
@@ -122,32 +124,29 @@ namespace GTFO_VR.Core.VR_Input
             steamVR_Behaviour_Pose.rotationOffset = Quaternion.Euler(VRConfig.configWeaponRotationOffset.Value, 0, 0);
             return controller;
         }
-        public static void setupCanvasPointers()
+
+        public static void removeCanvasPointer()
         {
-            if (!RightController || !LeftController)
+            if (TerminalCanvasPointer)
+            {
+                GameObject.Destroy(TerminalCanvasPointer);
+                TerminalCanvasPointer = null;
+            }    
+        }
+
+        public static void setupCanvasPointer( SteamVR_Input_Sources source = SteamVR_Input_Sources.Any )
+        {
+            if (!mainController)
                 return;
 
-            if (RightController.transform.Find("CanvasPointer"))
+            if (TerminalCanvasPointer)
             {
-                return;
+                GameObject.Destroy(TerminalCanvasPointer);
+                TerminalCanvasPointer = null;
             }
 
-            addCanvasPointer(RightController, SteamVR_Input_Sources.RightHand);
-        }
-
-        public static void removeCanvasPointers()
-        {
-
-            GameObject rightPointer = RightController.transform.Find("CanvasPointer")?.gameObject;
-
-            if (rightPointer != null)
-                GameObject.Destroy(rightPointer);
-        }
-
-        private static void addCanvasPointer(GameObject hand, SteamVR_Input_Sources source )
-        {
-            GameObject pointer = CanvasPointer.create(source);
-            pointer.transform.SetParent(hand.transform);
+            TerminalCanvasPointer = CanvasPointer.create(source);
+            TerminalCanvasPointer.transform.SetParent(mainController.transform);
         }
         private void HandleDoubleHandedChecks()
         {
