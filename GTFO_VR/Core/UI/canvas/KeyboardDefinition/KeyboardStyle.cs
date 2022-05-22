@@ -87,7 +87,11 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
                 keyMaterial = new Material(Shader.Find("UI/Default"));
                 keyMaterial.renderQueue = (int)RenderQueue.Overlay + 1;  // But still need to render underneath our text
                 keyMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
-                keyMaterial.color = keyColor * colorBrightnessMultiplier;
+
+                Color color = keyColor * colorBrightnessMultiplier;
+                color.a = 1;
+
+                keyMaterial.color = color;
             }
 
             return keyMaterial;
@@ -101,6 +105,10 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             states.highlighted =    new ColorTransitionState() { destinationColor = keyHighlightColor   * colorBrightnessMultiplier,    transitionTime = 0f };
             states.pressed =        new ColorTransitionState() { destinationColor = keyPressedColor     * colorBrightnessMultiplier,    transitionTime = 0f };
 
+            states.normal.destinationColor.a = 1;
+            states.highlighted.destinationColor.a = 1;
+            states.pressed.destinationColor.a = 1;
+
             return states;
         }
 
@@ -113,7 +121,12 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
                 backgroundMaterial = new Material(Shader.Find("UI/Default"));
                 backgroundMaterial.renderQueue = (int)RenderQueue.Overlay ;  // But still need to render underneath our text
                 backgroundMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
-                backgroundMaterial.color = backgroundColor * colorBrightnessMultiplier;
+
+                Color color = backgroundColor * colorBrightnessMultiplier;
+                color.a = 1;
+
+                backgroundMaterial.color = color;
+
             }
 
             return backgroundMaterial;

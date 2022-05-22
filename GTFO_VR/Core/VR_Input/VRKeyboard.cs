@@ -41,7 +41,7 @@ namespace GTFO_VR.Core.VR_Input
                 bool terminalKeyboardDisplayed = false;
                 if (VRConfig.configTerminalKeyboard.Value)
                 {
-                    KeyboardStyle.colorBrightnessMultiplier = 0.1f;
+                    KeyboardStyle.colorBrightnessMultiplier = 0.15f;
 
                     LevelGeneration.LG_ComputerTerminal terminal = VRPlayer.getInteractingTerminal();
                     if (terminal != null)

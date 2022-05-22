@@ -1,4 +1,5 @@
-﻿using GTFO_VR.Core.UI.Canvas.Pointer;
+﻿using GTFO_VR.Core.UI.canvas.Pointer;
+using GTFO_VR.Core.UI.Canvas.Pointer;
 using GTFO_VR.Util;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace GTFO_VR.Core.UI.Canvas
 {
-    public class TerminalReader : MonoBehaviour, PointerEvent.IPointerEvent
+    public class TerminalReader : MonoPointerEvent
     {
         private GameObject m_textCanvas;
 
@@ -238,12 +239,12 @@ namespace GTFO_VR.Core.UI.Canvas
             }
         }
 
-        public void OnPointerEnter(PointerEvent ev)
+        public override void OnPointerEnter(PointerEvent ev)
         {
             //throw new NotImplementedException();
         }
 
-        public void OnPointerExit(PointerEvent ev)
+        public override void OnPointerExit(PointerEvent ev)
         {
             m_highlight.transform.localScale = Vector3.zero;
             m_PreviousIndexStart = -1;
@@ -251,17 +252,17 @@ namespace GTFO_VR.Core.UI.Canvas
             m_PreviousIndexEnd = -1;
         }
 
-        public void onPointerMove(PointerEvent ev)
+        public override void onPointerMove(PointerEvent ev)
         {
             hoverPointer(ev.position);
         }
 
-        public void onPointerDown(PointerEvent ev)
+        public override void onPointerDown(PointerEvent ev)
         {
             submitSelection(true);
         }
 
-        public void onPointerUp(PointerEvent ev)
+        public override void onPointerUp(PointerEvent ev)
         {
             //throw new NotImplementedException();
         }

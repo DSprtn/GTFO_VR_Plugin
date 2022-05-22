@@ -18,9 +18,15 @@ namespace GTFO_VR.Core.UI.Canvas
         private MeshFilter meshFilter;
         private MeshRenderer meshRenderer;
 
-        private void Start()
+        private void Awake()
         {
             ensureInit();
+        }
+
+
+        private void Start()
+        {
+            GenerateMesh();
         }
         
         private void ensureInit()
@@ -37,11 +43,13 @@ namespace GTFO_VR.Core.UI.Canvas
             }
         }
 
+        
         private void OnValidate()
         {
             ensureInit();
             GenerateMesh();
         }
+        
 
         public void setSize(float width, float height)
         {

@@ -10,6 +10,7 @@ using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.UI.Button;
+using GTFO_VR.Core.UI.canvas.Pointer;
 
 namespace GTFO_VR.Core.UI.Canvas.Pointer
 {
@@ -61,7 +62,7 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
         public ColorTransitionState pressed;
     }
 
-    class PhysicalButton : MonoBehaviour, PointerEvent.IPointerEvent
+    class PhysicalButton : MonoPointerEvent
     {
         public BoxCollider m_collider;
         public RectTransform m_rectTrans;
@@ -91,7 +92,6 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
         {
             m_ColorStates = states;
             m_currentState = m_ColorStates.normal;
-
             m_propertyBlock.SetColor("_Color", m_currentState.destinationColor);
             m_renderer.SetPropertyBlock(m_propertyBlock);
         }
@@ -125,25 +125,25 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             return new ColorTransition(startColor, targetState);
         }
 
-        public void OnPointerEnter(PointerEvent ev)
+        public override void OnPointerEnter(PointerEvent ev)
         {
             isHighlighted = true;
             m_Transition = getTransitionFromCurrenTo(m_ColorStates.highlighted);
         }
 
-        public void OnPointerExit(PointerEvent ev)
+        public override void OnPointerExit(PointerEvent ev)
         {
             isHighlighted = false;
             m_Transition = getTransitionFromCurrenTo(m_ColorStates.normal);
             m_currentState = isPressed ? m_ColorStates.pressed : m_ColorStates.normal;
         }
 
-        public void onPointerMove(PointerEvent ev)
+        public override void onPointerMove(PointerEvent ev)
         {
             //throw new NotImplementedException();
         }
 
-        public void onPointerDown(PointerEvent ev)
+        public override void onPointerDown(PointerEvent ev)
         {
             isPressed = true;
             onClick.Invoke();
@@ -151,7 +151,7 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             m_currentState = m_ColorStates.pressed;
         }
 
-        public void onPointerUp(PointerEvent ev)
+        public override void onPointerUp(PointerEvent ev)
         {
             isPressed = false;
             m_Transition = getTransitionFromCurrenTo( isHighlighted ? m_ColorStates.highlighted : m_ColorStates.normal);

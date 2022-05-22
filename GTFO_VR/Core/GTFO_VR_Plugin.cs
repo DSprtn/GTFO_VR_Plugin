@@ -2,6 +2,7 @@
 using BepInEx.IL2CPP;
 using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.UI;
+using GTFO_VR.Core.UI.canvas.Pointer;
 using GTFO_VR.Core.UI.Canvas;
 using GTFO_VR.Core.UI.Canvas.KeyboardDefinition;
 using GTFO_VR.Core.UI.Canvas.Pointer;
@@ -85,10 +86,12 @@ namespace GTFO_VR.Core
             ClassInjector.RegisterTypeInIl2Cpp<WeaponRadialMenu>();
             ClassInjector.RegisterTypeInIl2Cpp<WeaponAmmoHologram>();
 
-            ClassInjector.RegisterTypeInIl2Cpp<RoundedCubeBackground>();
-            ClassInjector.RegisterTypeInIl2Cpp<PhysicalButton>();
-            ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardCanvas>();
+            ClassInjector.RegisterTypeInIl2Cpp<MonoPointerEvent>();
+            ClassInjector.RegisterTypeInIl2Cpp<RoundedCubeBackground>();       
+            ClassInjector.RegisterTypeInIl2Cpp<PhysicalButton>();              
+            ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardCanvas>();      
             ClassInjector.RegisterTypeInIl2Cpp<CanvasPointer>();
+            ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardInterface>();
             ClassInjector.RegisterTypeInIl2Cpp<TerminalReader>();
             ClassInjector.RegisterTypeInIl2Cpp<RectColliderSizer>();
         }

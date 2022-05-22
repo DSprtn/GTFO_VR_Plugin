@@ -17,6 +17,7 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             this.position = position;
         }
 
+        /*
         public interface IPointerEvent
         {
             void OnPointerEnter(PointerEvent ev);
@@ -25,5 +26,6 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             void onPointerDown(PointerEvent ev);
             void onPointerUp(PointerEvent ev);
         }
+        */
     }
 }

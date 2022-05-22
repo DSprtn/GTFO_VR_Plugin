@@ -1,5 +1,7 @@
-﻿using GTFO_VR.Core.UI.Canvas;
+﻿using GTFO_VR.Core.UI.canvas.Pointer;
+using GTFO_VR.Core.UI.Canvas;
 using GTFO_VR.Core.UI.Canvas.KeyboardDefinition;
+using System;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -116,9 +118,9 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             handleInput();
         }
 
-        private static PointerEvent.IPointerEvent getButton(RaycastHit hit)
+        private static MonoPointerEvent getButton(RaycastHit hit)
         {
-            return hit.collider?.gameObject?.GetComponent<PointerEvent.IPointerEvent>();
+            return hit.collider?.gameObject?.GetComponent<MonoPointerEvent>();
         }
 
         private static bool isCollider(RaycastHit hit)
@@ -133,7 +135,7 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
 
             if (up || down)
             {
-                PointerEvent.IPointerEvent button = getButton(m_currentHit);
+                MonoPointerEvent button = getButton(m_currentHit);
 
                 if (down)
                 {
@@ -149,7 +151,7 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
                 {
                     if ( m_ButtonPressHit.collider != m_currentHit.collider )
                     {
-                        PointerEvent.IPointerEvent downButton = getButton(m_ButtonPressHit);
+                        MonoPointerEvent downButton = getButton(m_ButtonPressHit);
                         downButton?.onPointerUp(new PointerEvent(m_currentHit.point));
                     }
                     else
@@ -187,11 +189,11 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
 
         private void handleHighlight()
         {
-            PointerEvent.IPointerEvent button = getButton(m_currentHit);
+            MonoPointerEvent button = getButton(m_currentHit);
 
             if (m_currentHit.collider != m_prevHit.collider)
             {
-                PointerEvent.IPointerEvent prevButton = getButton(m_prevHit);
+                MonoPointerEvent prevButton = getButton(m_prevHit);
                 prevButton?.OnPointerExit(new PointerEvent(m_prevHit.point));
 
                 button?.OnPointerEnter(new PointerEvent(m_prevHit.point));
