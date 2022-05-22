@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
-namespace GTFO_VR.UI.CANVAS
+namespace GTFO_VR.Core.UI.Canvas
 {
     class RoundedCubeBackground : MonoBehaviour
     {

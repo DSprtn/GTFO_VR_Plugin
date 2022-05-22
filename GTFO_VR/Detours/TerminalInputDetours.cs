@@ -4,7 +4,7 @@ using BepInEx.IL2CPP.Hook;
 using System.Runtime.InteropServices;
 using GTFO_VR.Core;
 using GTFO_VR.Core.VR_Input;
-using GTFO_VR.UI.CANVAS;
+using GTFO_VR.Core.UI.Canvas;
 
 namespace GTFO_VR.Detours
 {

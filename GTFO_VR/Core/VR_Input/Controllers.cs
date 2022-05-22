@@ -1,5 +1,5 @@
-﻿using GTFO_VR.Events;
-using GTFO_VR.UI.CANVAS.POINTER;
+﻿using GTFO_VR.Core.UI.Canvas.Pointer;
+using GTFO_VR.Events;
 using System;
 using UnityEngine;
 using Valve.VR;

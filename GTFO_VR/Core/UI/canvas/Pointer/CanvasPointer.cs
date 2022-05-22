@@ -1,21 +1,11 @@
-﻿using Assets.scripts.canvas.Pointer;
-using Assets.scripts.KeyboardDefinition;
-using GTFO_VR.Core.UI.canvas;
-using GTFO_VR.Core.UI.canvas.Pointer;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GTFO_VR.Core.UI.Canvas;
+using GTFO_VR.Core.UI.Canvas.KeyboardDefinition;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.UI;
 using Valve.VR;
 
-namespace GTFO_VR.UI.CANVAS.POINTER
+namespace GTFO_VR.Core.UI.Canvas.Pointer
 {
     class CanvasPointer : MonoBehaviour
     {

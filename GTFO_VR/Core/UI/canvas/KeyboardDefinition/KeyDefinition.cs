@@ -1,6 +1,5 @@
-﻿using Assets.scripts.canvas;
-using GTFO_VR.Core.UI.canvas.KeyboardDefinition;
-using GTFO_VR.UI.CANVAS;
+﻿using Assets.scripts.KeyboardDefinition;
+using GTFO_VR.Core.UI.Canvas.Pointer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +12,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
-namespace Assets.scripts.KeyboardDefinition
+namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
 {
     public enum KeyType
     {

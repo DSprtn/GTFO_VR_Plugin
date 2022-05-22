@@ -1,4 +1,5 @@
-﻿using GTFO_VR.UI.CANVAS;
+﻿using GTFO_VR.Core.UI.Canvas;
+using GTFO_VR.Core.UI.Canvas.KeyboardDefinition;
 using System;
 using System.Collections.Generic;
 using System.Linq;

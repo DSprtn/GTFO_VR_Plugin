@@ -1,13 +1,11 @@
-﻿using Assets.scripts.canvas.Pointer;
-using GTFO_VR.Core.UI.canvas.Pointer;
-using GTFO_VR.UI.CANVAS;
+﻿using GTFO_VR.Core.UI.Canvas.Pointer;
 using GTFO_VR.Util;
 using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-namespace GTFO_VR.Core.UI.canvas
+namespace GTFO_VR.Core.UI.Canvas
 {
     public class TerminalReader : MonoBehaviour, PointerEvent.IPointerEvent
     {

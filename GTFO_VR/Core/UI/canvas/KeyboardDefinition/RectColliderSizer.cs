@@ -1,6 +1,4 @@
-﻿using Assets.scripts.canvas;
-using GTFO_VR.UI.CANVAS;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace GTFO_VR.Core.UI.canvas.KeyboardDefinition
+namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
 {
     class RectColliderSizer : MonoBehaviour // Replacement for UIBehaviour::OnRectTransformDimensionsChange() because unhollowed libs don't have the virtual modifier (fixed by updating bepinex )
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine.UI;
 
-namespace Assets.scripts.KeyboardDefinition
+namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
 {
 
     public class LayoutParameters

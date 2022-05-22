@@ -1,7 +1,8 @@
 ﻿using Assets.scripts.KeyboardDefinition;
 using GTFO_VR.Core.PlayerBehaviours;
+using GTFO_VR.Core.UI.Canvas;
+using GTFO_VR.Core.UI.Canvas.KeyboardDefinition;
 using GTFO_VR.Events;
-using GTFO_VR.UI.CANVAS;
 using System;
 using System.Text;
 using UnityEngine;

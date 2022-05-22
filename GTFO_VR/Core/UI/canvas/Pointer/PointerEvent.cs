@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Assets.scripts.canvas.Pointer
+namespace GTFO_VR.Core.UI.Canvas.Pointer
 {
     public class PointerEvent
     {

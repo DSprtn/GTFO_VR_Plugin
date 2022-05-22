@@ -1,23 +1,17 @@
-﻿using Assets.scripts.canvas;
-using Assets.scripts.canvas.Pointer;
-using BepInEx;
+﻿using BepInEx;
 using BepInEx.IL2CPP;
 using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.UI;
-using GTFO_VR.Core.UI.canvas;
-using GTFO_VR.Core.UI.canvas.KeyboardDefinition;
-using GTFO_VR.Core.UI.canvas.Pointer;
+using GTFO_VR.Core.UI.Canvas;
+using GTFO_VR.Core.UI.Canvas.KeyboardDefinition;
+using GTFO_VR.Core.UI.Canvas.Pointer;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Detours;
 using GTFO_VR.UI;
-using GTFO_VR.UI.CANVAS;
-using GTFO_VR.UI.CANVAS.POINTER;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnhollowerRuntimeLib;
-using static Assets.scripts.canvas.Pointer.PointerEvent;
-using static GTFO_VR.Util.ExtensionMethods;
 
 namespace GTFO_VR.Core
 {
@@ -91,7 +85,8 @@ namespace GTFO_VR.Core
             ClassInjector.RegisterTypeInIl2Cpp<WeaponRadialMenu>();
             ClassInjector.RegisterTypeInIl2Cpp<WeaponAmmoHologram>();
 
-            ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardInterface>();
+            ClassInjector.RegisterTypeInIl2Cpp<RoundedCubeBackground>();
+            ClassInjector.RegisterTypeInIl2Cpp<PhysicalButton>();
             ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardCanvas>();
             ClassInjector.RegisterTypeInIl2Cpp<CanvasPointer>();
             ClassInjector.RegisterTypeInIl2Cpp<TerminalReader>();

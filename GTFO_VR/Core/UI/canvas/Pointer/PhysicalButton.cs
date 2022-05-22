@@ -1,7 +1,6 @@
-﻿using Assets.scripts.canvas.Pointer;
-using GTFO_VR.Core;
-using GTFO_VR.Core.UI.canvas.Pointer;
-using GTFO_VR.UI.CANVAS;
+﻿using GTFO_VR.Core;
+using GTFO_VR.Core.UI.Canvas.Pointer;
+using GTFO_VR.Core.UI.Canvas;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.UI.Button;
 
-namespace Assets.scripts.canvas
+namespace GTFO_VR.Core.UI.Canvas.Pointer
 {
     public struct ColorTransitionState
     {

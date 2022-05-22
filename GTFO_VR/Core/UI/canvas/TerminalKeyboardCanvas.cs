@@ -1,16 +1,16 @@
 ﻿using Assets.scripts.KeyboardDefinition;
-using GTFO_VR.UI.CANVAS.POINTER;
+using GTFO_VR.Core.UI.Canvas.KeyboardDefinition;
 using System.Collections;
 using System.Collections.Generic;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GTFO_VR.UI.CANVAS
+namespace GTFO_VR.Core.UI.Canvas
 {
     public class TerminalKeyboardCanvas : MonoBehaviour
     {
-        public Canvas m_canvas;
+        public UnityEngine.Canvas m_canvas;
         public TerminalKeyboardInterface m_keyboardRoot;
 
         public static TerminalKeyboardCanvas attach(GameObject go, float width, float height, TextAnchor gravity)
@@ -23,7 +23,7 @@ namespace GTFO_VR.UI.CANVAS
                                                         TerminalKeyboardInterface.CANVAS_SCALE,
                                                         TerminalKeyboardInterface.CANVAS_SCALE);
 
-            canvas.m_canvas = go.AddComponent<Canvas>();
+            canvas.m_canvas = go.AddComponent<UnityEngine.Canvas>();
             canvas.m_canvas.renderMode = RenderMode.WorldSpace;
 
             go.AddComponent<UnityEngine.UI.GraphicRaycaster>();
