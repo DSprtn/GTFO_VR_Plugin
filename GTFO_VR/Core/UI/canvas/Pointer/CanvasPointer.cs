@@ -73,6 +73,10 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             m_LineRenderer.receiveShadows = false;
             m_LineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
+            // Line renderer appears to update with a significant delay.
+            // If we keep it in local space it should only affect the length and be imperceptible.
+            m_LineRenderer.useWorldSpace = false;
+
             m_pointerMaterial = new Material(Shader.Find("Sprites/Default"));
             m_pointerMaterial.renderQueue = (int)RenderQueue.Overlay + 2;
 
@@ -225,8 +229,8 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
                 m_Dot.transform.position = Vector3.zero;
             }
 
-            m_LineRenderer.SetPosition(0, transform.position);
-            m_LineRenderer.SetPosition(1, endPosition);
+            m_LineRenderer.SetPosition(0, transform.localPosition );
+            m_LineRenderer.SetPosition(1, transform.InverseTransformPoint( endPosition ));
         }
 
         private void OnDestroy()
