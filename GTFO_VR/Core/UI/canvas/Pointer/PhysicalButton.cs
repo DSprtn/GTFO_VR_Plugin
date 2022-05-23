@@ -159,8 +159,15 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
         public override void OnPointerExit(PointerEvent ev)
         {
             isHighlighted = false;
-            m_Transition = getTransitionFromCurrenTo(m_ColorStates.normal);
-            m_currentState = isPressed ? m_ColorStates.pressed : m_ColorStates.normal;
+            if (isPressed)
+            {
+                m_currentState = m_ColorStates.pressed;
+            }
+            else
+            {
+                m_currentState = m_ColorStates.normal;
+                m_Transition = getTransitionFromCurrenTo(m_ColorStates.normal);
+            }
         }
 
         public override Vector3 onPointerMove(PointerEvent ev)
