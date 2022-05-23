@@ -461,7 +461,7 @@ namespace GTFO_VR.Core.UI.Canvas
                 keyboardRow.AddChild(new KeyDefinition("9"));
                 keyboardRow.AddChild(new KeyDefinition("0"));
                 keyboardRow.AddChild(new KeyDefinition("."));   // For typing ip addresses
-                keyboardRow.AddChild(new KeyDefinition(KeyType.BACKPSPACE, "backspace", new LayoutParameters( LayoutParameters.FILL_PARENT )));
+                keyboardRow.AddChild(new KeyDefinition(KeyType.BACKPSPACE, "backspace", new LayoutParameters( LayoutParameters.FILL_PARENT )).setRepeatKey(true)  );
 
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }

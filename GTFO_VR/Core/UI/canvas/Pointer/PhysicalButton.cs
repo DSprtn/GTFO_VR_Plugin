@@ -76,8 +76,15 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
         private ColorStates m_ColorStates;
         private ColorTransition m_Transition = null;    // Null when not in a transition.
 
-        bool isHighlighted = false;
-        bool isPressed = false;
+        public bool isHighlighted = false;
+        public bool isPressed = false;
+
+        public bool m_repeatKey = false;
+        public float m_repeatKeyTriggerTime = 0.5f;
+        public float m_repeatKeyDelay = 0.01f;
+        private float m_downDelta = 0;
+        private float m_keyRepeatDelta = 0;
+
 
         private void Awake()
         {
@@ -105,6 +112,24 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
 
                 if (m_Transition.isFinished())
                     m_Transition = null;
+            }
+
+            if (isPressed)
+            {
+                if (m_repeatKey && m_repeatKeyTriggerTime >= 0 &&  m_downDelta > m_repeatKeyTriggerTime)
+                {
+                    if (m_keyRepeatDelta > m_repeatKeyDelay)
+                    {
+                        onClick.Invoke();
+                        m_keyRepeatDelta = 0;
+                    }
+                    else
+                    {
+                        m_keyRepeatDelta += Time.deltaTime;
+                    }
+                }
+
+                m_downDelta += Time.deltaTime;
             }
         }
 
@@ -140,11 +165,14 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
 
         public override Vector3 onPointerMove(PointerEvent ev)
         {
+
             return ev.position;
         }
 
         public override void onPointerDown(PointerEvent ev)
         {
+            m_downDelta = 0;
+            m_keyRepeatDelta = 0;
             isPressed = true;
             onClick.Invoke();
             m_Transition = getTransitionFromCurrenTo(m_ColorStates.pressed);

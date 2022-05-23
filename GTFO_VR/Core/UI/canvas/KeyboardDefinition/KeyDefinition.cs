@@ -41,6 +41,7 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
         public string Label;
         public LayoutParameters layoutParameters;
         public KeyboardStyle style;
+        public bool RepeatKey = false;
 
         public KeyDefinition(string input) : this(input, input) { }
 
@@ -67,6 +68,12 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             this.Label = label;
             this.layoutParameters = layoutParameters;
             populateInput();
+        }
+
+        public KeyDefinition setRepeatKey( bool repeatKey)
+        {
+            this.RepeatKey = repeatKey;
+            return this;
         }
 
         public bool hasInput()
@@ -159,6 +166,8 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             /////////////////////
 
             button.onClick.AddListener( (UnityAction) (() => handleClick(keyboardRoot)) );
+            if (RepeatKey)
+                button.m_repeatKey = true;
 
             ////////////////////
             /// Box collider
