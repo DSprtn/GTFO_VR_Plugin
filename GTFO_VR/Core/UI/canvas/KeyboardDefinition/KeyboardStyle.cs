@@ -18,6 +18,9 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
 
     public class KeyboardStyle
     {
+        // Colors, even on unlit materials, appear a lot darker in-game than in unity.
+        // Set this to 0.15f in GTFO to make the colors match. 
+        // Exception for font. See getFontColor()
         public static float colorBrightnessMultiplier = 1;
 
         public float TileSize = 2;
@@ -82,7 +85,9 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
 
         public Color getTextColor()
         {
-            return fontColor;
+            // Font overlay shader will glow even with the brightness multiplier applied.
+            // Outline is still ugly but acceptable.
+            return fontColor * (colorBrightnessMultiplier * 3f);
         }
 
         public Material getKeyMaterial()
@@ -92,11 +97,6 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
                 keyMaterial = new Material(Shader.Find("UI/Default"));
                 keyMaterial.renderQueue = (int)RenderQueue.Overlay + 1;  // But still need to render underneath our text
                 keyMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
-
-                Color color = new Color(1, 1, 1, 1);
-                color.a = 1;
-
-                keyMaterial.color = color;
             }
 
             return keyMaterial;

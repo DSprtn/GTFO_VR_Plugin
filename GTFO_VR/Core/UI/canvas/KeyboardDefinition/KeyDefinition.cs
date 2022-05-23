@@ -125,11 +125,6 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             // Button itself
             /////////////////////
 
-
-            //ColorBlock cb = button.colors;
-            //cb.highlightedColor = style.highlightColor;
-            //button.colors = cb;
-
             button.m_background.setSize(element.preferredWidth, element.preferredHeight);
             button.m_background.setMaterial(style.getKeyMaterial());
             button.m_background.radius = 0.1f;
