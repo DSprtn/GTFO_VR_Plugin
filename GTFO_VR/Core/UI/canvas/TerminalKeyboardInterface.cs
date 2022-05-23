@@ -368,7 +368,7 @@ namespace GTFO_VR.Core.UI.Canvas
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("RESOURCE ", "RESOURCE", 4));
+                keyboardRow.AddChild(new KeyDefinition("RESOURCES ", "RESOURCES", 4));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
