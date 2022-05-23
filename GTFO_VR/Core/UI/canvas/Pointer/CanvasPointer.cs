@@ -73,14 +73,21 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             m_LineRenderer.receiveShadows = false;
             m_LineRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
-            m_pointerMaterial = new Material(Shader.Find("Unlit/Color"));
+            m_pointerMaterial = new Material(Shader.Find("Sprites/Default"));
             m_pointerMaterial.renderQueue = (int)RenderQueue.Overlay + 2;
-            m_pointerMaterial.color = KeyboardStyle.getPointerLineColor();
+
             m_LineRenderer.material = m_pointerMaterial;
 
             mFarCurve.AddKey(0, LINE_WIDTH);
-            mFarCurve.AddKey(1, 0);
+            mFarCurve.AddKey(1, LINE_WIDTH);
             m_LineRenderer.widthCurve = mFarCurve;
+
+            Color startColor = KeyboardStyle.getPointerLineColor();
+            Color endColor = KeyboardStyle.getPointerLineColor();
+            endColor.a = 0;
+
+            m_LineRenderer.SetColors(startColor, endColor);
+
 
             ///////////////////
             // End dot
@@ -92,7 +99,7 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
 
             m_dotMaterial = new Material(Shader.Find("Unlit/Color") );
             m_dotMaterial.renderQueue = (int)RenderQueue.Overlay +2;
-            m_dotMaterial.color = KeyboardStyle.getPointerColor();
+            m_dotMaterial.color = KeyboardStyle.getPointerLineColor();
             m_dotMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
             m_Dot.GetComponent<MeshRenderer>().material = m_dotMaterial;
         }
@@ -104,11 +111,8 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
 
         public void orientBeam()
         {
-            this.transform.localPosition = new Vector3(0, 0, 0);
-            this.transform.rotation = new Quaternion();
-
-            this.transform.Translate(this.transform.forward * -0.05f);
-            this.transform.Rotate(this.transform.right, 45);
+            this.transform.localPosition = new Vector3(0, -0.025f, -0.06f);
+            this.transform.localRotation = Quaternion.Euler(45, 0, 0);
         }
 
         private void Update()

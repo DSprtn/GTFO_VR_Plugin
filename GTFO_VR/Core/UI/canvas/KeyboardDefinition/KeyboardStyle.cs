@@ -35,15 +35,19 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
 
         private Color fontColor = new Color(1, 1, 1);
 
-        public static Color pointerLineColor = new Color(0, 0.20f, 0.23f);
-        public static Color pointerColor = new Color(0, 0.20f, 0.23f);
         public Color textHighlightColor = new Color(0f, 0.075f, 0.075f);
-
         public Color backgroundColor = new Color(34f / 255f, 34f / 255f, 34f / 255f);
 
         private Material keyMaterial;
         private Material fontMaterial;
         private Material backgroundMaterial;
+
+        public static Color pointerLineColor = new Color(1, 1, 1);
+
+        public static Color getPointerLineColor()
+        {
+            return pointerLineColor * colorBrightnessMultiplier;
+        }
 
         public BackgroundStyle keyboardBackgroundStyle = new BackgroundStyle()
         {
@@ -149,22 +153,5 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
 
             return fontMaterial;
         }
-
-        public static Color getPointerLineColor()
-        {
-            pointerLineColor = new Color(0f, 1f, 1f);// * colorBrightnessMultiplier;
-            pointerLineColor.a = 1;
-
-            return pointerLineColor;
-        }
-
-        public static Color getPointerColor()
-        {
-            pointerColor = new Color(1f, 1f, 1f);// * colorBrightnessMultiplier;
-            pointerColor.a = 1;
-
-            return pointerColor;
-        }
-
     }
 }
