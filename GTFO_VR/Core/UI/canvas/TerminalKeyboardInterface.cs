@@ -385,12 +385,6 @@ namespace GTFO_VR.Core.UI.Canvas
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("REACTOR_VERIFY ", "REACTOR_VERIFY", 5));
-                bottomKeyboardLayout.AddChild(keyboardRow);
-            }
-
-            {
-                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
                 keyboardRow.AddChild(new KeyDefinition("UPLINK_VERIFY ", "UPLINK_VERIFY", 5));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
@@ -398,6 +392,12 @@ namespace GTFO_VR.Core.UI.Canvas
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
                 keyboardRow.AddChild(new KeyDefinition("UPLINK_CONNECT ", "UPLINK_CONNECT", 5));
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
+                keyboardRow.AddChild(new KeyDefinition("REACTOR_VERIFY ", "REACTOR_VERIFY", 5));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
