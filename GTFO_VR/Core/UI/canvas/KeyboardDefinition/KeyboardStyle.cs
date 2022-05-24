@@ -21,7 +21,7 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
         // Colors, even on unlit materials, appear a lot darker in-game than in unity.
         // Set this to 0.15f in GTFO to make the colors match. 
         // Exception for font. See getFontColor()
-        public static float colorBrightnessMultiplier = 1;
+        public static float colorBrightnessMultiplier = 0.15f;
 
         public float TileSize = 2;
         public float FontSize = 0.8f;
