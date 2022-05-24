@@ -177,7 +177,6 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
 
         public override Vector3 onPointerMove(PointerEvent ev)
         {
-
             return ev.position;
         }
 

@@ -21,11 +21,9 @@ namespace GTFO_VR.Core.UI.canvas.Pointer
 
         }
 
-        // Return desired pointer position
-
         public virtual Vector3 onPointerMove(PointerEvent ev)
         {
-            return Vector3.zero;
+            return ev.position;
         }
         public virtual void onPointerDown(PointerEvent ev)
         {
@@ -34,6 +32,11 @@ namespace GTFO_VR.Core.UI.canvas.Pointer
         public virtual void onPointerUp(PointerEvent ev)
         {
 
+        }
+
+        public virtual float getPointerSize( float defaultSize )
+        {
+            return defaultSize;
         }
 
     }

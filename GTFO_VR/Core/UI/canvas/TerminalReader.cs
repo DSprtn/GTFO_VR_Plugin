@@ -11,6 +11,7 @@ namespace GTFO_VR.Core.UI.Canvas
     public class TerminalReader : MonoPointerEvent
     {
         private static readonly float READER_SIZE_PADDING = 1;
+        private static readonly float READER_POINTER_SIZE = 0.005f;
 
         private GameObject m_textCanvas;
 
@@ -269,9 +270,10 @@ namespace GTFO_VR.Core.UI.Canvas
             submitSelection(true);
         }
 
-        public override void onPointerUp(PointerEvent ev)
+        public override float getPointerSize(float defaultSize)
         {
-            //throw new NotImplementedException();
+            // Tiny text, tiny pointer
+            return READER_POINTER_SIZE;
         }
     }
 

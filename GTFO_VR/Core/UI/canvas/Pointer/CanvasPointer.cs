@@ -16,7 +16,9 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
 
         private static readonly float LINE_WIDTH = 0.003f;
 
-        public readonly float m_DefaultLength = 0.3f; // Unity not reflecting change unless readonly??
+        public static readonly float m_DefaultLength = 0.3f; // Unity not reflecting change unless readonly??
+        public static readonly float m_DefaultDotSize = 0.01f;
+        public float m_CurrentDotSize = m_DefaultDotSize;
         public GameObject m_Dot;
 
         private AnimationCurve mFarCurve = new AnimationCurve();
@@ -97,7 +99,7 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             // End dot
             ///////////////////
             m_Dot = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            m_Dot.transform.localScale = new Vector3(0.005f, 0.005f, 0.001f);
+            m_Dot.transform.localScale = new Vector3(m_DefaultDotSize, m_DefaultDotSize, 0.001f);
             UnityEngine.Object.Destroy(m_Dot.GetComponent<SphereCollider>());
             m_Dot.transform.SetParent(gameObject.transform);
 
@@ -200,13 +202,14 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
                 prevButton?.OnPointerExit(new PointerEvent(m_prevHit.point));
 
                 button?.OnPointerEnter(new PointerEvent(m_prevHit.point));
+                m_CurrentDotSize = button ? button.getPointerSize(m_DefaultDotSize) : m_DefaultDotSize;
             }
 
              // Target may decide to move pointer end somewhere else for smoothing.
              if ( button != null )
-            {
+             {
                 m_PointerEndPosition = button.onPointerMove(new PointerEvent(m_currentHit.point));
-            }
+              }
 
    
         }
@@ -222,6 +225,7 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
 
                 m_Dot.transform.position = endPosition; // Position and align dot
                 m_Dot.transform.rotation = m_currentHit.collider.transform.rotation;
+                m_Dot.transform.localScale = new Vector3(m_CurrentDotSize, m_CurrentDotSize, m_Dot.transform.localScale.z);
             }
             else
             {
