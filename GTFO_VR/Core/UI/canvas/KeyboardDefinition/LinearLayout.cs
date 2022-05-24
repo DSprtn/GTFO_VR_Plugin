@@ -60,8 +60,8 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
                 background.radius = inheritedStyle.keyboardBackgroundStyle.radius;
                 background.cornerVertices = inheritedStyle.keyboardBackgroundStyle.cornerVertices;
                 background.padding = inheritedStyle.keyboardBackgroundStyle.padding;
+                background.autoSize = true;
 
-                panel.AddComponent<RectColliderSizer>();
                 background.GetComponent<MeshRenderer>().sharedMaterial = inheritedStyle.getBackgroundMaterial();
             }
 

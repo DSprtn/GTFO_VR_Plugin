@@ -85,12 +85,17 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
         private float m_downDelta = 0;
         private float m_keyRepeatDelta = 0;
 
+        private void OnRectTransformDimensionsChange()
+        {
+            m_collider.size = new Vector3(m_rectTrans.sizeDelta.x, m_rectTrans.sizeDelta.y, 0.01f);
+        }
 
         private void Awake()
         {
             m_collider = this.gameObject.AddComponent<BoxCollider>();
             m_rectTrans = this.gameObject.AddComponent<RectTransform>();
             m_background = this.gameObject.AddComponent<RoundedCubeBackground>();
+            m_background.autoSize = true;
             m_renderer = this.gameObject.GetComponent<MeshRenderer>();
             m_propertyBlock = new MaterialPropertyBlock();
         }
@@ -136,12 +141,6 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
         public void setBackgroundEnabled(bool enable)
         {
             m_background.enabled = enable;
-        }
-
-        public void setSize( float width, float height, float depth )
-        {
-            m_collider.size = new Vector3(width, height, depth);
-            m_background.setSize(width, height);
         }
 
         [HideFromIl2Cpp]

@@ -14,6 +14,7 @@ namespace GTFO_VR.Core.UI.Canvas
         public float radius = 3;
         public float padding = 0.01f;   // Negative padding works too
         public int cornerVertices = 4;
+        public bool autoSize = true;
         
         private MeshFilter meshFilter;
         private MeshRenderer meshRenderer;
@@ -67,12 +68,6 @@ namespace GTFO_VR.Core.UI.Canvas
             GenerateMesh();
         }
 
-
-        public void regenerate()
-        {
-            GenerateMesh();
-        }
-
         public void setMaterial( Material mat )
         {
             if (meshRenderer != null)
@@ -81,7 +76,19 @@ namespace GTFO_VR.Core.UI.Canvas
             }
         }
 
-        private void GenerateMesh()
+        private void OnRectTransformDimensionsChange()
+        {
+            if (autoSize)
+            {
+                RectTransform rectTransform = GetComponent<RectTransform>();
+                if (rectTransform != null)
+                {
+                    setSize(rectTransform.sizeDelta.x, rectTransform.sizeDelta.y);
+                }
+            }
+        }
+
+        public void GenerateMesh()
         {
             ensureInit();
 

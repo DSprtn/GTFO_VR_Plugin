@@ -93,7 +93,6 @@ namespace GTFO_VR.Core
             ClassInjector.RegisterTypeInIl2Cpp<CanvasPointer>();
             ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardInterface>();
             ClassInjector.RegisterTypeInIl2Cpp<TerminalReader>();
-            ClassInjector.RegisterTypeInIl2Cpp<RectColliderSizer>();
         }
 
         private bool SteamVRRunningCheck()

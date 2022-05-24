@@ -137,12 +137,10 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             // Button itself
             /////////////////////
 
-            button.m_background.setSize(element.preferredWidth, element.preferredHeight);
             button.m_background.setMaterial(style.getKeyMaterial());
             button.m_background.radius = style.keyBackgroundStyle.radius;
             button.m_background.cornerVertices = style.keyBackgroundStyle.cornerVertices;
             button.m_background.padding = style.keyBackgroundStyle.padding;
-            button.m_background.regenerate();
 
             switch (apperance)
             {
@@ -181,7 +179,6 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             sizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             sizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
-
             /////////////////////
             // Click listener
             /////////////////////
@@ -190,21 +187,8 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             if (RepeatKey)
                 button.m_repeatKey = true;
 
-            ////////////////////
-            /// Box collider
-            /// /////////////////
-
-            button.setSize(element.preferredWidth, element.preferredHeight, 0.01f);
-            if (element.flexibleWidth >= 0 || element.flexibleHeight >= 0)
-            {
-                // Size not known yet, add measuring thing.
-                // Shouldn't this be flexible?
-                buttonRoot.AddComponent<RectColliderSizer>();
-            }
-
             return buttonRoot;
         }
-
 
         public void handleClick( TerminalKeyboardInterface keyboardRoot )
         {

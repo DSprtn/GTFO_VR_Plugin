@@ -46,24 +46,9 @@ namespace GTFO_VR.Core.UI.Canvas
         {
             GameObject child = layout.GenerateLayout(keyboardRoot, style);
 
-            // Canvas should only have a single child with the same dimensions as its parent
-            child.transform.position = this.transform.position;
-            child.transform.localScale = this.transform.localScale;
-            child.transform.rotation = this.transform.rotation;
+            // Canvas should only have a single child
+            child.transform.SetParent(this.transform, false);
             child.GetComponent<RectTransform>().sizeDelta = this.gameObject.GetComponent<RectTransform>().sizeDelta;
-            child.transform.SetParent(this.transform);
-
-        }
-
-        private void Start()
-        {
-            //VRInputModule.AddCanvas(m_canvas);
-            //m_canvas.worldCamera = VRInputModule.getOrCreate().m_Camera;
-        }
-
-        private void OnDisable()
-        {
-            //VRInputModule.RemoveCanvas(m_canvas);
         }
     }
 
