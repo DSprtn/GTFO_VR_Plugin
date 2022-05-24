@@ -45,6 +45,7 @@ namespace GTFO_VR.Core.VR_Input
         private void Awake()
         {
             SetupControllers();
+            setupTerminalCanvasPointer();
             SetMainController();
             ItemEquippableEvents.OnPlayerWieldItem += CheckShouldDoubleHand;
             VRConfig.configUseLeftHand.SettingChanged += HandednessSwitch;
@@ -76,6 +77,8 @@ namespace GTFO_VR.Core.VR_Input
                 mainControllerType = HandType.Left;
                 offHandControllerType = HandType.Right;
             }
+
+            TerminalCanvasPointer?.transform.SetParent(mainController.transform, false);
             mainControllerPose = mainController.GetComponent<SteamVR_Behaviour_Pose>();
         }
 
@@ -88,6 +91,17 @@ namespace GTFO_VR.Core.VR_Input
 
             DontDestroyOnLoad(RightController);
             DontDestroyOnLoad(LeftController);
+        }
+
+        private void setupTerminalCanvasPointer()
+        {
+            TerminalCanvasPointer = CanvasPointer.create(SteamVR_Input_Sources.Any);
+            TerminalCanvasPointer.SetActive(false);
+        }
+
+        public static void ToggleTerminalCanvasPointer(bool enable)
+        {
+            TerminalCanvasPointer?.SetActive(enable);
         }
 
         public static void SetOrigin(Transform origin)
@@ -125,29 +139,6 @@ namespace GTFO_VR.Core.VR_Input
             return controller;
         }
 
-        public static void removeCanvasPointer()
-        {
-            if (TerminalCanvasPointer)
-            {
-                GameObject.Destroy(TerminalCanvasPointer);
-                TerminalCanvasPointer = null;
-            }    
-        }
-
-        public static void setupCanvasPointer( SteamVR_Input_Sources source = SteamVR_Input_Sources.Any )
-        {
-            if (!mainController)
-                return;
-
-            if (TerminalCanvasPointer)
-            {
-                GameObject.Destroy(TerminalCanvasPointer);
-                TerminalCanvasPointer = null;
-            }
-
-            TerminalCanvasPointer = CanvasPointer.create(source);
-            TerminalCanvasPointer.transform.SetParent(mainController.transform);
-        }
         private void HandleDoubleHandedChecks()
         {
             bool isInDoubleHandPos = false;

@@ -49,7 +49,7 @@ namespace GTFO_VR.Core.VR_Input
                     if (terminal != null)
                     {
                         m_KeyboardRoot = TerminalKeyboardInterface.create(terminal);
-                        Controllers.setupCanvasPointer();
+                        Controllers.ToggleTerminalCanvasPointer(true);
                         VRPlayer.hideWielded(true);
                         terminalKeyboardDisplayed = true;
                     }
@@ -83,7 +83,7 @@ namespace GTFO_VR.Core.VR_Input
 
                 if (m_KeyboardRoot)
                 {
-                    Controllers.removeCanvasPointer();
+                    Controllers.ToggleTerminalCanvasPointer(false);
                     VRPlayer.hideWielded(false);
                     GameObject.Destroy(m_KeyboardRoot);
                     m_KeyboardRoot = null;
