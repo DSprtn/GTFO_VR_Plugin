@@ -23,6 +23,10 @@ namespace GTFO_VR.Core.UI.Canvas
             ensureInit();
         }
 
+        void OnEnable()
+        {
+            meshRenderer.enabled = true;
+        }
 
         private void Start()
         {
@@ -41,6 +45,11 @@ namespace GTFO_VR.Core.UI.Canvas
                     meshRenderer.material = new Material(Shader.Find("Unlit/Color"));
                 }
             }
+        }
+
+        void OnDisable()
+        {
+            meshRenderer.enabled = false;
         }
 
         

@@ -133,6 +133,11 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             }
         }
 
+        public void setBackgroundEnabled(bool enable)
+        {
+            m_background.enabled = enable;
+        }
+
         public void setSize( float width, float height, float depth )
         {
             m_collider.size = new Vector3(width, height, depth);

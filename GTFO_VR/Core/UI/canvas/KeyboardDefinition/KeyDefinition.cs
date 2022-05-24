@@ -31,7 +31,12 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
         DOWN,
         LEFT,
         RIGHT,
-        EMPTY
+        EMPTY,
+    }
+
+    public enum KeyApperanceType
+    {
+        NORMAL, ALT, GONE
     }
 
     public class KeyDefinition : KeyboardLayout
@@ -42,6 +47,7 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
         public LayoutParameters layoutParameters;
         public KeyboardStyle style;
         public bool RepeatKey = false;
+        public KeyApperanceType apperance = KeyApperanceType.NORMAL;
 
         public KeyDefinition(string input) : this(input, input) { }
 
@@ -73,6 +79,12 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
         public KeyDefinition setRepeatKey( bool repeatKey)
         {
             this.RepeatKey = repeatKey;
+            return this;
+        }
+
+        public KeyDefinition setApperance( KeyApperanceType apperance )
+        {
+            this.apperance = apperance;
             return this;
         }
 
@@ -127,12 +139,23 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
 
             button.m_background.setSize(element.preferredWidth, element.preferredHeight);
             button.m_background.setMaterial(style.getKeyMaterial());
-            button.m_background.radius = 0.1f;
-            button.m_background.cornerVertices = 4;
-            button.m_background.padding = 0.04f;
+            button.m_background.radius = style.keyBackgroundStyle.radius;
+            button.m_background.cornerVertices = style.keyBackgroundStyle.cornerVertices;
+            button.m_background.padding = style.keyBackgroundStyle.padding;
             button.m_background.regenerate();
 
-            button.setColorStates(style.getButtonColorStates());
+            switch (apperance)
+            {
+                case KeyApperanceType.NORMAL:
+                    button.setColorStates(style.getButtonColorStates());
+                    break;
+                case KeyApperanceType.ALT:
+                    button.setColorStates(style.getAltButtonColorStates());
+                    break;
+                case KeyApperanceType.GONE:
+                    button.setBackgroundEnabled(false);
+                    break;
+            }
 
             ///////////////////
             // Text 
@@ -200,6 +223,6 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
         {
             throw new NotImplementedException();
         }
-        
+
     }
 }

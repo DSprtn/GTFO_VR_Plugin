@@ -30,6 +30,7 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
         public float keyPadding = 0.01f;
 
         private Color keyColor =            new Color(16f / 255f, 83f / 255f, 133f / 255f);
+        private Color keyColorAlt =         new Color(12f / 255f, 63f / 255f, 102f / 255f);
         private Color keyPressedColor =     new Color(10f / 255f, 54f / 255f, 87f / 255f);
         private Color keyHighlightColor =   new Color(21f / 255f, 106f / 255f, 171f / 255f);
 
@@ -61,7 +62,7 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
         {
             radius = 0.1f,
             cornerVertices = 4,
-            padding = 0.04f,
+            padding = 0.06f,
         };
 
         public void cleanup()
@@ -113,6 +114,21 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             states.normal =         new ColorTransitionState() { destinationColor = keyColor            * colorBrightnessMultiplier,    transitionTime = 0.5f };
             states.highlighted =    new ColorTransitionState() { destinationColor = keyHighlightColor   * colorBrightnessMultiplier,    transitionTime = 0f };
             states.pressed =        new ColorTransitionState() { destinationColor = keyPressedColor     * colorBrightnessMultiplier,    transitionTime = 0f };
+
+            states.normal.destinationColor.a = 1;
+            states.highlighted.destinationColor.a = 1;
+            states.pressed.destinationColor.a = 1;
+
+            return states;
+        }
+
+        public ColorStates getAltButtonColorStates()
+        {
+            ColorStates states;
+
+            states.normal = new ColorTransitionState() { destinationColor = keyColorAlt * colorBrightnessMultiplier, transitionTime = 0.5f };
+            states.highlighted = new ColorTransitionState() { destinationColor = keyHighlightColor * colorBrightnessMultiplier, transitionTime = 0f };
+            states.pressed = new ColorTransitionState() { destinationColor = keyPressedColor * colorBrightnessMultiplier, transitionTime = 0f };
 
             states.normal.destinationColor.a = 1;
             states.highlighted.destinationColor.a = 1;
