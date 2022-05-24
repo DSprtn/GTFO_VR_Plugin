@@ -156,6 +156,7 @@ namespace GTFO_VR.Core.UI.Canvas
             meshFilter.mesh = new Mesh { vertices = vertices.ToArray(), triangles = triangles.ToArray() };
         }
 
+        [HideFromIl2Cpp]
         private void addCurvedCorner(List<Vector3> vertices, List<int> triangles, int start, int center, int end, int cornerVertexCount)
         {
             if (cornerVertexCount < 1)

@@ -4,6 +4,7 @@ using GTFO_VR.Util;
 using System;
 using System.Collections.Generic;
 using TMPro;
+using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
 namespace GTFO_VR.Core.UI.Canvas
@@ -103,6 +104,7 @@ namespace GTFO_VR.Core.UI.Canvas
 
         }
 
+        [HideFromIl2Cpp]
         private void drawHighlight( TMP_CharacterInfo[] characters, int start, int end)
         {
             // Sanity check
@@ -244,11 +246,13 @@ namespace GTFO_VR.Core.UI.Canvas
             }
         }
 
+        [HideFromIl2Cpp]
         public override void OnPointerEnter(PointerEvent ev)
         {
             m_pointerHistory.clearPointerHistory();
         }
 
+        [HideFromIl2Cpp]
         public override void OnPointerExit(PointerEvent ev)
         {
             m_highlight.transform.localScale = Vector3.zero;
@@ -257,6 +261,7 @@ namespace GTFO_VR.Core.UI.Canvas
             m_PreviousIndexEnd = -1;
         }
 
+        [HideFromIl2Cpp]
         public override Vector3 onPointerMove(PointerEvent ev)
         {
             m_pointerHistory.addPointerHistory(ev.position);
@@ -265,6 +270,7 @@ namespace GTFO_VR.Core.UI.Canvas
             return smoothed;
         }
 
+        [HideFromIl2Cpp]
         public override void onPointerDown(PointerEvent ev)
         {
             submitSelection(true);

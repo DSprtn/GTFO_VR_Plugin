@@ -144,6 +144,7 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             m_background.setSize(width, height);
         }
 
+        [HideFromIl2Cpp]
         private ColorTransition getTransitionFromCurrenTo(ColorTransitionState targetState )
         {
             Color startColor;
@@ -155,12 +156,14 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             return new ColorTransition(startColor, targetState);
         }
 
+        [HideFromIl2Cpp]
         public override void OnPointerEnter(PointerEvent ev)
         {
             isHighlighted = true;
             m_Transition = getTransitionFromCurrenTo(m_ColorStates.highlighted);
         }
 
+        [HideFromIl2Cpp]
         public override void OnPointerExit(PointerEvent ev)
         {
             isHighlighted = false;
@@ -175,11 +178,13 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             }
         }
 
+        [HideFromIl2Cpp]
         public override Vector3 onPointerMove(PointerEvent ev)
         {
             return ev.position;
         }
 
+        [HideFromIl2Cpp]
         public override void onPointerDown(PointerEvent ev)
         {
             m_downDelta = 0;
@@ -190,6 +195,7 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             m_currentState = m_ColorStates.pressed;
         }
 
+        [HideFromIl2Cpp]
         public override void onPointerUp(PointerEvent ev)
         {
             isPressed = false;

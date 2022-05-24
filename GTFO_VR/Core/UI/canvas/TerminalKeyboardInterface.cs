@@ -124,6 +124,7 @@ namespace GTFO_VR.Core.UI.Canvas
            
         }
 
+        [HideFromIl2Cpp]
         private void generateCanvas(  GameObject go, RectTransform terminalCanvasRect, float rawHeight, float rawWidth, TextAnchor gravity, KeyboardLayout layout, KeyboardStyle style, CanvasPosition position)
         {
             TerminalKeyboardCanvas newKeyboardCanvas = TerminalKeyboardCanvas.attach(go, rawWidth, rawHeight, gravity);
@@ -230,6 +231,7 @@ namespace GTFO_VR.Core.UI.Canvas
             newKeyboardCanvas.inflateLayout(this, layout, style);
         }
 
+        [HideFromIl2Cpp]
         public void HandleInput( KeyDefinition key )
         {
             checkDirty();
@@ -281,6 +283,7 @@ namespace GTFO_VR.Core.UI.Canvas
             }
         }
 
+        [HideFromIl2Cpp]
         public void HandleInput(string str)
         {
             checkDirty();
