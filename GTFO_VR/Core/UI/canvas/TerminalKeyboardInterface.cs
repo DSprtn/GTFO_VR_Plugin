@@ -16,12 +16,11 @@ namespace GTFO_VR.Core.UI.Canvas
     {
         private LevelGeneration.LG_ComputerTerminal m_terminal;
         private GameObject m_terminalCanvas;
-        private KeyboardStyle m_keyboardStyle = new KeyboardStyle(2, 1);
+        private KeyboardStyle m_keyboardStyle = new KeyboardStyle();
 
         public static readonly int LAYER = 2;   // ignore raycast, by defaul at least.
         public static readonly int LAYER_MASK = 1 << LAYER;
         public static readonly float CANVAS_SCALE = 0.045f; // Same scaling used by GTFO, because otherwise units are silly.
-        private static readonly float SECTION_PADDING = 0f * CANVAS_SCALE;
 
         public static string currentFrameInput = "";
 
@@ -59,12 +58,6 @@ namespace GTFO_VR.Core.UI.Canvas
             this.transform.position = m_terminalCanvas.transform.position;
             this.transform.rotation = m_terminalCanvas.transform.rotation;
 
-            m_keyboardStyle.TileSize = 1;
-            m_keyboardStyle.FontSize = 0.5f;
-            m_keyboardStyle.SpacingHorizontal = 0.00f;
-            m_keyboardStyle.SpacingVertical = 0.00f;
-            m_keyboardStyle.keyPadding = 0.01f;
-
             RectTransform terminalCanvasRect = m_terminalCanvas.GetComponent<RectTransform>();
 
             /////////////////////////
@@ -74,10 +67,8 @@ namespace GTFO_VR.Core.UI.Canvas
             GameObject terminalReaderRoot = TerminalReader.Create(m_terminalCanvas, this);
             terminalReaderRoot.transform.SetParent(this.transform);
 
-
-
             ///////////////////////
-            // Bottom keyboard
+            // Actual keyboard surfaces
             ///////////////////////
 
             {

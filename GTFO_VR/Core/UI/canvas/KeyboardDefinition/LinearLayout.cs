@@ -74,12 +74,10 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             {
                 case LinearOrientation.VERTICAL:
                     layoutGroup = panel.AddComponent<VerticalLayoutGroup>();
-                    layoutGroup.spacing = inheritedStyle.SpacingVertical;
                     sizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
                     break;
                 case LinearOrientation.HORIZONTAL:
                     layoutGroup = panel.AddComponent<HorizontalLayoutGroup>();
-                    layoutGroup.spacing = inheritedStyle.SpacingHorizontal;
                     sizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
                     break;
             }

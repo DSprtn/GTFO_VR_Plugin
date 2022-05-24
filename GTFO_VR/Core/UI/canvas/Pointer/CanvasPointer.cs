@@ -90,8 +90,8 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
             Color endColor = KeyboardStyle.getPointerLineColor();
             endColor.a = 0;
 
-            m_LineRenderer.SetColors(startColor, endColor);
-
+            m_LineRenderer.startColor = startColor;
+            m_LineRenderer.endColor = endColor;
 
             ///////////////////
             // End dot

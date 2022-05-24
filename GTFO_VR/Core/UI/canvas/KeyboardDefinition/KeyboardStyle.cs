@@ -23,11 +23,8 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
         // Exception for font. See getFontColor()
         public static float colorBrightnessMultiplier = 0.15f;
 
-        public float TileSize = 2;
-        public float FontSize = 0.8f;
-        public float SpacingVertical = 0.0f;
-        public float SpacingHorizontal = 0.0f;
-        public float keyPadding = 0.01f;
+        public float TileSize = 1f;
+        public float FontSize = 0.5f;
 
         private Color keyColor =            new Color(16f / 255f, 83f / 255f, 133f / 255f);
         private Color keyColorAlt =         new Color(12f / 255f, 63f / 255f, 102f / 255f);
@@ -80,12 +77,9 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
         }
 
 
-        public KeyboardStyle(float tileSize = 1, float fontSize = 0.5f, float spacing = 0.1f)
+        public KeyboardStyle()
         {
-            this.TileSize = tileSize;
-            this.FontSize = fontSize;
-            this.SpacingVertical = spacing;
-            this.SpacingHorizontal = spacing;
+
         }
 
         public Color getTextColor()
