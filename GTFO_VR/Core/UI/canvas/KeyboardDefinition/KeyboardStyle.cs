@@ -26,10 +26,14 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
         public float TileSize = 1f;
         public float FontSize = 0.5f;
 
-        private Color keyColor =            new Color(16f / 255f, 83f / 255f, 133f / 255f);
-        private Color keyColorAlt =         new Color(12f / 255f, 63f / 255f, 102f / 255f);
-        private Color keyPressedColor =     new Color(10f / 255f, 54f / 255f, 87f / 255f);
-        private Color keyHighlightColor =   new Color(21f / 255f, 106f / 255f, 171f / 255f);
+        // Color at max brightness
+        public Color baseKeyColor = new Color(31f / 255f, 158f / 255f, 255f / 255f);
+        public Color altKeyColor = new Color(23f / 255f, 118f / 255f, 191f / 255f);
+        public Color exitKeyColor = new Color(191f / 255f, 23f / 255f, 23f / 255f);
+
+        float KeyColorBrightness = 0.52f;
+        float KeyColorPressedBrightness = 0.34f;
+        float KeyColorHighlightBrightness = 0.75f;
 
         private Color fontColor = new Color(1, 1, 1);
 
@@ -84,9 +88,10 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
 
         public Color getTextColor()
         {
-            // Font overlay shader will glow even with the brightness multiplier applied.
-            // Outline is still ugly but acceptable.
-            return fontColor * (colorBrightnessMultiplier * 3f);
+            // Text colors behaves a bit differently because different material I guess?
+            Color color = fontColor * (colorBrightnessMultiplier * 1.5f );
+            color.a = 1;
+            return color;
         }
 
         public Material getKeyMaterial()
@@ -101,13 +106,23 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             return keyMaterial;
         }
 
-        public ColorStates getButtonColorStates()
+        private Color adjustToGameBrightness(Color color)
+        {
+            return color * colorBrightnessMultiplier;
+        }
+
+        private Color getAdjustedKeyColor(Color color, float brightness)
+        {
+            return (adjustToGameBrightness(color * brightness));
+        }
+
+        public ColorStates getButtonColorStates( Color baseColor )
         {
             ColorStates states;
 
-            states.normal =         new ColorTransitionState() { destinationColor = keyColor            * colorBrightnessMultiplier,    transitionTime = 0.5f };
-            states.highlighted =    new ColorTransitionState() { destinationColor = keyHighlightColor   * colorBrightnessMultiplier,    transitionTime = 0f };
-            states.pressed =        new ColorTransitionState() { destinationColor = keyPressedColor     * colorBrightnessMultiplier,    transitionTime = 0f };
+            states.normal =         new ColorTransitionState() { destinationColor = getAdjustedKeyColor(baseColor, KeyColorBrightness),           transitionTime = 0.5f };
+            states.highlighted =    new ColorTransitionState() { destinationColor = getAdjustedKeyColor(baseColor, KeyColorHighlightBrightness),  transitionTime = 0f };
+            states.pressed =        new ColorTransitionState() { destinationColor = getAdjustedKeyColor(baseColor, KeyColorPressedBrightness),    transitionTime = 0f };
 
             states.normal.destinationColor.a = 1;
             states.highlighted.destinationColor.a = 1;
@@ -116,22 +131,20 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             return states;
         }
 
-        public ColorStates getAltButtonColorStates()
+        public ColorStates getNormalKeyStates()
         {
-            ColorStates states;
-
-            states.normal = new ColorTransitionState() { destinationColor = keyColorAlt * colorBrightnessMultiplier, transitionTime = 0.5f };
-            states.highlighted = new ColorTransitionState() { destinationColor = keyHighlightColor * colorBrightnessMultiplier, transitionTime = 0f };
-            states.pressed = new ColorTransitionState() { destinationColor = keyPressedColor * colorBrightnessMultiplier, transitionTime = 0f };
-
-            states.normal.destinationColor.a = 1;
-            states.highlighted.destinationColor.a = 1;
-            states.pressed.destinationColor.a = 1;
-
-            return states;
+            return getButtonColorStates(baseKeyColor);
         }
 
+        public ColorStates getAltKeyStates()
+        {
+            return getButtonColorStates(altKeyColor);
+        }
 
+        public ColorStates getExitKeyStates()
+        {
+            return getButtonColorStates(exitKeyColor);
+        }
 
         public Material getBackgroundMaterial()
         {

@@ -36,7 +36,7 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
 
     public enum KeyApperanceType
     {
-        NORMAL, ALT, GONE
+        NORMAL, ALT, EXIT, GONE
     }
 
     public class KeyDefinition : KeyboardLayout
@@ -147,10 +147,13 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             switch (apperance)
             {
                 case KeyApperanceType.NORMAL:
-                    button.setColorStates(style.getButtonColorStates());
+                    button.setColorStates(style.getNormalKeyStates());
                     break;
                 case KeyApperanceType.ALT:
-                    button.setColorStates(style.getAltButtonColorStates());
+                    button.setColorStates(style.getAltKeyStates());
+                    break;
+                case KeyApperanceType.EXIT:
+                    button.setColorStates(style.getExitKeyStates());
                     break;
                 case KeyApperanceType.GONE:
                     button.setBackgroundEnabled(false);

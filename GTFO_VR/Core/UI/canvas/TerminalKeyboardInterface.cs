@@ -441,7 +441,7 @@ namespace GTFO_VR.Core.UI.Canvas
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperCenter, rowParams);
 
                 keyboardRow.AddChild(new KeyDefinition(KeyType.ESC, "x")
-                    .setApperance(KeyApperanceType.ALT));
+                    .setApperance(KeyApperanceType.EXIT));
                 keyboardRow.AddChild(new KeyDefinition("1"));
                 keyboardRow.AddChild(new KeyDefinition("2"));
                 keyboardRow.AddChild(new KeyDefinition("3"));
@@ -489,8 +489,10 @@ namespace GTFO_VR.Core.UI.Canvas
                 {
                     LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperLeft, shortRowParams);
 
-                    keyboardRow.AddChild(new KeyDefinition(KeyType.CAPS_LOCK, "", 1.85f)
+                    keyboardRow.AddChild(new KeyDefinition(KeyType.CAPS_LOCK, "", 1.5f)
                         .setApperance(KeyApperanceType.ALT));
+                    keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", 0.35f)
+                    .setApperance(KeyApperanceType.GONE));
                     keyboardRow.AddChild(new KeyDefinition("a"));
                     keyboardRow.AddChild(new KeyDefinition("s"));
                     keyboardRow.AddChild(new KeyDefinition("d"));
@@ -547,8 +549,8 @@ namespace GTFO_VR.Core.UI.Canvas
                     .setApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.RIGHT, ">")
                     .setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", new LayoutParameters(LayoutParameters.FILL_PARENT))
-                    .setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition(KeyType.ESC, "x", new LayoutParameters(LayoutParameters.FILL_PARENT))
+                    .setApperance(KeyApperanceType.EXIT));
 
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
