@@ -25,7 +25,7 @@ namespace GTFO_VR.Core.VR_Input
 
         public static bool KeyboardClosedThisFrame;
 
-        private GameObject m_KeyboardRoot;
+        private TerminalKeyboardInterface m_KeyboardRoot;
 
         private void Awake()
         {
@@ -34,6 +34,9 @@ namespace GTFO_VR.Core.VR_Input
             SteamVR_Events.System(EVREventType.VREvent_KeyboardClosed).Listen(OnKeyboardDone);
 
             FocusStateEvents.OnFocusStateChange += FocusStateChanged;
+
+            m_KeyboardRoot = TerminalKeyboardInterface.create();
+            DontDestroyOnLoad(m_KeyboardRoot);
         }
 
         private void FocusStateChanged(eFocusState state)
@@ -46,7 +49,7 @@ namespace GTFO_VR.Core.VR_Input
                     LevelGeneration.LG_ComputerTerminal terminal = VRPlayer.getInteractingTerminal();
                     if (terminal != null)
                     {
-                        m_KeyboardRoot = TerminalKeyboardInterface.create(terminal);
+                        m_KeyboardRoot.attachToTerminal(terminal);
                         Controllers.ToggleTerminalCanvasPointer(true);
                         VRPlayer.hideWielded(true);
                         terminalKeyboardDisplayed = true;
@@ -81,10 +84,9 @@ namespace GTFO_VR.Core.VR_Input
 
                 if (m_KeyboardRoot)
                 {
+                    m_KeyboardRoot.deatchFromTerminal();
                     Controllers.ToggleTerminalCanvasPointer(false);
                     VRPlayer.hideWielded(false);
-                    GameObject.Destroy(m_KeyboardRoot);
-                    m_KeyboardRoot = null;
                 }
             }
         }

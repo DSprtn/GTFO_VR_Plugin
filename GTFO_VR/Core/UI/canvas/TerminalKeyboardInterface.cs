@@ -15,8 +15,15 @@ namespace GTFO_VR.Core.UI.Canvas
     public class TerminalKeyboardInterface : MonoBehaviour
     {
         private LevelGeneration.LG_ComputerTerminal m_terminal;
-        private GameObject m_terminalCanvas;
         private KeyboardStyle m_keyboardStyle = new KeyboardStyle();
+
+        private GameObject m_leftKeyboard;
+        private GameObject m_rightKeyboard;
+        private GameObject m_bottomKeyboard;
+
+        private KeyDefinition m_ZoneButton;
+
+        private TerminalReader m_Reader;
 
         public static readonly int LAYER = 2;   // ignore raycast, by defaul at least.
         public static readonly int LAYER_MASK = 1 << LAYER;
@@ -26,15 +33,22 @@ namespace GTFO_VR.Core.UI.Canvas
 
         bool m_dataDirty = false;
 
-        public static GameObject create(LevelGeneration.LG_ComputerTerminal terminal)
+        public static TerminalKeyboardInterface create()
         {
             GameObject go = new GameObject();
             go.name = "keyboardRoot";
             go.layer = LAYER;
             TerminalKeyboardInterface inf = go.AddComponent<TerminalKeyboardInterface>();
-            inf.m_terminalCanvas = terminal.m_text.gameObject;
-            inf.m_terminal = terminal;
-            return go;
+            go.SetActive(false); // let Awake() run then deactivate until needed.
+            return inf;
+        }
+
+        private void Awake()
+        {
+            generateKeyboads();
+
+            m_Reader = TerminalReader.Create(this);
+            m_Reader.transform.SetParent(this.transform);
         }
 
         [HideFromIl2Cpp]
@@ -43,70 +57,46 @@ namespace GTFO_VR.Core.UI.Canvas
             return m_keyboardStyle;
         }
 
-        private void LateUpdate()
+
+        [HideFromIl2Cpp]
+        public void attachToTerminal(LevelGeneration.LG_ComputerTerminal terminal )
         {
-           m_dataDirty = true;
+            m_terminal = terminal;
+
+            GameObject terminalCanvas = m_terminal.m_text.gameObject;
+            RectTransform terminalRect = terminalCanvas.GetComponent<RectTransform>();
+
+            this.transform.SetPositionAndRotation(terminalCanvas.transform.position, terminalCanvas.transform.rotation); 
+
+            positionKeyboard(m_leftKeyboard, terminalRect, CanvasPosition.left);
+            positionKeyboard(m_rightKeyboard, terminalRect, CanvasPosition.right);
+            positionKeyboard(m_bottomKeyboard, terminalRect, CanvasPosition.bottom);
+
+            if (m_ZoneButton != null)
+            {
+                String zone = getZone();
+                m_ZoneButton.updateContent(zone + " ", zone);
+            }
+
+            m_Reader.attachToTerminal(terminalCanvas);
+
+            this.gameObject.SetActive(true);
         }
 
-        public static string getKeyboardInput()
+        public void deatchFromTerminal()
         {
-            return currentFrameInput;
-        }
-
-        private void Start()
-        {
-            this.transform.position = m_terminalCanvas.transform.position;
-            this.transform.rotation = m_terminalCanvas.transform.rotation;
-
-            RectTransform terminalCanvasRect = m_terminalCanvas.GetComponent<RectTransform>();
-
-            /////////////////////////
-            // terminal text canvas
-            /////////////////////////
-
-            GameObject terminalReaderRoot = TerminalReader.Create(m_terminalCanvas, this);
-            terminalReaderRoot.transform.SetParent(this.transform);
-
-            ///////////////////////
-            // Actual keyboard surfaces
-            ///////////////////////
-
+            if (m_terminal != null)
             {
-                GameObject bottomKeyboard = new GameObject();
-                bottomKeyboard.name = "bottomKeyboard";
-
-                bottomKeyboard.transform.SetParent(this.gameObject.transform);
-
-                float bottomKeyboardHeight = 14;
-                float bottomKeyboardWidth = 16;
-
-                generateCanvas(bottomKeyboard, terminalCanvasRect, bottomKeyboardHeight, bottomKeyboardWidth, TextAnchor.UpperCenter, getBottomKeyboardLayout(), m_keyboardStyle, CanvasPosition.bottom);
+                m_terminal = null;
             }
 
+            if (m_Reader != null)
             {
-                GameObject leftKeyboard = new GameObject();
-                leftKeyboard.name = "leftKeyboard";
+                m_Reader.deatchFromTerminal();
 
-                leftKeyboard.transform.SetParent(this.gameObject.transform);
-
-                float bottomKeyboardHeight = terminalCanvasRect.sizeDelta.y;
-                float bottomKeyboardWidth = 16;
-
-                generateCanvas(leftKeyboard, terminalCanvasRect, bottomKeyboardHeight, bottomKeyboardWidth, TextAnchor.LowerRight, getLeftKeyboardLayout(), m_keyboardStyle, CanvasPosition.left);
             }
 
-            {
-                GameObject rightKeyboard = new GameObject();
-                rightKeyboard.name = "rightKeyboard";
-
-                rightKeyboard.transform.SetParent(this.gameObject.transform);
-
-                float bottomKeyboardHeight = terminalCanvasRect.sizeDelta.y;
-                float bottomKeyboardWidth = 16;
-
-                generateCanvas(rightKeyboard, terminalCanvasRect, bottomKeyboardHeight, bottomKeyboardWidth, TextAnchor.LowerLeft, getRightKeyboard(getZone()), m_keyboardStyle, CanvasPosition.right);
-            }
-
+            this.gameObject.SetActive(false);
         }
 
         private string getZone()
@@ -120,20 +110,47 @@ namespace GTFO_VR.Core.UI.Canvas
             {
                 return "ZONE_0";
             }
+        }
 
-           
+        private void generateKeyboads()
+        {
+            m_bottomKeyboard = new GameObject();
+            m_bottomKeyboard.name = "bottomKeyboard";
+            m_bottomKeyboard.transform.SetParent(this.gameObject.transform);
+            generateKeyboard(m_bottomKeyboard, 14, 16, TextAnchor.UpperCenter, getBottomKeyboardLayout(), m_keyboardStyle);
+
+            m_leftKeyboard = new GameObject();
+            m_leftKeyboard.name = "leftKeyboard";
+            m_leftKeyboard.transform.SetParent(this.gameObject.transform);
+            generateKeyboard(m_leftKeyboard, 14, 16, TextAnchor.LowerRight, getLeftKeyboardLayout(), m_keyboardStyle);
+
+            m_rightKeyboard = new GameObject();
+            m_rightKeyboard.name = "rightKeyboard";
+            m_rightKeyboard.transform.SetParent(this.gameObject.transform);
+            generateKeyboard(m_rightKeyboard, 14, 16, TextAnchor.LowerLeft, getRightKeyboard(out m_ZoneButton), m_keyboardStyle);
+            
         }
 
         [HideFromIl2Cpp]
-        private void generateCanvas(  GameObject go, RectTransform terminalCanvasRect, float rawHeight, float rawWidth, TextAnchor gravity, KeyboardLayout layout, KeyboardStyle style, CanvasPosition position)
+        private void generateKeyboard(GameObject go, float rawHeight, float rawWidth, TextAnchor gravity, KeyboardLayout layout, KeyboardStyle style)
         {
             TerminalKeyboardCanvas newKeyboardCanvas = TerminalKeyboardCanvas.attach(go, rawWidth, rawHeight, gravity);
+            newKeyboardCanvas.inflateLayout(this, layout, style);
+        }
 
+        [HideFromIl2Cpp]
+        private void positionKeyboard( GameObject go, RectTransform terminalCanvasRect, CanvasPosition position)
+        {
             float terminalHeight = terminalCanvasRect.rect.height * CANVAS_SCALE;
             float terminalWidth = terminalCanvasRect.rect.width * CANVAS_SCALE;
 
-            float keyboardCanvasHeight = rawHeight * CANVAS_SCALE;
-            float keyboardCanvasWidth = rawWidth * CANVAS_SCALE;
+            RectTransform keyboardCanvasRect = go.GetComponent<RectTransform>();
+
+            float keyboardCanvasHeight = keyboardCanvasRect.sizeDelta.y * CANVAS_SCALE;
+            float keyboardCanvasWidth = keyboardCanvasRect.sizeDelta.x * CANVAS_SCALE;
+
+            // Reset rotation
+            go.transform.localRotation = new Quaternion();
 
             //////////////////////////////////////////
             // Align with edge of terminal canvas
@@ -142,26 +159,28 @@ namespace GTFO_VR.Core.UI.Canvas
             switch (position)
             {
                 case CanvasPosition.left:
-                    float leftKeyboardOffset = terminalWidth / 2; // distance to edge of monitor
-                    leftKeyboardOffset += keyboardCanvasWidth / 2;                // half of keyboard height so top aligns with bottom edge
-                    go.transform.localPosition = new Vector3(-leftKeyboardOffset, 0 , 0); ;
+                    float leftKeyboardOffset = terminalWidth / 2;                                       // distance to edge of monitor
+                    leftKeyboardOffset += keyboardCanvasWidth / 2;                                      // half of keyboard width so side aligns with side
+                    float leftKeyboardHeightOffset = (keyboardCanvasHeight - terminalHeight) * 0.5f;    // Half of height difference to line up bottom edge
+                    go.transform.localPosition = new Vector3(-leftKeyboardOffset, leftKeyboardHeightOffset, 0); ;
                     break;
 
                 case CanvasPosition.right:
-                    float RightKeyboardOffset = terminalWidth / 2; // distance to edge of monitor
-                    RightKeyboardOffset += keyboardCanvasWidth / 2;                // half of keyboard height so top aligns with bottom edge
-                    go.transform.localPosition = new Vector3(RightKeyboardOffset, 0, 0); ;
+                    float rightKeyboardOffset = terminalWidth / 2;                                      // distance to edge of monitor
+                    rightKeyboardOffset += keyboardCanvasWidth / 2;                                     // half of keyboard width so side aligns with side
+                    float rightKeyboardHeightOffset = (keyboardCanvasHeight - terminalHeight) * 0.5f;   // Half of height difference to line up bottom edge
+                    go.transform.localPosition = new Vector3(rightKeyboardOffset, rightKeyboardHeightOffset, 0); ;
                     break;
 
                 case CanvasPosition.bottom:
-                    float bottomKeyboardOffset = terminalHeight / 2; // distance to edge of monitor
-                    bottomKeyboardOffset += keyboardCanvasHeight / 2;                // half of keyboard height so top aligns with bottom edge
+                    float bottomKeyboardOffset = terminalHeight / 2;                // distance to edge of monitor
+                    bottomKeyboardOffset += keyboardCanvasHeight / 2;               // half of keyboard height so top aligns with bottom edge
                     go.transform.localPosition = new Vector3(0, -bottomKeyboardOffset, 0); ;
                     break;
             }
 
 
-
+            
             ////////////////////////////////
             // Add a bit of extra spacing
             ////////////////////////////////
@@ -183,9 +202,6 @@ namespace GTFO_VR.Core.UI.Canvas
                     go.transform.localPosition += new Vector3(0, -verticalSpacing, 0);
                     break;
             }
-
-
-
 
             /////////////////////
             // Rotate upwards
@@ -210,11 +226,10 @@ namespace GTFO_VR.Core.UI.Canvas
             }
 
 
-            
             ////////////////////
             // Project forward
             ////////////////////
-            
+
             switch (position)
             {
                 case CanvasPosition.left:
@@ -226,9 +241,8 @@ namespace GTFO_VR.Core.UI.Canvas
                 case CanvasPosition.bottom:
                     go.transform.localPosition += (-go.transform.forward) * 0.05f;
                     break;
-            } 
-
-            newKeyboardCanvas.inflateLayout(this, layout, style);
+            }
+            
         }
 
         [HideFromIl2Cpp]
@@ -283,6 +297,16 @@ namespace GTFO_VR.Core.UI.Canvas
             }
         }
 
+        private void LateUpdate()
+        {
+            m_dataDirty = true;
+        }
+
+        public static string getKeyboardInput()
+        {
+            return currentFrameInput;
+        }
+
         [HideFromIl2Cpp]
         public void HandleInput(string str)
         {
@@ -307,7 +331,7 @@ namespace GTFO_VR.Core.UI.Canvas
         }
 
         [HideFromIl2Cpp]
-        private static KeyboardLayout getRightKeyboard(string zoneName)
+        private static KeyboardLayout getRightKeyboard( out KeyDefinition zoneButton )
         {
             LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.LowerLeft, LayoutParameters.WrapContent());
             bottomKeyboardLayout.m_showBackground = true;
@@ -356,7 +380,11 @@ namespace GTFO_VR.Core.UI.Canvas
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-                keyboardRow.AddChild(new KeyDefinition( zoneName + " ", zoneName, 4).setApperance(KeyApperanceType.ALT));
+
+                // This will be updated when assigned to a terminal
+                zoneButton = new KeyDefinition("ZONE_-1 ", "ZONE_-1", 4).setApperance(KeyApperanceType.ALT);
+
+                keyboardRow.AddChild(zoneButton);
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 

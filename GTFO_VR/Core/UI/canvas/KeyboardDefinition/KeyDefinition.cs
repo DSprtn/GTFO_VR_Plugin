@@ -49,6 +49,9 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
         public bool RepeatKey = false;
         public KeyApperanceType apperance = KeyApperanceType.NORMAL;
 
+        private PhysicalButton m_button;
+        private TextMeshProUGUI m_text;
+
         public KeyDefinition(string input) : this(input, input) { }
 
         public KeyDefinition(string input, string label) : this(input, label, new LayoutParameters() ){ }
@@ -118,6 +121,13 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             }
         }
 
+        public void updateContent( string input, string label )
+        {
+            this.Input = input;
+            this.Label = label;
+            m_text.text = this.Label;
+        }
+
         public GameObject GenerateLayout(TerminalKeyboardInterface keyboardRoot, KeyboardStyle style)
         {
             
@@ -128,7 +138,7 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             buttonRoot.layer = TerminalKeyboardInterface.LAYER;
             buttonRoot.name = GetName();
 
-            PhysicalButton button = buttonRoot.AddComponent<PhysicalButton>();
+            m_button = buttonRoot.AddComponent<PhysicalButton>();
 
             LayoutElement element = buttonRoot.AddComponent<LayoutElement>();
             this.layoutParameters.populateLayoutElement(element, style);
@@ -137,24 +147,24 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             // Button itself
             /////////////////////
 
-            button.m_background.setMaterial(style.getKeyMaterial());
-            button.m_background.radius = style.keyBackgroundStyle.radius;
-            button.m_background.cornerVertices = style.keyBackgroundStyle.cornerVertices;
-            button.m_background.padding = style.keyBackgroundStyle.padding;
+            m_button.m_background.setMaterial(style.getKeyMaterial());
+            m_button.m_background.radius = style.keyBackgroundStyle.radius;
+            m_button.m_background.cornerVertices = style.keyBackgroundStyle.cornerVertices;
+            m_button.m_background.padding = style.keyBackgroundStyle.padding;
 
             switch (apperance)
             {
                 case KeyApperanceType.NORMAL:
-                    button.setColorStates(style.getNormalKeyStates());
+                    m_button.setColorStates(style.getNormalKeyStates());
                     break;
                 case KeyApperanceType.ALT:
-                    button.setColorStates(style.getAltKeyStates());
+                    m_button.setColorStates(style.getAltKeyStates());
                     break;
                 case KeyApperanceType.EXIT:
-                    button.setColorStates(style.getExitKeyStates());
+                    m_button.setColorStates(style.getExitKeyStates());
                     break;
                 case KeyApperanceType.GONE:
-                    button.setBackgroundEnabled(false);
+                    m_button.setBackgroundEnabled(false);
                     break;
             }
 
@@ -166,13 +176,13 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             textObject.transform.SetParent(buttonRoot.transform);
             RectTransform textMeshRect = textObject.AddComponent<RectTransform>();
 
-            TextMeshProUGUI textMesh = textObject.AddComponent<TextMeshProUGUI>();
-            textMesh.text = Label;
+            m_text = textObject.AddComponent<TextMeshProUGUI>();
+            m_text.text = Label;
             // Center all the things
-            textMesh.fontSize = style.FontSize;
-            textMesh.alignment = TextAlignmentOptions.Center;
-            textMesh.fontSharedMaterial = style.getFontMaterial( textMesh.fontMaterial ); ;
-            textMesh.color = style.getTextColor();
+            m_text.fontSize = style.FontSize;
+            m_text.alignment = TextAlignmentOptions.Center;
+            m_text.fontSharedMaterial = style.getFontMaterial(m_text.fontMaterial ); ;
+            m_text.color = style.getTextColor();
 
             // Some of these buttons have their sizes resolved at runtime, so text object much grow to fit their content
             ContentSizeFitter sizeFitter = textObject.AddComponent<ContentSizeFitter>();
@@ -183,9 +193,9 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
             // Click listener
             /////////////////////
 
-            button.onClick.AddListener( (UnityAction) (() => handleClick(keyboardRoot)) );
+            m_button.onClick.AddListener( (UnityAction) (() => handleClick(keyboardRoot)) );
             if (RepeatKey)
-                button.m_repeatKey = true;
+                m_button.m_repeatKey = true;
 
             return buttonRoot;
         }

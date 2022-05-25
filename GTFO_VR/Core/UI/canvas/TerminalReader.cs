@@ -14,8 +14,6 @@ namespace GTFO_VR.Core.UI.Canvas
         private static readonly float READER_SIZE_PADDING = 1;
         private static readonly float READER_POINTER_SIZE = 0.005f;
 
-        private GameObject m_textCanvas;
-
         private TerminalKeyboardInterface m_keyboardRoot;
 
         public TextMeshPro m_textMesh;
@@ -34,29 +32,25 @@ namespace GTFO_VR.Core.UI.Canvas
 
         private PointerHistory m_pointerHistory = new PointerHistory();
 
-        public static GameObject Create( GameObject textCanvas, TerminalKeyboardInterface keyboardRoot )
+        public static TerminalReader Create( TerminalKeyboardInterface keyboardRoot )
         {
             GameObject terminalReaderRoot = new GameObject();
             terminalReaderRoot.layer = TerminalKeyboardInterface.LAYER;
             terminalReaderRoot.name = "terminalReader";
 
             TerminalReader reader = terminalReaderRoot.AddComponent<TerminalReader>();
-            reader.m_textCanvas = textCanvas;
-            reader.m_collider = terminalReaderRoot.AddComponent<BoxCollider>();
             reader.m_keyboardRoot = keyboardRoot;
 
-            return terminalReaderRoot;
+            return reader;
         }
 
-        private void Start()
-        {
-            this.transform.SetPositionAndRotation(m_textCanvas.transform.position, m_textCanvas.transform.rotation);
-            this.transform.localScale = new Vector3(TerminalKeyboardInterface.CANVAS_SCALE, TerminalKeyboardInterface.CANVAS_SCALE, TerminalKeyboardInterface.CANVAS_SCALE);
+        private void Awake()
+        {   
+            ///////////////
+            // Collider
+            ///////////////
 
-            this.m_textMesh = m_textCanvas.GetComponent<TMPro.TextMeshPro>(); ;
-
-            RectTransform terminalCanvasRect = m_textCanvas.GetComponent<RectTransform>();
-            m_collider.size = new Vector3(terminalCanvasRect.sizeDelta.x + READER_SIZE_PADDING, terminalCanvasRect.sizeDelta.y + READER_SIZE_PADDING, 0.1f);
+            m_collider = this.gameObject.AddComponent<BoxCollider>();
 
             ////////////////
             // Underline
@@ -66,11 +60,30 @@ namespace GTFO_VR.Core.UI.Canvas
             m_highlight = GameObject.CreatePrimitive(PrimitiveType.Quad);
             GameObject.Destroy(m_highlight.GetComponent<MeshCollider>());
 
-            m_highlight.GetComponent<MeshRenderer>().sharedMaterial = getUnderlineMaterial();
-
             m_highlight.transform.SetParent(this.gameObject.transform);
             m_highlight.transform.localRotation = new Quaternion();
             m_highlight.transform.localScale = new Vector3(0, 0, 0);
+        }
+
+        private void Start()
+        {
+            m_highlight.GetComponent<MeshRenderer>().sharedMaterial = getUnderlineMaterial();
+        }
+
+        public void attachToTerminal(GameObject textCanvas)
+        {
+            this.transform.SetPositionAndRotation(textCanvas.transform.position, textCanvas.transform.rotation);
+            this.transform.localScale = new Vector3(TerminalKeyboardInterface.CANVAS_SCALE, TerminalKeyboardInterface.CANVAS_SCALE, TerminalKeyboardInterface.CANVAS_SCALE);
+
+            this.m_textMesh = textCanvas.GetComponent<TMPro.TextMeshPro>(); ;
+
+            RectTransform terminalCanvasRect = textCanvas.GetComponent<RectTransform>();
+            m_collider.size = new Vector3(terminalCanvasRect.sizeDelta.x + READER_SIZE_PADDING, terminalCanvasRect.sizeDelta.y + READER_SIZE_PADDING, 0.1f);
+        }
+
+        public void deatchFromTerminal()
+        {
+            m_textMesh = null;
         }
 
         private Material getUnderlineMaterial()
