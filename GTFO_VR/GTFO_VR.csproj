@@ -41,7 +41,6 @@
     <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsIntegration.cs" />
     <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsUtils.cs" />
     <Compile Include="Core\PlayerBehaviours\MovementVignette.cs" />
-    <Compile Include="Core\UI\canvas\KeyboardDefinition\RectColliderSizer.cs" />
     <Compile Include="Core\UI\canvas\Pointer\CanvasPointer.cs" />
     <Compile Include="Core\UI\canvas\Pointer\MonoPointerEvent.cs" />
     <Compile Include="Core\UI\canvas\Pointer\PhysicalButton.cs" />
