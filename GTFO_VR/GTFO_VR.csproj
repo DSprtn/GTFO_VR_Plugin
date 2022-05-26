@@ -65,7 +65,7 @@
     <Compile Include="Core\PlayerBehaviours\ColisionFade.cs" />
     <Compile Include="Core\PlayerBehaviours\Haptics.cs" />
     <Compile Include="Core\PlayerBehaviours\VRRendering.cs" />
-    <Compile Include="Core\VR_Input\DummyAction.cs" />
+    <Compile Include="Core\VR_Input\Dummy_InputHandler.cs" />
     <Compile Include="Detours\BioscannerDetours.cs" />
     <Compile Include="Detours\HammerAttackCheckDetour.cs" />
     <Compile Include="Detours\TerminalInputDetours.cs" />

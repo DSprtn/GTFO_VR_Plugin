@@ -260,37 +260,37 @@ namespace GTFO_VR.Core.UI.Canvas
                 {
                     case KeyType.BACKPSPACE:
                     {
-                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalDel);
+                        Dummy_InputHandler.triggerDummyAction(InputAction.TerminalDel);
                         break;
                     }
 
                     case KeyType.ESC:
                     {
-                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalExit);
+                        Dummy_InputHandler.triggerDummyAction(InputAction.TerminalExit);
                         break;
                     }
 
                     case KeyType.LEFT:
                     {
-                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalLeft);
+                        Dummy_InputHandler.triggerDummyAction(InputAction.TerminalLeft);
                         break;
                     }
 
                     case KeyType.UP:
                     {
-                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalUp);
+                        Dummy_InputHandler.triggerDummyAction(InputAction.TerminalUp);
                         break;
                     }
 
                     case KeyType.RIGHT:
                     {
-                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalRight);
+                        Dummy_InputHandler.triggerDummyAction(InputAction.TerminalRight);
                         break;
                     }
 
                     case KeyType.DOWN:
                     {
-                        SteamVR_InputHandler.triggerDummyAction(InputAction.TerminalDown);
+                        Dummy_InputHandler.triggerDummyAction(InputAction.TerminalDown);
                         break;
                     }
                 }
