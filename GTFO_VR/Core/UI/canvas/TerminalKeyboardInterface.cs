@@ -345,7 +345,7 @@ namespace GTFO_VR.Core.UI.Canvas
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
                 keyboardRow.AddChild(new KeyDefinition("FOG ", "FOG", 2).setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("HSU ", "HSU", 2).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("GENERATOR ", "GEN", 2).setApperance(KeyApperanceType.ALT));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
@@ -397,34 +397,34 @@ namespace GTFO_VR.Core.UI.Canvas
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("ZONE_", "ZONE_", 3).setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("-T ", "-T", 1).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("ZONE_", "ZONE_", 3.5f).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("-T ", "-T", 1.5f).setApperance(KeyApperanceType.ALT));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("LOGS\r", "LOGS", 2).setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("READ ", "READ", 2).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("LOGS\r", "LOGS", 2.5f).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("LIST ", "LIST", 2.5f).setApperance(KeyApperanceType.ALT));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("INFO\r", "INFO", 2).setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("LIST ", "LIST", 2).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("READ ", "READ", 2.5f).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("PING ", "PING", 2.5f).setApperance(KeyApperanceType.ALT));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("QUERY ", "QUERY", 2).setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("PING ", "PING", 2).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("INFO\r", "INFO", 2.5f).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("QUERY ", "QUERY", 2.5f).setApperance(KeyApperanceType.ALT));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
-                bottomKeyboardLayout.AddChild(new KeyDefinition("COMMANDS\r", "COMMANDS", 4).setApperance(KeyApperanceType.ALT));
+                bottomKeyboardLayout.AddChild(new KeyDefinition("COMMANDS\r", "COMMANDS", 5f).setApperance(KeyApperanceType.ALT));
             }
 
             return bottomKeyboardLayout;

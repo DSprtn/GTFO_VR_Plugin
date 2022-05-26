@@ -56,7 +56,7 @@ namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
 
         public KeyDefinition(string input, string label) : this(input, label, new LayoutParameters() ){ }
 
-        public KeyDefinition(string input, string label, int width) : this(input, label, new LayoutParameters(width)) { }
+        public KeyDefinition(string input, string label, float width) : this(input, label, new LayoutParameters(width)) { }
 
         public KeyDefinition(string input, string label, LayoutParameters layoutParameters)
         {
