@@ -338,30 +338,13 @@ namespace GTFO_VR.Core.UI.Canvas
 
             LayoutParameters rowParams = new LayoutParameters( LayoutParameters.WRAP_CONTENT, 1);
 
-            bottomKeyboardLayout.AddChild(new KeyDefinition("TERMINAL ", "TERMINAL", 4).setApperance(KeyApperanceType.ALT));
+            bottomKeyboardLayout.AddChild(new KeyDefinition("TERMINAL_ ", "TERMINAL", 4).setApperance(KeyApperanceType.ALT));
             
             bottomKeyboardLayout.AddChild(new KeyDefinition("BULKHEAD ", "BULKHEAD", 4).setApperance(KeyApperanceType.ALT));
 
-            {
-                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("FOG ", "FOG", 2).setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("GENERATOR ", "GEN", 2).setApperance(KeyApperanceType.ALT));
-                bottomKeyboardLayout.AddChild(keyboardRow);
-            }
+            bottomKeyboardLayout.AddChild(new KeyDefinition("SECURITY ", "SECURITY", 4).setApperance(KeyApperanceType.ALT));
 
-            {
-                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("CELL ", "CELL", 2).setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("KEY ", "KEY", 2).setApperance(KeyApperanceType.ALT));
-                bottomKeyboardLayout.AddChild(keyboardRow);
-            }
-
-            {
-                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("DISINFECT ", "DISIN", 2).setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("MEDI ", "MEDI", 2).setApperance(KeyApperanceType.ALT));
-                bottomKeyboardLayout.AddChild(keyboardRow);
-            }
+            bottomKeyboardLayout.AddChild(new KeyDefinition("UNKNOWN ", "UNKNOWN", 4).setApperance(KeyApperanceType.ALT));
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
@@ -371,12 +354,19 @@ namespace GTFO_VR.Core.UI.Canvas
             }
 
             {
+                LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
+                keyboardRow.AddChild(new KeyDefinition("MEDI ", "MEDI", 2).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("DISINFECT ", "DISIN", 2).setApperance(KeyApperanceType.ALT));
+                bottomKeyboardLayout.AddChild(keyboardRow);
+            }
+
+            bottomKeyboardLayout.AddChild(new KeyDefinition("RESOURCES ", "RESOURCES", 4).setApperance(KeyApperanceType.ALT));
+
+            {
                 // This will be updated when assigned to a terminal
                 zoneButton = new KeyDefinition("ZONE_-1 ", "ZONE_-1", 4).setApperance(KeyApperanceType.ALT);
                 bottomKeyboardLayout.AddChild(zoneButton);
             }
-
-            bottomKeyboardLayout.AddChild(new KeyDefinition("RESOURCES ", "RESOURCES", 4).setApperance(KeyApperanceType.ALT));
 
             return bottomKeyboardLayout;
         }
