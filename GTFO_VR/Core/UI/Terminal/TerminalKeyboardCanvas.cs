@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.Core.UI.Terminal.KeyboardDefinition;
+using System;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,8 @@ namespace GTFO_VR.Core.UI.Terminal
     {
         public UnityEngine.Canvas m_canvas;
         public TerminalKeyboardInterface m_keyboardRoot;
+
+        public TerminalKeyboardCanvas(IntPtr value) : base(value) { }
 
         public static TerminalKeyboardCanvas attach(GameObject go, float width, float height, TextAnchor gravity)
         {

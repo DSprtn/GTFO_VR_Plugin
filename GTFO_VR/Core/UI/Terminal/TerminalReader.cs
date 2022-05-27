@@ -11,6 +11,8 @@ namespace GTFO_VR.Core.UI.Terminal
 {
     public class TerminalReader : MonoPointerEvent
     {
+        public TerminalReader(IntPtr value) : base(value) { }
+
         private static readonly float READER_SIZE_PADDING = 1;
         private static readonly float READER_POINTER_SIZE = 0.005f;
 

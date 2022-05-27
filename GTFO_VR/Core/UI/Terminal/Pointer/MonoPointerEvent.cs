@@ -1,4 +1,5 @@
-﻿using UnhollowerBaseLib.Attributes;
+﻿using System;
+using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
 namespace GTFO_VR.Core.UI.Terminal.Pointer
@@ -6,6 +7,8 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
     // Poor man's interface
     public class MonoPointerEvent : MonoBehaviour
     {
+
+        public MonoPointerEvent(IntPtr value) : base(value) { }
 
         [HideFromIl2Cpp]
         public virtual void OnPointerEnter(PointerEvent ev)

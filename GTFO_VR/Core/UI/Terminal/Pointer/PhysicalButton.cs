@@ -1,4 +1,5 @@
-﻿using UnhollowerBaseLib.Attributes;
+﻿using System;
+using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 using static UnityEngine.UI.Button;
 
@@ -54,6 +55,8 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
 
     class PhysicalButton : MonoPointerEvent
     {
+        public PhysicalButton(IntPtr value) : base(value) { }
+
         public BoxCollider m_collider;
         public RectTransform m_rectTrans;
         public RoundedCubeBackground m_background;

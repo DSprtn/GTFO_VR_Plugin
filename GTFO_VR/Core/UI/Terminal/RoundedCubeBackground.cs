@@ -7,6 +7,8 @@ namespace GTFO_VR.Core.UI.Terminal
 {
     class RoundedCubeBackground : MonoBehaviour
     {
+        public RoundedCubeBackground(IntPtr value) : base(value) { }
+
         private static readonly float DEGREES_90_IN_RADS = 90f * 0.0174532924F;
         
         public float width = 10;

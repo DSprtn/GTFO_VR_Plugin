@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.Core.UI.Terminal.KeyboardDefinition;
+using System;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -8,6 +9,8 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
 {
     class TerminalPointer : MonoBehaviour
     {
+        public TerminalPointer(IntPtr value) : base(value) { }
+
         //private SteamVR_Action_Boolean m_click = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/GrabPinch");
         private SteamVR_Action_Boolean m_click = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/Shoot");
 

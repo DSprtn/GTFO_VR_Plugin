@@ -13,6 +13,8 @@ namespace GTFO_VR.Core.UI.Terminal
     }
     public class TerminalKeyboardInterface : MonoBehaviour
     {
+        public TerminalKeyboardInterface(IntPtr value) : base(value) { }
+
         private LevelGeneration.LG_ComputerTerminal m_terminal;
         private KeyboardStyle m_keyboardStyle = new KeyboardStyle();
 
