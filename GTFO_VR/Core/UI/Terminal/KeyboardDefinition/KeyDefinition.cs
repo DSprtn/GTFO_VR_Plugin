@@ -121,11 +121,11 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             m_text.text = this.Label;
         }
 
-        public GameObject GenerateLayout(TerminalKeyboardInterface keyboardRoot, KeyboardStyle style)
+        public GameObject GenerateLayout(TerminalKeyboardInterface keyboardRoot, KeyboardStyle inheritedStyle)
         {
             
             if (this.style != null)
-                style = this.style;
+                inheritedStyle = this.style;
 
             GameObject buttonRoot = new GameObject();
             buttonRoot.layer = TerminalKeyboardInterface.LAYER;
@@ -134,27 +134,27 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             m_button = buttonRoot.AddComponent<PhysicalButton>();
 
             LayoutElement element = buttonRoot.AddComponent<LayoutElement>();
-            this.layoutParameters.populateLayoutElement(element, style);
+            this.layoutParameters.populateLayoutElement(element, inheritedStyle);
 
             /////////////////////
             // Button itself
             /////////////////////
 
-            m_button.m_background.setMaterial(style.getKeyMaterial());
-            m_button.m_background.radius = style.keyBackgroundStyle.radius;
-            m_button.m_background.cornerVertices = style.keyBackgroundStyle.cornerVertices;
-            m_button.m_background.padding = style.keyBackgroundStyle.padding;
+            m_button.m_background.setMaterial(inheritedStyle.getKeyMaterial());
+            m_button.m_background.radius = inheritedStyle.keyBackgroundStyle.radius;
+            m_button.m_background.cornerVertices = inheritedStyle.keyBackgroundStyle.cornerVertices;
+            m_button.m_background.padding = inheritedStyle.keyBackgroundStyle.padding;
 
             switch (apperance)
             {
                 case KeyApperanceType.NORMAL:
-                    m_button.setColorStates(style.getNormalKeyStates());
+                    m_button.setColorStates(inheritedStyle.getNormalKeyStates());
                     break;
                 case KeyApperanceType.ALT:
-                    m_button.setColorStates(style.getAltKeyStates());
+                    m_button.setColorStates(inheritedStyle.getAltKeyStates());
                     break;
                 case KeyApperanceType.EXIT:
-                    m_button.setColorStates(style.getExitKeyStates());
+                    m_button.setColorStates(inheritedStyle.getExitKeyStates());
                     break;
                 case KeyApperanceType.GONE:
                     m_button.setBackgroundEnabled(false);
@@ -172,10 +172,10 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             m_text = textObject.AddComponent<TextMeshProUGUI>();
             m_text.text = Label;
             // Center all the things
-            m_text.fontSize = style.FontSize;
+            m_text.fontSize = inheritedStyle.FontSize;
             m_text.alignment = TextAlignmentOptions.Center;
-            m_text.fontSharedMaterial = style.getFontMaterial(m_text.fontMaterial ); ;
-            m_text.color = style.getTextColor();
+            m_text.fontSharedMaterial = inheritedStyle.getFontMaterial(m_text.fontMaterial ); ;
+            m_text.color = inheritedStyle.getTextColor();
 
             // Some of these buttons have their sizes resolved at runtime, so text object much grow to fit their content
             ContentSizeFitter sizeFitter = textObject.AddComponent<ContentSizeFitter>();
