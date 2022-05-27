@@ -1,13 +1,8 @@
-﻿using GTFO_VR.Core.UI.Canvas.Pointer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using GTFO_VR.Core.UI.Terminal.Pointer;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
+namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
 {
     public struct BackgroundStyle
     {

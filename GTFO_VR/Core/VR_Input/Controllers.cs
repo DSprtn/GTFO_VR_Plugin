@@ -1,4 +1,4 @@
-﻿using GTFO_VR.Core.UI.Canvas.Pointer;
+﻿using GTFO_VR.Core.UI.Terminal.Pointer;
 using GTFO_VR.Events;
 using System;
 using UnityEngine;
@@ -95,7 +95,7 @@ namespace GTFO_VR.Core.VR_Input
 
         private void setupTerminalCanvasPointer()
         {
-            TerminalCanvasPointer = CanvasPointer.create(SteamVR_Input_Sources.Any);
+            TerminalCanvasPointer = TerminalPointer.create(SteamVR_Input_Sources.Any);
             TerminalCanvasPointer.SetActive(false);
         }
 

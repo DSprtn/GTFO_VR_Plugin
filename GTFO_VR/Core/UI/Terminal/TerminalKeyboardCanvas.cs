@@ -1,13 +1,9 @@
-﻿using Assets.scripts.KeyboardDefinition;
-using GTFO_VR.Core.UI.Canvas.KeyboardDefinition;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using GTFO_VR.Core.UI.Terminal.KeyboardDefinition;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GTFO_VR.Core.UI.Canvas
+namespace GTFO_VR.Core.UI.Terminal
 {
     public class TerminalKeyboardCanvas : MonoBehaviour
     {

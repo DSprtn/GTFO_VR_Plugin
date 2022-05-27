@@ -1,13 +1,7 @@
-﻿using GTFO_VR.Core.UI.Canvas;
-using GTFO_VR.Core.UI.Canvas.KeyboardDefinition;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using UnityEngine;
 
-namespace Assets.scripts.KeyboardDefinition
+namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
 {
     public interface KeyboardLayout
     {

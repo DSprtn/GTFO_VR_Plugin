@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 
-namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
+namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
 {
 
     public class LayoutParameters

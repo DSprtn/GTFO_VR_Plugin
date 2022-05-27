@@ -1,18 +1,8 @@
-﻿using GTFO_VR.Core;
-using GTFO_VR.Core.UI.Canvas.Pointer;
-using GTFO_VR.Core.UI.Canvas;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnhollowerBaseLib.Attributes;
+﻿using UnhollowerBaseLib.Attributes;
 using UnityEngine;
-using UnityEngine.UI;
 using static UnityEngine.UI.Button;
-using GTFO_VR.Core.UI.canvas.Pointer;
 
-namespace GTFO_VR.Core.UI.Canvas.Pointer
+namespace GTFO_VR.Core.UI.Terminal.Pointer
 {
     public struct ColorTransitionState
     {

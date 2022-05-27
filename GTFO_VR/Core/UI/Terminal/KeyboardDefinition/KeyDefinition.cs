@@ -1,18 +1,11 @@
-﻿using Assets.scripts.KeyboardDefinition;
-using GTFO_VR.Core.UI.Canvas.Pointer;
+﻿using GTFO_VR.Core.UI.Terminal.Pointer;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
-using UnityEngine.Rendering;
 using UnityEngine.UI;
 
-namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
+namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
 {
     public enum KeyType
     {

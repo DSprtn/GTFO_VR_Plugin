@@ -1,15 +1,12 @@
-﻿using GTFO_VR.Core.UI.canvas.Pointer;
-using GTFO_VR.Core.UI.Canvas;
-using GTFO_VR.Core.UI.Canvas.KeyboardDefinition;
-using System;
+﻿using GTFO_VR.Core.UI.Terminal.KeyboardDefinition;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 using UnityEngine.Rendering;
 using Valve.VR;
 
-namespace GTFO_VR.Core.UI.Canvas.Pointer
+namespace GTFO_VR.Core.UI.Terminal.Pointer
 {
-    class CanvasPointer : MonoBehaviour
+    class TerminalPointer : MonoBehaviour
     {
         //private SteamVR_Action_Boolean m_click = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/GrabPinch");
         private SteamVR_Action_Boolean m_click = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/Shoot");
@@ -50,7 +47,7 @@ namespace GTFO_VR.Core.UI.Canvas.Pointer
         {
             GameObject pointerRoot = new GameObject();
             pointerRoot.name = "CanvasPointer";
-            CanvasPointer pointer = pointerRoot.AddComponent<CanvasPointer>();
+            TerminalPointer pointer = pointerRoot.AddComponent<TerminalPointer>();
 
             pointer.m_InputSource = inputSource;
 

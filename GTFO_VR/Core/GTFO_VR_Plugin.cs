@@ -2,10 +2,8 @@
 using BepInEx.IL2CPP;
 using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.UI;
-using GTFO_VR.Core.UI.canvas.Pointer;
-using GTFO_VR.Core.UI.Canvas;
-using GTFO_VR.Core.UI.Canvas.KeyboardDefinition;
-using GTFO_VR.Core.UI.Canvas.Pointer;
+using GTFO_VR.Core.UI.Terminal.Pointer;
+using GTFO_VR.Core.UI.Terminal;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Detours;
 using GTFO_VR.UI;
@@ -90,7 +88,7 @@ namespace GTFO_VR.Core
             ClassInjector.RegisterTypeInIl2Cpp<RoundedCubeBackground>();       
             ClassInjector.RegisterTypeInIl2Cpp<PhysicalButton>();              
             ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardCanvas>();      
-            ClassInjector.RegisterTypeInIl2Cpp<CanvasPointer>();
+            ClassInjector.RegisterTypeInIl2Cpp<TerminalPointer>();
             ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardInterface>();
             ClassInjector.RegisterTypeInIl2Cpp<TerminalReader>();
         }

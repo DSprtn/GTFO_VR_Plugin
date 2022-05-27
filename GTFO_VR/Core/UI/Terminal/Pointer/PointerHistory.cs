@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace GTFO_VR.Core.UI.Canvas.Pointer
+namespace GTFO_VR.Core.UI.Terminal.Pointer
 {
     public class PointerHistory
     {

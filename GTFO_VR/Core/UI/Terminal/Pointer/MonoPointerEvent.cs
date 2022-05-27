@@ -1,13 +1,7 @@
-﻿using GTFO_VR.Core.UI.Canvas.Pointer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnhollowerBaseLib.Attributes;
+﻿using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
-namespace GTFO_VR.Core.UI.canvas.Pointer
+namespace GTFO_VR.Core.UI.Terminal.Pointer
 {
     // Poor man's interface
     public class MonoPointerEvent : MonoBehaviour

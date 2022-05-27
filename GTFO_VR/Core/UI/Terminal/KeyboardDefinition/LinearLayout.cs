@@ -1,10 +1,9 @@
-﻿using Assets.scripts.KeyboardDefinition;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GTFO_VR.Core.UI.Canvas.KeyboardDefinition
+namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
 {
     public enum LinearOrientation { VERTICAL, HORIZONTAL };
 

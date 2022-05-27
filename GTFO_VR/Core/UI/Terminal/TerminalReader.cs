@@ -1,5 +1,4 @@
-﻿using GTFO_VR.Core.UI.canvas.Pointer;
-using GTFO_VR.Core.UI.Canvas.Pointer;
+﻿using GTFO_VR.Core.UI.Terminal.Pointer;
 using GTFO_VR.Util;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,8 @@ using TMPro;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
-namespace GTFO_VR.Core.UI.Canvas
+namespace GTFO_VR.Core.UI.Terminal
+
 {
     public class TerminalReader : MonoPointerEvent
     {

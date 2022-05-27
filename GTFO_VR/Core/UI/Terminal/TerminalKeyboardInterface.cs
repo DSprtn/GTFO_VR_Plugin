@@ -1,11 +1,10 @@
-﻿using Assets.scripts.KeyboardDefinition;
-using GTFO_VR.Core.UI.Canvas.KeyboardDefinition;
+﻿using GTFO_VR.Core.UI.Terminal.KeyboardDefinition;
 using GTFO_VR.Core.VR_Input;
 using System;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
-namespace GTFO_VR.Core.UI.Canvas
+namespace GTFO_VR.Core.UI.Terminal
 {
 
     enum CanvasPosition
