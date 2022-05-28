@@ -146,7 +146,7 @@ namespace GTFO_VR.Core.UI.Terminal
             m_highlight.transform.localScale = new Vector3(width, lineHeight, 0.03f);
         }
 
-        private static HashSet<Char> DELIMITERS = new HashSet<char>() { '\'','\"', '\\', ' ', '\r', '\n', '\t', '\f', '\v', '<', '>', ',' };
+        private static HashSet<Char> DELIMITERS = new HashSet<char>() { '\'','\"', '\\', ' ', '\r', '\n', '\t', '\f', '\v', '<', '>', ',', '[', ']' };
 
         public string GetSelection()
         {
