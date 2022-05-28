@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace GTFO_VR.Core.UI.Terminal.Pointer
 {
+
+    /// <summary>
+    /// Keeps track of a pointer position for a few frames in order to smoothen its position
+    /// </summary>
     public class PointerHistory
     {
         private static readonly int POINTER_SMOOTHING_COUNT = 5;

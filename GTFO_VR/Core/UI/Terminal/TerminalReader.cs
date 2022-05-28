@@ -9,6 +9,9 @@ using UnityEngine;
 namespace GTFO_VR.Core.UI.Terminal
 
 {
+    /// <summary>
+    /// Responsible for letting you hover and select text from the terminal
+    /// </summary>
     public class TerminalReader : MonoPointerEvent
     {
         public TerminalReader(IntPtr value) : base(value) { }
@@ -102,6 +105,7 @@ namespace GTFO_VR.Core.UI.Terminal
             if (m_textMesh == null)
                 return -1;
 
+            // Note that this has been reimplemented. See ExtensionMethods.cs
             int res = m_textMesh.FindNearestCharacterInWorldSpace(position);
 
             if (res < 0)
@@ -153,11 +157,17 @@ namespace GTFO_VR.Core.UI.Terminal
             return m_currentSelection;
         }
 
+        /// <summary>
+        /// Send the highlighted block of text to the terminal input
+        /// </summary>
         public void SubmitSelection(bool addSpace)
         {
             m_keyboardRoot.HandleInput(GetSelection() + (addSpace ? " " : "") );
         }
 
+        /// <summary>
+        /// Find the block of text at the input world position and highlight it
+        /// </summary>
         public void HoverPointer(Vector3 position)
         {
             int nearestChar = FindNearestCharacter(position);

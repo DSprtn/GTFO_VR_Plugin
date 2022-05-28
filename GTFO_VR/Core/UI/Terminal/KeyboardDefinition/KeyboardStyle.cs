@@ -11,6 +11,9 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
         public float padding;
     }
 
+    /// <summary>
+    /// Provides all the colors and materials for the terminal keyboard
+    /// </summary>
     public class KeyboardStyle
     {
         // Colors, even on unlit materials, appear a lot darker in-game than in unity.
@@ -85,16 +88,25 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             return m_keyMaterial;
         }
 
+        /// <summary>
+        /// Adjust the color so it looks the same in-game as it does in the unity editor
+        /// </summary>
         private Color AdjustToGameBrightness(Color color)
         {
             return color * colorBrightnessMultiplier;
         }
 
+        /// <summary>
+        /// Adjust the color so it looks the same in-game as it does in the unity editor, and apply a brightness modifier
+        /// </summary>
         private Color GetAdjustedKeyColor(Color color, float brightness)
         {
             return (AdjustToGameBrightness(color * brightness));
         }
 
+        /// <summary>
+        /// Get the set of key colors for the normal/highlighted/pressed states 
+        /// </summary>
         public ColorStates GetButtonColorStates( Color baseColor )
         {
             ColorStates states;
@@ -156,6 +168,9 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             return m_fontMaterial;
         }
 
+        /// <summary>
+        /// Destroy all the materials we created
+        /// </summary>
         public void Cleanup()
         {
             if (m_keyMaterial != null)

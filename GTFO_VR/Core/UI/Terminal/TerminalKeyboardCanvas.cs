@@ -6,6 +6,11 @@ using UnityEngine.UI;
 
 namespace GTFO_VR.Core.UI.Terminal
 {
+
+
+    /// <summary>
+    /// Holder canvas for each section of the terminal keyboard
+    /// </summary>
     public class TerminalKeyboardCanvas : MonoBehaviour
     {
         private UnityEngine.Canvas m_canvas;

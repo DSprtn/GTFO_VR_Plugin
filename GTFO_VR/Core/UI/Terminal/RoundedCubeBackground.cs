@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace GTFO_VR.Core.UI.Terminal
 {
+    /// <summary>
+    /// A configurable flat mesh consisting of a square with rounded corners for use in a canvas
+    /// </summary>
     class RoundedCubeBackground : MonoBehaviour
     {
         public RoundedCubeBackground(IntPtr value) : base(value) { }

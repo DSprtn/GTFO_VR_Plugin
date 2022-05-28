@@ -7,10 +7,13 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
 {
     public struct ColorTransitionState
     {
-        public Color destinationColor;
-        public float transitionTime;
+        public Color destinationColor;  // Color to transition to
+        public float transitionTime;    // Transition duration
     }
 
+    /// <summary>
+    /// Helper for animating between two colors
+    /// </summary>
     public class ColorTransition
     {
         public Color From;
@@ -25,6 +28,9 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             this.To = to;
         }
 
+        /// <summary>
+        /// Calculate what the color should be at any pointer in its transition
+        /// </summary>
         public Color Evaluate( float deltaTime )    // Pass 0 to just get current
         {
             m_elapsedTime += deltaTime;
@@ -52,6 +58,10 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         public ColorTransitionState pressed;
     }
 
+    /// <summary>
+    /// A button with a background, used for the terminal keyboard. 
+    /// Inherits from MonoPointerEvent because we don't get to implement our own interfaces.
+    /// </summary>
     class PhysicalButton : MonoPointerEvent
     {
         public PhysicalButton(IntPtr value) : base(value) { }

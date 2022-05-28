@@ -32,6 +32,9 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
         NORMAL, ALT, EXIT, GONE
     }
 
+    /// <summary>
+    /// Defines a single key to be added to a LinearLayout ( which in turn is a wrapper for Vertical/HorizontalLayoutGroup
+    /// </summary>
     public class KeyDefinition : KeyboardLayout
     {
         public KeyType KeyType = KeyType.INPUT;
@@ -72,12 +75,19 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             PopulateInput();
         }
 
+        /// <summary>
+        /// If this key should repeat its input when held down
+        /// </summary>
         public KeyDefinition SetRepeatKey( bool repeatKey)
         {
             this.RepeatKey = repeatKey;
             return this;
         }
 
+
+        /// <summary>
+        /// Which predefined style this button should use
+        /// </summary>
         public KeyDefinition SetApperance( KeyApperanceType apperance )
         {
             this.Appearance = apperance;
@@ -114,6 +124,9 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             }
         }
 
+        /// <summary>
+        /// Update the button ( both the definition ahd the actual object it created ) with new content
+        /// </summary>
         public void UpdateContent( string input, string label )
         {
             this.Input = input;
@@ -195,7 +208,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             return buttonRoot;
         }
 
-        public void HandleClick( TerminalKeyboardInterface keyboardRoot )
+        private void HandleClick( TerminalKeyboardInterface keyboardRoot )
         {
             keyboardRoot.HandleInput(this);
         }

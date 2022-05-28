@@ -4,7 +4,10 @@ using UnityEngine;
 
 namespace GTFO_VR.Core.UI.Terminal.Pointer
 {
-    // Poor man's interface
+    /// <summary>
+    /// We don't get to implement our own interfaces, 
+    /// so our terminal keyboard interactables ( buttons, reader ) all inherit from this instead
+    /// </summary>
     public class MonoPointerEvent : MonoBehaviour
     {
 
@@ -22,6 +25,10 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
 
         }
 
+        /// <summary>
+        /// Move position called after OnPointer Enter.
+        /// Implementation may return a different position to be used to display the pointer location.
+        /// </summary>
         [HideFromIl2Cpp]
         public virtual Vector3 OnPointerMove(PointerEvent ev)
         {
@@ -40,6 +47,9 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
 
         }
 
+        /// <summary>
+        /// Implementation may provide a different pointer size
+        /// </summary>
         [HideFromIl2Cpp]
         public virtual float GetPointerSize( float defaultSize )
         {

@@ -7,6 +7,10 @@ using Valve.VR;
 
 namespace GTFO_VR.Core.UI.Terminal.Pointer
 {
+    /// <summary>
+    /// Pointer responsible for interacting with the terminal keyboard and reader.
+    /// Note that this does not use the EventSystem at all.
+    /// </summary>
     class TerminalPointer : MonoBehaviour
     {
         public TerminalPointer(IntPtr value) : base(value) { }
@@ -127,6 +131,9 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             UpdateLine();
         }
 
+        /// <summary>
+        /// Get our MonoPointerEvent component from collider we hit, if it implements it.
+        /// </summary>
         private static MonoPointerEvent GetButton(RaycastHit hit)
         {
             return hit.collider?.gameObject?.GetComponent<MonoPointerEvent>();
@@ -137,6 +144,9 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             return hit.collider != null;
         }
 
+        /// <summary>
+        /// Deal with controller clicks, down and up
+        /// </summary>
         private void HandleInput()
         {
             bool down = m_click.GetStateDown(m_InputSource);
@@ -190,6 +200,9 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             m_PointerEndPosition = m_currentHit.point;
         }
 
+        /// <summary>
+        /// Handler pointer movement; pointer enter, exit, and move
+        /// </summary>
         private void HandleMove()
         {
             MonoPointerEvent button = GetButton(m_currentHit);
@@ -212,6 +225,9 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
    
         }
 
+        /// <summary>
+        /// Position the pointer line and dot
+        /// </summary>
         public void UpdateLine()
         {
             bool hit = IsCollider(m_currentHit);

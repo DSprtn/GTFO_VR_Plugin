@@ -2,6 +2,9 @@
 
 namespace GTFO_VR.Core.UI.Terminal.Pointer
 {
+    /// <summary>
+    /// Our equivalent of EventSystem.PointerEventData
+    /// </summary>
     public struct PointerEvent
     {
         public Vector3 Position;

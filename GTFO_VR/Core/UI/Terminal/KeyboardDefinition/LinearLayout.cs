@@ -7,6 +7,9 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
 {
     public enum LinearOrientation { VERTICAL, HORIZONTAL };
 
+    /// <summary>
+    /// Wrapped for Vertical/HorizontalLayoutGroup
+    /// </summary>
     public class LinearLayout : KeyboardLayout
     {
         private string m_name;

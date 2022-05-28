@@ -2,7 +2,9 @@
 
 namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
 {
-
+    /// <summary>
+    /// Used to populate the settings of LayoutElement and Vertical/HorizontalLayoutGroup.
+    /// </summary>
     public class LayoutParameters
     {
         public static readonly float FILL_PARENT = -1;
@@ -34,6 +36,9 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             this.Weight = weight;
         }
 
+        /// <summary>
+        /// Fills Unity's LayoutElement with values that correspond to the layout parameters configured by this object.
+        /// </summary>
         public LayoutElement PopulateLayoutElement(LayoutElement element, KeyboardStyle style)
         {
             if ( Width == FILL_PARENT )

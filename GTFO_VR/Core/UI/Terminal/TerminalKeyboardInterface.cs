@@ -11,6 +11,10 @@ namespace GTFO_VR.Core.UI.Terminal
     {
         left, right, bottom
     }
+
+    /// <summary>
+    /// Root of the terminal keyboard. Handles creating and positioning the layout, as well as interacting with the terminal.
+    /// </summary>
     public class TerminalKeyboardInterface : MonoBehaviour
     {
         public TerminalKeyboardInterface(IntPtr value) : base(value) { }
@@ -58,7 +62,9 @@ namespace GTFO_VR.Core.UI.Terminal
             return m_keyboardStyle;
         }
 
-
+        /// <summary>
+        /// Attach the already instantiated terminal keyboard to a terminal
+        /// </summary>
         [HideFromIl2Cpp]
         public void AttachToTerminal(LevelGeneration.LG_ComputerTerminal terminal )
         {
@@ -100,9 +106,12 @@ namespace GTFO_VR.Core.UI.Terminal
             this.gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// Get the zone of the terminal this keyboard is attached to.
+        /// </summary>
         private string GetZone()
         {
-            // Do terminals outside have these values?
+            // Do terminals outside have these values? ( Yes: Zero_0 it turns out )
             if (m_terminal?.m_terminalItem?.FloorItemLocation != null)
             {
                 return m_terminal.m_terminalItem.FloorItemLocation;
@@ -113,6 +122,9 @@ namespace GTFO_VR.Core.UI.Terminal
             }
         }
 
+        /// <summary>
+        /// Generate the keyboard layouts. This happens only once, long before the keyboard is attached to an actual terminal.
+        /// </summary>
         private void GenerateKeyboards()
         {
             m_bottomKeyboard = new GameObject();
@@ -139,6 +151,9 @@ namespace GTFO_VR.Core.UI.Terminal
             newKeyboardCanvas.InflateLayout(this, layout, style);
         }
 
+        /// <summary>
+        /// Position the pre-generated keyboard layout to align with the attached terminal
+        /// </summary>
         [HideFromIl2Cpp]
         private void PositionKeyboard( GameObject go, RectTransform terminalCanvasRect, CanvasPosition position)
         {
@@ -298,6 +313,9 @@ namespace GTFO_VR.Core.UI.Terminal
             }
         }
 
+        /// <summary>
+        /// GTFO checks for text input at strange times, so some hackery is required.
+        /// </summary>
         private void LateUpdate()
         {
             m_dataDirty = true;
@@ -313,9 +331,12 @@ namespace GTFO_VR.Core.UI.Terminal
         {
             CheckDirty();
             currentFrameInput += str;
-            
         }
 
+        /// <summary>
+        /// Input considered dirty ( old ) after LateUpdate.
+        /// If true clear before input or Update().
+        /// </summary>
         private void CheckDirty()
         {
             if (m_dataDirty)

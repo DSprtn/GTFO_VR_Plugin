@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace GTFO_VR.Core.VR_Input
 {
+
+    /// <summary>
+    /// Works just like a SteamVR boolean input, but you can call down and have GTFO treat it as a normal input.
+    /// Basically what the WeaponRadialMenu already does, but compartmentalized.
+    /// </summary>
     public class DummyAction
     {
         private bool m_autoUp = false;
@@ -114,6 +119,10 @@ namespace GTFO_VR.Core.VR_Input
             return false;
         }
 
+
+        /// <summary>
+        /// Trigger the requested action, if it has been mapped
+        /// </summary>
         public static void triggerDummyAction(InputAction action)
         {
             DummyAction dummyAction = GetDummyBoolActionMapping(action);
