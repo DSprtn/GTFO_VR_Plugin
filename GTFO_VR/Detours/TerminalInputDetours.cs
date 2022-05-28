@@ -28,7 +28,7 @@ namespace GTFO_VR.Detours
         private unsafe static IntPtr OurGetInputString()
         {
             string input = IL2CPP.Il2CppStringToManaged(originalInputStringGetter());
-            IntPtr vr_input = IL2CPP.ManagedStringToIl2Cpp(VRKeyboard.GetKeyboardInput() + TerminalKeyboardInterface.getKeyboardInput()  + input);
+            IntPtr vr_input = IL2CPP.ManagedStringToIl2Cpp(VRKeyboard.GetKeyboardInput() + TerminalKeyboardInterface.GetKeyboardInput()  + input);
 
             return vr_input;
         }
@@ -36,7 +36,7 @@ namespace GTFO_VR.Detours
         private unsafe static bool OurGetAnyInput()
         {
             bool vr_input = VRKeyboard.GetKeyboardInput() != "";
-            bool terminal_vr_input = TerminalKeyboardInterface.getKeyboardInput() != "";
+            bool terminal_vr_input = TerminalKeyboardInterface.GetKeyboardInput() != "";
             return vr_input || terminal_vr_input || originalAnyInputDownGetter();
         }
 

@@ -23,25 +23,25 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         }
 
         [HideFromIl2Cpp]
-        public virtual Vector3 onPointerMove(PointerEvent ev)
+        public virtual Vector3 OnPointerMove(PointerEvent ev)
         {
             return ev.Position;
         }
 
         [HideFromIl2Cpp]
-        public virtual void onPointerDown(PointerEvent ev)
+        public virtual void OnPointerDown(PointerEvent ev)
         {
 
         }
 
         [HideFromIl2Cpp]
-        public virtual void onPointerUp(PointerEvent ev)
+        public virtual void OnPointerUp(PointerEvent ev)
         {
 
         }
 
         [HideFromIl2Cpp]
-        public virtual float getPointerSize( float defaultSize )
+        public virtual float GetPointerSize( float defaultSize )
         {
             return defaultSize;
         }

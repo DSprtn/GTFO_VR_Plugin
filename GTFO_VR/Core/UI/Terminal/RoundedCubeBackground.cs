@@ -23,7 +23,7 @@ namespace GTFO_VR.Core.UI.Terminal
 
         private void Awake()
         {
-            ensureInit();
+            EnsureInit();
         }
 
         void OnEnable()
@@ -36,7 +36,7 @@ namespace GTFO_VR.Core.UI.Terminal
             GenerateMesh();
         }
         
-        private void ensureInit()
+        private void EnsureInit()
         {
             if (this.m_meshFilter == null)
             {
@@ -63,14 +63,14 @@ namespace GTFO_VR.Core.UI.Terminal
         }
         */
 
-        public void setSize(float width, float height)
+        public void SetSize(float width, float height)
         {
             this.Width = width;
             this.Height = height;
             GenerateMesh();
         }
 
-        public void setMaterial( Material mat )
+        public void SetMaterial( Material mat )
         {
             if (m_renderer != null)
             {
@@ -85,14 +85,14 @@ namespace GTFO_VR.Core.UI.Terminal
                 RectTransform rectTransform = GetComponent<RectTransform>();
                 if (rectTransform != null)
                 {
-                    setSize(rectTransform.sizeDelta.x, rectTransform.sizeDelta.y);
+                    SetSize(rectTransform.sizeDelta.x, rectTransform.sizeDelta.y);
                 }
             }
         }
 
         public void GenerateMesh()
         {
-            ensureInit();
+            EnsureInit();
 
             float halfWidth = (Width * 0.5f) - Padding;
             float halfHeight = (Height * 0.5f) - Padding;
@@ -157,16 +157,16 @@ namespace GTFO_VR.Core.UI.Terminal
                 7,10,1
             };
 
-            addCurvedCorner(vertices, triangles, 0, 1, 2,   CornerVertices);
-            addCurvedCorner(vertices, triangles, 3, 4, 5,   CornerVertices);
-            addCurvedCorner(vertices, triangles, 6, 7, 8,   CornerVertices);
-            addCurvedCorner(vertices, triangles, 9, 10, 11, CornerVertices);
+            AddCurvedCorner(vertices, triangles, 0, 1, 2,   CornerVertices);
+            AddCurvedCorner(vertices, triangles, 3, 4, 5,   CornerVertices);
+            AddCurvedCorner(vertices, triangles, 6, 7, 8,   CornerVertices);
+            AddCurvedCorner(vertices, triangles, 9, 10, 11, CornerVertices);
 
             m_meshFilter.mesh = new Mesh { vertices = vertices.ToArray(), triangles = triangles.ToArray() };
         }
 
         [HideFromIl2Cpp]
-        private void addCurvedCorner(List<Vector3> vertices, List<int> triangles, int start, int center, int end, int cornerVertexCount)
+        private void AddCurvedCorner(List<Vector3> vertices, List<int> triangles, int start, int center, int end, int cornerVertexCount)
         {
             if (cornerVertexCount < 1)
                 cornerVertexCount = 1;

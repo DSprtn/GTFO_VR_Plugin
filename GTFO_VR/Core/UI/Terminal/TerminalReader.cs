@@ -31,7 +31,7 @@ namespace GTFO_VR.Core.UI.Terminal
 
         private PointerHistory m_pointerHistory = new PointerHistory();
 
-        public static TerminalReader Create( TerminalKeyboardInterface keyboardRoot )
+        public static TerminalReader Instantiate( TerminalKeyboardInterface keyboardRoot )
         {
             GameObject terminalReaderRoot = new GameObject();
             terminalReaderRoot.layer = TerminalKeyboardInterface.LAYER;
@@ -66,10 +66,10 @@ namespace GTFO_VR.Core.UI.Terminal
 
         private void Start()
         {
-            m_highlight.GetComponent<MeshRenderer>().sharedMaterial = getUnderlineMaterial();
+            m_highlight.GetComponent<MeshRenderer>().sharedMaterial = GetUnderlineMaterial();
         }
 
-        public void attachToTerminal(GameObject textCanvas)
+        public void AttachToTerminal(GameObject textCanvas)
         {
             this.transform.SetPositionAndRotation(textCanvas.transform.position, textCanvas.transform.rotation);
             this.transform.localScale = new Vector3(TerminalKeyboardInterface.CANVAS_SCALE, TerminalKeyboardInterface.CANVAS_SCALE, TerminalKeyboardInterface.CANVAS_SCALE);
@@ -80,12 +80,12 @@ namespace GTFO_VR.Core.UI.Terminal
             m_collider.size = new Vector3(terminalCanvasRect.sizeDelta.x + READER_SIZE_PADDING, terminalCanvasRect.sizeDelta.y + READER_SIZE_PADDING, 0.1f);
         }
 
-        public void deatchFromTerminal()
+        public void DetatchFromTerminal()
         {
             m_textMesh = null;
         }
 
-        private Material getUnderlineMaterial()
+        private Material GetUnderlineMaterial()
         {
             if (m_underlineMaterial == null)
             {
@@ -97,7 +97,7 @@ namespace GTFO_VR.Core.UI.Terminal
             return m_underlineMaterial;
         }
 
-        public int findNearestCharacter(Vector3 position )
+        public int FindNearestCharacter(Vector3 position )
         {
             if (m_textMesh == null)
                 return -1;
@@ -110,14 +110,14 @@ namespace GTFO_VR.Core.UI.Terminal
             return res;
         }   
 
-        public void clearSelection()
+        public void ClearSelection()
         {
             m_currentSelection = "";
 
         }
 
         [HideFromIl2Cpp]
-        private void drawHighlight( TMP_CharacterInfo[] characters, int start, int end)
+        private void DrawHighlight( TMP_CharacterInfo[] characters, int start, int end)
         {
             // Sanity check
             if (start < 0 || end >= m_textMesh.textInfo.characterInfo.Length)
@@ -148,19 +148,19 @@ namespace GTFO_VR.Core.UI.Terminal
 
         private static HashSet<Char> DELIMITERS = new HashSet<char>() { '\'','\"', '\\', ' ', '\r', '\n', '\t', '\f', '\v', '<', '>', ',' };
 
-        public string getSelection()
+        public string GetSelection()
         {
             return m_currentSelection;
         }
 
-        public void submitSelection(bool addSpace)
+        public void SubmitSelection(bool addSpace)
         {
-            m_keyboardRoot.HandleInput(getSelection() + (addSpace ? " " : "") );
+            m_keyboardRoot.HandleInput(GetSelection() + (addSpace ? " " : "") );
         }
 
-        public void hoverPointer(Vector3 position)
+        public void HoverPointer(Vector3 position)
         {
-            int nearestChar = findNearestCharacter(position);
+            int nearestChar = FindNearestCharacter(position);
 
             // Out of range
             if (nearestChar < 0)
@@ -226,14 +226,14 @@ namespace GTFO_VR.Core.UI.Terminal
             if (indexStart < 0 || indexEnd >= rawText.Length)
                 return;
 
-            clearSelection();
+            ClearSelection();
 
             // To draw the highlight we're back to needing the characterInfo indicides
             // index offset should be the same for both the characterinfo array and original string,
             // so we can just math it.
             int charIndexStart = (nearestChar) + (indexStart - nearestOriginalIndex);
             int charIndexEnd =   (nearestChar) + (indexEnd - nearestOriginalIndex);
-            drawHighlight(text, charIndexStart, charIndexEnd);
+            DrawHighlight(text, charIndexStart, charIndexEnd);
 
             /////////////////
             /// Extract text
@@ -261,7 +261,7 @@ namespace GTFO_VR.Core.UI.Terminal
         [HideFromIl2Cpp]
         public override void OnPointerEnter(PointerEvent ev)
         {
-            m_pointerHistory.clearPointerHistory();
+            m_pointerHistory.ClearPointerHistory();
         }
 
         [HideFromIl2Cpp]
@@ -274,21 +274,21 @@ namespace GTFO_VR.Core.UI.Terminal
         }
 
         [HideFromIl2Cpp]
-        public override Vector3 onPointerMove(PointerEvent ev)
+        public override Vector3 OnPointerMove(PointerEvent ev)
         {
-            m_pointerHistory.addPointerHistory(ev.Position);
-            Vector3 smoothed = m_pointerHistory.getSmoothenedPointerPosition();
-            hoverPointer(smoothed);
+            m_pointerHistory.AddPointerHistory(ev.Position);
+            Vector3 smoothed = m_pointerHistory.GetSmoothenedPointerPosition();
+            HoverPointer(smoothed);
             return smoothed;
         }
 
         [HideFromIl2Cpp]
-        public override void onPointerDown(PointerEvent ev)
+        public override void OnPointerDown(PointerEvent ev)
         {
-            submitSelection(true);
+            SubmitSelection(true);
         }
 
-        public override float getPointerSize(float defaultSize)
+        public override float GetPointerSize(float defaultSize)
         {
             // Tiny text, tiny pointer
             return READER_POINTER_SIZE;

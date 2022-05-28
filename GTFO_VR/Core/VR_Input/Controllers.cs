@@ -95,7 +95,7 @@ namespace GTFO_VR.Core.VR_Input
 
         private void setupTerminalCanvasPointer()
         {
-            TerminalCanvasPointer = TerminalPointer.create(SteamVR_Input_Sources.Any);
+            TerminalCanvasPointer = TerminalPointer.Instantiate(SteamVR_Input_Sources.Any);
             TerminalCanvasPointer.SetActive(false);
         }
 

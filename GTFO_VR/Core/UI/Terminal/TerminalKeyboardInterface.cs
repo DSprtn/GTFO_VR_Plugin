@@ -46,9 +46,9 @@ namespace GTFO_VR.Core.UI.Terminal
 
         private void Awake()
         {
-            generateKeyboads();
+            GenerateKeyboards();
 
-            m_Reader = TerminalReader.Create(this);
+            m_Reader = TerminalReader.Instantiate(this);
             m_Reader.transform.SetParent(this.transform);
         }
 
@@ -60,7 +60,7 @@ namespace GTFO_VR.Core.UI.Terminal
 
 
         [HideFromIl2Cpp]
-        public void attachToTerminal(LevelGeneration.LG_ComputerTerminal terminal )
+        public void AttachToTerminal(LevelGeneration.LG_ComputerTerminal terminal )
         {
             m_terminal = terminal;
 
@@ -69,22 +69,22 @@ namespace GTFO_VR.Core.UI.Terminal
 
             this.transform.SetPositionAndRotation(terminalCanvas.transform.position, terminalCanvas.transform.rotation); 
 
-            positionKeyboard(m_leftKeyboard, terminalRect, CanvasPosition.left);
-            positionKeyboard(m_rightKeyboard, terminalRect, CanvasPosition.right);
-            positionKeyboard(m_bottomKeyboard, terminalRect, CanvasPosition.bottom);
+            PositionKeyboard(m_leftKeyboard, terminalRect, CanvasPosition.left);
+            PositionKeyboard(m_rightKeyboard, terminalRect, CanvasPosition.right);
+            PositionKeyboard(m_bottomKeyboard, terminalRect, CanvasPosition.bottom);
 
             if (m_ZoneButton != null)
             {
-                String zone = getZone();
-                m_ZoneButton.updateContent(zone + " ", zone);
+                String zone = GetZone();
+                m_ZoneButton.UpdateContent(zone + " ", zone);
             }
 
-            m_Reader.attachToTerminal(terminalCanvas);
+            m_Reader.AttachToTerminal(terminalCanvas);
 
             this.gameObject.SetActive(true);
         }
 
-        public void deatchFromTerminal()
+        public void DetatchFromTerminal()
         {
             if (m_terminal != null)
             {
@@ -93,14 +93,14 @@ namespace GTFO_VR.Core.UI.Terminal
 
             if (m_Reader != null)
             {
-                m_Reader.deatchFromTerminal();
+                m_Reader.DetatchFromTerminal();
 
             }
 
             this.gameObject.SetActive(false);
         }
 
-        private string getZone()
+        private string GetZone()
         {
             // Do terminals outside have these values?
             if (m_terminal?.m_terminalItem?.FloorItemLocation != null)
@@ -113,34 +113,34 @@ namespace GTFO_VR.Core.UI.Terminal
             }
         }
 
-        private void generateKeyboads()
+        private void GenerateKeyboards()
         {
             m_bottomKeyboard = new GameObject();
             m_bottomKeyboard.name = "bottomKeyboard";
             m_bottomKeyboard.transform.SetParent(this.gameObject.transform);
-            generateKeyboard(m_bottomKeyboard, 14, 16, TextAnchor.UpperCenter, getBottomKeyboardLayout(), m_keyboardStyle);
+            GenerateKeyboard(m_bottomKeyboard, 14, 16, TextAnchor.UpperCenter, GetBottomKeyboardLayout(), m_keyboardStyle);
 
             m_leftKeyboard = new GameObject();
             m_leftKeyboard.name = "leftKeyboard";
             m_leftKeyboard.transform.SetParent(this.gameObject.transform);
-            generateKeyboard(m_leftKeyboard, 14, 16, TextAnchor.LowerRight, getLeftKeyboardLayout(), m_keyboardStyle);
+            GenerateKeyboard(m_leftKeyboard, 14, 16, TextAnchor.LowerRight, GetLeftKeyboardLayout(), m_keyboardStyle);
 
             m_rightKeyboard = new GameObject();
             m_rightKeyboard.name = "rightKeyboard";
             m_rightKeyboard.transform.SetParent(this.gameObject.transform);
-            generateKeyboard(m_rightKeyboard, 14, 16, TextAnchor.LowerLeft, getRightKeyboard(out m_ZoneButton), m_keyboardStyle);
+            GenerateKeyboard(m_rightKeyboard, 14, 16, TextAnchor.LowerLeft, GetRightKeyboardLayout(out m_ZoneButton), m_keyboardStyle);
             
         }
 
         [HideFromIl2Cpp]
-        private void generateKeyboard(GameObject go, float rawHeight, float rawWidth, TextAnchor gravity, KeyboardLayout layout, KeyboardStyle style)
+        private void GenerateKeyboard(GameObject go, float rawHeight, float rawWidth, TextAnchor gravity, KeyboardLayout layout, KeyboardStyle style)
         {
-            TerminalKeyboardCanvas newKeyboardCanvas = TerminalKeyboardCanvas.attach(go, rawWidth, rawHeight, gravity);
-            newKeyboardCanvas.inflateLayout(this, layout, style);
+            TerminalKeyboardCanvas newKeyboardCanvas = TerminalKeyboardCanvas.Instantiate(go, rawWidth, rawHeight, gravity);
+            newKeyboardCanvas.InflateLayout(this, layout, style);
         }
 
         [HideFromIl2Cpp]
-        private void positionKeyboard( GameObject go, RectTransform terminalCanvasRect, CanvasPosition position)
+        private void PositionKeyboard( GameObject go, RectTransform terminalCanvasRect, CanvasPosition position)
         {
             float terminalHeight = terminalCanvasRect.rect.height * CANVAS_SCALE;
             float terminalWidth = terminalCanvasRect.rect.width * CANVAS_SCALE;
@@ -249,9 +249,9 @@ namespace GTFO_VR.Core.UI.Terminal
         [HideFromIl2Cpp]
         public void HandleInput( KeyDefinition key )
         {
-            checkDirty();
+            CheckDirty();
 
-            if (key.hasInput())
+            if (key.HasInput())
             {
                 currentFrameInput += key.Input;
             }
@@ -303,7 +303,7 @@ namespace GTFO_VR.Core.UI.Terminal
             m_dataDirty = true;
         }
 
-        public static string getKeyboardInput()
+        public static string GetKeyboardInput()
         {
             return currentFrameInput;
         }
@@ -311,12 +311,12 @@ namespace GTFO_VR.Core.UI.Terminal
         [HideFromIl2Cpp]
         public void HandleInput(string str)
         {
-            checkDirty();
+            CheckDirty();
             currentFrameInput += str;
             
         }
 
-        private void checkDirty()
+        private void CheckDirty()
         {
             if (m_dataDirty)
             {
@@ -328,44 +328,44 @@ namespace GTFO_VR.Core.UI.Terminal
         // Update is called once per frame
         void Update()
         {
-            checkDirty();
+            CheckDirty();
         }
 
         [HideFromIl2Cpp]
-        private static KeyboardLayout getRightKeyboard( out KeyDefinition zoneButton )
+        private static KeyboardLayout GetRightKeyboardLayout( out KeyDefinition zoneButton )
         {
             LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.LowerLeft, LayoutParameters.WrapContent());
             bottomKeyboardLayout.ShowBackground = true;
 
             LayoutParameters rowParams = new LayoutParameters( LayoutParameters.WRAP_CONTENT, 1);
 
-            bottomKeyboardLayout.AddChild(new KeyDefinition("TERMINAL_ ", "TERMINAL", 4).setApperance(KeyApperanceType.ALT));
+            bottomKeyboardLayout.AddChild(new KeyDefinition("TERMINAL_ ", "TERMINAL", 4).SetApperance(KeyApperanceType.ALT));
             
-            bottomKeyboardLayout.AddChild(new KeyDefinition("BULKHEAD ", "BULKHEAD", 4).setApperance(KeyApperanceType.ALT));
+            bottomKeyboardLayout.AddChild(new KeyDefinition("BULKHEAD ", "BULKHEAD", 4).SetApperance(KeyApperanceType.ALT));
 
-            bottomKeyboardLayout.AddChild(new KeyDefinition("SECURITY ", "SECURITY", 4).setApperance(KeyApperanceType.ALT));
+            bottomKeyboardLayout.AddChild(new KeyDefinition("SECURITY ", "SECURITY", 4).SetApperance(KeyApperanceType.ALT));
 
-            bottomKeyboardLayout.AddChild(new KeyDefinition("UNKNOWN ", "UNKNOWN", 4).setApperance(KeyApperanceType.ALT));
+            bottomKeyboardLayout.AddChild(new KeyDefinition("UNKNOWN ", "UNKNOWN", 4).SetApperance(KeyApperanceType.ALT));
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("AMMO ", "AMMO ", 2).setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("TOOL ", "TOOL ", 2).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("AMMO ", "AMMO ", 2).SetApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("TOOL ", "TOOL ", 2).SetApperance(KeyApperanceType.ALT));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("MEDI ", "MEDI", 2).setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("DISINFECT ", "DISIN", 2).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("MEDI ", "MEDI", 2).SetApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("DISINFECT ", "DISIN", 2).SetApperance(KeyApperanceType.ALT));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
-            bottomKeyboardLayout.AddChild(new KeyDefinition("RESOURCES ", "RESOURCES", 4).setApperance(KeyApperanceType.ALT));
+            bottomKeyboardLayout.AddChild(new KeyDefinition("RESOURCES ", "RESOURCES", 4).SetApperance(KeyApperanceType.ALT));
 
             {
                 // This will be updated when assigned to a terminal
-                zoneButton = new KeyDefinition("ZONE_-1 ", "ZONE_-1", 4).setApperance(KeyApperanceType.ALT);
+                zoneButton = new KeyDefinition("ZONE_-1 ", "ZONE_-1", 4).SetApperance(KeyApperanceType.ALT);
                 bottomKeyboardLayout.AddChild(zoneButton);
             }
 
@@ -373,56 +373,56 @@ namespace GTFO_VR.Core.UI.Terminal
         }
 
         [HideFromIl2Cpp]
-        private static KeyboardLayout getLeftKeyboardLayout()
+        private static KeyboardLayout GetLeftKeyboardLayout()
         {
             LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.LowerRight, LayoutParameters.WrapContent());
             bottomKeyboardLayout.ShowBackground = true;
 
             LayoutParameters rowParams = new LayoutParameters(LayoutParameters.WRAP_CONTENT, 1);
  
-            bottomKeyboardLayout.AddChild(new KeyDefinition("UPLINK_VERIFY ", "UPLINK_VERIFY", 5).setApperance(KeyApperanceType.ALT));
+            bottomKeyboardLayout.AddChild(new KeyDefinition("UPLINK_VERIFY ", "UPLINK_VERIFY", 5).SetApperance(KeyApperanceType.ALT));
 
-            bottomKeyboardLayout.AddChild(new KeyDefinition("UPLINK_CONNECT ", "UPLINK_CONNECT", 5).setApperance(KeyApperanceType.ALT));
+            bottomKeyboardLayout.AddChild(new KeyDefinition("UPLINK_CONNECT ", "UPLINK_CONNECT", 5).SetApperance(KeyApperanceType.ALT));
             
-            bottomKeyboardLayout.AddChild(new KeyDefinition("REACTOR_VERIFY ", "REACTOR_VERIFY", 5).setApperance(KeyApperanceType.ALT));
+            bottomKeyboardLayout.AddChild(new KeyDefinition("REACTOR_VERIFY ", "REACTOR_VERIFY", 5).SetApperance(KeyApperanceType.ALT));
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("ZONE_", "ZONE_", 3.5f).setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("-T ", "-T", 1.5f).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("ZONE_", "ZONE_", 3.5f).SetApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("-T ", "-T", 1.5f).SetApperance(KeyApperanceType.ALT));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("LOGS\r", "LOGS", 2.5f).setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("LIST ", "LIST", 2.5f).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("LOGS\r", "LOGS", 2.5f).SetApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("LIST ", "LIST", 2.5f).SetApperance(KeyApperanceType.ALT));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("READ ", "READ", 2.5f).setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("PING ", "PING", 2.5f).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("READ ", "READ", 2.5f).SetApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("PING ", "PING", 2.5f).SetApperance(KeyApperanceType.ALT));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerRight, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("INFO\r", "INFO", 2.5f).setApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("QUERY ", "QUERY", 2.5f).setApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("INFO\r", "INFO", 2.5f).SetApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("QUERY ", "QUERY", 2.5f).SetApperance(KeyApperanceType.ALT));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
-                bottomKeyboardLayout.AddChild(new KeyDefinition("COMMANDS\r", "COMMANDS", 5f).setApperance(KeyApperanceType.ALT));
+                bottomKeyboardLayout.AddChild(new KeyDefinition("COMMANDS\r", "COMMANDS", 5f).SetApperance(KeyApperanceType.ALT));
             }
 
             return bottomKeyboardLayout;
         }
 
         [HideFromIl2Cpp]
-        private static KeyboardLayout getBottomKeyboardLayout()
+        private static KeyboardLayout GetBottomKeyboardLayout()
         {
             LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.UpperCenter, LayoutParameters.WrapContent() );
             bottomKeyboardLayout.ShowBackground = true;
@@ -433,7 +433,7 @@ namespace GTFO_VR.Core.UI.Terminal
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperCenter, rowParams);
 
                 keyboardRow.AddChild(new KeyDefinition(KeyType.ESC, "x")
-                    .setApperance(KeyApperanceType.EXIT));
+                    .SetApperance(KeyApperanceType.EXIT));
                 keyboardRow.AddChild(new KeyDefinition("1"));
                 keyboardRow.AddChild(new KeyDefinition("2"));
                 keyboardRow.AddChild(new KeyDefinition("3"));
@@ -446,8 +446,8 @@ namespace GTFO_VR.Core.UI.Terminal
                 keyboardRow.AddChild(new KeyDefinition("0"));
                 keyboardRow.AddChild(new KeyDefinition("."));   // For typing ip addresses
                 keyboardRow.AddChild(new KeyDefinition(KeyType.BACKPSPACE, "Backspace", new LayoutParameters( LayoutParameters.FILL_PARENT ))
-                    .setRepeatKey(true)
-                    .setApperance(KeyApperanceType.ALT));
+                    .SetRepeatKey(true)
+                    .SetApperance(KeyApperanceType.ALT));
 
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
@@ -461,7 +461,7 @@ namespace GTFO_VR.Core.UI.Terminal
                     LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperLeft, shortRowParams);
 
                     keyboardRow.AddChild(new KeyDefinition(KeyType.TAB, "Tab", 1.5f)
-                        .setApperance(KeyApperanceType.ALT));
+                        .SetApperance(KeyApperanceType.ALT));
                     keyboardRow.AddChild(new KeyDefinition("q"));
                     keyboardRow.AddChild(new KeyDefinition("w"));
                     keyboardRow.AddChild(new KeyDefinition("e"));
@@ -482,9 +482,9 @@ namespace GTFO_VR.Core.UI.Terminal
                     LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperLeft, shortRowParams);
 
                     keyboardRow.AddChild(new KeyDefinition(KeyType.CAPS_LOCK, "", 1.5f)
-                        .setApperance(KeyApperanceType.ALT));
+                        .SetApperance(KeyApperanceType.ALT));
                     keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", 0.35f)
-                    .setApperance(KeyApperanceType.GONE));
+                    .SetApperance(KeyApperanceType.GONE));
                     keyboardRow.AddChild(new KeyDefinition("a"));
                     keyboardRow.AddChild(new KeyDefinition("s"));
                     keyboardRow.AddChild(new KeyDefinition("d"));
@@ -496,7 +496,7 @@ namespace GTFO_VR.Core.UI.Terminal
                     keyboardRow.AddChild(new KeyDefinition("l"));
                     keyboardRow.AddChild(new KeyDefinition("_"));
                     keyboardRow.AddChild(new KeyDefinition(KeyType.ENTER, "", new LayoutParameters(LayoutParameters.FILL_PARENT, 1, 0.01f))
-                        .setApperance(KeyApperanceType.GONE));
+                        .SetApperance(KeyApperanceType.GONE));
 
                     shortRowVertical.AddChild(keyboardRow);
                 }
@@ -506,7 +506,7 @@ namespace GTFO_VR.Core.UI.Terminal
                     LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperLeft, rowParams);
 
                     keyboardRow.AddChild(new KeyDefinition(KeyType.SHIFT, "", 2.4f)
-                        .setApperance(KeyApperanceType.ALT));
+                        .SetApperance(KeyApperanceType.ALT));
                     keyboardRow.AddChild(new KeyDefinition("z"));
                     keyboardRow.AddChild(new KeyDefinition("x"));
                     keyboardRow.AddChild(new KeyDefinition("c"));
@@ -517,7 +517,7 @@ namespace GTFO_VR.Core.UI.Terminal
                     keyboardRow.AddChild(new KeyDefinition(","));
                     keyboardRow.AddChild(new KeyDefinition("."));
                     keyboardRow.AddChild(new KeyDefinition(KeyType.UP, "^", 1.1f)
-                        .setApperance(KeyApperanceType.ALT));
+                        .SetApperance(KeyApperanceType.ALT));
                     //keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", new KeyboardLayoutParameters(1f, true)));
 
                     shortRowVertical.AddChild(keyboardRow);
@@ -525,7 +525,7 @@ namespace GTFO_VR.Core.UI.Terminal
 
                 shortRowHorizontal.AddChild(shortRowVertical);
                 shortRowHorizontal.AddChild(new KeyDefinition(KeyType.ENTER, "Enter", new LayoutParameters(LayoutParameters.FILL_PARENT, 3f))
-                    .setApperance(KeyApperanceType.ALT));
+                    .SetApperance(KeyApperanceType.ALT));
                 bottomKeyboardLayout.AddChild(shortRowHorizontal);
             }
 
@@ -533,16 +533,16 @@ namespace GTFO_VR.Core.UI.Terminal
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperCenter, rowParams);
 
                 keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", 3.2f)
-                    .setApperance(KeyApperanceType.ALT));
+                    .SetApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.SPACE, "Space", 7.2f));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.LEFT, "<")
-                    .setApperance(KeyApperanceType.ALT));
+                    .SetApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.DOWN, "v", 1.1f)
-                    .setApperance(KeyApperanceType.ALT));
+                    .SetApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.RIGHT, ">")
-                    .setApperance(KeyApperanceType.ALT));
+                    .SetApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.ESC, "x", new LayoutParameters(LayoutParameters.FILL_PARENT))
-                    .setApperance(KeyApperanceType.EXIT));
+                    .SetApperance(KeyApperanceType.EXIT));
 
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
@@ -553,7 +553,7 @@ namespace GTFO_VR.Core.UI.Terminal
         private void OnDestroy()
         {
             // Let's not leak materials
-            m_keyboardStyle.cleanup();
+            m_keyboardStyle.Cleanup();
 
         }
 

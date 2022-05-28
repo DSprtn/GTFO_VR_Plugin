@@ -12,7 +12,7 @@ namespace GTFO_VR.Core.UI.Terminal
 
         public TerminalKeyboardCanvas(IntPtr value) : base(value) { }
 
-        public static TerminalKeyboardCanvas attach(GameObject go, float width, float height, TextAnchor gravity)
+        public static TerminalKeyboardCanvas Instantiate(GameObject go, float width, float height, TextAnchor gravity)
         {
             TerminalKeyboardCanvas canvas = go.AddComponent<TerminalKeyboardCanvas>();
 
@@ -40,7 +40,7 @@ namespace GTFO_VR.Core.UI.Terminal
         }
 
         [HideFromIl2Cpp]
-        public void inflateLayout(TerminalKeyboardInterface keyboardRoot, KeyboardLayout layout, KeyboardStyle style)
+        public void InflateLayout(TerminalKeyboardInterface keyboardRoot, KeyboardLayout layout, KeyboardStyle style)
         {
             GameObject child = layout.GenerateLayout(keyboardRoot, style);
 

@@ -52,18 +52,18 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             panel.AddComponent<RectTransform>();
 
             LayoutElement element = panel.AddComponent<LayoutElement>();
-            m_layoutParameters.populateLayoutElement(element, inheritedStyle);
+            m_layoutParameters.PopulateLayoutElement(element, inheritedStyle);
 
             if ( ShowBackground )
             {
                 RoundedCubeBackground background = panel.AddComponent<RoundedCubeBackground>();
-                background.setMaterial(inheritedStyle.getBackgroundMaterial());
+                background.SetMaterial(inheritedStyle.GetBackgroundMaterial());
                 background.Radius = inheritedStyle.keyboardBackgroundStyle.radius;
                 background.CornerVertices = inheritedStyle.keyboardBackgroundStyle.cornerVertices;
                 background.Padding = inheritedStyle.keyboardBackgroundStyle.padding;
                 background.AutoSize = true;
 
-                background.GetComponent<MeshRenderer>().sharedMaterial = inheritedStyle.getBackgroundMaterial();
+                background.GetComponent<MeshRenderer>().sharedMaterial = inheritedStyle.GetBackgroundMaterial();
             }
 
             // preferred height/width is only respected in the orientation of the layout.

@@ -45,7 +45,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
 
         }
 
-        public static Color getPointerLineColor()
+        public static Color GetPointerLineColor()
         {
             return pointerLineColor * colorBrightnessMultiplier;
         }
@@ -65,7 +65,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             padding = 0.06f,
         };
 
-        public Color getTextColor()
+        public Color GetTextColor()
         {
             // Text colors behaves a bit differently because different material I guess?
             Color color = FontColor * (colorBrightnessMultiplier * 1.5f );
@@ -73,7 +73,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             return color;
         }
 
-        public Material getKeyMaterial()
+        public Material GetKeyMaterial()
         {
             if (m_keyMaterial == null)
             {
@@ -85,23 +85,23 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             return m_keyMaterial;
         }
 
-        private Color adjustToGameBrightness(Color color)
+        private Color AdjustToGameBrightness(Color color)
         {
             return color * colorBrightnessMultiplier;
         }
 
-        private Color getAdjustedKeyColor(Color color, float brightness)
+        private Color GetAdjustedKeyColor(Color color, float brightness)
         {
-            return (adjustToGameBrightness(color * brightness));
+            return (AdjustToGameBrightness(color * brightness));
         }
 
-        public ColorStates getButtonColorStates( Color baseColor )
+        public ColorStates GetButtonColorStates( Color baseColor )
         {
             ColorStates states;
 
-            states.normal =         new ColorTransitionState() { destinationColor = getAdjustedKeyColor(baseColor, KeyColorBrightness),           transitionTime = 0.5f };
-            states.highlighted =    new ColorTransitionState() { destinationColor = getAdjustedKeyColor(baseColor, KeyColorHighlightBrightness),  transitionTime = 0f };
-            states.pressed =        new ColorTransitionState() { destinationColor = getAdjustedKeyColor(baseColor, KeyColorPressedBrightness),    transitionTime = 0f };
+            states.normal =         new ColorTransitionState() { destinationColor = GetAdjustedKeyColor(baseColor, KeyColorBrightness),           transitionTime = 0.5f };
+            states.highlighted =    new ColorTransitionState() { destinationColor = GetAdjustedKeyColor(baseColor, KeyColorHighlightBrightness),  transitionTime = 0f };
+            states.pressed =        new ColorTransitionState() { destinationColor = GetAdjustedKeyColor(baseColor, KeyColorPressedBrightness),    transitionTime = 0f };
 
             states.normal.destinationColor.a = 1;
             states.highlighted.destinationColor.a = 1;
@@ -110,22 +110,22 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             return states;
         }
 
-        public ColorStates getNormalKeyStates()
+        public ColorStates GetNormalKeyStates()
         {
-            return getButtonColorStates(BaseKeyColor);
+            return GetButtonColorStates(BaseKeyColor);
         }
 
-        public ColorStates getAltKeyStates()
+        public ColorStates GetAltKeyStates()
         {
-            return getButtonColorStates(AltKeyColor);
+            return GetButtonColorStates(AltKeyColor);
         }
 
-        public ColorStates getExitKeyStates()
+        public ColorStates GetExitKeyStates()
         {
-            return getButtonColorStates(ExitKeyColor);
+            return GetButtonColorStates(ExitKeyColor);
         }
 
-        public Material getBackgroundMaterial()
+        public Material GetBackgroundMaterial()
         {
             if (m_backgroundMaterial == null)
             {
@@ -143,7 +143,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             return m_backgroundMaterial;
         }
 
-        public Material getFontMaterial(Material existingMaterial)
+        public Material GetFontMaterial(Material existingMaterial)
         {
             if (m_fontMaterial == null)
             {
@@ -156,7 +156,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             return m_fontMaterial;
         }
 
-        public void cleanup()
+        public void Cleanup()
         {
             if (m_keyMaterial != null)
                 UnityEngine.Object.Destroy(m_keyMaterial);

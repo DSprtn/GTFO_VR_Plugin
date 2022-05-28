@@ -44,12 +44,12 @@ namespace GTFO_VR.Core.VR_Input
                 bool terminalKeyboardDisplayed = false;
                 if (VRConfig.configTerminalKeyboard.Value)
                 {
-                    LevelGeneration.LG_ComputerTerminal terminal = VRPlayer.getInteractingTerminal();
+                    LevelGeneration.LG_ComputerTerminal terminal = VRPlayer.GetInteractingTerminal();
                     if (terminal != null)
                     {
-                        m_KeyboardRoot.attachToTerminal(terminal);
+                        m_KeyboardRoot.AttachToTerminal(terminal);
                         Controllers.ToggleTerminalCanvasPointer(true);
-                        VRPlayer.hideWielded(true);
+                        VRPlayer.HideWielded(true);
                         terminalKeyboardDisplayed = true;
                     }
                     else
@@ -82,9 +82,9 @@ namespace GTFO_VR.Core.VR_Input
 
                 if (m_KeyboardRoot)
                 {
-                    m_KeyboardRoot.deatchFromTerminal();
+                    m_KeyboardRoot.DetatchFromTerminal();
                     Controllers.ToggleTerminalCanvasPointer(false);
-                    VRPlayer.hideWielded(false);
+                    VRPlayer.HideWielded(false);
                 }
             }
         }

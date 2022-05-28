@@ -34,7 +34,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             this.Weight = weight;
         }
 
-        public LayoutElement populateLayoutElement(LayoutElement element, KeyboardStyle style)
+        public LayoutElement PopulateLayoutElement(LayoutElement element, KeyboardStyle style)
         {
             if ( Width == FILL_PARENT )
             {

@@ -44,7 +44,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             Disabled = 4
         }
 
-        public static GameObject create(SteamVR_Input_Sources inputSource )
+        public static GameObject Instantiate(SteamVR_Input_Sources inputSource )
         {
             GameObject pointerRoot = new GameObject();
             pointerRoot.name = "CanvasPointer";
@@ -57,7 +57,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
 
 
         [HideFromIl2Cpp]
-        public SteamVR_Input_Sources getInputSource()
+        public SteamVR_Input_Sources GetInputSource()
         {
             return m_InputSource;
         }
@@ -86,8 +86,8 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             mFarCurve.AddKey(1, LINE_WIDTH);
             m_LineRenderer.widthCurve = mFarCurve;
 
-            Color startColor = KeyboardStyle.getPointerLineColor();
-            Color endColor = KeyboardStyle.getPointerLineColor();
+            Color startColor = KeyboardStyle.GetPointerLineColor();
+            Color endColor = KeyboardStyle.GetPointerLineColor();
             endColor.a = 0;
 
             m_LineRenderer.startColor = startColor;
@@ -103,17 +103,17 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
 
             m_dotMaterial = new Material(Shader.Find("Unlit/Color") );
             m_dotMaterial.renderQueue = (int)RenderQueue.Overlay +2;
-            m_dotMaterial.color = KeyboardStyle.getPointerLineColor();
+            m_dotMaterial.color = KeyboardStyle.GetPointerLineColor();
             m_dotMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
             m_Dot.GetComponent<MeshRenderer>().material = m_dotMaterial;
         }
 
         private void Start()
         {
-            orientBeam();
+            OrientBeam();
         }
 
-        public void orientBeam()
+        public void OrientBeam()
         {
             this.transform.localPosition = new Vector3(0, -0.025f, -0.06f);
             this.transform.localRotation = Quaternion.Euler(45, 0, 0);
@@ -121,37 +121,37 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
 
         private void Update()
         {
-            doRaycast();
-            handleMove();
-            handleInput();
-            updateLine();
+            DoRaycast();
+            HandleMove();
+            HandleInput();
+            UpdateLine();
         }
 
-        private static MonoPointerEvent getButton(RaycastHit hit)
+        private static MonoPointerEvent GetButton(RaycastHit hit)
         {
             return hit.collider?.gameObject?.GetComponent<MonoPointerEvent>();
         }
 
-        private static bool isCollider(RaycastHit hit)
+        private static bool IsCollider(RaycastHit hit)
         {
             return hit.collider != null;
         }
 
-        private void handleInput()
+        private void HandleInput()
         {
             bool down = m_click.GetStateDown(m_InputSource);
             bool up = m_click.GetStateUp(m_InputSource);
 
             if (up || down)
             {
-                MonoPointerEvent button = getButton(m_currentHit);
+                MonoPointerEvent button = GetButton(m_currentHit);
 
                 if (down)
                 {
                     
                     if ( button != null)
                     {
-                        button.onPointerDown(new PointerEvent(m_currentHit.point));
+                        button.OnPointerDown(new PointerEvent(m_currentHit.point));
                         m_ButtonPressHit = m_currentHit;
                     }
                 }
@@ -160,12 +160,12 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
                 {
                     if ( m_ButtonPressHit.collider != m_currentHit.collider )
                     {
-                        MonoPointerEvent downButton = getButton(m_ButtonPressHit);
-                        downButton?.onPointerUp(new PointerEvent(m_currentHit.point));
+                        MonoPointerEvent downButton = GetButton(m_ButtonPressHit);
+                        downButton?.OnPointerUp(new PointerEvent(m_currentHit.point));
                     }
                     else
                     {
-                        button?.onPointerUp( new PointerEvent(m_currentHit.point) );
+                        button?.OnPointerUp( new PointerEvent(m_currentHit.point) );
 
                     }
 
@@ -174,7 +174,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             }
         }
 
-        private void doRaycast()
+        private void DoRaycast()
         {
             RaycastHit hit;
             bool hitSomething = Physics.Raycast(
@@ -190,31 +190,31 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             m_PointerEndPosition = m_currentHit.point;
         }
 
-        private void handleMove()
+        private void HandleMove()
         {
-            MonoPointerEvent button = getButton(m_currentHit);
+            MonoPointerEvent button = GetButton(m_currentHit);
 
             if (m_currentHit.collider != m_prevHit.collider)
             {
-                MonoPointerEvent prevButton = getButton(m_prevHit);
+                MonoPointerEvent prevButton = GetButton(m_prevHit);
                 prevButton?.OnPointerExit(new PointerEvent(m_prevHit.point));
 
                 button?.OnPointerEnter(new PointerEvent(m_prevHit.point));
-                m_CurrentDotSize = button ? button.getPointerSize(m_DefaultDotSize) : m_DefaultDotSize;
+                m_CurrentDotSize = button ? button.GetPointerSize(m_DefaultDotSize) : m_DefaultDotSize;
             }
 
              // Target may decide to move pointer end somewhere else for smoothing.
              if ( button != null )
              {
-                m_PointerEndPosition = button.onPointerMove(new PointerEvent(m_currentHit.point));
+                m_PointerEndPosition = button.OnPointerMove(new PointerEvent(m_currentHit.point));
               }
 
    
         }
 
-        public void updateLine()
+        public void UpdateLine()
         {
-            bool hit = isCollider(m_currentHit);
+            bool hit = IsCollider(m_currentHit);
 
             Vector3 endPosition;
             if (hit)

@@ -25,7 +25,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             this.To = to;
         }
 
-        public Color evaluate( float deltaTime )    // Pass 0 to just get current
+        public Color Evaluate( float deltaTime )    // Pass 0 to just get current
         {
             m_elapsedTime += deltaTime;
 
@@ -39,7 +39,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             return (From * (1f - transitionRatio) + (To.destinationColor * transitionRatio));
         }
 
-        public bool isFinished()
+        public bool IsFinished()
         {
             return m_transitionFinished;
         }
@@ -93,7 +93,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             m_propertyBlock = new MaterialPropertyBlock();
         }
 
-        public void setColorStates(ColorStates states )
+        public void SetColorStates(ColorStates states )
         {
             m_ColorStates = states;
             m_currentState = m_ColorStates.normal;
@@ -105,10 +105,10 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         {
             if (m_Transition != null)
             {
-                m_propertyBlock.SetColor("_Color", m_Transition.evaluate(Time.deltaTime));
+                m_propertyBlock.SetColor("_Color", m_Transition.Evaluate(Time.deltaTime));
                 m_renderer.SetPropertyBlock(m_propertyBlock);
 
-                if (m_Transition.isFinished())
+                if (m_Transition.IsFinished())
                     m_Transition = null;
             }
 
@@ -131,22 +131,22 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             }
         }
 
-        public void setBackgroundEnabled(bool enable)
+        public void SetBackgroundEnabled(bool enable)
         {
             m_background.enabled = enable;
         }
 
-        public RoundedCubeBackground getBackground()
+        public RoundedCubeBackground GetBackground()
         {
             return m_background;
         }
 
         [HideFromIl2Cpp]
-        private ColorTransition getTransitionFromCurrenTo(ColorTransitionState targetState )
+        private ColorTransition GetTransitionFromCurrentTo(ColorTransitionState targetState )
         {
             Color startColor;
             if (m_Transition != null)
-                startColor = m_Transition.evaluate(0);
+                startColor = m_Transition.Evaluate(0);
             else
                 startColor = m_currentState.destinationColor;
 
@@ -157,7 +157,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         public override void OnPointerEnter(PointerEvent ev)
         {
             IsHighlighted = true;
-            m_Transition = getTransitionFromCurrenTo(m_ColorStates.highlighted);
+            m_Transition = GetTransitionFromCurrentTo(m_ColorStates.highlighted);
         }
 
         [HideFromIl2Cpp]
@@ -171,32 +171,32 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             else
             {
                 m_currentState = m_ColorStates.normal;
-                m_Transition = getTransitionFromCurrenTo(m_ColorStates.normal);
+                m_Transition = GetTransitionFromCurrentTo(m_ColorStates.normal);
             }
         }
 
         [HideFromIl2Cpp]
-        public override Vector3 onPointerMove(PointerEvent ev)
+        public override Vector3 OnPointerMove(PointerEvent ev)
         {
             return ev.Position;
         }
 
         [HideFromIl2Cpp]
-        public override void onPointerDown(PointerEvent ev)
+        public override void OnPointerDown(PointerEvent ev)
         {
             m_downDelta = 0;
             m_keyRepeatDelta = 0;
             IsPressed = true;
             OnClick.Invoke();
-            m_Transition = getTransitionFromCurrenTo(m_ColorStates.pressed);
+            m_Transition = GetTransitionFromCurrentTo(m_ColorStates.pressed);
             m_currentState = m_ColorStates.pressed;
         }
 
         [HideFromIl2Cpp]
-        public override void onPointerUp(PointerEvent ev)
+        public override void OnPointerUp(PointerEvent ev)
         {
             IsPressed = false;
-            m_Transition = getTransitionFromCurrenTo( IsHighlighted ? m_ColorStates.highlighted : m_ColorStates.normal);
+            m_Transition = GetTransitionFromCurrentTo( IsHighlighted ? m_ColorStates.highlighted : m_ColorStates.normal);
             m_currentState = IsHighlighted ? m_ColorStates.highlighted : m_ColorStates.normal;
         }
     }

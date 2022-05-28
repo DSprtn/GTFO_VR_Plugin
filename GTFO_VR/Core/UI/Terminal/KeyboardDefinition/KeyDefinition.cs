@@ -56,7 +56,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             this.Input = input;
             this.Label = label;
             this.Parameters = layoutParameters;
-            populateInput();
+            PopulateInput();
         }
 
         public KeyDefinition(KeyType type, string label) : this(type, label, new LayoutParameters() ){ }
@@ -69,27 +69,27 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             this.KeyType = type;
             this.Label = label;
             this.Parameters = layoutParameters;
-            populateInput();
+            PopulateInput();
         }
 
-        public KeyDefinition setRepeatKey( bool repeatKey)
+        public KeyDefinition SetRepeatKey( bool repeatKey)
         {
             this.RepeatKey = repeatKey;
             return this;
         }
 
-        public KeyDefinition setApperance( KeyApperanceType apperance )
+        public KeyDefinition SetApperance( KeyApperanceType apperance )
         {
             this.Appearance = apperance;
             return this;
         }
 
-        public bool hasInput()
+        public bool HasInput()
         {
             return Input != null;
         }
 
-        private void populateInput()
+        private void PopulateInput()
         {
             if (Input != null)
                 return;
@@ -114,7 +114,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             }
         }
 
-        public void updateContent( string input, string label )
+        public void UpdateContent( string input, string label )
         {
             this.Input = input;
             this.Label = label;
@@ -134,15 +134,15 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             m_button = buttonRoot.AddComponent<PhysicalButton>();
 
             LayoutElement element = buttonRoot.AddComponent<LayoutElement>();
-            this.Parameters.populateLayoutElement(element, inheritedStyle);
+            this.Parameters.PopulateLayoutElement(element, inheritedStyle);
 
             /////////////////////
             // Button itself
             /////////////////////
 
-            RoundedCubeBackground background = m_button.getBackground();
+            RoundedCubeBackground background = m_button.GetBackground();
 
-            background.setMaterial(inheritedStyle.getKeyMaterial());
+            background.SetMaterial(inheritedStyle.GetKeyMaterial());
             background.Radius = inheritedStyle.keyBackgroundStyle.radius;
             background.CornerVertices = inheritedStyle.keyBackgroundStyle.cornerVertices;
             background.Padding = inheritedStyle.keyBackgroundStyle.padding;
@@ -150,16 +150,16 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             switch (Appearance)
             {
                 case KeyApperanceType.NORMAL:
-                    m_button.setColorStates(inheritedStyle.getNormalKeyStates());
+                    m_button.SetColorStates(inheritedStyle.GetNormalKeyStates());
                     break;
                 case KeyApperanceType.ALT:
-                    m_button.setColorStates(inheritedStyle.getAltKeyStates());
+                    m_button.SetColorStates(inheritedStyle.GetAltKeyStates());
                     break;
                 case KeyApperanceType.EXIT:
-                    m_button.setColorStates(inheritedStyle.getExitKeyStates());
+                    m_button.SetColorStates(inheritedStyle.GetExitKeyStates());
                     break;
                 case KeyApperanceType.GONE:
-                    m_button.setBackgroundEnabled(false);
+                    m_button.SetBackgroundEnabled(false);
                     break;
             }
 
@@ -176,8 +176,8 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             // Center all the things
             m_text.fontSize = inheritedStyle.FontSize;
             m_text.alignment = TextAlignmentOptions.Center;
-            m_text.fontSharedMaterial = inheritedStyle.getFontMaterial(m_text.fontMaterial ); ;
-            m_text.color = inheritedStyle.getTextColor();
+            m_text.fontSharedMaterial = inheritedStyle.GetFontMaterial(m_text.fontMaterial ); ;
+            m_text.color = inheritedStyle.GetTextColor();
 
             // Some of these buttons have their sizes resolved at runtime, so text object much grow to fit their content
             ContentSizeFitter sizeFitter = textObject.AddComponent<ContentSizeFitter>();
@@ -188,14 +188,14 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             // Click listener
             /////////////////////
 
-            m_button.OnClick.AddListener( (UnityAction) (() => handleClick(keyboardRoot)) );
+            m_button.OnClick.AddListener( (UnityAction) (() => HandleClick(keyboardRoot)) );
             if (RepeatKey)
                 m_button.RepeatKey = true;
 
             return buttonRoot;
         }
 
-        public void handleClick( TerminalKeyboardInterface keyboardRoot )
+        public void HandleClick( TerminalKeyboardInterface keyboardRoot )
         {
             keyboardRoot.HandleInput(this);
         }
