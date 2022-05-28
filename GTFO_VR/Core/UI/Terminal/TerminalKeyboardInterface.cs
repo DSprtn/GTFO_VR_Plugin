@@ -16,21 +16,21 @@ namespace GTFO_VR.Core.UI.Terminal
         public TerminalKeyboardInterface(IntPtr value) : base(value) { }
 
         private LevelGeneration.LG_ComputerTerminal m_terminal;
-        private KeyboardStyle m_keyboardStyle = new KeyboardStyle();
 
         private GameObject m_leftKeyboard;
         private GameObject m_rightKeyboard;
         private GameObject m_bottomKeyboard;
 
         private KeyDefinition m_ZoneButton;
-
         private TerminalReader m_Reader;
+
+        private KeyboardStyle m_keyboardStyle = new KeyboardStyle();
 
         public static readonly int LAYER = 2;   // ignore raycast, by defaul at least.
         public static readonly int LAYER_MASK = 1 << LAYER;
         public static readonly float CANVAS_SCALE = 0.045f; // Same scaling used by GTFO, because otherwise units are silly.
 
-        public static string currentFrameInput = "";
+        private static string currentFrameInput = "";
 
         bool m_dataDirty = false;
 
@@ -335,7 +335,7 @@ namespace GTFO_VR.Core.UI.Terminal
         private static KeyboardLayout getRightKeyboard( out KeyDefinition zoneButton )
         {
             LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.LowerLeft, LayoutParameters.WrapContent());
-            bottomKeyboardLayout.m_showBackground = true;
+            bottomKeyboardLayout.ShowBackground = true;
 
             LayoutParameters rowParams = new LayoutParameters( LayoutParameters.WRAP_CONTENT, 1);
 
@@ -376,7 +376,7 @@ namespace GTFO_VR.Core.UI.Terminal
         private static KeyboardLayout getLeftKeyboardLayout()
         {
             LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.LowerRight, LayoutParameters.WrapContent());
-            bottomKeyboardLayout.m_showBackground = true;
+            bottomKeyboardLayout.ShowBackground = true;
 
             LayoutParameters rowParams = new LayoutParameters(LayoutParameters.WRAP_CONTENT, 1);
  
@@ -425,7 +425,7 @@ namespace GTFO_VR.Core.UI.Terminal
         private static KeyboardLayout getBottomKeyboardLayout()
         {
             LinearLayout bottomKeyboardLayout = new LinearLayout(LinearOrientation.VERTICAL, TextAnchor.UpperCenter, LayoutParameters.WrapContent() );
-            bottomKeyboardLayout.m_showBackground = true;
+            bottomKeyboardLayout.ShowBackground = true;
 
             LayoutParameters rowParams = new LayoutParameters(15, 1);
 

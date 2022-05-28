@@ -6,7 +6,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
     public class PointerHistory
     {
         private static readonly int POINTER_SMOOTHING_COUNT = 5;
-        Queue<Vector3> m_pointerHistory = new Queue<Vector3>();
+        private Queue<Vector3> m_pointerHistory = new Queue<Vector3>();
 
         public void addPointerHistory(Vector3 position)
         {

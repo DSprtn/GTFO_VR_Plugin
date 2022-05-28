@@ -11,15 +11,15 @@ namespace GTFO_VR.Core.UI.Terminal
 
         private static readonly float DEGREES_90_IN_RADS = 90f * 0.0174532924F;
         
-        public float width = 10;
-        public float height = 10;
-        public float radius = 3;
-        public float padding = 0.01f;   // Negative padding works too
-        public int cornerVertices = 4;
-        public bool autoSize = true;
+        public float Width = 10;
+        public float Height = 10;
+        public float Radius = 3;
+        public float Padding = 0.01f;   // Negative padding works too
+        public int CornerVertices = 4;
+        public bool AutoSize = true;
         
-        private MeshFilter meshFilter;
-        private MeshRenderer meshRenderer;
+        private MeshFilter m_meshFilter;
+        private MeshRenderer m_renderer;
 
         private void Awake()
         {
@@ -28,7 +28,7 @@ namespace GTFO_VR.Core.UI.Terminal
 
         void OnEnable()
         {
-            meshRenderer.enabled = true;
+            m_renderer.enabled = true;
         }
 
         private void Start()
@@ -38,21 +38,21 @@ namespace GTFO_VR.Core.UI.Terminal
         
         private void ensureInit()
         {
-            if (this.meshFilter == null)
+            if (this.m_meshFilter == null)
             {
-                this.meshFilter = GetComponent<MeshFilter>();
-                if (this.meshFilter == null)
+                this.m_meshFilter = GetComponent<MeshFilter>();
+                if (this.m_meshFilter == null)
                 {
-                    meshFilter = this.gameObject.AddComponent<MeshFilter>();
-                    meshRenderer = this.gameObject.AddComponent<MeshRenderer>();
-                    meshRenderer.material = new Material(Shader.Find("Unlit/Color"));
+                    m_meshFilter = this.gameObject.AddComponent<MeshFilter>();
+                    m_renderer = this.gameObject.AddComponent<MeshRenderer>();
+                    m_renderer.material = new Material(Shader.Find("Unlit/Color"));
                 }
             }
         }
 
         void OnDisable()
         {
-            meshRenderer.enabled = false;
+            m_renderer.enabled = false;
         }
 
         /*
@@ -65,22 +65,22 @@ namespace GTFO_VR.Core.UI.Terminal
 
         public void setSize(float width, float height)
         {
-            this.width = width;
-            this.height = height;
+            this.Width = width;
+            this.Height = height;
             GenerateMesh();
         }
 
         public void setMaterial( Material mat )
         {
-            if (meshRenderer != null)
+            if (m_renderer != null)
             {
-                meshRenderer.sharedMaterial = mat;
+                m_renderer.sharedMaterial = mat;
             }
         }
 
         private void OnRectTransformDimensionsChange()
         {
-            if (autoSize)
+            if (AutoSize)
             {
                 RectTransform rectTransform = GetComponent<RectTransform>();
                 if (rectTransform != null)
@@ -94,11 +94,11 @@ namespace GTFO_VR.Core.UI.Terminal
         {
             ensureInit();
 
-            float halfWidth = (width * 0.5f) - padding;
-            float halfHeight = (height * 0.5f) - padding;
+            float halfWidth = (Width * 0.5f) - Padding;
+            float halfHeight = (Height * 0.5f) - Padding;
 
             // Radius can't be greater than half the width/height, as it'll begin intersecting with itself
-            float viableRadius = radius;
+            float viableRadius = Radius;
             float minRadius = Math.Min( halfWidth, halfHeight);
             if (minRadius < viableRadius)
                 viableRadius = minRadius; 
@@ -157,12 +157,12 @@ namespace GTFO_VR.Core.UI.Terminal
                 7,10,1
             };
 
-            addCurvedCorner(vertices, triangles, 0, 1, 2, cornerVertices);
-            addCurvedCorner(vertices, triangles, 3, 4, 5, cornerVertices);
-            addCurvedCorner(vertices, triangles, 6, 7, 8, cornerVertices);
-            addCurvedCorner(vertices, triangles, 9, 10, 11, cornerVertices);
+            addCurvedCorner(vertices, triangles, 0, 1, 2,   CornerVertices);
+            addCurvedCorner(vertices, triangles, 3, 4, 5,   CornerVertices);
+            addCurvedCorner(vertices, triangles, 6, 7, 8,   CornerVertices);
+            addCurvedCorner(vertices, triangles, 9, 10, 11, CornerVertices);
 
-            meshFilter.mesh = new Mesh { vertices = vertices.ToArray(), triangles = triangles.ToArray() };
+            m_meshFilter.mesh = new Mesh { vertices = vertices.ToArray(), triangles = triangles.ToArray() };
         }
 
         [HideFromIl2Cpp]
@@ -185,13 +185,13 @@ namespace GTFO_VR.Core.UI.Terminal
             {
                 vertices.Add( vertices[center] + Vector3.RotateTowards(startOrigin, endOrigin, degreesPerTriangle * i, 1));
                 triangles.Add(previousVertex);
-                triangles.Add( vertices.Count - 1);
+                triangles.Add(vertices.Count - 1);
                 triangles.Add(center);
 
                 previousVertex = vertices.Count - 1;
             }
 
-            // then draw the final triangle connecting it to the other end
+            // then add the final triangle connecting it to the other end
             triangles.Add(vertices.Count - 1);
             triangles.Add(end);
             triangles.Add(center);

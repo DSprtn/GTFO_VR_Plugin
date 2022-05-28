@@ -35,12 +35,12 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
     public class KeyDefinition : KeyboardLayout
     {
         public KeyType KeyType = KeyType.INPUT;
-        public string Input;       // if character or input
+        public string Input;
         public string Label;
-        public LayoutParameters layoutParameters;
-        public KeyboardStyle style;
+        public LayoutParameters Parameters;
+        public KeyboardStyle Style;
         public bool RepeatKey = false;
-        public KeyApperanceType apperance = KeyApperanceType.NORMAL;
+        public KeyApperanceType Appearance = KeyApperanceType.NORMAL;
 
         private PhysicalButton m_button;
         private TextMeshProUGUI m_text;
@@ -55,7 +55,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
         {
             this.Input = input;
             this.Label = label;
-            this.layoutParameters = layoutParameters;
+            this.Parameters = layoutParameters;
             populateInput();
         }
 
@@ -68,7 +68,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
         {
             this.KeyType = type;
             this.Label = label;
-            this.layoutParameters = layoutParameters;
+            this.Parameters = layoutParameters;
             populateInput();
         }
 
@@ -80,7 +80,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
 
         public KeyDefinition setApperance( KeyApperanceType apperance )
         {
-            this.apperance = apperance;
+            this.Appearance = apperance;
             return this;
         }
 
@@ -124,8 +124,8 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
         public GameObject GenerateLayout(TerminalKeyboardInterface keyboardRoot, KeyboardStyle inheritedStyle)
         {
             
-            if (this.style != null)
-                inheritedStyle = this.style;
+            if (this.Style != null)
+                inheritedStyle = this.Style;
 
             GameObject buttonRoot = new GameObject();
             buttonRoot.layer = TerminalKeyboardInterface.LAYER;
@@ -134,18 +134,20 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             m_button = buttonRoot.AddComponent<PhysicalButton>();
 
             LayoutElement element = buttonRoot.AddComponent<LayoutElement>();
-            this.layoutParameters.populateLayoutElement(element, inheritedStyle);
+            this.Parameters.populateLayoutElement(element, inheritedStyle);
 
             /////////////////////
             // Button itself
             /////////////////////
 
-            m_button.m_background.setMaterial(inheritedStyle.getKeyMaterial());
-            m_button.m_background.radius = inheritedStyle.keyBackgroundStyle.radius;
-            m_button.m_background.cornerVertices = inheritedStyle.keyBackgroundStyle.cornerVertices;
-            m_button.m_background.padding = inheritedStyle.keyBackgroundStyle.padding;
+            RoundedCubeBackground background = m_button.getBackground();
 
-            switch (apperance)
+            background.setMaterial(inheritedStyle.getKeyMaterial());
+            background.Radius = inheritedStyle.keyBackgroundStyle.radius;
+            background.CornerVertices = inheritedStyle.keyBackgroundStyle.cornerVertices;
+            background.Padding = inheritedStyle.keyBackgroundStyle.padding;
+
+            switch (Appearance)
             {
                 case KeyApperanceType.NORMAL:
                     m_button.setColorStates(inheritedStyle.getNormalKeyStates());
@@ -186,9 +188,9 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             // Click listener
             /////////////////////
 
-            m_button.onClick.AddListener( (UnityAction) (() => handleClick(keyboardRoot)) );
+            m_button.OnClick.AddListener( (UnityAction) (() => handleClick(keyboardRoot)) );
             if (RepeatKey)
-                m_button.m_repeatKey = true;
+                m_button.RepeatKey = true;
 
             return buttonRoot;
         }

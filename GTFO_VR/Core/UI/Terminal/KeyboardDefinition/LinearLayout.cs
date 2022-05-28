@@ -9,14 +9,16 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
 
     public class LinearLayout : KeyboardLayout
     {
-        private LayoutParameters m_layoutParameters;
-        private LinearOrientation m_orientation;
-        private TextAnchor m_gravity;  // Turns out they reuse this for Auto Layout.
         private string m_name;
+        private TextAnchor m_gravity;  // Turns out they reuse this for Auto Layout.
         private KeyboardStyle m_style;
-        public bool m_showBackground = false;
+        private LinearOrientation m_orientation;
+        private LayoutParameters m_layoutParameters;
 
         private List<KeyboardLayout> m_children = new List<KeyboardLayout>();
+
+
+        public bool ShowBackground = false;
         
         public LinearLayout(LinearOrientation orientation=LinearOrientation.VERTICAL) : this(orientation, TextAnchor.UpperCenter, LayoutParameters.FillParent() ) { }
 
@@ -52,14 +54,14 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             LayoutElement element = panel.AddComponent<LayoutElement>();
             m_layoutParameters.populateLayoutElement(element, inheritedStyle);
 
-            if ( m_showBackground )
+            if ( ShowBackground )
             {
                 RoundedCubeBackground background = panel.AddComponent<RoundedCubeBackground>();
                 background.setMaterial(inheritedStyle.getBackgroundMaterial());
-                background.radius = inheritedStyle.keyboardBackgroundStyle.radius;
-                background.cornerVertices = inheritedStyle.keyboardBackgroundStyle.cornerVertices;
-                background.padding = inheritedStyle.keyboardBackgroundStyle.padding;
-                background.autoSize = true;
+                background.Radius = inheritedStyle.keyboardBackgroundStyle.radius;
+                background.CornerVertices = inheritedStyle.keyboardBackgroundStyle.cornerVertices;
+                background.Padding = inheritedStyle.keyboardBackgroundStyle.padding;
+                background.AutoSize = true;
 
                 background.GetComponent<MeshRenderer>().sharedMaterial = inheritedStyle.getBackgroundMaterial();
             }

@@ -13,36 +13,35 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
 
     public class ColorTransition
     {
-        public Color from;
-        public ColorTransitionState to;
+        public Color From;
+        public ColorTransitionState To;
 
-        bool transitionFinished;
-
-        float elapsedTime = 0;
+        bool m_transitionFinished;
+        float m_elapsedTime = 0;
 
         public ColorTransition(Color from, ColorTransitionState to)
         {
-            this.from = from;
-            this.to = to;
+            this.From = from;
+            this.To = to;
         }
 
         public Color evaluate( float deltaTime )    // Pass 0 to just get current
         {
-            elapsedTime += deltaTime;
+            m_elapsedTime += deltaTime;
 
-            float transitionRatio = to.transitionTime <= 0 ? 1 : elapsedTime / to.transitionTime;
+            float transitionRatio = To.transitionTime <= 0 ? 1 : m_elapsedTime / To.transitionTime;
             if (transitionRatio > 1)
             {
                 transitionRatio = 1;
-                transitionFinished = true;
+                m_transitionFinished = true;
             }
 
-            return (from * (1f - transitionRatio) + (to.destinationColor * transitionRatio));
+            return (From * (1f - transitionRatio) + (To.destinationColor * transitionRatio));
         }
 
         public bool isFinished()
         {
-            return transitionFinished;
+            return m_transitionFinished;
         }
     }
 
@@ -57,24 +56,25 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
     {
         public PhysicalButton(IntPtr value) : base(value) { }
 
-        public BoxCollider m_collider;
-        public RectTransform m_rectTrans;
-        public RoundedCubeBackground m_background;
-        public MeshRenderer m_renderer;
+        private BoxCollider m_collider;
+        private RectTransform m_rectTrans;
+        private RoundedCubeBackground m_background;
+        private MeshRenderer m_renderer;
 
         private MaterialPropertyBlock m_propertyBlock;
-        public ButtonClickedEvent onClick = new ButtonClickedEvent();
+        public ButtonClickedEvent OnClick = new ButtonClickedEvent();
 
         private ColorTransitionState m_currentState;
         private ColorStates m_ColorStates;
         private ColorTransition m_Transition = null;    // Null when not in a transition.
 
-        public bool isHighlighted = false;
-        public bool isPressed = false;
+        public bool IsHighlighted = false;
+        public bool IsPressed = false;
 
-        public bool m_repeatKey = false;
-        public float m_repeatKeyTriggerTime = 0.5f;
-        public float m_repeatKeyDelay = 0.01f;
+        public bool RepeatKey = false;
+        public float RepeatKeyTriggerTime = 0.5f;
+        public float RepeatKeyDelay = 0.01f;
+
         private float m_downDelta = 0;
         private float m_keyRepeatDelta = 0;
 
@@ -88,7 +88,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             m_collider = this.gameObject.AddComponent<BoxCollider>();
             m_rectTrans = this.gameObject.AddComponent<RectTransform>();
             m_background = this.gameObject.AddComponent<RoundedCubeBackground>();
-            m_background.autoSize = true;
+            m_background.AutoSize = true;
             m_renderer = this.gameObject.GetComponent<MeshRenderer>();
             m_propertyBlock = new MaterialPropertyBlock();
         }
@@ -112,13 +112,13 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
                     m_Transition = null;
             }
 
-            if (isPressed)
+            if (IsPressed)
             {
-                if (m_repeatKey && m_repeatKeyTriggerTime >= 0 &&  m_downDelta > m_repeatKeyTriggerTime)
+                if (RepeatKey && RepeatKeyTriggerTime >= 0 &&  m_downDelta > RepeatKeyTriggerTime)
                 {
-                    if (m_keyRepeatDelta > m_repeatKeyDelay)
+                    if (m_keyRepeatDelta > RepeatKeyDelay)
                     {
-                        onClick.Invoke();
+                        OnClick.Invoke();
                         m_keyRepeatDelta = 0;
                     }
                     else
@@ -136,6 +136,11 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             m_background.enabled = enable;
         }
 
+        public RoundedCubeBackground getBackground()
+        {
+            return m_background;
+        }
+
         [HideFromIl2Cpp]
         private ColorTransition getTransitionFromCurrenTo(ColorTransitionState targetState )
         {
@@ -151,15 +156,15 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         [HideFromIl2Cpp]
         public override void OnPointerEnter(PointerEvent ev)
         {
-            isHighlighted = true;
+            IsHighlighted = true;
             m_Transition = getTransitionFromCurrenTo(m_ColorStates.highlighted);
         }
 
         [HideFromIl2Cpp]
         public override void OnPointerExit(PointerEvent ev)
         {
-            isHighlighted = false;
-            if (isPressed)
+            IsHighlighted = false;
+            if (IsPressed)
             {
                 m_currentState = m_ColorStates.pressed;
             }
@@ -173,7 +178,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         [HideFromIl2Cpp]
         public override Vector3 onPointerMove(PointerEvent ev)
         {
-            return ev.position;
+            return ev.Position;
         }
 
         [HideFromIl2Cpp]
@@ -181,8 +186,8 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         {
             m_downDelta = 0;
             m_keyRepeatDelta = 0;
-            isPressed = true;
-            onClick.Invoke();
+            IsPressed = true;
+            OnClick.Invoke();
             m_Transition = getTransitionFromCurrenTo(m_ColorStates.pressed);
             m_currentState = m_ColorStates.pressed;
         }
@@ -190,9 +195,9 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         [HideFromIl2Cpp]
         public override void onPointerUp(PointerEvent ev)
         {
-            isPressed = false;
-            m_Transition = getTransitionFromCurrenTo( isHighlighted ? m_ColorStates.highlighted : m_ColorStates.normal);
-            m_currentState = isHighlighted ? m_ColorStates.highlighted : m_ColorStates.normal;
+            IsPressed = false;
+            m_Transition = getTransitionFromCurrenTo( IsHighlighted ? m_ColorStates.highlighted : m_ColorStates.normal);
+            m_currentState = IsHighlighted ? m_ColorStates.highlighted : m_ColorStates.normal;
         }
     }
 }

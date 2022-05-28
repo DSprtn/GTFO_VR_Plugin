@@ -13,23 +13,20 @@ namespace GTFO_VR.Core.UI.Terminal
     {
         public TerminalReader(IntPtr value) : base(value) { }
 
+        private TerminalKeyboardInterface m_keyboardRoot;
+
         private static readonly float READER_SIZE_PADDING = 1;
         private static readonly float READER_POINTER_SIZE = 0.005f;
 
-        private TerminalKeyboardInterface m_keyboardRoot;
-
-        public TextMeshPro m_textMesh;
+        private TextMeshPro m_textMesh;
         private BoxCollider m_collider;
 
         private int m_PreviousIndex = -1;
-
         private int m_PreviousIndexStart = -1;
         private int m_PreviousIndexEnd = -1;
-
         private string m_currentSelection = "";
 
         private GameObject m_highlight;
-
         private Material m_underlineMaterial;
 
         private PointerHistory m_pointerHistory = new PointerHistory();
@@ -93,7 +90,7 @@ namespace GTFO_VR.Core.UI.Terminal
             if (m_underlineMaterial == null)
             {
                 Material lineMaterial = new Material(Shader.Find("Unlit/Color"));
-                lineMaterial.color = m_keyboardRoot.getStyle().textHighlightColor;
+                lineMaterial.color = m_keyboardRoot.getStyle().TerminalHighlightColor;
                 m_underlineMaterial = lineMaterial;
             }
 
@@ -279,7 +276,7 @@ namespace GTFO_VR.Core.UI.Terminal
         [HideFromIl2Cpp]
         public override Vector3 onPointerMove(PointerEvent ev)
         {
-            m_pointerHistory.addPointerHistory(ev.position);
+            m_pointerHistory.addPointerHistory(ev.Position);
             Vector3 smoothed = m_pointerHistory.getSmoothenedPointerPosition();
             hoverPointer(smoothed);
             return smoothed;

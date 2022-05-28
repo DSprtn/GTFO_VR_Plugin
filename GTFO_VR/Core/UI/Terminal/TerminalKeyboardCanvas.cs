@@ -8,8 +8,7 @@ namespace GTFO_VR.Core.UI.Terminal
 {
     public class TerminalKeyboardCanvas : MonoBehaviour
     {
-        public UnityEngine.Canvas m_canvas;
-        public TerminalKeyboardInterface m_keyboardRoot;
+        private UnityEngine.Canvas m_canvas;
 
         public TerminalKeyboardCanvas(IntPtr value) : base(value) { }
 

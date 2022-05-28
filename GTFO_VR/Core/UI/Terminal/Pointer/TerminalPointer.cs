@@ -11,17 +11,10 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
     {
         public TerminalPointer(IntPtr value) : base(value) { }
 
-        //private SteamVR_Action_Boolean m_click = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/GrabPinch");
-        private SteamVR_Action_Boolean m_click = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/Shoot");
-
         private static readonly float LINE_WIDTH = 0.003f;
 
-        public static readonly float m_DefaultLength = 0.3f; // Unity not reflecting change unless readonly??
-        public static readonly float m_DefaultDotSize = 0.01f;
-        public float m_CurrentDotSize = m_DefaultDotSize;
-        public GameObject m_Dot;
-
-        private AnimationCurve mFarCurve = new AnimationCurve();
+        //private SteamVR_Action_Boolean m_click = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/GrabPinch"); // Use when testing in editor
+        private SteamVR_Action_Boolean m_click = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/Shoot");
 
         private SteamVR_Input_Sources m_InputSource;    // Right hand left hand
 
@@ -29,10 +22,15 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         private RaycastHit m_currentHit;
         private RaycastHit m_ButtonPressHit;
 
+        private AnimationCurve mFarCurve = new AnimationCurve();
         private LineRenderer m_LineRenderer = null;
-
         private Material m_pointerMaterial;
         private Material m_dotMaterial;
+
+        private static readonly float m_DefaultLength = 0.3f; // Unity not reflecting change unless readonly??
+        private static readonly float m_DefaultDotSize = 0.01f;
+        private float m_CurrentDotSize = m_DefaultDotSize;
+        private GameObject m_Dot;
 
         // Only valid if a collider has been hit
         private Vector3 m_PointerEndPosition = Vector3.zero;

@@ -18,10 +18,10 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             return new LayoutParameters(WRAP_CONTENT, WRAP_CONTENT);
         }
 
-        public float width = 1;     // Size of element multiplied by tile size defined in KeyboardStyle.
-        public float height = 1;
+        public float Width = 1;     // Size of element multiplied by tile size defined in KeyboardStyle.
+        public float Height = 1;
 
-        public float weight = 1;
+        public float Weight = 1;
 
         public LayoutParameters() : this(1, 1, 1) { }
         public LayoutParameters(float width) : this(width, 1, 1) { }
@@ -29,42 +29,42 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
 
         public LayoutParameters( float width, float height, float weight)
         {
-            this.width = width;
-            this.height = height;
-            this.weight = weight;
+            this.Width = width;
+            this.Height = height;
+            this.Weight = weight;
         }
 
         public LayoutElement populateLayoutElement(LayoutElement element, KeyboardStyle style)
         {
-            if ( width == FILL_PARENT )
+            if ( Width == FILL_PARENT )
             {
                 element.preferredWidth = -1;
-                element.flexibleWidth = weight;
+                element.flexibleWidth = Weight;
             }
-            else if (width == WRAP_CONTENT)
+            else if (Width == WRAP_CONTENT)
             {
                 element.preferredWidth = -1;
                 element.flexibleWidth = -1;
             }
             else
             {
-                element.preferredWidth = style.TileSize * this.width;
+                element.preferredWidth = style.TileSize * this.Width;
                 element.flexibleWidth = -1;
             }
 
-            if (height == FILL_PARENT)
+            if (Height == FILL_PARENT)
             {
                 element.preferredHeight = -1;
-                element.flexibleHeight = weight;
+                element.flexibleHeight = Weight;
             }
-            else if (width == WRAP_CONTENT)
+            else if (Width == WRAP_CONTENT)
             {
                 element.preferredHeight = -1;
                 element.flexibleHeight = -1;
             }
             else
             {
-                element.preferredHeight = style.TileSize * this.height;
+                element.preferredHeight = style.TileSize * this.Height;
                 element.flexibleHeight = -1;
             }
 

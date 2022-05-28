@@ -25,7 +25,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         [HideFromIl2Cpp]
         public virtual Vector3 onPointerMove(PointerEvent ev)
         {
-            return ev.position;
+            return ev.Position;
         }
 
         [HideFromIl2Cpp]

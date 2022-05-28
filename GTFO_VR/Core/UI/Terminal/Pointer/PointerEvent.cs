@@ -2,14 +2,15 @@
 
 namespace GTFO_VR.Core.UI.Terminal.Pointer
 {
-    public class PointerEvent
+    public struct PointerEvent
     {
-        public Vector3 position = Vector3.zero;
-        public int pointerId = -1;
+        public Vector3 Position;
+        public int PointerId;
 
         public PointerEvent( Vector3 position )
         {
-            this.position = position;
+            this.Position = position;
+            PointerId = -1;
         }
 
         /*
