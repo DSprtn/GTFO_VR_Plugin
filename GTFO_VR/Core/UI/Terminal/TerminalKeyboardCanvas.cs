@@ -30,8 +30,6 @@ namespace GTFO_VR.Core.UI.Terminal
             canvas.m_canvas = go.AddComponent<UnityEngine.Canvas>();
             canvas.m_canvas.renderMode = RenderMode.WorldSpace;
 
-            go.AddComponent<UnityEngine.UI.GraphicRaycaster>();
-
             RectTransform rect = go.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(width, height);
 
