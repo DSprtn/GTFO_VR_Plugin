@@ -256,6 +256,7 @@ namespace GTFO_VR.Core.VR_Input
         private void OnDestroy()
         {
             FocusStateEvents.OnFocusStateChange -= FocusStateChanged;
+            GameObject.Destroy(m_KeyboardRoot);
         }
     }
 }
