@@ -90,12 +90,14 @@ namespace GTFO_VR.Core.UI.Terminal
             this.gameObject.SetActive(true);
         }
 
+        public bool IsAttachedToTerminal()
+        {
+            return m_terminal != null;
+        }
+
         public void DetatchFromTerminal()
         {
-            if (m_terminal != null)
-            {
-                m_terminal = null;
-            }
+            m_terminal = null;
 
             if (m_Reader != null)
             {

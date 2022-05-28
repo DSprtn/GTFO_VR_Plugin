@@ -185,24 +185,12 @@ namespace GTFO_VR.Core.PlayerBehaviours
             return terminalInteract.m_terminal;
         }
 
-        public static void HideWielded(bool hide)
+        public static void SetWieldedItemVisibility(bool visible)
         {
-            if (!VRConfig.configUseControllers.Value || !PlayerAgent)
-            {
-                return;
-            }
-
-            ItemEquippable heldItem = PlayerAgent.FPItemHolder.WieldedItem;
+            ItemEquippable heldItem = PlayerAgent?.FPItemHolder?.WieldedItem;
             if (heldItem != null)
             {
-                if (hide)
-                {
-                    heldItem.gameObject.SetActive(false);
-                }
-                else
-                {
-                    heldItem.gameObject.SetActive(true);
-                }
+                heldItem.gameObject.SetActive(visible);
             }
         }
 

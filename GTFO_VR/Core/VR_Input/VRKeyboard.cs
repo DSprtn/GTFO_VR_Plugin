@@ -42,19 +42,23 @@ namespace GTFO_VR.Core.VR_Input
             if (state.Equals(eFocusState.ComputerTerminal))
             {
                 bool terminalKeyboardDisplayed = false;
-                if (VRConfig.configTerminalKeyboard.Value)
+                if ( VRConfig.configTerminalKeyboard.Value)
                 {
-                    LevelGeneration.LG_ComputerTerminal terminal = VRPlayer.GetInteractingTerminal();
-                    if (terminal != null)
+                    // Can only interact with in-game keyboard if using motion controllers
+                    if (VRConfig.configUseControllers.Value)
                     {
-                        m_KeyboardRoot.AttachToTerminal(terminal);
-                        Controllers.ToggleTerminalCanvasPointer(true);
-                        VRPlayer.HideWielded(true);
-                        terminalKeyboardDisplayed = true;
-                    }
-                    else
-                    {
-                        Log.Error("Could not get interacting terminal!");
+                        LevelGeneration.LG_ComputerTerminal terminal = VRPlayer.GetInteractingTerminal();
+                        if (terminal != null)
+                        {
+                            m_KeyboardRoot.AttachToTerminal(terminal);
+                            Controllers.ToggleTerminalCanvasPointer(true);
+                            VRPlayer.SetWieldedItemVisibility(false);
+                            terminalKeyboardDisplayed = true;
+                        }
+                        else
+                        {
+                            Log.Error("Could not get interacting terminal!");
+                        }
                     }
                 }
                 
@@ -80,11 +84,11 @@ namespace GTFO_VR.Core.VR_Input
                 SteamVR.instance.overlay.HideKeyboard();
                 SteamVR_Render.unfocusedRenderResolution = .5f;
 
-                if (m_KeyboardRoot)
+                if ( m_KeyboardRoot && m_KeyboardRoot.IsAttachedToTerminal() )
                 {
                     m_KeyboardRoot.DetatchFromTerminal();
                     Controllers.ToggleTerminalCanvasPointer(false);
-                    VRPlayer.HideWielded(false);
+                    VRPlayer.SetWieldedItemVisibility(true);
                 }
             }
         }
