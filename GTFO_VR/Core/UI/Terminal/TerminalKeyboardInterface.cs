@@ -34,9 +34,7 @@ namespace GTFO_VR.Core.UI.Terminal
         public static readonly int LAYER_MASK = 1 << LAYER;
         public static readonly float CANVAS_SCALE = 0.045f; // Same scaling used by GTFO, because otherwise units are silly.
 
-        private static string currentFrameInput = "";
-
-        bool m_dataDirty = false;
+        private static string currentInput = "";
 
         public static TerminalKeyboardInterface create()
         {
@@ -266,11 +264,9 @@ namespace GTFO_VR.Core.UI.Terminal
         [HideFromIl2Cpp]
         public void HandleInput( KeyDefinition key )
         {
-            CheckDirty();
-
             if (key.HasInput())
             {
-                currentFrameInput += key.Input;
+                currentInput += key.Input;
             }
             else
             {
@@ -315,43 +311,23 @@ namespace GTFO_VR.Core.UI.Terminal
             }
         }
 
-        /// <summary>
-        /// GTFO checks for text input at strange times, so some hackery is required.
-        /// </summary>
-        private void LateUpdate()
-        {
-            m_dataDirty = true;
-        }
-
         public static string GetKeyboardInput()
         {
-            return currentFrameInput;
+            // This is only called once, so we can just clear it here.
+            string retString = currentInput;
+            currentInput = "";
+            return retString;
+        }
+
+        public static bool HasKeyboardInput()
+        {
+            return !String.IsNullOrEmpty(currentInput);
         }
 
         [HideFromIl2Cpp]
         public void HandleInput(string str)
         {
-            CheckDirty();
-            currentFrameInput += str;
-        }
-
-        /// <summary>
-        /// Input considered dirty ( old ) after LateUpdate.
-        /// If true clear before input or Update().
-        /// </summary>
-        private void CheckDirty()
-        {
-            if (m_dataDirty)
-            {
-                currentFrameInput = "";
-                m_dataDirty = false;
-            }
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-            CheckDirty();
+            currentInput += str;
         }
 
         [HideFromIl2Cpp]

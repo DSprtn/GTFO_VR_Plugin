@@ -36,8 +36,7 @@ namespace GTFO_VR.Detours
         private unsafe static bool OurGetAnyInput()
         {
             bool vr_input = VRKeyboard.GetKeyboardInput() != "";
-            bool terminal_vr_input = TerminalKeyboardInterface.GetKeyboardInput() != "";
-            return vr_input || terminal_vr_input || originalAnyInputDownGetter();
+            return vr_input || TerminalKeyboardInterface.HasKeyboardInput() || originalAnyInputDownGetter();
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
