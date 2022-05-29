@@ -459,7 +459,7 @@ namespace GTFO_VR.Core.UI.Terminal
                 {
                     LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperLeft, shortRowParams);
 
-                    keyboardRow.AddChild(new KeyDefinition(KeyType.TAB, "Tab", 1.5f)
+                    keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", 1.5f) // Tab
                         .SetApperance(KeyApperanceType.ALT));
                     keyboardRow.AddChild(new KeyDefinition("q"));
                     keyboardRow.AddChild(new KeyDefinition("w"));
