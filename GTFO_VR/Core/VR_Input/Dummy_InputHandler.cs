@@ -114,7 +114,7 @@ namespace GTFO_VR.Core.VR_Input
         public static bool GetAction(InputAction action)
         {
             DummyAction dummyAction = GetDummyBoolActionMapping(action);
-            if (dummyAction != null && dummyAction.getDown())
+            if (dummyAction != null)
                 return dummyAction.getState();
             return false;
         }
