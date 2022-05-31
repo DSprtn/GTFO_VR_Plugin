@@ -348,14 +348,14 @@ namespace GTFO_VR.Core.UI.Terminal
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("AMMO ", "AMMO ", 2).SetApperance(KeyApperanceType.ALT));
-                keyboardRow.AddChild(new KeyDefinition("TOOL ", "TOOL ", 2).SetApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("AMMOPACK ", "AMMO ", 2).SetApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("TOOL_REFILL ", "TOOL ", 2).SetApperance(KeyApperanceType.ALT));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
 
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.LowerLeft, rowParams);
-                keyboardRow.AddChild(new KeyDefinition("MEDI ", "MEDI", 2).SetApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition("MEDIPACK ", "MEDI", 2).SetApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition("DISINFECT ", "DISIN", 2).SetApperance(KeyApperanceType.ALT));
                 bottomKeyboardLayout.AddChild(keyboardRow);
             }
