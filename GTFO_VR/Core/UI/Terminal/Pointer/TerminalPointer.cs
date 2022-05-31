@@ -120,7 +120,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         public void OrientBeam()
         {
             this.transform.localPosition = new Vector3(0, -0.025f, -0.06f);
-            this.transform.localRotation = Quaternion.Euler(45, 0, 0);
+            this.transform.localRotation = Quaternion.Euler(20, 0, 0);
         }
 
         private void Update()
