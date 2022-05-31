@@ -48,8 +48,16 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
 
         }
 
+        public static Color GetPointerDotColor()
+        {
+            Color color = pointerLineColor * colorBrightnessMultiplier;
+            color.a = 1;
+            return color;
+        }
+
         public static Color GetPointerLineColor()
         {
+            // Alpha gradient doesn't look right unless we leave the multiplied alpha value here
             return pointerLineColor * colorBrightnessMultiplier;
         }
 

@@ -80,8 +80,8 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             // Line renderer appears to update with a significant delay.
             // If we keep it in local space it should only affect the length and be imperceptible.
             m_LineRenderer.useWorldSpace = false;
-
-            m_pointerMaterial = new Material(Shader.Find("Sprites/Default"));
+           
+            m_pointerMaterial = new Material(Shader.Find("Sprites/Default")); // Required for gradient, so clips a bit
             m_pointerMaterial.renderQueue = (int)RenderQueue.Overlay + 2;
 
             m_LineRenderer.material = m_pointerMaterial;
@@ -105,9 +105,9 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             UnityEngine.Object.Destroy(m_Dot.GetComponent<SphereCollider>());
             m_Dot.transform.SetParent(gameObject.transform);
 
-            m_dotMaterial = new Material(Shader.Find("Unlit/Color") );
+            m_dotMaterial = new Material(Shader.Find("UI/Default") );
             m_dotMaterial.renderQueue = (int)RenderQueue.Overlay +2;
-            m_dotMaterial.color = KeyboardStyle.GetPointerLineColor();
+            m_dotMaterial.color = KeyboardStyle.GetPointerDotColor();
             m_dotMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
             m_Dot.GetComponent<MeshRenderer>().material = m_dotMaterial;
         }
