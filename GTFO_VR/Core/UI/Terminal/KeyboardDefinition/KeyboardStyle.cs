@@ -35,7 +35,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
 
         public Color FontColor = new Color(1, 1, 1);
         public Color TerminalHighlightColor = new Color(0f, 0.075f, 0.075f);
-        public Color BackgroundColor = new Color(34f / 255f, 34f / 255f, 34f / 255f);
+        public Color BackgroundColor = new Color(26f / 255f, 26f / 255f, 26f / 255f);
 
         private Material m_keyMaterial;
         private Material m_fontMaterial;
