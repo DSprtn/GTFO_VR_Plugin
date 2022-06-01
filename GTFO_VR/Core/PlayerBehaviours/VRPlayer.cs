@@ -159,6 +159,47 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
+        public static LevelGeneration.LG_ComputerTerminal GetInteractingTerminal()
+        {
+            Interact_ComputerTerminal terminalInteract = null;
+
+            // Sometimes this will be null, and then not null after entering and exiting once
+            ICameraRayInteractor interactor = PlayerAgent?.Interaction?.m_currentCamInteractor;
+            if (interactor != null)
+            {
+                terminalInteract = interactor.TryCast<Interact_ComputerTerminal>();
+                if (terminalInteract != null)
+                {
+                    return terminalInteract.m_terminal; ;
+                }
+            }
+
+            // When the above is null, it will be listed here instead, and vice-versa.
+            Il2CppSystem.Collections.Generic.List<IInteractable> interactables = PlayerAgent?.Interaction?.m_proximityInteracts;
+            if (interactables != null)
+            {
+                foreach (IInteractable interactable in interactables)
+                {
+                    terminalInteract = interactable.TryCast<Interact_ComputerTerminal>();
+                    if (terminalInteract != null)
+                    {
+                        return terminalInteract.m_terminal;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public static void SetWieldedItemVisibility(bool visible)
+        {
+            ItemEquippable heldItem = PlayerAgent?.FPItemHolder?.WieldedItem;
+            if (heldItem != null)
+            {
+                heldItem.gameObject.SetActive(visible);
+            }
+        }
+
         private void PlayerEnteredLadder(LG_Ladder ladder)
         {
             m_snapTurn.DoSnapTurnTowards(Quaternion.LookRotation(ladder.transform.forward).eulerAngles, 2f);

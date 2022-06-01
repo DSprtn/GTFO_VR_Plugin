@@ -41,6 +41,20 @@
     <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsIntegration.cs" />
     <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsUtils.cs" />
     <Compile Include="Core\PlayerBehaviours\MovementVignette.cs" />
+    <Compile Include="Core\UI\Terminal\Pointer\TerminalPointer.cs" />
+    <Compile Include="Core\UI\Terminal\Pointer\MonoPointerEvent.cs" />
+    <Compile Include="Core\UI\Terminal\Pointer\PhysicalButton.cs" />
+    <Compile Include="Core\UI\Terminal\Pointer\PointerHistory.cs" />
+    <Compile Include="Core\UI\Terminal\Pointer\PointerEvent.cs" />
+    <Compile Include="Core\UI\Terminal\TerminalReader.cs" />
+    <Compile Include="Core\UI\Terminal\KeyboardDefinition\KeyboardLayout.cs" />
+    <Compile Include="Core\UI\Terminal\KeyboardDefinition\LayoutParameters.cs" />
+    <Compile Include="Core\UI\Terminal\KeyboardDefinition\KeyboardStyle.cs" />
+    <Compile Include="Core\UI\Terminal\KeyboardDefinition\KeyDefinition.cs" />
+    <Compile Include="Core\UI\Terminal\KeyboardDefinition\LinearLayout.cs" />
+    <Compile Include="Core\UI\Terminal\RoundedCubeBackground.cs" />
+    <Compile Include="Core\UI\Terminal\TerminalKeyboardCanvas.cs" />
+    <Compile Include="Core\UI\Terminal\TerminalKeyboardInterface.cs" />
     <Compile Include="Core\UI\RadialItem.cs" />
     <Compile Include="Core\UI\RadialMenu.cs" />
     <Compile Include="Core\PlayerBehaviours\VRMeleeWeapon.cs" />
@@ -51,6 +65,7 @@
     <Compile Include="Core\PlayerBehaviours\ColisionFade.cs" />
     <Compile Include="Core\PlayerBehaviours\Haptics.cs" />
     <Compile Include="Core\PlayerBehaviours\VRRendering.cs" />
+    <Compile Include="Core\VR_Input\Dummy_InputHandler.cs" />
     <Compile Include="Detours\BioscannerDetours.cs" />
     <Compile Include="Detours\HammerAttackCheckDetour.cs" />
     <Compile Include="Detours\TerminalInputDetours.cs" />
@@ -507,6 +522,7 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetPath)" "$(GTFO_PATH)\BepInEx\plugins" /E /Y</PostBuildEvent>

@@ -1,4 +1,5 @@
-﻿using GTFO_VR.Events;
+﻿using GTFO_VR.Core.UI.Terminal.Pointer;
+using GTFO_VR.Events;
 using System;
 using UnityEngine;
 using Valve.VR;
@@ -26,6 +27,8 @@ namespace GTFO_VR.Core.VR_Input
 
         private static GameObject RightController;
 
+        private static GameObject TerminalCanvasPointer;
+
         public static SteamVR_Behaviour_Pose mainControllerPose;
 
         public static bool aimingTwoHanded;
@@ -42,6 +45,7 @@ namespace GTFO_VR.Core.VR_Input
         private void Awake()
         {
             SetupControllers();
+            SetupTerminalCanvasPointer();
             SetMainController();
             ItemEquippableEvents.OnPlayerWieldItem += CheckShouldDoubleHand;
             VRConfig.configUseLeftHand.SettingChanged += HandednessSwitch;
@@ -73,6 +77,8 @@ namespace GTFO_VR.Core.VR_Input
                 mainControllerType = HandType.Left;
                 offHandControllerType = HandType.Right;
             }
+
+            TerminalCanvasPointer?.transform.SetParent(mainController.transform, false);
             mainControllerPose = mainController.GetComponent<SteamVR_Behaviour_Pose>();
         }
 
@@ -85,6 +91,17 @@ namespace GTFO_VR.Core.VR_Input
 
             DontDestroyOnLoad(RightController);
             DontDestroyOnLoad(LeftController);
+        }
+
+        private void SetupTerminalCanvasPointer()
+        {
+            TerminalCanvasPointer = TerminalPointer.Instantiate(SteamVR_Input_Sources.Any);
+            TerminalCanvasPointer.SetActive(false);
+        }
+
+        public static void ToggleTerminalCanvasPointer(bool enable)
+        {
+            TerminalCanvasPointer?.SetActive(enable);
         }
 
         public static void SetOrigin(Transform origin)
