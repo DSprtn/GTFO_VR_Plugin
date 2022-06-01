@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 725888836
+CRC: 3244569919
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 16d787fed99ecd12dcab3fc599eb2918
+    Hash: 4bc281b988a1ba06aeeed5a4eb973f3b
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 31b2f3f205ca46fbe3b0062f4cdc33e3
+    Hash: 76970e4386c108d9b0386c5f8bf6a242
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -25,13 +25,27 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
 - Class: 222
   Script: {instanceID: 0}
 - Class: 224
   Script: {instanceID: 0}
 Assets:
+- Assets/RadialIcons/ChatType.png
+- Assets/RadialIcons/PackFallback.png
+- Assets/RadialIcons/Objective.png
+- Assets/RadialIcons/Throwable.png
+- Assets/RadialIcons/Melee.png
 - Assets/P_VRWatch.prefab
+- Assets/RadialIcons/Tool.png
+- Assets/RadialIcons/Primary.png
 - Assets/TextMesh Pro/Resources/Shaders/TMP_ClipSphere.shader
+- Assets/RadialIcons/HackingTool.png
+- Assets/blob.png
+- Assets/RadialIcons/Chat.png
+- Assets/RadialIcons/BG.png
+- Assets/RadialIcons/Secondary.png
 - Assets/SpriteNoZTestAndClip.shader
 - Assets/TextMesh Pro/Resources/Shaders/TMP_NoZTest.shader
 - Assets/SpriteNoZTest.shader

@@ -2,7 +2,8 @@
   "actions": [
     {
       "name": "/actions/default/in/Pose",
-      "type": "pose"
+      "type": "pose",
+      "requirement": "mandatory"
     },
     {
       "name": "/actions/default/in/SkeletonLeftHand",
@@ -20,15 +21,6 @@
       "requirement": "suggested"
     },
     {
-      "name": "/actions/default/in/SnapTurnLeft",
-      "type": "boolean",
-      "requirement": "suggested"
-    },
-    {
-      "name": "/actions/default/in/SnapTurnRight",
-      "type": "boolean"
-    },
-    {
       "name": "/actions/default/in/Movement",
       "type": "vector2",
       "requirement": "mandatory"
@@ -36,7 +28,7 @@
     {
       "name": "/actions/default/in/ToggleWatchMode",
       "type": "boolean",
-      "requirement": "mandatory"
+      "requirement": "optional"
     },
     {
       "name": "/actions/default/in/Shoot",
@@ -55,17 +47,17 @@
     {
       "name": "/actions/default/in/Crouch",
       "type": "boolean",
-      "requirement": "mandatory"
+      "requirement": "suggested"
     },
     {
       "name": "/actions/default/in/WeaponSwitchLeft",
       "type": "boolean",
-      "requirement": "mandatory"
+      "requirement": "optional"
     },
     {
       "name": "/actions/default/in/WeaponSwitchRight",
       "type": "boolean",
-      "requirement": "mandatory"
+      "requirement": "optional"
     },
     {
       "name": "/actions/default/in/ToggleFlashlight",
@@ -90,6 +82,31 @@
     },
     {
       "name": "/actions/default/in/Ping",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/SnapTurn",
+      "type": "vector2"
+    },
+    {
+      "name": "/actions/default/in/AimOrShove",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/OpenObjectives",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/WeaponRadialMenu",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/ToggleLaserPointer",
+      "type": "boolean",
+      "requirement": "optional"
+    },
+    {
+      "name": "/actions/default/in/WatchRadialMenu",
       "type": "boolean"
     },
     {

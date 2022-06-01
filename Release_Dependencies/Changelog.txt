@@ -1,0 +1,61 @@
+Total changelog: (1.1.9b5)
+- Complete new VR keyboard system added by Nordskog. Many thanks!
+
+Total changelog: (1.1.9b4)
+- Recompiled for R6.5
+
+Total changelog: (1.1.9b3)
+
+Bugfixes:
+- (R6 Specific) - Fix getting downed stopping VR rendering
+- (R6 Specific) - Fix loading checkpoints disabling VR
+- (R6 Specific) - Fix joining on-going games disabling VR (hopefully)
+- (R6 Specific) - Fix game win/loss breaking VR
+
+Tweaks:
+- (R6 Specific) - Tweak all UI sizes to be much better readable, especially in lower resolutions
+- (R6 Specific) - Improve knife hitbox, mainly for stabbing motions
+
+
+Total changelog: (1.1.9b2)
+
+Bugfixes:
+- (R6 Specific) - Fix bioscanner crashing the game
+
+Total changelog: (1.1.9b1)
+
+Ported to R6! The game is very performance hungry, even moreso this update, so I recommend lowering your in-game settings greatly!
+Turn off SSAO, bloom, subsurface scattering, depth of field, motion blur etc
+Lower fog resolution, fog diffusion quality
+
+Bugfixes:
+- Fix headlight rendering for pimax, odd shadow rendering for all HMDs
+- Opening audio logs in terminals with VR keyboard (casing issue)
+- Fix VR render resolution config not applying at the start
+- (R6 Specific) - Gun flashlight rendering fixed
+- (R6 Specific) - Terminal exit influencing camera
+- (R6 Specific) - Weapon lagging behind player movement
+- (R6 Specific) - Gun flashlight rendering fixed
+- (R6 Specific) - Decal rendering
+- (R6 Specific) - Fixed melee weapon hit delay
+- (R6 Specific) - Laserpointer color always white due to new color space
+- (R6 Specific) - Fog/Light resolution changes in VR
+
+Tweaks:
+- Weapon ammo hologram BG is now a little less bright
+- (R6 Specific) - Weapon icon sizes reduced to fit into radial menu
+- Tweaked weapon zeroing to be more accurate at short distances
+- All melee weapon hitboxes
+
+Additions:
+- All new melee weapons work in VR
+- (By Devs!) All gun sights are now rendered correctly in VR
+
+Removals:
+- Removed light/fog resolution config tweak, it gave more artifact and very little performance. Devs added more fog resolution options so use those instead!
+- Removed bloom from VR options, it's now in the base game, tweakable under graphics
+
+Known issues:
+- R6 is very VRAM hungry! If your texture or render resolution settings are too high and you're using too much VRAM your game will be very unstable!
+  changing resolution in-game or even playing some maps might cause crashes! 
+- Vignette effect is broken at the moment
