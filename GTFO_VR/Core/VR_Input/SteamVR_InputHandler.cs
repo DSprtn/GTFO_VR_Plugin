@@ -208,6 +208,7 @@ namespace GTFO_VR.Core.VR_Input
                 { InputAction.ToggleMap, m_openMapAction },
                 { InputAction.Flashlight, m_flashlightAction },
             };
+
         }
 
         private static SteamVR_Action_Boolean GetBoolActionMapping(InputAction action)
@@ -216,6 +217,7 @@ namespace GTFO_VR.Core.VR_Input
             {
                 return boolActions[action];
             }
+
             return null;
         }
 

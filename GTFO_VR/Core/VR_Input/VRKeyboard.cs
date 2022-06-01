@@ -1,4 +1,6 @@
-﻿using GTFO_VR.Events;
+﻿using GTFO_VR.Core.PlayerBehaviours;
+using GTFO_VR.Core.UI.Terminal;
+using GTFO_VR.Events;
 using System;
 using System.Text;
 using UnityEngine;
@@ -21,6 +23,8 @@ namespace GTFO_VR.Core.VR_Input
 
         public static bool KeyboardClosedThisFrame;
 
+        private TerminalKeyboardInterface m_KeyboardRoot;
+
         private void Awake()
         {
             SteamVR_Events.System(EVREventType.VREvent_KeyboardCharInput).Listen(OnKeyboardInput);
@@ -28,18 +32,47 @@ namespace GTFO_VR.Core.VR_Input
             SteamVR_Events.System(EVREventType.VREvent_KeyboardClosed).Listen(OnKeyboardDone);
 
             FocusStateEvents.OnFocusStateChange += FocusStateChanged;
+
+            m_KeyboardRoot = TerminalKeyboardInterface.create();
+            m_KeyboardRoot.transform.SetParentAtZero(this.gameObject.transform);
         }
 
         private void FocusStateChanged(eFocusState state)
         {
             if (state.Equals(eFocusState.ComputerTerminal))
             {
-                SteamVR_Render.unfocusedRenderResolution = 1f;
-                SteamVR.instance.overlay.ShowKeyboard(0, 0, "Terminal input", 256, "", true, 0);
-                m_chatMode = false;
+                bool terminalKeyboardDisplayed = false;
+                if ( VRConfig.configTerminalKeyboard.Value)
+                {
+                    // Can only interact with in-game keyboard if using motion controllers
+                    if (VRConfig.configUseControllers.Value)
+                    {
+                        LevelGeneration.LG_ComputerTerminal terminal = VRPlayer.GetInteractingTerminal();
+                        if (terminal != null)
+                        {
+                            m_KeyboardRoot.AttachToTerminal(terminal);
+                            Controllers.ToggleTerminalCanvasPointer(true);
+                            VRPlayer.SetWieldedItemVisibility(false);
+                            terminalKeyboardDisplayed = true;
+                        }
+                        else
+                        {
+                            Log.Error("Could not get interacting terminal!");
+                        }
+                    }
+                }
+                
+                // Fall back to overlay
+                if (!terminalKeyboardDisplayed)
+                {
+                    SteamVR_Render.unfocusedRenderResolution = 1f;
+                    SteamVR.instance.overlay.ShowKeyboard(0, 0, "Terminal input", 256, "", true, 0);
+                    m_chatMode = false;
 
-                OrientKeyboard();
-            } else if (state.Equals(eFocusState.FPS_TypingInChat))
+                    OrientKeyboard();
+                }
+            } 
+            else if (state.Equals(eFocusState.FPS_TypingInChat))
             {
                 SteamVR_Render.unfocusedRenderResolution = 1f;
                 SteamVR.instance.overlay.ShowKeyboard(0, 0, "Chat input", 256, "", false, 0);
@@ -50,6 +83,13 @@ namespace GTFO_VR.Core.VR_Input
             {
                 SteamVR.instance.overlay.HideKeyboard();
                 SteamVR_Render.unfocusedRenderResolution = .5f;
+
+                if ( m_KeyboardRoot && m_KeyboardRoot.IsAttachedToTerminal() )
+                {
+                    m_KeyboardRoot.DetatchFromTerminal();
+                    Controllers.ToggleTerminalCanvasPointer(false);
+                    VRPlayer.SetWieldedItemVisibility(true);
+                }
             }
         }
 
@@ -216,6 +256,7 @@ namespace GTFO_VR.Core.VR_Input
         private void OnDestroy()
         {
             FocusStateEvents.OnFocusStateChange -= FocusStateChanged;
+            GameObject.Destroy(m_KeyboardRoot);
         }
     }
 }

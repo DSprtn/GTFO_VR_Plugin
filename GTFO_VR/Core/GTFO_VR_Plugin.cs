@@ -2,6 +2,8 @@
 using BepInEx.IL2CPP;
 using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.UI;
+using GTFO_VR.Core.UI.Terminal.Pointer;
+using GTFO_VR.Core.UI.Terminal;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Detours;
 using GTFO_VR.UI;
@@ -9,7 +11,6 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnhollowerRuntimeLib;
-using static GTFO_VR.Util.ExtensionMethods;
 
 namespace GTFO_VR.Core
 {
@@ -82,6 +83,14 @@ namespace GTFO_VR.Core
             ClassInjector.RegisterTypeInIl2Cpp<RadialItem>();
             ClassInjector.RegisterTypeInIl2Cpp<WeaponRadialMenu>();
             ClassInjector.RegisterTypeInIl2Cpp<WeaponAmmoHologram>();
+
+            ClassInjector.RegisterTypeInIl2Cpp<MonoPointerEvent>();
+            ClassInjector.RegisterTypeInIl2Cpp<RoundedCubeBackground>();       
+            ClassInjector.RegisterTypeInIl2Cpp<PhysicalButton>();              
+            ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardCanvas>();      
+            ClassInjector.RegisterTypeInIl2Cpp<TerminalPointer>();
+            ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardInterface>();
+            ClassInjector.RegisterTypeInIl2Cpp<TerminalReader>();
         }
 
         private bool SteamVRRunningCheck()
