@@ -45,7 +45,7 @@ namespace GTFO_VR.Core.VR_Input
         private void Awake()
         {
             SetupControllers();
-            setupTerminalCanvasPointer();
+            SetupTerminalCanvasPointer();
             SetMainController();
             ItemEquippableEvents.OnPlayerWieldItem += CheckShouldDoubleHand;
             VRConfig.configUseLeftHand.SettingChanged += HandednessSwitch;
@@ -93,7 +93,7 @@ namespace GTFO_VR.Core.VR_Input
             DontDestroyOnLoad(LeftController);
         }
 
-        private void setupTerminalCanvasPointer()
+        private void SetupTerminalCanvasPointer()
         {
             TerminalCanvasPointer = TerminalPointer.Instantiate(SteamVR_Input_Sources.Any);
             TerminalCanvasPointer.SetActive(false);
