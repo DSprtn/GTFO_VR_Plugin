@@ -34,7 +34,7 @@ namespace GTFO_VR.Core.VR_Input
             FocusStateEvents.OnFocusStateChange += FocusStateChanged;
 
             m_KeyboardRoot = TerminalKeyboardInterface.create();
-            DontDestroyOnLoad(m_KeyboardRoot);
+            m_KeyboardRoot.transform.SetParentAtZero(this.gameObject.transform);
         }
 
         private void FocusStateChanged(eFocusState state)

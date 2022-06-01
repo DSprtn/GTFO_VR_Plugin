@@ -39,7 +39,7 @@ namespace GTFO_VR.Core.UI.Terminal
         public static TerminalKeyboardInterface create()
         {
             GameObject go = new GameObject();
-            go.name = "keyboardRoot";
+            go.name = "KeyboardRoot";
             go.layer = LAYER;
             TerminalKeyboardInterface inf = go.AddComponent<TerminalKeyboardInterface>();
             go.SetActive(false); // let Awake() run then deactivate until needed.
