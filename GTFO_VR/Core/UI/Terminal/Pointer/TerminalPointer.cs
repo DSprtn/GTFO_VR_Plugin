@@ -251,6 +251,26 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             m_LineRenderer.SetPosition(1, transform.InverseTransformPoint( endPosition ));
         }
 
+        private void OnDisable()
+        {
+            // If we are hovering over a key, it will never receive an exit event
+            MonoPointerEvent enteredButton = GetButton(m_currentHit);
+            if (enteredButton != null)
+            {
+                enteredButton.OnPointerCancel(new PointerEvent( Vector3.zero ));
+            }
+
+            // We keep track of the button we down'd, even if the pointer exits it.
+            MonoPointerEvent downButton = GetButton(m_ButtonPressHit);
+            if (downButton != null)
+            {
+                downButton.OnPointerCancel(new PointerEvent(Vector3.zero));
+            }
+
+            m_currentHit = new RaycastHit();
+            m_ButtonPressHit = new RaycastHit();
+        }
+
         private void OnDestroy()
         {
             if (m_pointerMaterial != null)

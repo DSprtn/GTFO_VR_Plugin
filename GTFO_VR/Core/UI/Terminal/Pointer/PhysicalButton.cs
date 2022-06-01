@@ -76,7 +76,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
 
         private ColorTransitionState m_currentState;
         private ColorStates m_ColorStates;
-        private ColorTransition m_Transition = null;    // Null when not in a transition.
+        private ColorTransition m_transition = null;    // Null when not in a transition.
 
         public bool IsHighlighted = false;
         public bool IsPressed = false;
@@ -111,15 +111,27 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             m_renderer.SetPropertyBlock(m_propertyBlock);
         }
 
+        private void clearState()
+        {
+            IsPressed = false;
+            IsHighlighted = false;
+
+            m_currentState = m_ColorStates.normal;
+            m_transition = null;
+
+            m_propertyBlock.SetColor("_Color", m_currentState.destinationColor);
+            m_renderer.SetPropertyBlock(m_propertyBlock);
+        }
+
         private void Update()
         {
-            if (m_Transition != null)
+            if (m_transition != null)
             {
-                m_propertyBlock.SetColor("_Color", m_Transition.Evaluate(Time.deltaTime));
+                m_propertyBlock.SetColor("_Color", m_transition.Evaluate(Time.deltaTime));
                 m_renderer.SetPropertyBlock(m_propertyBlock);
 
-                if (m_Transition.IsFinished())
-                    m_Transition = null;
+                if (m_transition.IsFinished())
+                    m_transition = null;
             }
 
             if (IsPressed)
@@ -155,8 +167,8 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         private ColorTransition GetTransitionFromCurrentTo(ColorTransitionState targetState )
         {
             Color startColor;
-            if (m_Transition != null)
-                startColor = m_Transition.Evaluate(0);
+            if (m_transition != null)
+                startColor = m_transition.Evaluate(0);
             else
                 startColor = m_currentState.destinationColor;
 
@@ -167,7 +179,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         public override void OnPointerEnter(PointerEvent ev)
         {
             IsHighlighted = true;
-            m_Transition = GetTransitionFromCurrentTo(m_ColorStates.highlighted);
+            m_transition = GetTransitionFromCurrentTo(m_ColorStates.highlighted);
         }
 
         [HideFromIl2Cpp]
@@ -181,7 +193,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             else
             {
                 m_currentState = m_ColorStates.normal;
-                m_Transition = GetTransitionFromCurrentTo(m_ColorStates.normal);
+                m_transition = GetTransitionFromCurrentTo(m_ColorStates.normal);
             }
         }
 
@@ -198,7 +210,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             m_keyRepeatDelta = 0;
             IsPressed = true;
             OnClick.Invoke();
-            m_Transition = GetTransitionFromCurrentTo(m_ColorStates.pressed);
+            m_transition = GetTransitionFromCurrentTo(m_ColorStates.pressed);
             m_currentState = m_ColorStates.pressed;
         }
 
@@ -206,8 +218,14 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         public override void OnPointerUp(PointerEvent ev)
         {
             IsPressed = false;
-            m_Transition = GetTransitionFromCurrentTo( IsHighlighted ? m_ColorStates.highlighted : m_ColorStates.normal);
+            m_transition = GetTransitionFromCurrentTo( IsHighlighted ? m_ColorStates.highlighted : m_ColorStates.normal);
             m_currentState = IsHighlighted ? m_ColorStates.highlighted : m_ColorStates.normal;
+        }
+
+        [HideFromIl2Cpp]
+        public override void OnPointerCancel(PointerEvent ev)
+        {
+            clearState();
         }
     }
 }
