@@ -12,8 +12,6 @@ plugin_targets = ["GTFO_VR.dll"]
 gtfo_data_plugin_targets = ["openvr_api.dll"]
 gtfo_data_dir_targets = ["StreamingAssets"]
 
-unhollower_lib_targets = ['AssemblyUnhollower.dll', 'UnhollowerBaseLib.dll', 'UnhollowerRuntimeLib.dll']
-
 readme_target = ["README.MD"]
 changelog_target = ["Changelog.txt"]
 
@@ -43,10 +41,14 @@ def copy_plugins_dir():
     staging_plugins_dir = staging_bepinex_dir / "plugins"
     staging_plugins_dir.mkdir(exist_ok=True)
 
-    copy_files(plugin_targets, built_plugin_dir, staging_plugins_dir)
+    copy_files(plugin_targets, gtfo_plugin_dir, staging_plugins_dir)
     copy_files(dependency_targets, release_dependencies_lib_dir, staging_plugins_dir)
     copy_dirs(dependency_dir_targets, release_dependencies_lib_dir, staging_plugins_dir)
 
+def create_dummy_dirs():
+    (staging_bepinex_dir / "unity-libs").mkdir(exist_ok=True)
+    (staging_bepinex_dir / "unhollowed").mkdir(exist_ok=True)
+	(staging_bepinex_core = staging_bepinex_dir / "core").mkdir(exist_ok=True)
 
 def copy_gtfo_data_dir():
     gtfo_data_staging_dir = staging_dir / "GTFO_Data"
@@ -81,19 +83,27 @@ def find_version():
 
 print("Running release tool...")
 
+
+
 parser = ArgumentParser()
 parser.add_argument("-v", "--version", dest="version",
                     help="Create archive with given version")
 
 args = parser.parse_args()
 
+try:
+    gtfo_dir = Path(os.environ['GTFO_PATH'])
+except:
+    print("Your GTFO env path seems to be invalid. Set GTFO_PATH to your GTFO installation.")
+
 current_dir = Path(os.path.dirname(os.path.abspath(__file__)))
 
-built_plugin_dir = current_dir / Path("GTFO_VR/bin/Release/")
+print("GTFO_PATH set to " + str(gtfo_dir))
+gtfo_plugin_dir = gtfo_dir / "BepInEx/plugins/"
 
-if not (built_plugin_dir / "GTFO_VR.dll").exists():
-    os.exit("No built GTFO_VR plugin version found in " + str(built_plugin_path) + " ! Build GTFO_VR in release mode"
-                                                                                   "before trying to create this package!")
+if not gtfo_plugin_dir.exists():
+    os.exit("Your GTFO installation seems to not contain Bepinex/plugins/. This tool is made to grab newest dlls from"
+            "there, so make sure this exists!")
 
 print("Found plugin dir...")
 
@@ -109,6 +119,8 @@ staging_bepinex_dir = (staging_dir / "BepInEx")
 staging_bepinex_dir.mkdir(exist_ok=True)
 
 copy_plugins_dir()
+create_dummy_dirs()
+copy_unhollowed_libs()
 copy_gtfo_data_dir()
 copy_text_files()
 
@@ -119,7 +131,7 @@ else:
     version = args.version
 print("Got version " + str(version))
 
-archive_name = "GTFO_VR_Release_" + version
+archive_name = "GTFO_VR_Release_" + version + '_Partial'
 shutil.make_archive(archive_name, 'zip', str(staging_dir))
 
 print("Created archive " + str(archive_name))

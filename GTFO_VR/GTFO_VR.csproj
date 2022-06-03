@@ -170,10 +170,6 @@
       <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Addons-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="AlienFXManagedWrapper3.5">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\AlienFXManagedWrapper3.5.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="AssetPrefabs-ASM">
       <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\AssetPrefabs-ASM.dll</HintPath>
       <Private>False</Private>
@@ -283,11 +279,6 @@
     </Reference>
     <Reference Include="Modules-ASM">
       <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Modules-ASM.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\base\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PlayFab-ASM">

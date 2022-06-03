@@ -1,5 +1,8 @@
 Total changelog: (1.1.9b5)
-- Complete new VR keyboard system added by Nordskog. Many thanks!
+- Complete new VR keyboard system added by Nordskog. Great work!
+- Water performance workaround - Transparent objects won't render in other transparent objects, but it's worth it for the performance improvement.
+- Upgraded to a newer version of bepinex. This makes the installation much simpler, but a game file wipe might be needed. Be sure to look at the new install instructions!
+
 
 Total changelog: (1.1.9b4)
 - Recompiled for R6.5

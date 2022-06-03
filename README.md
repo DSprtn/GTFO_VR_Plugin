@@ -10,73 +10,63 @@ E-mail any suggestions for new features or tweaks over to GTFOVRMod@gmail.com
 
 Grab the newest version from here! https://github.com/DSprtn/GTFO_VR_Plugin/releases
 
-Try to get used to the game in Non-VR mode first before using! 
+Grab newest beta versions from the Discord. Join the beta testers under gt-getting-started and look for builds under gt-test-builds
+
+Try to get used to the game in Non-VR mode first before using this mod! 
 
 ## Installation: 
 
-	Installing GTFO VR/any GTFO mods for the first time? Use the First-Install archive, extract it into 
-	"SteamLibrary\steamapps\common\GTFO\", then skip to the 4th step.
-
-	Consult the installation video here if you're having trouble: 
-	https://www.youtube.com/watch?v=EH7CsLs3GlQ (Thanks Alabaster!)
-
-	If you are upgrading to R5 or have an old Bepinex/GTFO_VR installation, delete it! 
+	If you are upgrading to R6 or have an old Bepinex/GTFO_VR installation, delete it! 
 	Removing the bepinex folder should suffice. You'll have to redo your config!
+
+ 	1. Download BepInEx 6.0.0b553
+	from https://builds.bepinex.dev/projects/bepinex_be/553/BepInEx_UnityIL2CPP_x64_fa9b1ab_6.0.0-be.553.zip
 	
- 	1. Download and extract BepInEx 6.0.0b363 into your GTFO game folder (SteamLibrary\steamapps\common\GTFO\)
-	from https://builds.bepis.io/projects/bepinex_be/363/BepInEx_UnityIL2CPP_x64_086d2f8_6.0.0-be.363.zip
-	
-	You can also find the GTFO game path by doing the following:
-	Right click GTFO in your Steam library, go into Properties->Local Files->Browse
-	
-	2. Download the latest version of the GTFO_VR plugin from https://github.com/DSprtn/GTFO_VR_Plugin/releases 
-	and extract it into the same folder (SteamLibrary\steamapps\common\GTFO\)
-	
-	3. Download and extract the following archive into Steamapps\Common\GTFO\Bepinex\unity-libs\ 
-	https://github.com/DSprtn/MelonLoader/raw/master/BaseLibs/UnityDependencies/_2019.4.21.zip
-	
-	The order of extracting the archives is important! It should be done in order of the steps.
-	
+	2. Download the latest version of the GTFO_VR plugin from https://github.com/DSprtn/GTFO_VR_Plugin/releases
+	   OR grab one of the beta versions from the discord mentioned above!
+
+	3. Locate your GTFO folder using the steam library
+                Right click GTFO in your Steam library, go into Properties->Local Files->Browse
+
+	4. Extract both archives into this folder (SteamLibrary/SteamApps/common/GTFO)
+
 	At this time your directories and files should look more or less like this:
 	
 	GTFO/
 	├── BepInEx/
-	|   ├── core/
-	│       ├── AssemblyUnhollower.dll
-	│       ├── etc.
 	|   ├── plugins/
+	│       ├── bhaptics-patterns/
 	│       ├── GTFO_VR.dll
 	│       ├── Newtonsoft.Json.dll
 	│       ├── openvr_api.dll
-	│       └── SteamVR_Standalone_IL2CPP.dll
-	|   ├── unhollowed/ - Delete this folder if you're having issues!
-	|   └── unity-libs/
-	│       ├── UnityEngine.AccessbilityModule.dll
-	│       ├── etc.
-	└── GTFO_DATA/
-		├── Plugins/
-		│	├── openvr_api.dll
-		│	└── etc.
-	    	└── StreamingAssets/
-			├── AssetBundles
-			├── vrshaders
-			├── vrwatch
-			├── SteamVR_Standalone/
-				├── actions.json
-				├── etc.
+	│       ├── SteamVR_Standalone_IL2CPP.dll
+	│       └── etc.
+	|   └── unhollowed/ - Delete this folder if you're having issues!
+	├── GTFO_DATA/
+	|	├── Plugins/
+	|	│	├── openvr_api.dll
+	|	│	└── etc.
+	|    	└── StreamingAssets/
+	|		├── AssetBundles
+	|		├── vrshaders
+	|		├── vrwatch
+	|		├── SteamVR_Standalone/
+	|			├── actions.json
+	|			├── etc.
+	├── GTFO.exe
+	├── etc.
 	
-	4. Make sure 'use desktop game theatre' is off in the properties of GTFO in the steam library 
+	
+	5. Make sure 'use desktop game theatre' is off in the properties of GTFO in the steam library 
 	(or in general steam settings)
 	
-	5. Start SteamVR
+	6. While SteamVR is running, launch the game from the library or from within SteamVR and you're in!
+		Ignore the "GTFO does not support VR" warning, just click OK
 	
-	6. Launch the game from within the library or from within SteamVR and you're in!
-	(Ignore the "GTFO does not support VR" warning, just click OK)
+	7. Tweak or setup your controls under SteamVR -> Settings -> Controllers -> 
+	Manage Controller Bindings -> GTFO VR
 	
-	7. Tweak or setup your controls under SteamVR -> Settings -> Controllers 
-	-> Manage Controller Bindings -> GTFO VR
-	
-	8. Tweak all VR config options under Settings -> VR Settings
+	8. Tweak all VR config options inside GTFO game under Settings -> VR Settings
 	
 	
 	To enable tracking or change the angle at which the weapons are being held you must set an action pose 
@@ -113,7 +103,8 @@ Try to get used to the game in Non-VR mode first before using!
 
 	The game is very performance hungry, even moreso this update, so I recommend lowering your in-game settings greatly!
 	Turn off SSAO, bloom, subsurface scattering, depth of field, motion blur etc.
-	Lower texture resolution, fog resolution and fog diffusion quality
+	Lower texture resolution, fog resolution and fog diffusion quality. 
+	If you're experiencing crashing lower the texture resolution! 
 	
 ### MISC IN-GAME ACTIONS
 
@@ -174,37 +165,12 @@ Try to get used to the game in Non-VR mode first before using!
 	
 #### TERMINAL
 	
-	Shortcuts exist as uppercase letters on the virtual keyboard. To use, simply set the keyboard to uppercase 
-	and it will autofill the text based on the uppercase letters you type in.
-	
-	The shortcuts return the following:
-	
-                case ("L"):
-                        returns "LIST ";
-                case ("Q"):
-                        returns "QUERY ";
-                case ("R"):
-                        returns "REACTOR";
-                case ("H"):
-                        returns "HELP";
-                case ("C"):
-                        returns "COMMANDS";
-                case ("V"):
-                        returns "REACTOR_VERIFY ";
-                case ("P"):
-                        returns "PING ";
-                case ("A"):
-                        returns "AMMOPACK_";
-                case ("T"):
-                        returns "TOOL_REFILL_";
-                case ("M"):
-                        returns "MEDIPACK_";
-                case ("Z"):
-                        returns "ZONE_";
-                case ("U"):
-                        returns "UPLINK_VERIFY ";
-		
-	If you'd like to have custom bindable shortcuts let me know! 
+	A floating keyboard interface will appear alongside shortcuts whenever you interact with a terminal. You can copypaste text 
+	from the terminal by clicking on it in the terminal screen. The keyboard will work just like in flatscreen mode.
+
+
+![Capture](https://user-images.githubusercontent.com/11588107/171913470-7d269bd2-3006-496c-a99b-b58e7c47be64.PNG)
+
 				
 ## Features:
 	Works in multiplayer, with others not needing any mods!
@@ -234,7 +200,7 @@ Try to get used to the game in Non-VR mode first before using!
 	reduce crashing with some small side effects (Oculus Crash workaround.)
 
 	If a crash occurs send me the output log from the path given below (before starting another game!):
-	C:\Users\$USER\AppData\LocalLow\10 Chambers Collective\GTFO\player.log OR player-prev.log if you already played another game.
+	\Users\$USER\AppData\LocalLow\10 Chambers Collective\GTFO\player.log OR player-prev.log if you already played another game.
 	
 	R6 is very VRAM hungry! If your texture or render resolution settings are too high and you're using too much VRAM your game will be very unstable!
 	changing resolution in-game or even playing some maps might cause crashes!
