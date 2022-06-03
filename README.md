@@ -14,6 +14,9 @@ Grab newest beta versions from the Discord. Join the beta testers under gt-getti
 
 Try to get used to the game in Non-VR mode first before using this mod! 
 
+## Recommendation: Wireless VR Solution
+	If you are using Wireless PCVR to play, and the weapon handling feels 'floaty' or 'unresponsive', try using ALVR (https://github.com/alvr-org/ALVR). Other users report this provides a smooth experience.
+
 ## Installation: 
 
 	If you are upgrading to R6 or have an old Bepinex/GTFO_VR installation, delete it! 
