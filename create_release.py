@@ -82,8 +82,12 @@ def find_version():
 print("Running release tool...")
 
 parser = ArgumentParser()
+
 parser.add_argument("-v", "--version", dest="version",
                     help="Create archive with given version")
+
+parser.add_argument('-k', '--keep', dest='keep', action='store_true', default=False,
+                    help="Keep staging folder for debugging")
 
 args = parser.parse_args()
 
@@ -123,3 +127,7 @@ archive_name = "GTFO_VR_Release_" + version
 shutil.make_archive(archive_name, 'zip', str(staging_dir))
 
 print("Created archive " + str(archive_name))
+
+if not args.keep:
+    if staging_dir.exists():
+        shutil.rmtree(staging_dir)
