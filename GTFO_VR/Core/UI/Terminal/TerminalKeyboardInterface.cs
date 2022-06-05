@@ -34,7 +34,8 @@ namespace GTFO_VR.Core.UI.Terminal
         public static readonly int LAYER_MASK = 1 << LAYER;
         public static readonly float CANVAS_SCALE = 0.045f; // Same scaling used by GTFO, because otherwise units are silly.
 
-        private static string currentInput = "";
+        private static string m_currentFrameInput = "";
+        private static string m_prevFrameInput = "";
 
         public static TerminalKeyboardInterface create()
         {
@@ -266,7 +267,7 @@ namespace GTFO_VR.Core.UI.Terminal
         {
             if (key.HasInput())
             {
-                currentInput += key.Input;
+                m_currentFrameInput += key.Input;
             }
             else
             {
@@ -311,23 +312,29 @@ namespace GTFO_VR.Core.UI.Terminal
             }
         }
 
+        public void LateUpdate()
+        {
+            // We receive input during normal update, but it is read earlier.
+            // Make a copy of the input this frame, and serve it as input for the entirety of next frame.
+            m_prevFrameInput = m_currentFrameInput;
+            m_currentFrameInput = "";
+
+        }
+
         public static string GetKeyboardInput()
         {
-            // This is only called once, so we can just clear it here.
-            string retString = currentInput;
-            currentInput = "";
-            return retString;
+            return m_prevFrameInput;
         }
 
         public static bool HasKeyboardInput()
         {
-            return !String.IsNullOrEmpty(currentInput);
+            return !String.IsNullOrEmpty(m_prevFrameInput);
         }
 
         [HideFromIl2Cpp]
         public void HandleInput(string str)
         {
-            currentInput += str;
+            m_currentFrameInput += str;
         }
 
         [HideFromIl2Cpp]
