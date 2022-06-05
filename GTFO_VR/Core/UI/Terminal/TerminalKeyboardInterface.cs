@@ -37,6 +37,9 @@ namespace GTFO_VR.Core.UI.Terminal
         private static string m_currentFrameInput = "";
         private static string m_prevFrameInput = "";
 
+        private static KeyCode m_currentFrameKeycode = KeyCode.None;
+        private static KeyCode m_prevFrameKeycode = KeyCode.None;
+
         public static TerminalKeyboardInterface create()
         {
             GameObject go = new GameObject();
@@ -259,12 +262,18 @@ namespace GTFO_VR.Core.UI.Terminal
                     go.transform.localPosition += (-go.transform.forward) * 0.05f;
                     break;
             }
-            
         }
 
         [HideFromIl2Cpp]
         public void HandleInput( KeyDefinition key )
         {
+            // A keycode down does not result in text being added to the terminal, but is required for some single-key actions
+            // Always performing it, in addition to adding its input, seems to work fine.
+            if (key.HasKeyCode())
+            {
+                m_currentFrameKeycode = key.KeyCode;
+            }
+
             if (key.HasInput())
             {
                 m_currentFrameInput += key.Input;
@@ -319,11 +328,20 @@ namespace GTFO_VR.Core.UI.Terminal
             m_prevFrameInput = m_currentFrameInput;
             m_currentFrameInput = "";
 
+            m_prevFrameKeycode = m_currentFrameKeycode;
+            m_currentFrameKeycode = KeyCode.None;
+
         }
 
         public static string GetKeyboardInput()
         {
             return m_prevFrameInput;
+        }
+
+
+        public static bool GetKeycodeDown( KeyCode key )
+        {
+            return key == m_prevFrameKeycode;
         }
 
         public static bool HasKeyboardInput()
@@ -440,16 +458,16 @@ namespace GTFO_VR.Core.UI.Terminal
 
                 keyboardRow.AddChild(new KeyDefinition(KeyType.ESC, "x")
                     .SetApperance(KeyApperanceType.EXIT));
-                keyboardRow.AddChild(new KeyDefinition("1"));
-                keyboardRow.AddChild(new KeyDefinition("2"));
-                keyboardRow.AddChild(new KeyDefinition("3"));
-                keyboardRow.AddChild(new KeyDefinition("4"));
-                keyboardRow.AddChild(new KeyDefinition("5"));
-                keyboardRow.AddChild(new KeyDefinition("6"));
-                keyboardRow.AddChild(new KeyDefinition("7"));
-                keyboardRow.AddChild(new KeyDefinition("8"));
-                keyboardRow.AddChild(new KeyDefinition("9"));
-                keyboardRow.AddChild(new KeyDefinition("0"));
+                keyboardRow.AddChild(new KeyDefinition("1").SetKeycode(KeyCode.Alpha1));
+                keyboardRow.AddChild(new KeyDefinition("2").SetKeycode(KeyCode.Alpha2));
+                keyboardRow.AddChild(new KeyDefinition("3").SetKeycode(KeyCode.Alpha3));
+                keyboardRow.AddChild(new KeyDefinition("4").SetKeycode(KeyCode.Alpha4));
+                keyboardRow.AddChild(new KeyDefinition("5").SetKeycode(KeyCode.Alpha5));
+                keyboardRow.AddChild(new KeyDefinition("6").SetKeycode(KeyCode.Alpha6));
+                keyboardRow.AddChild(new KeyDefinition("7").SetKeycode(KeyCode.Alpha7));
+                keyboardRow.AddChild(new KeyDefinition("8").SetKeycode(KeyCode.Alpha8));
+                keyboardRow.AddChild(new KeyDefinition("9").SetKeycode(KeyCode.Alpha9));
+                keyboardRow.AddChild(new KeyDefinition("0").SetKeycode(KeyCode.Alpha0));
                 keyboardRow.AddChild(new KeyDefinition("."));   // For typing ip addresses
                 keyboardRow.AddChild(new KeyDefinition(KeyType.BACKPSPACE, "Backspace", new LayoutParameters( LayoutParameters.FILL_PARENT ))
                     .SetRepeatKey(true)
@@ -468,16 +486,16 @@ namespace GTFO_VR.Core.UI.Terminal
 
                     keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", 1.5f) // Tab
                         .SetApperance(KeyApperanceType.ALT));
-                    keyboardRow.AddChild(new KeyDefinition("q"));
-                    keyboardRow.AddChild(new KeyDefinition("w"));
-                    keyboardRow.AddChild(new KeyDefinition("e"));
-                    keyboardRow.AddChild(new KeyDefinition("r"));
-                    keyboardRow.AddChild(new KeyDefinition("t"));
-                    keyboardRow.AddChild(new KeyDefinition("y"));
-                    keyboardRow.AddChild(new KeyDefinition("u"));
-                    keyboardRow.AddChild(new KeyDefinition("i"));
-                    keyboardRow.AddChild(new KeyDefinition("o"));
-                    keyboardRow.AddChild(new KeyDefinition("p"));
+                    keyboardRow.AddChild(new KeyDefinition("q").SetKeycode(KeyCode.Q));
+                    keyboardRow.AddChild(new KeyDefinition("w").SetKeycode(KeyCode.W));
+                    keyboardRow.AddChild(new KeyDefinition("e").SetKeycode(KeyCode.E));
+                    keyboardRow.AddChild(new KeyDefinition("r").SetKeycode(KeyCode.R));
+                    keyboardRow.AddChild(new KeyDefinition("t").SetKeycode(KeyCode.T));
+                    keyboardRow.AddChild(new KeyDefinition("y").SetKeycode(KeyCode.Y));
+                    keyboardRow.AddChild(new KeyDefinition("u").SetKeycode(KeyCode.U));
+                    keyboardRow.AddChild(new KeyDefinition("i").SetKeycode(KeyCode.I));
+                    keyboardRow.AddChild(new KeyDefinition("o").SetKeycode(KeyCode.O));
+                    keyboardRow.AddChild(new KeyDefinition("p").SetKeycode(KeyCode.P));
                     keyboardRow.AddChild(new KeyDefinition("-"));
 
                     shortRowVertical.AddChild(keyboardRow);
@@ -491,15 +509,15 @@ namespace GTFO_VR.Core.UI.Terminal
                         .SetApperance(KeyApperanceType.ALT));
                     keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", 0.35f)
                     .SetApperance(KeyApperanceType.GONE));
-                    keyboardRow.AddChild(new KeyDefinition("a"));
-                    keyboardRow.AddChild(new KeyDefinition("s"));
-                    keyboardRow.AddChild(new KeyDefinition("d"));
-                    keyboardRow.AddChild(new KeyDefinition("f"));
-                    keyboardRow.AddChild(new KeyDefinition("g"));
-                    keyboardRow.AddChild(new KeyDefinition("h"));
-                    keyboardRow.AddChild(new KeyDefinition("j"));
-                    keyboardRow.AddChild(new KeyDefinition("k"));
-                    keyboardRow.AddChild(new KeyDefinition("l"));
+                    keyboardRow.AddChild(new KeyDefinition("a").SetKeycode(KeyCode.A));
+                    keyboardRow.AddChild(new KeyDefinition("s").SetKeycode(KeyCode.S));
+                    keyboardRow.AddChild(new KeyDefinition("d").SetKeycode(KeyCode.D));
+                    keyboardRow.AddChild(new KeyDefinition("f").SetKeycode(KeyCode.F));
+                    keyboardRow.AddChild(new KeyDefinition("g").SetKeycode(KeyCode.G));
+                    keyboardRow.AddChild(new KeyDefinition("h").SetKeycode(KeyCode.H));
+                    keyboardRow.AddChild(new KeyDefinition("j").SetKeycode(KeyCode.J));
+                    keyboardRow.AddChild(new KeyDefinition("k").SetKeycode(KeyCode.K));
+                    keyboardRow.AddChild(new KeyDefinition("l").SetKeycode(KeyCode.L));
                     keyboardRow.AddChild(new KeyDefinition("_"));
                     keyboardRow.AddChild(new KeyDefinition(KeyType.ENTER, "", new LayoutParameters(LayoutParameters.FILL_PARENT, 1, 0.01f))
                         .SetApperance(KeyApperanceType.GONE));
@@ -513,13 +531,13 @@ namespace GTFO_VR.Core.UI.Terminal
 
                     keyboardRow.AddChild(new KeyDefinition(KeyType.SHIFT, "", 2.4f)
                         .SetApperance(KeyApperanceType.ALT));
-                    keyboardRow.AddChild(new KeyDefinition("z"));
-                    keyboardRow.AddChild(new KeyDefinition("x"));
-                    keyboardRow.AddChild(new KeyDefinition("c"));
-                    keyboardRow.AddChild(new KeyDefinition("v"));
-                    keyboardRow.AddChild(new KeyDefinition("b"));
-                    keyboardRow.AddChild(new KeyDefinition("n"));
-                    keyboardRow.AddChild(new KeyDefinition("m"));
+                    keyboardRow.AddChild(new KeyDefinition("z").SetKeycode(KeyCode.Z));
+                    keyboardRow.AddChild(new KeyDefinition("x").SetKeycode(KeyCode.X));
+                    keyboardRow.AddChild(new KeyDefinition("c").SetKeycode(KeyCode.C));
+                    keyboardRow.AddChild(new KeyDefinition("v").SetKeycode(KeyCode.V));
+                    keyboardRow.AddChild(new KeyDefinition("b").SetKeycode(KeyCode.B));
+                    keyboardRow.AddChild(new KeyDefinition("n").SetKeycode(KeyCode.N));
+                    keyboardRow.AddChild(new KeyDefinition("m").SetKeycode(KeyCode.M));
                     keyboardRow.AddChild(new KeyDefinition(","));
                     keyboardRow.AddChild(new KeyDefinition("."));
                     keyboardRow.AddChild(new KeyDefinition(KeyType.UP, "^", 1.1f)

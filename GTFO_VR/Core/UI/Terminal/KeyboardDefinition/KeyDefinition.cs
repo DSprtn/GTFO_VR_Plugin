@@ -40,6 +40,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
         public KeyType KeyType = KeyType.INPUT;
         public string Input;
         public string Label;
+        public KeyCode KeyCode = KeyCode.None;
         public LayoutParameters Parameters;
         public KeyboardStyle Style;
         public bool RepeatKey = false;
@@ -92,6 +93,17 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
         {
             this.Appearance = apperance;
             return this;
+        }
+
+        public KeyDefinition SetKeycode( KeyCode key )
+        {
+            this.KeyCode = key;
+            return this;
+        }
+
+        public bool HasKeyCode()
+        {
+            return KeyCode != KeyCode.None;
         }
 
         public bool HasInput()
