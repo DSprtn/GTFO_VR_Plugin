@@ -107,6 +107,7 @@
     <Compile Include="Injections\Events\InjectTentacleAttackEvents.cs" />
     <Compile Include="Injections\GameHooks\InjectPlayerGUIRef.cs" />
     <Compile Include="Injections\GameHooks\InjectVRStart.cs" />
+    <Compile Include="Injections\Input\InjectKeyInput.cs" />
     <Compile Include="Injections\Rendering\InjectClusteredRenderingResolutionTweak.cs" />
     <Compile Include="Injections\Rendering\InjectDisableFPSCameraRenderUpdate.cs" />
     <Compile Include="Injections\Rendering\InjectPostProcessTweaks.cs" />
