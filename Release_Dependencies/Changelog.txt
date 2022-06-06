@@ -1,3 +1,6 @@
+Total changelog: (1.1.9b6)
+- Fixes to keyboard not working correctly with audio logs or y/n prompts.
+
 Total changelog: (1.1.9b5)
 - Complete new VR keyboard system added by Nordskog. Great work!
 - Water performance workaround - Transparent objects won't render in other transparent objects, but it's worth it for the performance improvement.
