@@ -45,6 +45,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 m_fpsCamera.transform.position = HMD.GetWorldPosition();
             }
 
+            // Weapons with sights only render their sights otherwise. 
+            Shader.DisableKeyword("FPS_RENDERING_ALLOWED");
+
             m_fpsCamera.m_camera.transform.parent.localRotation = Quaternion.Euler(HMD.GetVRCameraEulerRelativeToFPSCameraParent());
             m_fpsCamera.UpdateCameraRay();
 
