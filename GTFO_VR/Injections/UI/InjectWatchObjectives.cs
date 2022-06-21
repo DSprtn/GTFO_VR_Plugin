@@ -6,10 +6,12 @@ using LevelGeneration;
 
 namespace GTFO_VR.Injections.UI
 {
+    // As of R7 this patch will crash the game when it is called, at random. Commented out for now.
+
     /// <summary>
     /// Replicate new objectives on the VR watch
     /// </summary>
-
+    /*
     [HarmonyPatch(typeof(PlayerGuiLayer), nameof(PlayerGuiLayer.UpdateObjectives))]
     internal class InjectWatchObjectives
     {
@@ -29,4 +31,5 @@ namespace GTFO_VR.Injections.UI
             Log.Debug($"Got new subobjective! - {txt}");
         }
     }
+    */
 }
