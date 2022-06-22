@@ -1,6 +1,6 @@
 # GTFO_VR_Plugin
 ### A plugin to add full roomscale virtual reality support to your favorite game!
-## Not working for Rundown 7 yet!
+## Only beta version is working in Rundown 7! - Get it in the Discord server, readme included. Don't follow install instructions from here!
 GTFO VR now also has a little corner over on the flatscreen to VR modding discord!
 https://discord.gg/ZFSCSDe
 
