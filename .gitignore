@@ -6,6 +6,9 @@
 GTFO_VR*.zip
 GTFO_VR*.rar
 
+# Notepad++ backups...
+*.bak
+
 # User-specific files
 *.suo
 *.user
