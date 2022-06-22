@@ -25,11 +25,15 @@ namespace GTFO_VR.UI
         public static PUI_InteractionPrompt interactionBar;
         public static PUI_Compass compass;
         public static PUI_WardenIntel intel;
+        public static PUI_ObjectiveTimer timer;
+        public static PUI_Subtitles subtitles;
 
         private GameObject m_statusBarHolder;
         private GameObject m_interactionBarHolder;
         private GameObject m_compassHolder;
         private GameObject m_intelHolder;
+        private GameObject m_timerHolder;
+        private GameObject m_subtitlesHolder;
 
         // Compass will not be visible after this distance from the center of its rect
         private float m_compassCullDistance = 1.2f;
@@ -46,11 +50,13 @@ namespace GTFO_VR.UI
             interactGUI = interaction;
         }
 
-        public static void SetPlayerGUIRef(PlayerGuiLayer playerGUIRef, PUI_Compass compassRef, PUI_WardenIntel intelRef)
+        public static void SetPlayerGUIRef(PlayerGuiLayer playerGUIRef, PUI_Compass compassRef, PUI_WardenIntel intelRef, PUI_ObjectiveTimer timerRef, PUI_Subtitles subtitlesRef)
         {
             intel = intelRef;
             compass = compassRef;
             playerGUI = playerGUIRef;
+            timer = timerRef;
+            subtitles = subtitlesRef;
         }
 
         private void Start()
@@ -60,6 +66,8 @@ namespace GTFO_VR.UI
             m_interactionBarHolder = new GameObject("VR_InteractionUI");
             m_compassHolder = new GameObject("CompassHolder");
             m_intelHolder = new GameObject("IntelHolder");
+            m_timerHolder = new GameObject("TimerHolder");
+            m_subtitlesHolder = new GameObject("SubtitlesHolder");
             Invoke(nameof(VRWorldSpaceUI.Setup), 1f);
         }
 
@@ -69,6 +77,10 @@ namespace GTFO_VR.UI
             SetupElement(interactionBar.transform, m_interactionBarHolder.transform, 0.0018f, holderScale:1.1f);
             SetupElement(compass.transform, m_compassHolder.transform, 0.0036f, false, holderScale:1.35f);
             SetupElement(intel.transform, m_intelHolder.transform, 0.0018f, holderScale:1f);
+            SetupElement(subtitles.transform, m_subtitlesHolder.transform, 0.0018f, holderScale: 1f);
+
+            //TODO: timer is destroyed when expedition is changed, so it will vanish and not be repopulated here.
+            SetupElement(timer.transform, m_timerHolder.transform, 0.0036f, false, holderScale: 1f);
 
             SetTextShader(compass.transform, VRAssets.TextSphereClip);
             SetSpriteRendererShader(compass.transform, VRAssets.SpriteSphereClip);
@@ -101,6 +113,8 @@ namespace GTFO_VR.UI
             UpdateStatus();
             UpdateCompass();
             UpdateIntel();
+            UpdateTimer();
+            UpdateSubtitles();
         }
 
         private void UpdateIntel()
@@ -180,6 +194,49 @@ namespace GTFO_VR.UI
             Shader.SetGlobalColor("_ClippingSphere", new Color(compassPos.x, compassPos.y, compassPos.z, m_compassCullDistance));
         }
 
+        private void UpdateTimer()
+        {
+            if (m_timerHolder == null)
+            {
+                Log.Error("m_timerHolder was null!");
+                return;
+            }
+            
+            if (timer != null && timer.transform.localScale.x > 0.0037)
+            {
+                timer.transform.localScale = Vector3.one * 0.0036f;
+            }
+
+            // do not use playerGUI.TimerOnMainScreenVisible, it is not true when it should or is be visible. 
+            m_timerHolder.SetActive(playerGUI.IsVisible()); 
+            if (m_timerHolder.activeSelf)
+            {
+                m_timerHolder.transform.position = GetTimerPosition();
+                m_timerHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
+            }
+        }
+
+        private void UpdateSubtitles()
+        {
+            if (m_subtitlesHolder == null)
+            {
+                Log.Error("m_subtitlesHolder was null!");
+                return;
+            }
+
+            if (subtitles != null && subtitles.transform.localScale.x > 0.02f)
+            {
+                subtitles.transform.localScale = Vector3.one * 0.0018f;
+            }
+
+            m_subtitlesHolder.SetActive(playerGUI.IsVisible());
+            if (m_subtitlesHolder.activeSelf)
+            {
+                m_subtitlesHolder.transform.position = GetSubtitlesPosition();
+                m_subtitlesHolder.transform.rotation = Quaternion.LookRotation(HMD.GetFlatForwardDirection());
+            }
+        }
+
         public static void PrepareNavMarker(NavMarker n)
         {
             n.transform.SetParent(null);
@@ -223,6 +280,16 @@ namespace GTFO_VR.UI
         private Vector3 GetCompassPosition()
         {
             return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.45f + new Vector3(0, 2.15f, 0);
+        }
+
+        private Vector3 GetTimerPosition()
+        {
+            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.45f + new Vector3(0, 1.50f, 0);
+        }
+
+        private Vector3 GetSubtitlesPosition()
+        {
+            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.45f + new Vector3(0, -0.75f, 0);
         }
 
         private Vector3 GetInteractionPromptPosition()
@@ -341,6 +408,16 @@ namespace GTFO_VR.UI
             {
                 m_intelHolder.transform.DetachChildren();
                 Destroy(m_intelHolder);
+            }
+            if (m_timerHolder != null)
+            {
+                m_timerHolder.transform.DetachChildren();
+                Destroy(m_timerHolder);
+            }
+            if (m_subtitlesHolder != null)
+            {
+                m_subtitlesHolder.transform.DetachChildren();
+                Destroy(m_subtitlesHolder);
             }
             SteamVR_Events.NewPosesApplied.Remove(OnNewPoses);
             PlayerOrigin.OnOriginShift -= SnapUIToPlayerView;

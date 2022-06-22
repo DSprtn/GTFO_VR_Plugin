@@ -45,6 +45,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 m_fpsCamera.transform.position = HMD.GetWorldPosition();
             }
 
+            // Weapons with sights only render their sights otherwise. 
+            Shader.DisableKeyword("FPS_RENDERING_ALLOWED");
+
             m_fpsCamera.m_camera.transform.parent.localRotation = Quaternion.Euler(HMD.GetVRCameraEulerRelativeToFPSCameraParent());
             m_fpsCamera.UpdateCameraRay();
 
@@ -72,6 +75,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_fpsCamera.m_cullingCamera.RunVisibilityOnPreCull();
             m_fpsCamera.m_preRenderCmds.Clear();
             m_fpsCamera.m_beforeForwardAlpahCmds.Clear();
+            m_fpsCamera.m_preLightingCmds.Clear();
 
             m_fpsRender.ForceMatrixUpdate();
 
@@ -123,15 +127,16 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void PrepareFrame()
         {
-            if (ScreenLiquidManager.LiquidSystem != null)
-                ScreenLiquidManager.LiquidSystem.CollectCommands(m_fpsCamera.m_preRenderCmds);
             if (AirParticleSystem.AirParticleSystem.Current != null)
                 AirParticleSystem.AirParticleSystem.Current.CollectCommands(m_fpsCamera.m_preRenderCmds, m_fpsCamera.m_beforeForwardAlpahCmds);
 
             if (m_fpsCamera.CollectCommandsClustered)
             {
-                ClusteredRendering.Current.CollectCommands(m_fpsCamera.m_preRenderCmds);
+                ClusteredRendering.Current.CollectCommands(m_fpsCamera.m_preRenderCmds, m_fpsCamera.m_preLightingCmds);
             }
+ 
+            if (ScreenLiquidManager.LiquidSystem != null)
+                ScreenLiquidManager.LiquidSystem.CollectCommands(m_fpsCamera.m_preRenderCmds);
 
             if (m_fpsCamera.CollectCommandsGUIX && GUIX_Manager.isSetup)
             {
@@ -143,8 +148,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 MapDetails.Current.CollectCommands(m_fpsCamera.m_preRenderCmds);
             }
 
-            Vector4 projectionParams = ClusteredRendering.GetProjectionParams(ClusteredRendering.Current.m_camera);
-            Vector4 zbufferParams = ClusteredRendering.GetZBufferParams(ClusteredRendering.Current.m_camera);
+            Vector4 projectionParams = RenderUtils.GetProjectionParams(ClusteredRendering.Current.m_camera);
+            Vector4 zbufferParams = RenderUtils.GetZBufferParams(ClusteredRendering.Current.m_camera);
             m_fpsCamera.m_preRenderCmds.SetGlobalVector(ClusteredRendering.ID_ProjectionParams, projectionParams);
             m_fpsCamera.m_preRenderCmds.SetGlobalVector(ClusteredRendering.ID_ZBufferParams, zbufferParams);
 
@@ -152,6 +157,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             Shader.SetGlobalMatrix("_MATRIX_VP", GL.GetGPUProjectionMatrix(m_fpsCamera.m_camera.projectionMatrix, false) * m_fpsCamera.m_camera.worldToCameraMatrix);
             Shader.SetGlobalMatrix("_MATRIX_IV", this.transform.worldToLocalMatrix);
             Shader.SetGlobalInt("_FrameIndex", m_fpsCamera.m_frameIndex++);
+            Shader.SetGlobalInt("_GameCameraActive", 1);
         }
 
         // Force FOV/Aspects and position match up for all relevant game cameras
