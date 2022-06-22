@@ -1,3 +1,15 @@
+Total changelog: (1.1.9b7) - Roughy is MVP!
+- Made to work in rundown 7
+- Added mission timers (like in R6C3 to the world UI)
+- Added subtitles to the world UI
+
+Known issues:
+- (Watch) Objective UI may not work 
+- UI is not visible through objects
+- 2D UI is visible on edges of the screen on some configurations.
+- Everything that was broken in R6 is still broken.
+
+
 Total changelog: (1.1.9b6)
 - Fixes to keyboard not working correctly with audio logs or y/n prompts.
 

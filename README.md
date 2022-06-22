@@ -15,7 +15,7 @@ Grab newest beta versions from the Discord. Join the beta testers under gt-getti
 Try to get used to the game in Non-VR mode first before using this mod! 
 
 ## Recommendation: Wireless VR Solution
-	If you are using Wireless PCVR to play, and the weapon handling feels 'floaty' or 'unresponsive', try using ALVR (https://github.com/alvr-org/ALVR). Other users report this provides a smooth experience.
+	If you are using Wireless PCVR to play, and the weapon handling feels 'floaty' or 'unresponsive', try using ALVR (https://github.com/alvr-org/ALVR). Other users report this provides a smoother experience.
 
 ## Installation: 
 
@@ -70,6 +70,9 @@ Try to get used to the game in Non-VR mode first before using this mod!
 	Manage Controller Bindings -> GTFO VR
 	
 	8. Tweak all VR config options inside GTFO game under Settings -> VR Settings
+
+	9. Lower/disable all graphical options! They either cause bad performance or visual artifacts.
+	This includes anti-aliasing under 'Display'
 	
 	
 	To enable tracking or change the angle at which the weapons are being held you must set an action pose 
