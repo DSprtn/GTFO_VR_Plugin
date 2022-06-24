@@ -3,6 +3,7 @@ using GTFO_VR.Events;
 using System;
 using UnityEngine;
 using UnityEngine.PostProcessing;
+using UnityEngine.Rendering;
 using Valve.VR;
 
 namespace GTFO_VR.Core.PlayerBehaviours
@@ -16,6 +17,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
         }
 
+        private CommandBuffer gOverwrite;
         private FPSCamera m_fpsCamera;
         private FPS_Render m_fpsRender;
         private UI_Apply m_uiBlitter;
@@ -23,9 +25,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void Awake()
         {
+            gOverwrite = new CommandBuffer();
             m_fpsCamera = GetComponent<FPSCamera>();
             m_uiBlitter = GetComponent<UI_Apply>();
             m_fpsRender = GetComponent<FPS_Render>();
+           
+            m_fpsCamera.m_camera.AddCommandBuffer(CameraEvent.AfterGBuffer, gOverwrite);
+
             SteamVR_Render.preRenderBothEyesCallback += PreRenderUpdate;
             SteamVR_Render.eyePreRenderCallback += PrepareFrameForEye;
         }
@@ -64,7 +70,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_fpsCamera.m_owner.Interaction.AfterCameraUpdate();
         }
 
-        private void PrepareFrameForEye(EVREye eye)
+        private void PrepareFrameForEye(EVREye eye, SteamVR_CameraMask mask)
         {
             m_skipLeftEye = Time.frameCount % 2 == 0;
 
@@ -90,6 +96,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
                     return;
                 }
             }
+
+            gOverwrite.Clear();
+            gOverwrite.DrawMesh(mask.meshFilter.mesh, mask.transform.localToWorldMatrix, SteamVR_CameraMask.occlusionMaterial);
 
             PrepareFrame();
         }

@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3244569919
+CRC: 4022278629
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 4bc281b988a1ba06aeeed5a4eb973f3b
+    Hash: ef4d6493b968c7090fe6f4a342162c34
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 76970e4386c108d9b0386c5f8bf6a242
+    Hash: 136bdbfb2fc6f34ff509ce379a45d812
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -24,6 +24,10 @@ ClassTypes:
 - Class: 43
   Script: {instanceID: 0}
 - Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
+- Class: 115
   Script: {instanceID: 0}
 - Class: 213
   Script: {instanceID: 0}
@@ -45,6 +49,7 @@ Assets:
 - Assets/blob.png
 - Assets/RadialIcons/Chat.png
 - Assets/RadialIcons/BG.png
+- Assets/HoloText/Share-TechMono.asset
 - Assets/RadialIcons/Secondary.png
 - Assets/SpriteNoZTestAndClip.shader
 - Assets/TextMesh Pro/Resources/Shaders/TMP_NoZTest.shader
