@@ -44,6 +44,10 @@ namespace GTFO_VR.Injections.UI
     {
         private static bool Prefix(NavMarkerLayer __instance)
         {
+            if (!__instance.m_visible)
+            {
+                return false;
+            }
             UpdateAllNavMarkers(__instance.m_markersActive);
             return false;
         }
