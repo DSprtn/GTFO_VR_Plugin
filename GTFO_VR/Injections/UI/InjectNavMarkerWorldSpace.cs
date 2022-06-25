@@ -57,6 +57,9 @@ namespace GTFO_VR.Injections.UI
             float tempScale = 1f;
             bool inElevator = FocusStateManager.CurrentState.Equals(eFocusState.InElevator);
 
+            Vector3 hmdPos = HMD.GetWorldPosition();
+            Vector3 hmdFwd = HMD.GetWorldForward();
+
             foreach (NavMarker n in m_markersActive)
             {
                 if (inElevator && n)
@@ -67,9 +70,10 @@ namespace GTFO_VR.Injections.UI
 
                 if (n != null && n.m_trackingObj != null)
                 {
-                    n.transform.position = n.m_trackingObj.transform.position;
+                    Vector3 trackingObjPos = n.m_trackingObj.transform.position;
+                    n.transform.position = trackingObjPos;
 
-                    float dotToCamera = Vector3.Dot((n.m_trackingObj.transform.position - HMD.GetWorldPosition()).normalized, HMD.GetWorldForward());
+                    float dotToCamera = Vector3.Dot((trackingObjPos - hmdPos).normalized, hmdFwd);
 
                     if (dotToCamera < 0)
                     {
@@ -77,14 +81,14 @@ namespace GTFO_VR.Injections.UI
                     }
                     else
                     {
-                        float distanceToCamera = Vector3.Distance(n.m_trackingObj.transform.position, HMD.GetWorldPosition());
-                        Vector3 hmdToTrackObj = (n.m_trackingObj.transform.position - HMD.GetWorldPosition()).normalized;
+                        float distanceToCamera = Vector3.Distance(trackingObjPos, hmdPos);
+                        Vector3 hmdToTrackObj = (trackingObjPos - hmdPos).normalized;
                         Quaternion rotToCamera = Quaternion.LookRotation(hmdToTrackObj.normalized);
                         n.transform.rotation = rotToCamera;
 
                         if (distanceToCamera > 60)
                         {
-                            n.transform.position = HMD.GetWorldPosition() + hmdToTrackObj * 60f;
+                            n.transform.position = hmdPos + hmdToTrackObj * 60f;
                         }
 
                         if (dotToCamera > 0.94f)
@@ -100,7 +104,10 @@ namespace GTFO_VR.Injections.UI
                         }
                         if(n.m_distance != null && n.m_distance.fontSharedMaterial != null)
                         {
-                            n.m_distance.fontSharedMaterial.shader = VRAssets.GetTextNoCull();
+                            if(n.m_distance.fontSharedMaterial.shader != VRAssets.GetTextNoCull())
+                            {
+                                n.m_distance.fontSharedMaterial.shader = VRAssets.GetTextNoCull();
+                            }
                         }
                         n.SetDistance(distanceToCamera);
 
