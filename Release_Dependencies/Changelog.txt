@@ -1,3 +1,8 @@
+Total changelog: (1.1.9b8) - 
+- Fixed melee weapons not getting correct orientations/scales/hitboxes when using different localizations
+- Improved performance by fixing the VR occlusion mesh. This should be around a 5-10% improvement depending on hardware.
+- Possibly fixed stuttering when opening menus when approaching VRAM limit.
+
 Total changelog: (1.1.9b7) - Roughy is MVP!
 - Made to work in rundown 7
 - Added mission timers (like in R6C3 to the world UI)
