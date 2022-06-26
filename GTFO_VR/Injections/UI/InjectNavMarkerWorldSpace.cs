@@ -172,6 +172,9 @@ namespace GTFO_VR.Injections.UI
 
                         n.SetDistance(distanceToCamera);
 
+                        n.UpdateTrackingDimension();
+                        n.UpdateEnabledPerDimensionState();
+
                         // Scale up to camera culling distance
                         // If nav marker is beyond that it will place itself back to 60m away
                         tempScale = 1 + Mathf.Clamp(distanceToCamera / 25f, 0, 2.4f);
