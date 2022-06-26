@@ -2,6 +2,7 @@
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.UI;
 using HarmonyLib;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GTFO_VR.Injections.UI
@@ -35,6 +36,70 @@ namespace GTFO_VR.Injections.UI
         }
     }
 
+    /// <summary>
+    /// Get a reference to every marker that is created so we can iterate through them without the performancei issues of accessing NavMarkerLayer.m_markersActive.
+    /// Note that this also includes Locator markers, which we (probably?) don't want to touch. Those are removed in a patch below.
+    /// </summary>
+    [HarmonyPatch(typeof(NavMarkerLayer), nameof(NavMarkerLayer.PrepareMarker))]
+    internal class InjectNavMarkerPrepare
+    {
+        private static void Postfix(NavMarker __result)
+        {
+            InjectNavMarkerWorldSpacePositioning.Markers.Add(__result);
+        }
+    }
+
+    /// <summary>
+    /// Also remove marker from our internal list. As of writing these are always null, so this effectively just clears any null elements.
+    /// NavMarkerLayer.m_markersActive will continue growing forever, filling up with null elements.
+    /// </summary>
+    [HarmonyPatch(typeof(NavMarkerLayer), nameof(NavMarkerLayer.RemoveMarker))]
+    internal class InjectNavMarkerRemove
+    {
+        private static void Prefix(NavMarker marker)
+        {
+            InjectNavMarkerWorldSpacePositioning.Markers.Remove(marker);
+
+            // As of writing the game is passing null for most (all?) of these, so do a quick sweep for nulls.
+            InjectNavMarkerWorldSpacePositioning.Markers.RemoveWhere(mkr => mkr == null);
+        }
+    }
+
+    /// <summary>
+    /// Same as RemoveMarker(), but looks up the marker by its m_trackingObj. Probably not used.
+    /// </summary>
+    [HarmonyPatch(typeof(NavMarkerLayer), nameof(NavMarkerLayer.RemoveMarkerForGO))]
+    internal class InjectNavMarkerRemoveForGO
+    {
+        private static void Prefix(GameObject go)
+        {
+            NavMarker removeMe = null;
+
+            foreach (NavMarker marker in InjectNavMarkerWorldSpacePositioning.Markers)
+            {
+                if ( marker != null && marker.m_trackingObj == go)
+                {
+                    removeMe = marker;
+                    break;
+                }
+            }
+
+            InjectNavMarkerWorldSpacePositioning.Markers.Remove(removeMe);
+        }
+    }
+
+    /// <summary>
+    /// Locator markers are also created in PrepareMarker, but we want to leave them alone. Remove from our list here.
+    /// </summary>
+    [HarmonyPatch(typeof(NavMarkerLayer), nameof(NavMarkerLayer.PlaceLocatorMarker))]
+    internal class InjectNavMarkerLocatorMarkerSkip
+    {
+        private static void Postfix(NavMarker __result)
+        {
+            InjectNavMarkerWorldSpacePositioning.Markers.Remove(__result);
+        }
+    }
+
 
     /// <summary>
     /// Calls into our VR library to handle positioning, scaling and rotating all nav markers
@@ -42,20 +107,25 @@ namespace GTFO_VR.Injections.UI
     [HarmonyPatch(typeof(NavMarkerLayer), nameof(NavMarkerLayer.AfterCameraUpdate))]
     internal class InjectNavMarkerWorldSpacePositioning
     {
+        public static HashSet<NavMarker> Markers = new HashSet<NavMarker>();
+
         private static bool Prefix(NavMarkerLayer __instance)
         {
             if (!__instance.m_visible)
             {
                 return false;
             }
-            UpdateAllNavMarkers(__instance.m_markersActive);
+            UpdateAllNavMarkers(Markers);
             return false;
         }
 
-        internal static void UpdateAllNavMarkers(Il2CppSystem.Collections.Generic.List<NavMarker> m_markersActive)
+        internal static void UpdateAllNavMarkers(HashSet<NavMarker> m_markersActive)
         {
             float tempScale = 1f;
             bool inElevator = FocusStateManager.CurrentState.Equals(eFocusState.InElevator);
+
+            Vector3 hmdPos = HMD.GetWorldPosition();
+            Vector3 hmdFwd = HMD.GetWorldForward();
 
             foreach (NavMarker n in m_markersActive)
             {
@@ -67,9 +137,10 @@ namespace GTFO_VR.Injections.UI
 
                 if (n != null && n.m_trackingObj != null)
                 {
-                    n.transform.position = n.m_trackingObj.transform.position;
+                    Vector3 trackingObjPos = n.m_trackingObj.transform.position;
+                    n.transform.position = trackingObjPos;
 
-                    float dotToCamera = Vector3.Dot((n.m_trackingObj.transform.position - HMD.GetWorldPosition()).normalized, HMD.GetWorldForward());
+                    float dotToCamera = Vector3.Dot((trackingObjPos - hmdPos).normalized, hmdFwd);
 
                     if (dotToCamera < 0)
                     {
@@ -77,14 +148,14 @@ namespace GTFO_VR.Injections.UI
                     }
                     else
                     {
-                        float distanceToCamera = Vector3.Distance(n.m_trackingObj.transform.position, HMD.GetWorldPosition());
-                        Vector3 hmdToTrackObj = (n.m_trackingObj.transform.position - HMD.GetWorldPosition()).normalized;
+                        float distanceToCamera = Vector3.Distance(trackingObjPos, hmdPos);
+                        Vector3 hmdToTrackObj = (trackingObjPos - hmdPos).normalized;
                         Quaternion rotToCamera = Quaternion.LookRotation(hmdToTrackObj.normalized);
                         n.transform.rotation = rotToCamera;
 
                         if (distanceToCamera > 60)
                         {
-                            n.transform.position = HMD.GetWorldPosition() + hmdToTrackObj * 60f;
+                            n.transform.position = hmdPos + hmdToTrackObj * 60f;
                         }
 
                         if (dotToCamera > 0.94f)
@@ -98,11 +169,11 @@ namespace GTFO_VR.Injections.UI
                         {
                             n.SetState(NavMarkerState.Visible);
                         }
-                        if(n.m_distance != null && n.m_distance.fontSharedMaterial != null)
-                        {
-                            n.m_distance.fontSharedMaterial.shader = VRAssets.GetTextNoCull();
-                        }
+
                         n.SetDistance(distanceToCamera);
+
+                        n.UpdateTrackingDimension();
+                        n.UpdateEnabledPerDimensionState();
 
                         // Scale up to camera culling distance
                         // If nav marker is beyond that it will place itself back to 60m away
