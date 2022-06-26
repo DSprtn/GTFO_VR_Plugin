@@ -1,3 +1,6 @@
+Total changelog: (1.1.9b9) - Roughy MVP again!
+- Improved performance of world markers and fixed their degrading performance
+
 Total changelog: (1.1.9b8) - 
 - Fixed melee weapons not getting correct orientations/scales/hitboxes when using different localizations
 - Improved performance by fixing the VR occlusion mesh. This should be around a 5-10% improvement depending on hardware.
