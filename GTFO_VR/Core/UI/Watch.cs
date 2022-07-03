@@ -10,6 +10,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using Valve.VR;
@@ -63,9 +64,8 @@ namespace GTFO_VR.UI
         Quaternion m_leftHandRotationOffset = Quaternion.Euler(new Vector3(205, -100f, -180f));
         Quaternion m_rightHandRotationOffset = Quaternion.Euler(new Vector3(205, 100f, 180f));
 
-        string m_mainObjective;
-        string m_subObjective;
-
+        string m_ObjectiveText;
+        Regex INDENT_REGEX = new Regex(@"<indent=\d{1,3}%>");
 
         SteamVR_Action_Boolean toggleWatchMode;
         SteamVR_Action_Boolean watchRadialMenu;
@@ -225,22 +225,39 @@ namespace GTFO_VR.UI
             }
         }
 
-        public void UpdateMainObjective(string mainObj)
+        
+        public void UpdateObjective(PUI_GameObjectives gameObjectives)
         {
-            this.m_mainObjective = mainObj;
+            StringBuilder builder = new StringBuilder();
+
+            // Main object is added to progressions too, as its subobjective. 
+            foreach ( PUI_ProgressionObjective progression in gameObjectives.m_progressionObjectives)
+            {
+                if (progression == null)
+                    continue;
+
+                string header = progression.m_header?.text;
+                if ( header != null)
+                {
+                    header = INDENT_REGEX.Replace(header, "");  // Indent breaks formatting
+                    builder.Append(header);
+                    builder.Append("\n");
+                }
+
+                string txt = progression.m_text?.text;
+                if ( txt != null)
+                {
+                    txt = INDENT_REGEX.Replace(txt, "");
+                    builder.Append(txt);
+                }
+            }
+            this.m_ObjectiveText = builder.ToString();
             UpdateObjectiveDisplay();
         }
-
-        public void UpdateSubObjective(string subObj)
-        {
-            this.m_subObjective = subObj;
-            UpdateObjectiveDisplay();
-        }
-
         public void UpdateObjectiveDisplay() {
             if (m_objectiveDisplay != null)
             {
-                m_objectiveDisplay.text = "WARDEN OBJECTIVE: \n \n " + m_mainObjective + " \n \n " + m_subObjective;
+                m_objectiveDisplay.text = m_ObjectiveText;
                 m_objectiveDisplay.ForceMeshUpdate(false);
                 SteamVR_InputHandler.TriggerHapticPulse(0.01f, 1 / .025f, 0.2f, Controllers.GetDeviceFromHandType(Controllers.offHandControllerType));
             }
@@ -404,6 +421,7 @@ namespace GTFO_VR.UI
             m_objectiveDisplay.fontSizeMin = 18;
             m_objectiveDisplay.fontSizeMax = 36;
             m_objectiveDisplay.alignment = TextAlignmentOptions.Center;
+            m_objectiveDisplay.faceColor = new Color32(255, 255, 255, 25); // Adjust alpha so all the text isn't just pure white
             MelonCoroutines.Start(SetRectSize(watchObjectiveTransform, new Vector2(34, 43f)));
         }
 
