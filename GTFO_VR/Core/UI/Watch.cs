@@ -481,12 +481,21 @@ namespace GTFO_VR.UI
         public void SwitchState()
         {
             int maxStateIndex = Enum.GetValues(typeof(WatchState)).Length - 1;
-            int nextIndex = (int)m_currentState + 1;
+            int nextIndex = (int)m_currentState;
 
-            if (nextIndex > maxStateIndex)
+            while(true)
             {
-                nextIndex = 0;
+                nextIndex++;
+                if (nextIndex > maxStateIndex)
+                    nextIndex = 0;
+
+                // If current index is chat and we want to skip it, repeat loop.
+                if (nextIndex == (int)WatchState.Chat && !VRConfig.configDisplayChatOnWatch.Value)
+                    continue;
+
+                break;
             }
+
             SwitchState((WatchState)nextIndex);
             SteamVR_InputHandler.TriggerHapticPulse(0.025f, 1 / .025f, 0.3f, Controllers.GetDeviceFromHandType(Controllers.offHandControllerType));
         }

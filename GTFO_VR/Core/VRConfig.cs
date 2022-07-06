@@ -18,6 +18,7 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<float> configWatchScaling;
         internal static ConfigEntry<bool> configUseNumbersForAmmoDisplay;
         internal static ConfigEntry<string> configWatchColor;
+        internal static ConfigEntry<bool> configDisplayChatOnWatch;
         internal static ConfigEntry<int> configCrouchHeight;
         internal static ConfigEntry<bool> configUseLaserPointerOnWeapons;
         internal static ConfigEntry<bool> configUseWeaponHaptics;
@@ -96,6 +97,7 @@ namespace GTFO_VR.Core
             configWatchColor = BindStringDropdown(file, "Watch", "Watch color", "WHITE", "Color to use for watch", "Watch color", new string[] { "WHITE", "RED", "GREEN", "BLUE", "CYAN", "YELLOW", "MAGENTA", "ORANGE", "BLACK" });
             configWatchScaling = BindFloat(file, "Watch", "Watch scale multiplier", 1f, 0.8f, 1.5f, "Watch size multiplier", "Watch size");
             configUseNumbersForAmmoDisplay = BindBool(file, "Watch", "Use numbers for ammo display?", false, "If true, current ammo and max ammo will be displayed as numbers on the watch", "Use number display for ammo");
+            configDisplayChatOnWatch = BindBool(file, "Watch", "Display chat on watch?", false, "If true, the watch will also display the chat when toggled, in addition to player status and objectives. This does not affect the radial menu", "Display chat on watch?");
 
             BindHeader("Weapons");
             configUseWeaponHaptics = BindBool(file, "Haptics", "Use haptics for shooting?", true, "If true, haptics effect will trigger when shooting weapons.", "Weapon haptics");
