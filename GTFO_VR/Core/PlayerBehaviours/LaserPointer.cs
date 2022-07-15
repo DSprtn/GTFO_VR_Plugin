@@ -73,9 +73,15 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             if (bHit && hit.distance < 100f)
             {
-                dist = hit.distance;
+                // Offset the hit location so dot doesn't get buried in geometry. Colliders are not always very accurate.
+                Vector3 offsetHit = (transform.parent.position - hit.point).normalized * 0.1f;  // Offset vector
+                dist = hit.distance - offsetHit.magnitude;
+
+                if (!m_dot.active)
+                    m_dot.SetActive(true);
+
                 m_dot.transform.rotation = Quaternion.LookRotation(m_pointer.transform.up);
-                m_dot.transform.position = hit.point;
+                m_dot.transform.position = hit.point + offsetHit;
                 m_dot.transform.localScale = Vector3.Lerp(m_dotScale, m_dotScale * 3f, dist / 51f);
             }
             else
