@@ -32,6 +32,7 @@ namespace GTFO_VR.Injections.UI
             foreach (SpriteRenderer r in __instance.transform.GetComponentsInChildren<SpriteRenderer>())
             {
                 r.material.shader = VRAssets.SpriteAlwaysRender;
+                r.material.renderQueue = 4001;
             }
         }
     }
