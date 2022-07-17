@@ -13,6 +13,7 @@ namespace GTFO_VR.Core
         }
 
         static AssetBundle assetBundle;
+        static AssetBundle secondaryAssetBundle;
 
         public static GameObject WatchPrefab;
 
@@ -23,6 +24,8 @@ namespace GTFO_VR.Core
         public static Shader TextSphereClip;
 
         public static Shader SpriteSphereClip;
+
+        public static Shader ThermalGlowShader;
 
         public static Sprite RadialBG;
         public static Sprite Objective;
@@ -83,6 +86,15 @@ namespace GTFO_VR.Core
                 Log.Error("No assetbundle present!");
             }
 
+            if (secondaryAssetBundle == null)
+            {
+                secondaryAssetBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/vrthermal");
+            }
+            if (secondaryAssetBundle == null)
+            {
+                Log.Error("No secondaryAssetBundle present!");
+            }
+
             RadialBG = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/bg.png").Cast<Texture2D>());
             Objective = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/objective.png").Cast<Texture2D>());
             Chat = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/chat.png").Cast<Texture2D>());
@@ -101,7 +113,15 @@ namespace GTFO_VR.Core
             SpriteAlwaysRender = assetBundle.LoadAsset("assets/spritenoztest.shader").Cast<Shader>();
             TextSphereClip = assetBundle.LoadAsset("assets/textmesh pro/resources/shaders/tmp_clipsphere.shader").Cast<Shader>();
             SpriteSphereClip = assetBundle.LoadAsset("assets/spritenoztestandclip.shader").Cast<Shader>();
-            if(TextAlwaysRender == null)
+
+            ThermalGlowShader = secondaryAssetBundle.LoadAsset("assets/GTFOVR_Thermal_Glow.shader").Cast<Shader>();
+
+            if (!ThermalGlowShader)
+            {
+                Log.Error("Could not find thermal glow shader!");
+            }
+
+            if (TextAlwaysRender == null)
             {
                 TextAlwaysRender = assetBundle.LoadAsset("assets/textmesh pro/resources/shaders/tmp_noztest.shader").Cast<Shader>();
             }

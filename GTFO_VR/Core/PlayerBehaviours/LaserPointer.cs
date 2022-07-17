@@ -19,6 +19,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private GameObject m_pointer;
         private GameObject m_dot;
+
+        private GameObject m_thermalDot;
+        private GameObject m_thermalPointer;
+
         private readonly float m_thickness = 1f / 400f;
 
         private Vector3 m_dotScale = new Vector3(0.04f, 0.01f, 0.016f);
@@ -73,9 +77,15 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             if (bHit && hit.distance < 100f)
             {
-                dist = hit.distance;
+                // Offset the hit location so dot doesn't get buried in geometry. Colliders are not always very accurate.
+                Vector3 offsetHit = (transform.parent.position - hit.point).normalized * 0.1f;  // Offset vector
+                dist = hit.distance - offsetHit.magnitude;
+
+                if (!m_dot.active)
+                    m_dot.SetActive(true);
+
                 m_dot.transform.rotation = Quaternion.LookRotation(m_pointer.transform.up);
-                m_dot.transform.position = hit.point;
+                m_dot.transform.position = hit.point + offsetHit;
                 m_dot.transform.localScale = Vector3.Lerp(m_dotScale, m_dotScale * 3f, dist / 51f);
             }
             else
@@ -118,36 +128,99 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             m_pointer.transform.localScale = new Vector3(m_thickness, m_thickness, 100f);
             m_pointer.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
-            m_dot.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
             m_pointer.transform.localRotation = Quaternion.identity;
+
+            m_dot.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
             m_dot.transform.localRotation = Quaternion.identity;
             m_dot.transform.localScale = m_dotScale;
         }
 
+        private GameObject CreateDot(Transform parent, bool applyTransforms)
+        {
+            GameObject dot = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            dot.GetComponent<Collider>().enabled = false;
+            dot.transform.SetParent(parent);
+            if (applyTransforms)
+            {
+                dot.transform.localScale = m_dotScale;
+                dot.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
+
+            }
+            else
+            {
+                // Parent will be transformed instead
+                dot.transform.localScale = new Vector3(1,1,1);
+                dot.transform.localPosition = new Vector3(0.0f, 0.0f, 0);
+            }
+
+            dot.transform.localRotation = Quaternion.identity;
+
+            return dot;
+        }
+
+        private GameObject CreatePointer( Transform parent, bool applyTransforms)
+        {
+            GameObject pointer = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            pointer.GetComponent<Collider>().enabled = false;
+            pointer.transform.parent = parent;
+            if (applyTransforms)
+            {
+                pointer.transform.localScale = new Vector3(m_thickness, m_thickness, 100f);
+                pointer.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
+            }
+            else
+            {
+                // Parent will be transformed instead
+                pointer.transform.localScale = new Vector3(1, 1, 1);
+                pointer.transform.localPosition = new Vector3(0.0f, 0.0f, 0);
+            }
+
+            pointer.transform.localRotation = Quaternion.identity;
+
+            return pointer;
+        }
+
         private void CreatePointerObjects()
         {
-            m_pointer = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            m_dot = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            m_dot.transform.localScale = m_dotScale;
-            m_dot.transform.SetParent(transform);
-            m_dot.GetComponent<Collider>().enabled = false;
-            m_pointer.GetComponent<Collider>().enabled = false;
+            ///////////////////////
+            //// Visible light
+            ///////////////////////
 
-            m_pointer.transform.parent = transform;
-            m_pointer.transform.localScale = new Vector3(m_thickness, m_thickness, 100f);
-            m_pointer.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
-            m_dot.transform.localPosition = new Vector3(0.0f, 0.0f, 50f);
-            m_pointer.transform.localRotation = Quaternion.identity;
-            m_dot.transform.localRotation = Quaternion.identity;
-            Material material = new Material(Shader.Find("Unlit/Color"));
+            m_pointer = CreatePointer(this.transform, true);
+            m_dot = CreateDot(this.transform, true);
+
+            Material pointerMaterial = new Material(Shader.Find("Unlit/Color")); // Renders after deferred pass
             Color c = ExtensionMethods.FromString(VRConfig.configLaserPointerColor.Value);
+            Color origColor = c;
             c *= .28f;
-            material.SetColor("_Color", c);
-            material.renderQueue = 3001;
-            m_pointer.GetComponent<MeshRenderer>().material = material;
-            m_dot.GetComponent<MeshRenderer>().material = material;
+            pointerMaterial.SetColor("_Color", c);
+            pointerMaterial.renderQueue = 3001; // Renders after thermals
 
-            
+            m_pointer.GetComponent<MeshRenderer>().material = pointerMaterial;
+            m_dot.GetComponent<MeshRenderer>().material = pointerMaterial;
+
+            /////////////////////////
+            /// Thermal
+            /// /////////////////////
+
+            m_thermalPointer = CreatePointer(m_pointer.transform, false);
+            m_thermalDot = CreateDot(m_dot.transform, false);
+
+            Material thermalMaterial = new Material(VRAssets.ThermalGlowShader); // Normal facing camera, writes _ShadingType to emission texture
+
+            thermalMaterial.SetColor("_EmissionColor", origColor * 0.25f);  // Alpha replaced by shader. Too bright and it does funny things to glass.
+            thermalMaterial.SetColor("_Bump", new Color(1, 1, 1, 1f));      // Makes thermal color brighter?
+            thermalMaterial.SetColor("_Color", c);          // Not unlit, so emission is what makes it constant.
+            thermalMaterial.SetFloat("_ShadingType", 2);    // Skin, brightest of the lot
+            thermalMaterial.renderQueue = 2500;             // Deferred shaders won't render above this
+
+            m_thermalPointer.GetComponent<MeshRenderer>().material = thermalMaterial;
+            m_thermalDot.GetComponent<MeshRenderer>().material = thermalMaterial;
+
+            // Makes things even brighter?
+            m_thermalPointer.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            m_thermalDot.GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
             m_setup = true;
 
             TogglePointer(false);
