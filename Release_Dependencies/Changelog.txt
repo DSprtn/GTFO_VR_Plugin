@@ -1,3 +1,9 @@
+Total changelog: (1.1.9b10) - (Roughy's great work, yet again)
+- Fixed watch objectives, made objectives more verbose/complete 
+- Fixed laser sight in thermal scopes
+- Fixed thermal scope reticles
+- Added option to skip chat when toggling watch screens (inv/obj)
+
 Total changelog: (1.1.9b9) - Roughy MVP again!
 - Improved performance of world markers and fixed their degrading performance
 
