@@ -132,7 +132,7 @@ namespace GTFO_VR.Injections.UI
                     return;
                 }
 
-                if (n != null && n.m_trackingObj != null)
+                if (n != null && n.gameObject.active && n.m_trackingObj != null)
                 {
                     Vector3 trackingObjPos = n.m_trackingObj.transform.position;
                     n.transform.position = trackingObjPos;
