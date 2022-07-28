@@ -109,6 +109,10 @@
       "name": "/actions/default/in/WatchRadialMenu",
       "type": "boolean"
     },
+	{
+      "name": "/actions/default/in/OpenAndSelectComms",
+      "type": "boolean"
+    },
     {
       "name": "/actions/default/out/Haptic",
       "type": "vibration"

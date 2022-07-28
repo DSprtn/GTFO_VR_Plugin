@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.Events;
+using GTFO_VR.UI;
 using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
@@ -45,6 +46,8 @@ namespace GTFO_VR.Core.VR_Input
         private static SteamVR_Action_Boolean m_openObjectivesAction;
 
         private static SteamVR_Action_Boolean m_aimOrShoveAction;
+
+        private static SteamVR_Action_Boolean m_openAndSelectComms;
 
         private static Dictionary<InputAction, SteamVR_Action_Boolean> boolActions;
 
@@ -116,7 +119,28 @@ namespace GTFO_VR.Core.VR_Input
             {
                 return true;
             }
+            if (handleCommsAction(action))
+            {
+                return false;
+            }
+
             return boolActionMapping != null && boolActionMapping.GetStateDown(SteamVR_Input_Sources.Any);
+        }
+
+        private static bool handleCommsAction(InputAction action)
+        {
+            // Same button used for both actions, so have caller return when action is not relevant.
+            if (action == InputAction.ToggleCommunicationMenu && FocusStateEvents.currentState != eFocusState.FPS)
+            {
+                return true; // Return
+            }
+
+            if (action == InputAction.SelectCommunicationMenu && FocusStateEvents.currentState != eFocusState.FPS_CommunicationDialog)
+            {
+                return true; // Return
+            }
+
+            return false; // Continue
         }
 
         public static bool GetAction(InputAction action)
@@ -182,8 +206,8 @@ namespace GTFO_VR.Core.VR_Input
             m_pingAction = SteamVR_Input.GetBooleanAction("Ping", false);
             m_openObjectivesAction = SteamVR_Input.GetBooleanAction("OpenObjectives", false);
             m_aimOrShoveAction = SteamVR_Input.GetBooleanAction("AimOrShove", false);
+            m_openAndSelectComms = SteamVR_Input.GetBooleanAction("OpenAndSelectComms", false);
             m_pushToTalkAction = SteamVR_Input.GetBooleanActionFromPath("/actions/default/in/PushToTalk");
-
 
             boolActions = new Dictionary<InputAction, SteamVR_Action_Boolean>
             {
@@ -207,6 +231,8 @@ namespace GTFO_VR.Core.VR_Input
                 { InputAction.MenuToggle, m_openMenuAction },
                 { InputAction.ToggleMap, m_openMapAction },
                 { InputAction.Flashlight, m_flashlightAction },
+                { InputAction.ToggleCommunicationMenu, m_openAndSelectComms },
+                { InputAction.SelectCommunicationMenu, m_openAndSelectComms },
             };
 
         }
