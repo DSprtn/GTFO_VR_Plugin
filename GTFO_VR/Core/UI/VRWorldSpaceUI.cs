@@ -27,6 +27,7 @@ namespace GTFO_VR.UI
         public static PUI_WardenIntel intel;
         public static PUI_ObjectiveTimer timer;
         public static PUI_Subtitles subtitles;
+        public static PUI_CommunicationMenu comms;
 
         private GameObject m_statusBarHolder;
         private GameObject m_interactionBarHolder;
@@ -34,6 +35,7 @@ namespace GTFO_VR.UI
         private GameObject m_intelHolder;
         private GameObject m_timerHolder;
         private GameObject m_subtitlesHolder;
+        private GameObject m_commsHolder;
 
         // Compass will not be visible after this distance from the center of its rect
         private float m_compassCullDistance = 1.2f;
@@ -59,6 +61,11 @@ namespace GTFO_VR.UI
             subtitles = subtitlesRef;
         }
 
+        public static void SetCommsGUIRef(PUI_CommunicationMenu commsRef)
+        {
+            comms = commsRef;
+        }
+
         private void Start()
         {
             Log.Info("Creating status and interaction prompt VR UI");
@@ -68,6 +75,7 @@ namespace GTFO_VR.UI
             m_intelHolder = new GameObject("IntelHolder");
             m_timerHolder = new GameObject("TimerHolder");
             m_subtitlesHolder = new GameObject("SubtitlesHolder");
+            m_commsHolder = new GameObject("CommsHolder");
             Invoke(nameof(VRWorldSpaceUI.Setup), 1f);
         }
 
@@ -78,6 +86,7 @@ namespace GTFO_VR.UI
             SetupElement(compass.transform, m_compassHolder.transform, 0.0036f, false, holderScale:1.35f);
             SetupElement(intel.transform, m_intelHolder.transform, 0.0018f, holderScale:1f);
             SetupElement(subtitles.transform, m_subtitlesHolder.transform, 0.0018f, holderScale: 1f);
+            SetupElement(comms.transform, m_commsHolder.transform, 0.0018f, holderScale: 0.5f);
 
             //TODO: timer is destroyed when expedition is changed, so it will vanish and not be repopulated here.
             SetupElement(timer.transform, m_timerHolder.transform, 0.0036f, false, holderScale: 1f);
@@ -115,6 +124,7 @@ namespace GTFO_VR.UI
             UpdateIntel();
             UpdateTimer();
             UpdateSubtitles();
+            UpdateComms();
         }
 
         private void UpdateIntel()
@@ -136,6 +146,28 @@ namespace GTFO_VR.UI
                 intel.transform.localScale = Vector3.one * 0.0018f;
             }
             
+        }
+
+        private void UpdateComms()
+        {
+            m_commsHolder.transform.position = GetCommsPosition();
+
+            if (FocusStateEvents.currentState.Equals(eFocusState.InElevator))
+            {
+                Vector3 flatForward = (m_commsHolder.transform.position - VRPlayer.FpsCamera.transform.position).normalized;
+                flatForward.y = 0;
+                m_commsHolder.transform.rotation = Quaternion.LookRotation(flatForward.normalized);
+            }
+            else
+            {
+                m_commsHolder.transform.rotation = LerpUIRot(m_commsHolder.transform);
+            }
+
+            if (comms != null && comms.transform.localScale.x > 0.002)
+            {
+                comms.transform.localScale = Vector3.one * 0.0018f;
+            }
+
         }
 
         private void UpdateStatus()
@@ -287,6 +319,11 @@ namespace GTFO_VR.UI
             return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.45f + new Vector3(0, 1.50f, 0);
         }
 
+        private Vector3 GetCommsPosition()
+        {
+            return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.45f + new Vector3(0f, 0.5f, 0);
+        }
+
         private Vector3 GetSubtitlesPosition()
         {
             return HMD.GetWorldPosition() + HMD.GetFlatForwardDirection() * 1.45f + new Vector3(0, -0.75f, 0);
@@ -418,6 +455,11 @@ namespace GTFO_VR.UI
             {
                 m_subtitlesHolder.transform.DetachChildren();
                 Destroy(m_subtitlesHolder);
+            }
+            if (m_commsHolder != null)
+            {
+                m_commsHolder.transform.DetachChildren();
+                Destroy(m_commsHolder);
             }
             SteamVR_Events.NewPosesApplied.Remove(OnNewPoses);
             PlayerOrigin.OnOriginShift -= SnapUIToPlayerView;
