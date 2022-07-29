@@ -91,8 +91,8 @@ namespace GTFO_VR.UI
             //TODO: timer is destroyed when expedition is changed, so it will vanish and not be repopulated here.
             SetupElement(timer.transform, m_timerHolder.transform, 0.0036f, false, holderScale: 1f);
 
-            SetTextShader(compass.transform, VRAssets.TextSphereClip);
             SetSpriteRendererShader(compass.transform, VRAssets.SpriteSphereClip);
+            setSharedMaterialShader();
 
             m_intelHolder.SetActive(true);
 
@@ -275,21 +275,6 @@ namespace GTFO_VR.UI
             n.m_initScale *= 0.009f;
             SetTransformHierarchyLayer(n.transform);
 
-            foreach(TextMeshPro p in n.transform.GetComponentsInChildren<TextMeshPro>(true))
-            {
-                if(p == null || p.fontSharedMaterial == null)
-                {
-                    return;
-                }
-                Log.Debug($"Prev shader = {p.fontMaterial.shader.name}");
-                p.fontSharedMaterial.shader = VRAssets.GetTextNoCull();
-            }
-
-            if(n != null && n.m_distance != null && n.m_distance.fontSharedMaterial != null)
-            {
-                n.m_distance.fontSharedMaterial.shader = VRAssets.GetTextNoCull();
-            }
-
             if (n.m_trackingObj)
             {
                 n.transform.position = n.m_trackingObj.transform.position;
@@ -369,7 +354,6 @@ namespace GTFO_VR.UI
             if (replaceShaders)
             {
                 SetSpriteRendererShader(ui);
-                SetTextShader(ui);
             }
 
             ui.transform.localScale = Vector3.one * scale;
@@ -377,12 +361,25 @@ namespace GTFO_VR.UI
             ui.transform.localRotation = Quaternion.identity;
         }
 
-        private static void SetTextShader(Transform ui)
+        private static void setSharedMaterialShader()
         {
-            foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>(true))
+            if ( comms != null )
             {
-                p.GetComponent<MeshRenderer>().material.shader = VRAssets.TextAlwaysRender;
-                p.ForceMeshUpdate(false);
+                // A single item is always populated during PUI_CommunicationMenu.Setup()
+                PUI_CommunicationButton btn = comms.m_buttons[0];
+
+                // This material is shared by most of the UI elements
+                btn.m_lineText.fontSharedMaterial.shader = VRAssets.GetTextNoCull();
+                btn.m_numberText.fontSharedMaterial.shader = VRAssets.GetTextNoCull();
+                btn.m_lineText.fontSharedMaterial.renderQueue = 4001;
+                btn.m_numberText.fontSharedMaterial.renderQueue = 4001;
+            }
+
+            if (compass != null)
+            {
+                // Compass has its own font material, but is shared between all its components.
+                compass.m_fontMaterial.shader = VRAssets.TextSphereClip;
+                compass.m_fontMaterial.renderQueue = 4001;
             }
         }
 
@@ -399,15 +396,6 @@ namespace GTFO_VR.UI
             foreach (SpriteRenderer s in ui.GetComponentsInChildren<SpriteRenderer>(true))
             {
                 s.material.shader = shader;
-            }
-        }
-
-        private static void SetTextShader(Transform ui, Shader shader)
-        {
-            foreach (TextMeshPro p in ui.GetComponentsInChildren<TextMeshPro>(true))
-            {
-                p.GetComponent<MeshRenderer>().material.shader = shader;
-                p.ForceMeshUpdate(false);
             }
         }
 

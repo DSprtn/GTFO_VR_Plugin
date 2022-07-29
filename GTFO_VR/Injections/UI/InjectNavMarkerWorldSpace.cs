@@ -25,14 +25,23 @@ namespace GTFO_VR.Injections.UI
     /// For some reason we can't do this the easy way like all the other UI, so we just brute force it.
     /// </summary>
     [HarmonyPatch(typeof(NavMarkerComponent), nameof(NavMarkerComponent.Start))]
-    internal class InjectNavMarkerWorldSpriteHack
+    internal class InjectNavMarkerMaterialTweak
     {
         private static void Postfix(NavMarkerComponent __instance)
         {
             foreach (SpriteRenderer r in __instance.transform.GetComponentsInChildren<SpriteRenderer>())
             {
-                r.material.shader = VRAssets.SpriteAlwaysRender;
-                r.material.renderQueue = 4001;
+                if ( r.sharedMaterial != null )
+                {
+                    r.sharedMaterial.shader = VRAssets.SpriteAlwaysRender;
+                    r.sharedMaterial.renderQueue = 4001;
+                }
+            }
+
+            if ( __instance.m_text != null && __instance.m_text.fontSharedMaterial != null)
+            {
+                __instance.m_text.fontSharedMaterial.shader = VRAssets.GetTextNoCull();
+                __instance.m_text.fontSharedMaterial.renderQueue = 4001;
             }
         }
     }
