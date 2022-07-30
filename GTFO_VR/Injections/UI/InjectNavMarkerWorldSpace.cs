@@ -32,6 +32,7 @@ namespace GTFO_VR.Injections.UI
             foreach (SpriteRenderer r in __instance.transform.GetComponentsInChildren<SpriteRenderer>())
             {
                 r.material.shader = VRAssets.SpriteAlwaysRender;
+                r.material.renderQueue = 4001;
             }
         }
     }
@@ -111,10 +112,6 @@ namespace GTFO_VR.Injections.UI
 
         private static bool Prefix(NavMarkerLayer __instance)
         {
-            if (!__instance.m_visible)
-            {
-                return false;
-            }
             UpdateAllNavMarkers(Markers);
             return false;
         }
@@ -135,7 +132,7 @@ namespace GTFO_VR.Injections.UI
                     return;
                 }
 
-                if (n != null && n.m_trackingObj != null)
+                if (n != null && n.gameObject.active && n.m_trackingObj != null)
                 {
                     Vector3 trackingObjPos = n.m_trackingObj.transform.position;
                     n.transform.position = trackingObjPos;
