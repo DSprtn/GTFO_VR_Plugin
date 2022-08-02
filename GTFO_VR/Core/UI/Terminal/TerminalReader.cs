@@ -150,7 +150,9 @@ namespace GTFO_VR.Core.UI.Terminal
             m_highlight.transform.localScale = new Vector3(width, lineHeight, 0.03f);
         }
 
-        private static HashSet<Char> DELIMITERS = new HashSet<char>() { '\'','\"', '\\', ' ', '\r', '\n', '\t', '\f', '\v', '<', '>', ',', '[', ']' };
+        private static HashSet<Char> DELIMITERS = new HashSet<char>() { '\'','\"', '\\', ' ', '\r', '\n', '\t', '\f', '\v', '<', '>', ','};
+
+        private static HashSet<Char> DELIMITERS_REQUIRE_SPACE = new HashSet<char>() { '[', ']' };
 
         public string GetSelection()
         {
@@ -202,9 +204,9 @@ namespace GTFO_VR.Core.UI.Terminal
             int indexStart = nearestOriginalIndex;
             int indexEnd = nearestOriginalIndex;
 
-            for (int i = nearestOriginalIndex; i < rawText.Length; i++ )
+            for (int i = nearestOriginalIndex; i < rawText.Length; i++)
             {
-                if (DELIMITERS.Contains(rawText[i]) )
+                if (DELIMITERS.Contains(rawText[i]))
                 {
                     break;
                 }
@@ -220,6 +222,15 @@ namespace GTFO_VR.Core.UI.Terminal
                 }
 
                 indexStart = i;
+            }
+            
+            // We delimit on [] because they sometimes surround stuff with them. 
+            // R7D1 introduces commands that contain brackets, like OVERRIDE_LOCKDOWN_ALPHA[CLASS_V]
+            // Do not delimit on [], but prune them if they are present at both the start and the end of the selection
+            if ( DELIMITERS_REQUIRE_SPACE.Contains(rawText[indexStart]) && DELIMITERS_REQUIRE_SPACE.Contains(rawText[indexEnd]) )
+            {
+                indexStart++;
+                indexEnd--;
             }
 
             // Same word, do nothing.
