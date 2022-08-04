@@ -80,7 +80,9 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
 
         public bool IsHighlighted = false;
         public bool IsPressed = false;
+        public bool IsToggled = false;
 
+        public bool ModifierKey = false;
         public bool RepeatKey = false;
         public float RepeatKeyTriggerTime = 0.5f;
         public float RepeatKeyDelay = 0.01f;
@@ -160,7 +162,7 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
 
         private ColorTransitionState GetColorStateForState()
         {
-            if (IsPressed)
+            if (IsPressed || IsToggled)
             {
                 return m_ColorStates.pressed;
             }
@@ -224,6 +226,8 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             m_downDelta = 0;
             m_keyRepeatDelta = 0;
             IsPressed = true;
+            if (ModifierKey)
+                IsToggled = !IsToggled;
             OnClick.Invoke();
             HandleStateChange();
         }
@@ -233,7 +237,17 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         {
             IsPressed = false;
             HandleStateChange();
+        }
 
+        [HideFromIl2Cpp]
+        public override void OnFocusLost(PointerEvent ev)
+        {
+            if (IsToggled)
+            {
+                IsToggled = false;
+                HandleStateChange();
+            }
+            
         }
 
         [HideFromIl2Cpp]

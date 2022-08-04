@@ -21,4 +21,17 @@ namespace GTFO_VR.Injections.Input
         }
     }
 
+    /// <summary>
+    /// When checking for modifiers such as ctrl ( ctrl-c to cancel ping repeat ), GetKey() is queried instead
+    /// </summary>
+    ///
+    [HarmonyPatch(typeof(UnityEngine.Input), nameof(UnityEngine.Input.GetKey), typeof(UnityEngine.KeyCode))]
+    internal class InjectKey
+    {
+        private static void Postfix(KeyCode key, ref bool __result)
+        {
+            __result = __result || TerminalKeyboardInterface.GetKeycodeDown(key);
+        }
+    }
+
 }

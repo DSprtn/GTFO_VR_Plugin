@@ -158,11 +158,20 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
 
                 if (down)
                 {
+                    MonoPointerEvent prevDownButton = GetButton(m_ButtonPressHit);
                     
                     if ( button != null)
                     {
                         button.OnPointerDown(new PointerEvent(m_currentHit.point));
                         m_ButtonPressHit = m_currentHit;
+
+                        if ( prevDownButton != null && prevDownButton != button )
+                        {
+                            // This will clear any toggled state ( modifier ), but only visually in the button.
+                            // TerminalKeyboardInterface is responsible for clearing its own state after receiving the onclick of the button hit
+                            // Not because it's a good solution, but because it's easier.
+                            prevDownButton.OnFocusLost( new PointerEvent(Vector3.zero) );
+                        }
                     }
                 }
 
@@ -178,8 +187,6 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
                         button?.OnPointerUp( new PointerEvent(m_currentHit.point) );
 
                     }
-
-                    m_ButtonPressHit = new RaycastHit();
                 }
             }
         }

@@ -61,6 +61,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             this.Label = label;
             this.Parameters = layoutParameters;
             PopulateInput();
+            PopulateKeycode();
         }
 
         public KeyDefinition(KeyType type, string label) : this(type, label, new LayoutParameters() ){ }
@@ -74,6 +75,7 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             this.Label = label;
             this.Parameters = layoutParameters;
             PopulateInput();
+            PopulateKeycode();
         }
 
         /// <summary>
@@ -133,6 +135,54 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
                         this.Input = "\t";
                         break;
                     }
+            }
+        }
+
+        public bool IsModifier()
+        {
+            switch (this.KeyType)
+            {
+                case KeyType.CTRL:
+                case KeyType.ALT:
+                case KeyType.SHIFT:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public void PopulateKeycode()
+        {
+            // Backspace is the other non-symbol buttons correspond to special input actions, so skip those
+            switch (this.KeyType)
+            {
+                case KeyType.CTRL:
+                {
+                    KeyCode = KeyCode.LeftControl;  // This is the one the game looks for
+                    break;
+                }
+                case KeyType.SHIFT:
+                {
+                    KeyCode = KeyCode.LeftShift;
+                    break;
+                }
+                case KeyType.ALT:
+                {
+                    KeyCode = KeyCode.LeftAlt;
+                    break;
+                }
+                case KeyType.SPACE:
+                {
+                    KeyCode = KeyCode.Space;
+                    break;
+                }
+                case KeyType.ENTER:
+                {
+                    KeyCode = KeyCode.KeypadEnter;
+                    break;
+                }
+                default:
+                    { break; }
             }
         }
 
@@ -214,15 +264,23 @@ namespace GTFO_VR.Core.UI.Terminal.KeyboardDefinition
             /////////////////////
 
             m_button.OnClick.AddListener( (UnityAction) (() => HandleClick(keyboardRoot)) );
-            if (RepeatKey)
-                m_button.RepeatKey = true;
+            m_button.RepeatKey = RepeatKey;
+            m_button.ModifierKey = IsModifier();
 
             return buttonRoot;
         }
 
         private void HandleClick( TerminalKeyboardInterface keyboardRoot )
         {
-            keyboardRoot.HandleInput(this);
+            if (IsModifier() )
+            {
+                keyboardRoot.HandleModifier(this, m_button.IsToggled);
+            }
+            else
+            {
+                keyboardRoot.HandleInput(this);
+            }
+  
         }
 
         public void AddChild(KeyboardLayout layout)

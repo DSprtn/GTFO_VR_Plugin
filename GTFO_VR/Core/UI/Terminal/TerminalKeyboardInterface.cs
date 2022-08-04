@@ -1,6 +1,7 @@
 ﻿using GTFO_VR.Core.UI.Terminal.KeyboardDefinition;
 using GTFO_VR.Core.VR_Input;
 using System;
+using System.Collections.Generic;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
@@ -37,8 +38,10 @@ namespace GTFO_VR.Core.UI.Terminal
         private static string m_currentFrameInput = "";
         private static string m_prevFrameInput = "";
 
-        private static KeyCode m_currentFrameKeycode = KeyCode.None;
-        private static KeyCode m_prevFrameKeycode = KeyCode.None;
+        private static HashSet<KeyCode> m_currentFrameKeycode = new HashSet<KeyCode>();
+        private static HashSet<KeyCode> m_prevFrameKeycode = new HashSet<KeyCode>();
+
+        private static HashSet<KeyCode> m_activeModifiers = new HashSet<KeyCode>();
 
         public static TerminalKeyboardInterface create()
         {
@@ -100,6 +103,7 @@ namespace GTFO_VR.Core.UI.Terminal
         public void DetatchFromTerminal()
         {
             m_terminal = null;
+            m_activeModifiers.Clear();
 
             if (m_Reader != null)
             {
@@ -265,13 +269,35 @@ namespace GTFO_VR.Core.UI.Terminal
         }
 
         [HideFromIl2Cpp]
+        public void HandleModifier(KeyDefinition key, bool activate)
+        {
+            if (activate)
+                m_activeModifiers.Add(key.KeyCode);
+            else
+                m_activeModifiers.Remove(key.KeyCode);
+        }
+
+            [HideFromIl2Cpp]
         public void HandleInput( KeyDefinition key )
         {
+            if (key.IsModifier())
+            {
+                // See HandleModifier();
+                return;
+            }
+
+            if (!key.HasKeyCode() && !key.HasInput())
+            {
+                // Modifiers will be cleared on next keycode or input in lateUpdate(), so that it can be applied to them.
+                // If the input has neither of these, we just clear it now.
+                m_activeModifiers.Clear();
+            }
+
             // A keycode down does not result in text being added to the terminal, but is required for some single-key actions
             // Always performing it, in addition to adding its input, seems to work fine.
             if (key.HasKeyCode())
             {
-                m_currentFrameKeycode = key.KeyCode;
+                m_currentFrameKeycode.Add(key.KeyCode);
             }
 
             if (key.HasInput())
@@ -323,13 +349,21 @@ namespace GTFO_VR.Core.UI.Terminal
 
         public void LateUpdate()
         {
+            // If there was a string/keycode input prev frame (and thus presented this frame), the active modifier will have been applied to it.
+            // Afterwards we can clear the modifier. Button press will have caused the modifier button to visually clear its state.
+            if (!String.IsNullOrEmpty(m_prevFrameInput) || m_prevFrameKeycode.Count > 0)
+            {
+                m_activeModifiers.Clear();
+            }
+
             // We receive input during normal update, but it is read earlier.
             // Make a copy of the input this frame, and serve it as input for the entirety of next frame.
             m_prevFrameInput = m_currentFrameInput;
             m_currentFrameInput = "";
 
-            m_prevFrameKeycode = m_currentFrameKeycode;
-            m_currentFrameKeycode = KeyCode.None;
+            // Swap the hashsets so current is prev, and prev is current and cleared. 
+            (m_prevFrameKeycode, m_currentFrameKeycode) = (m_currentFrameKeycode, m_prevFrameKeycode);
+            m_currentFrameKeycode.Clear();
 
         }
 
@@ -338,10 +372,9 @@ namespace GTFO_VR.Core.UI.Terminal
             return m_prevFrameInput;
         }
 
-
         public static bool GetKeycodeDown( KeyCode key )
         {
-            return key == m_prevFrameKeycode;
+            return m_prevFrameKeycode.Contains(key) || m_activeModifiers.Contains(key);
         }
 
         public static bool HasKeyboardInput()
@@ -505,7 +538,7 @@ namespace GTFO_VR.Core.UI.Terminal
                 {
                     LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperLeft, shortRowParams);
 
-                    keyboardRow.AddChild(new KeyDefinition(KeyType.CAPS_LOCK, "", 1.5f)
+                    keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", 1.5f)
                         .SetApperance(KeyApperanceType.ALT));
                     keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", 0.35f)
                     .SetApperance(KeyApperanceType.GONE));
@@ -529,7 +562,7 @@ namespace GTFO_VR.Core.UI.Terminal
                 {
                     LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperLeft, rowParams);
 
-                    keyboardRow.AddChild(new KeyDefinition(KeyType.SHIFT, "", 2.4f)
+                    keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", 2.4f)
                         .SetApperance(KeyApperanceType.ALT));
                     keyboardRow.AddChild(new KeyDefinition("z").SetKeycode(KeyCode.Z));
                     keyboardRow.AddChild(new KeyDefinition("x").SetKeycode(KeyCode.X));
@@ -556,7 +589,9 @@ namespace GTFO_VR.Core.UI.Terminal
             {
                 LinearLayout keyboardRow = new LinearLayout(LinearOrientation.HORIZONTAL, TextAnchor.UpperCenter, rowParams);
 
-                keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", 3.2f)
+                keyboardRow.AddChild(new KeyDefinition(KeyType.CTRL, "Ctrl", 1.6f)
+                    .SetApperance(KeyApperanceType.ALT));
+                keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", 1.6f)
                     .SetApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.SPACE, "Space", 7.2f));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.LEFT, "<")
