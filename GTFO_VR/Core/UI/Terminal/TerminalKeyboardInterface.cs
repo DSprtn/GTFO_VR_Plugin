@@ -468,7 +468,7 @@ namespace GTFO_VR.Core.UI.Terminal
                 keyboardRow.AddChild(new KeyDefinition("8").SetKeycode(KeyCode.Alpha8));
                 keyboardRow.AddChild(new KeyDefinition("9").SetKeycode(KeyCode.Alpha9));
                 keyboardRow.AddChild(new KeyDefinition("0").SetKeycode(KeyCode.Alpha0));
-                keyboardRow.AddChild(new KeyDefinition("."));   // For typing ip addresses
+                keyboardRow.AddChild(new KeyDefinition("["));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.BACKPSPACE, "Backspace", new LayoutParameters( LayoutParameters.FILL_PARENT ))
                     .SetRepeatKey(true)
                     .SetApperance(KeyApperanceType.ALT));
@@ -496,7 +496,7 @@ namespace GTFO_VR.Core.UI.Terminal
                     keyboardRow.AddChild(new KeyDefinition("i").SetKeycode(KeyCode.I));
                     keyboardRow.AddChild(new KeyDefinition("o").SetKeycode(KeyCode.O));
                     keyboardRow.AddChild(new KeyDefinition("p").SetKeycode(KeyCode.P));
-                    keyboardRow.AddChild(new KeyDefinition("-"));
+                    keyboardRow.AddChild(new KeyDefinition("]"));
 
                     shortRowVertical.AddChild(keyboardRow);
                 }
@@ -518,7 +518,7 @@ namespace GTFO_VR.Core.UI.Terminal
                     keyboardRow.AddChild(new KeyDefinition("j").SetKeycode(KeyCode.J));
                     keyboardRow.AddChild(new KeyDefinition("k").SetKeycode(KeyCode.K));
                     keyboardRow.AddChild(new KeyDefinition("l").SetKeycode(KeyCode.L));
-                    keyboardRow.AddChild(new KeyDefinition("_"));
+                    keyboardRow.AddChild(new KeyDefinition("-"));
                     keyboardRow.AddChild(new KeyDefinition(KeyType.ENTER, "", new LayoutParameters(LayoutParameters.FILL_PARENT, 1, 0.01f))
                         .SetApperance(KeyApperanceType.GONE));
 
@@ -538,8 +538,8 @@ namespace GTFO_VR.Core.UI.Terminal
                     keyboardRow.AddChild(new KeyDefinition("b").SetKeycode(KeyCode.B));
                     keyboardRow.AddChild(new KeyDefinition("n").SetKeycode(KeyCode.N));
                     keyboardRow.AddChild(new KeyDefinition("m").SetKeycode(KeyCode.M));
-                    keyboardRow.AddChild(new KeyDefinition(","));
                     keyboardRow.AddChild(new KeyDefinition("."));
+                    keyboardRow.AddChild(new KeyDefinition("_"));
                     keyboardRow.AddChild(new KeyDefinition(KeyType.UP, "^", 1.1f)
                         .SetApperance(KeyApperanceType.ALT));
                     //keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", new KeyboardLayoutParameters(1f, true)));
