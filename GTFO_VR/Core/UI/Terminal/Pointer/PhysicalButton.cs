@@ -158,6 +158,29 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             m_background.enabled = enable;
         }
 
+        private ColorTransitionState GetColorStateForState()
+        {
+            if (IsPressed)
+            {
+                return m_ColorStates.pressed;
+            }
+            if (IsHighlighted)
+            {
+                return m_ColorStates.highlighted;
+            }
+            else
+            {
+                return m_ColorStates.normal;
+            }
+        }
+         
+        private void HandleStateChange()
+        {
+            ColorTransitionState newState = GetColorStateForState();
+            m_transition = GetTransitionFromCurrentTo(newState);
+            m_currentState = newState;
+        }
+
         public RoundedCubeBackground GetBackground()
         {
             return m_background;
@@ -179,22 +202,14 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         public override void OnPointerEnter(PointerEvent ev)
         {
             IsHighlighted = true;
-            m_transition = GetTransitionFromCurrentTo(m_ColorStates.highlighted);
+            HandleStateChange();
         }
 
         [HideFromIl2Cpp]
         public override void OnPointerExit(PointerEvent ev)
         {
             IsHighlighted = false;
-            if (IsPressed)
-            {
-                m_currentState = m_ColorStates.pressed;
-            }
-            else
-            {
-                m_currentState = m_ColorStates.normal;
-                m_transition = GetTransitionFromCurrentTo(m_ColorStates.normal);
-            }
+            HandleStateChange();
         }
 
         [HideFromIl2Cpp]
@@ -210,16 +225,15 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
             m_keyRepeatDelta = 0;
             IsPressed = true;
             OnClick.Invoke();
-            m_transition = GetTransitionFromCurrentTo(m_ColorStates.pressed);
-            m_currentState = m_ColorStates.pressed;
+            HandleStateChange();
         }
 
         [HideFromIl2Cpp]
         public override void OnPointerUp(PointerEvent ev)
         {
             IsPressed = false;
-            m_transition = GetTransitionFromCurrentTo( IsHighlighted ? m_ColorStates.highlighted : m_ColorStates.normal);
-            m_currentState = IsHighlighted ? m_ColorStates.highlighted : m_ColorStates.normal;
+            HandleStateChange();
+
         }
 
         [HideFromIl2Cpp]
