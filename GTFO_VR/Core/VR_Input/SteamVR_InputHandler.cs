@@ -129,13 +129,14 @@ namespace GTFO_VR.Core.VR_Input
 
         private static bool handleCommsAction(InputAction action)
         {
-            // Same button used for both actions, so have caller return when action is not relevant.
+            // Same button used to both open menu and navigate items, so suppress toggle action if menu is open.
             if (action == InputAction.ToggleCommunicationMenu && FocusStateEvents.currentState != eFocusState.FPS)
             {
                 return true; // Return
             }
 
-            if (action == InputAction.SelectCommunicationMenu && FocusStateEvents.currentState != eFocusState.FPS_CommunicationDialog)
+            // Interact normally does nothing while in the comms menu, at least at the time of writing. Suppress just in case.
+            if (action == InputAction.Use && FocusStateEvents.currentState == eFocusState.FPS_CommunicationDialog)
             {
                 return true; // Return
             }
@@ -232,7 +233,7 @@ namespace GTFO_VR.Core.VR_Input
                 { InputAction.ToggleMap, m_openMapAction },
                 { InputAction.Flashlight, m_flashlightAction },
                 { InputAction.ToggleCommunicationMenu, m_openAndSelectComms },
-                { InputAction.SelectCommunicationMenu, m_openAndSelectComms },
+                { InputAction.SelectCommunicationMenu, m_interactAction },
             };
 
         }
@@ -267,7 +268,8 @@ namespace GTFO_VR.Core.VR_Input
                 {
                     return 1f;
                 }
-                if (m_weaponSwitchRightAction.GetStateDown(SteamVR_Input_Sources.Any))
+                if (m_weaponSwitchRightAction.GetStateDown(SteamVR_Input_Sources.Any) 
+                    || (FocusStateEvents.currentState == eFocusState.FPS_CommunicationDialog && m_openAndSelectComms.GetStateDown(SteamVR_Input_Sources.Any) ) )  // Comms menu navigation
                 {
                     return -1f;
                 }
