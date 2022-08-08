@@ -143,6 +143,7 @@
     <Compile Include="Injections\Gameplay\InjectVRHammer.cs" />
     <Compile Include="Injections\UI\InjectWatchObjectives.cs" />
     <Compile Include="Injections\UI\InjectWatchUpdateStatus.cs" />
+    <Compile Include="Injections\UI\InjectCommsMenu.cs" />
     <Compile Include="Injections\Gameplay\InjectWeaponAimFlashlightAggro.cs" />
     <Compile Include="Core\GTFO_VR_Plugin.cs" />
     <Compile Include="Core\UI\DividedBarShaderController.cs" />

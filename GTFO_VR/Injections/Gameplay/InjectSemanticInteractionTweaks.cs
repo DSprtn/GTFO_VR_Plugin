@@ -151,6 +151,55 @@ namespace GTFO_VR.Injections.Gameplay
         }
     }
 
+    [HarmonyPatch(typeof(PUI_CommunicationMenu), nameof(PUI_CommunicationMenu.UpdateCmdTripMine))]
+    internal class InjectCommsMinerPlacementTweak
+    {
+        private static void Prefix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = true;
+        }
+
+        private static void Postfix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = false;
+        }
+    }
+
+    [HarmonyPatch(typeof(PUI_CommunicationMenu), nameof(PUI_CommunicationMenu.UpdateCmdSentryGun))]
+    internal class InjectCommsSentryPlacementTweak
+    {
+        private static void Prefix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = true;
+        }
+
+        private static void Postfix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = false;
+        }
+    }
+
+
+    [HarmonyPatch(typeof(PUI_CommunicationMenu), nameof(PUI_CommunicationMenu.UpdateButtonsForNode))]
+    internal class InjectCommsFinalPlacementTweak
+    {
+        private static void Prefix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = true;
+        }
+
+        private static void Postfix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = false;
+        }
+    }
+
     [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.Forward))]
     [HarmonyPatch(MethodType.Getter)]
     internal class InjectFPSCameraForwardTweakForInteraction
