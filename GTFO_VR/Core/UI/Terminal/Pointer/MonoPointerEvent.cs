@@ -57,6 +57,15 @@ namespace GTFO_VR.Core.UI.Terminal.Pointer
         }
 
         /// <summary>
+        /// The event was cancelled. Target should revert to its default state.
+        /// </summary>
+        [HideFromIl2Cpp]
+        public virtual void OnFocusLost(PointerEvent ev)
+        {
+
+        }
+
+        /// <summary>
         /// Implementation may provide a different pointer size
         /// </summary>
         [HideFromIl2Cpp]
