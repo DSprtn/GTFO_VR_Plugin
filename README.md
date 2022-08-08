@@ -206,7 +206,7 @@ Try to get used to the game in Non-VR mode first before using this mod!
 	reduce crashing with some small side effects (Oculus Crash workaround.)
 
 	If a crash occurs send me the output log from the path given below (before starting another game!):
-	\Users\$USER\AppData\LocalLow\10 Chambers Collective\GTFO\player.log OR player-prev.log if you already played another game.
+	\Users\$USER\AppData\LocalLow\10 Chambers Collective\GTFO\player.log OR player-prev.log if you already played another game of GTFO.
 	
 	R6 is very VRAM hungry! If your texture or render resolution settings are too high and you're using too much VRAM your game will be very unstable!
 	changing resolution in-game or even playing some maps might cause crashes!

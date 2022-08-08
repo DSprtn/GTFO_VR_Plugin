@@ -24,7 +24,7 @@ namespace GTFO_VR.Core
             MODNAME = "GTFO_VR_Plugin",
             AUTHOR = "Spartan",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "1.1.9.10";
+            VERSION = "1.1.9.11";
 
 
         public static bool DEBUG_ENABLED = false;
@@ -32,7 +32,7 @@ namespace GTFO_VR.Core
         public override void Load()
         {
             Core.Log.Setup(BepInEx.Logging.Logger.CreateLogSource(MODNAME));
-            Core.Log.Info($"Loading VR plugin {VERSION}");
+            Core.Log.Info($"Loading VR plugin v.{VERSION}");
 
             VRConfig.SetupConfig(Config);
 

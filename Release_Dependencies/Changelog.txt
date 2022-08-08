@@ -1,3 +1,10 @@
+Total changelog: (1.1.9b11) - [Roughy]
+- Fixed UI elements clipping into world 
+- Added bot command menu 
+- Fixed selecting commands with brackets on terminal keyboard
+- Added key modifiers (i.e. ctrl, alt etc.) so you can cancel repeating terminal pings for instance
+- Added square bracket keys to keyboard
+
 Total changelog: (1.1.9b10) - (Roughy's great work, yet again)
 - Fixed watch objectives, made objectives more verbose/complete 
 - Fixed laser sight in thermal scopes
