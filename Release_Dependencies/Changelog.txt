@@ -1,8 +1,8 @@
 Total changelog: (1.1.9b11) - [Roughy]
-- Fixed UI elements clipping into world 
-- Added bot command menu 
-- Fixed selecting commands with brackets on terminal keyboard
-- Added key modifiers (i.e. ctrl, alt etc.) so you can cancel repeating terminal pings for instance
+- Fixed VR UI elements clipping into world 
+- Added bot command menu (new keybind.) You can now make bots use their equipment in VR!
+- Fixed selecting commands with brackets on terminal
+- Added key modifiers (i.e. ctrl, alt etc.) to keyboard so you can cancel repeating terminal pings for instance
 - Added square bracket keys to keyboard
 
 Total changelog: (1.1.9b10) - (Roughy's great work, yet again)
