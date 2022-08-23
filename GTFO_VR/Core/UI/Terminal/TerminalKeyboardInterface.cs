@@ -569,6 +569,7 @@ namespace GTFO_VR.Core.UI.Terminal
                     keyboardRow.AddChild(new KeyDefinition("."));
                     keyboardRow.AddChild(new KeyDefinition("_"));
                     keyboardRow.AddChild(new KeyDefinition(KeyType.UP, "^", 1.1f)
+                        .SetKeycode(KeyCode.UpArrow)
                         .SetApperance(KeyApperanceType.ALT));
                     //keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", new KeyboardLayoutParameters(1f, true)));
 
@@ -590,12 +591,16 @@ namespace GTFO_VR.Core.UI.Terminal
                     .SetApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.SPACE, "Space", 7.2f));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.LEFT, "<")
+                    .SetKeycode(KeyCode.LeftArrow)
                     .SetApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.DOWN, "v", 1.1f)
+                    .SetKeycode(KeyCode.DownArrow)
                     .SetApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.RIGHT, ">")
+                    .SetKeycode(KeyCode.RightArrow)
                     .SetApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.ESC, "x", new LayoutParameters(LayoutParameters.FILL_PARENT))
+                    .SetKeycode(KeyCode.Escape)
                     .SetApperance(KeyApperanceType.EXIT));
 
                 bottomKeyboardLayout.AddChild(keyboardRow);
