@@ -308,12 +308,6 @@ namespace GTFO_VR.Core.UI.Terminal
             {
                 switch(key.KeyType)
                 {
-                    case KeyType.BACKPSPACE:
-                    {
-                        Dummy_InputHandler.triggerDummyAction(InputAction.TerminalDel);
-                        break;
-                    }
-
                     case KeyType.ESC:
                     {
                         Dummy_InputHandler.triggerDummyAction(InputAction.TerminalExit);
@@ -502,7 +496,8 @@ namespace GTFO_VR.Core.UI.Terminal
                 keyboardRow.AddChild(new KeyDefinition("9").SetKeycode(KeyCode.Alpha9));
                 keyboardRow.AddChild(new KeyDefinition("0").SetKeycode(KeyCode.Alpha0));
                 keyboardRow.AddChild(new KeyDefinition("["));
-                keyboardRow.AddChild(new KeyDefinition(KeyType.BACKPSPACE, "Backspace", new LayoutParameters( LayoutParameters.FILL_PARENT ))
+                keyboardRow.AddChild(new KeyDefinition("\u0008", "Backspace", new LayoutParameters( LayoutParameters.FILL_PARENT ))
+                    .SetKeycode(KeyCode.Backspace)
                     .SetRepeatKey(true)
                     .SetApperance(KeyApperanceType.ALT));
 

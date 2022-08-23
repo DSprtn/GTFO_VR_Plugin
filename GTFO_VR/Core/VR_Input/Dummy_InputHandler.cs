@@ -147,7 +147,6 @@ namespace GTFO_VR.Core.VR_Input
         {
             dummyBoolActions = new Dictionary<InputAction, DummyAction>
             {
-                { InputAction.TerminalDel, m_terminalDeleteAction },
                 { InputAction.TerminalExit, m_terminalExitAction },
 
                 { InputAction.TerminalLeft, m_terminalLeftAction },
