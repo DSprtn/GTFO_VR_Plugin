@@ -17,16 +17,16 @@ namespace GTFO_VR.Core.VR_Input
         private bool m_down = false;
         private bool m_up = false;
 
-        private float m_duration = 0;
+        private int m_frameDuration = 5;  // We do not have superhuman fingers, keep button pressed for a bit
 
-        private float m_downTime = -1;
+        private int m_downFrame = -1;
 
         private int m_firstDownFrame = -1;
         private int m_firstUpFrame = -1;
 
         public DummyAction()
         {
-            // Default 1-frame down-up
+            // Default 5-frame down-up
         }
 
         public DummyAction(bool autoUp)
@@ -35,23 +35,18 @@ namespace GTFO_VR.Core.VR_Input
             m_autoUp = autoUp;
         }
 
-        public DummyAction(float duration)
+        public DummyAction(int frameDuration)
         {
             // Keep the key pressed for duration
-            m_duration = duration;
+            m_frameDuration = frameDuration;
         }
 
         public void requestDown()
         {
-            if (m_down)
-            {
-                // Key hit again before being released
-                m_up = true;
-                m_firstUpFrame = -1; // Set when getUp() first called
-            }
-
-            m_downTime = Time.time;
             m_firstDownFrame = -1; // Set when getDown() first called
+            m_firstUpFrame = -1; // Set when getUp() first called
+            m_downFrame = Time.frameCount;
+            m_up = false;
             m_state = true;
             m_down = true;
         }
@@ -66,12 +61,7 @@ namespace GTFO_VR.Core.VR_Input
             }
         }
 
-        public bool getState()
-        {
-            return m_state;
-        }
-
-        public bool getDown()
+        private void evaulateState()
         {
             if (m_state)
             {
@@ -101,21 +91,14 @@ namespace GTFO_VR.Core.VR_Input
                     // Let keyDown persist for at least one frame
                     if (m_autoUp)
                     {
-                        if ((Time.time - m_downTime) > m_duration)
+                        if ((Time.frameCount - m_downFrame) > m_frameDuration)
                         {
                             requestUp();
                         }
                     }
                 }
-
-                return m_down;
             }
 
-            return false;
-        }
-
-        public bool getUp()
-        {
             if (m_up)
             {
                 // see getDown()
@@ -123,16 +106,29 @@ namespace GTFO_VR.Core.VR_Input
                 {
                     m_firstUpFrame = Time.frameCount;
                 }
-                else if ( Time.frameCount != m_firstUpFrame)
+                else if (Time.frameCount != m_firstUpFrame)
                 {
                     m_up = false;
-                    return false;
                 }
-
-                return true;
             }
+        }
 
-            return false;
+        public bool getState()
+        {
+            evaulateState();
+            return m_state;
+        }
+
+        public bool getDown()
+        {
+            evaulateState();
+            return m_down;
+        }
+
+        public bool getUp()
+        {
+            evaulateState();
+            return m_up;
         }
     }
 
@@ -174,8 +170,10 @@ namespace GTFO_VR.Core.VR_Input
         {
             DummyAction dummyAction = GetDummyBoolActionMapping(action);
             if (dummyAction != null && dummyAction.getUp())
+            {
                 return true;
-
+            }
+              
             return false;
         }
 
@@ -183,8 +181,10 @@ namespace GTFO_VR.Core.VR_Input
         {
             DummyAction dummyAction = GetDummyBoolActionMapping(action);
             if (dummyAction != null && dummyAction.getDown())
+            {
                 return true;
-
+            }
+                
             return false;
         }
 
@@ -192,7 +192,10 @@ namespace GTFO_VR.Core.VR_Input
         {
             DummyAction dummyAction = GetDummyBoolActionMapping(action);
             if (dummyAction != null)
+            {
                 return dummyAction.getState();
+            }
+                
             return false;
         }
 
