@@ -1,3 +1,8 @@
+Total changelog: (1.1.9b12) - [Roughy]
+- Fix various terminal bugs/issues
+- Possibly fix rare state that would make you unable to exit the terminal
+- Add arrows/esc key
+
 Total changelog: (1.1.9b11) - [Roughy]
 - Fixed VR UI elements clipping into world 
 - Added bot command menu (new keybind.) You can now make bots use their equipment in VR!
