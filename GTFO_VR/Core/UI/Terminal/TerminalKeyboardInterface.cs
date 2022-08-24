@@ -308,12 +308,6 @@ namespace GTFO_VR.Core.UI.Terminal
             {
                 switch(key.KeyType)
                 {
-                    case KeyType.BACKPSPACE:
-                    {
-                        Dummy_InputHandler.triggerDummyAction(InputAction.TerminalDel);
-                        break;
-                    }
-
                     case KeyType.ESC:
                     {
                         Dummy_InputHandler.triggerDummyAction(InputAction.TerminalExit);
@@ -502,7 +496,8 @@ namespace GTFO_VR.Core.UI.Terminal
                 keyboardRow.AddChild(new KeyDefinition("9").SetKeycode(KeyCode.Alpha9));
                 keyboardRow.AddChild(new KeyDefinition("0").SetKeycode(KeyCode.Alpha0));
                 keyboardRow.AddChild(new KeyDefinition("["));
-                keyboardRow.AddChild(new KeyDefinition(KeyType.BACKPSPACE, "Backspace", new LayoutParameters( LayoutParameters.FILL_PARENT ))
+                keyboardRow.AddChild(new KeyDefinition("\u0008", "Backspace", new LayoutParameters( LayoutParameters.FILL_PARENT ))
+                    .SetKeycode(KeyCode.Backspace)
                     .SetRepeatKey(true)
                     .SetApperance(KeyApperanceType.ALT));
 
@@ -574,6 +569,8 @@ namespace GTFO_VR.Core.UI.Terminal
                     keyboardRow.AddChild(new KeyDefinition("."));
                     keyboardRow.AddChild(new KeyDefinition("_"));
                     keyboardRow.AddChild(new KeyDefinition(KeyType.UP, "^", 1.1f)
+                        .SetRepeatKey(true)
+                        .SetKeycode(KeyCode.UpArrow)
                         .SetApperance(KeyApperanceType.ALT));
                     //keyboardRow.AddChild(new KeyDefinition(KeyType.EMPTY, "", new KeyboardLayoutParameters(1f, true)));
 
@@ -595,12 +592,19 @@ namespace GTFO_VR.Core.UI.Terminal
                     .SetApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.SPACE, "Space", 7.2f));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.LEFT, "<")
+                    .SetRepeatKey(true)
+                    .SetKeycode(KeyCode.LeftArrow)
                     .SetApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.DOWN, "v", 1.1f)
+                    .SetRepeatKey(true)
+                    .SetKeycode(KeyCode.DownArrow)
                     .SetApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.RIGHT, ">")
+                    .SetRepeatKey(true)
+                    .SetKeycode(KeyCode.RightArrow)
                     .SetApperance(KeyApperanceType.ALT));
                 keyboardRow.AddChild(new KeyDefinition(KeyType.ESC, "x", new LayoutParameters(LayoutParameters.FILL_PARENT))
+                    .SetKeycode(KeyCode.Escape)
                     .SetApperance(KeyApperanceType.EXIT));
 
                 bottomKeyboardLayout.AddChild(keyboardRow);
