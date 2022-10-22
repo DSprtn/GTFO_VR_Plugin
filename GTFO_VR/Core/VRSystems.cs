@@ -136,10 +136,7 @@ namespace GTFO_VR.Core
         {
             if (state.Equals(eFocusState.FPS) || state.Equals(eFocusState.InElevator))
             {
-                // VR bindings require this to be disabled.
-                // It is overriden if player accesses settings, so refresh when returning to FPS.
-                CellSettingsManager.SetBoolValue(eCellSettingID.Gameplay_HoldToShowComsList, false);
-
+                ForceApplyVRControlSettings();
                 HandleIngameFocus();
             }
 
@@ -149,6 +146,14 @@ namespace GTFO_VR.Core
             }
 
             ClearUIRenderTex();
+        }
+
+        private static void ForceApplyVRControlSettings()
+        {
+            // VR bindings require these to be disabled.
+            // It is overriden if player accesses settings, so refresh when returning to FPS.
+            CellSettingsManager.SetBoolValue(eCellSettingID.Gameplay_HoldToShowComsList, false);
+            CellSettingsManager.SetBoolValue(eCellSettingID.Gameplay_CrouchToggle, false);
         }
 
         private void HandleOutOfGameFocus()
