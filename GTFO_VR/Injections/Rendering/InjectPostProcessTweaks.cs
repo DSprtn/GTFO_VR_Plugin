@@ -14,16 +14,9 @@ namespace GTFO_VR.Injections.Rendering
     {
         private static void Postfix(FPSCamera __instance)
         {
-            //__instance.m_postProcessing.m_autoExposure.active = VRConfig.configPostEyeAdaptation.Value;
-            __instance.m_postProcessing.m_vignette.active = VRConfig.configPostVignette.Value || VRConfig.configUseVignetteWhenMoving.Value;
-            __instance.m_postProcessing.m_motionBlur.active = false;
+            __instance.m_postProcessing.m_bloom.intensity.Override(.275f);
+            __instance.m_postProcessing.m_bloom.threshold.Override(1.1f);
 
-
-            var bloomSettings = __instance.m_postProcessing.m_bloomModel.settings.bloom;
-            bloomSettings.intensity *= .25f;
-            bloomSettings.radius *= .5f;
-            bloomSettings.threshold *= 1.2f;
-            __instance.m_postProcessing.m_bloomModel.settings.bloom = bloomSettings;
         }
     }
 

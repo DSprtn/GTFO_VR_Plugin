@@ -18,51 +18,60 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private PlayerLocomotion m_playerLocomotion;
 
-        private Vignette vignettePost;
+        private Vignette m_vignettePost;
 
-        private float targetIntensity = 0.25f;
+        private float m_targetIntensity = 0.25f;
+
+        float m_currentIntensity = 0f;
+
+        bool m_setup = false;
 
         private void Update()
         {
-            if(vignettePost == null)
+            if(m_vignettePost == null)
             {
                 if(m_fpsCamera.m_postProcessing != null)
                 {
-                    vignettePost = m_fpsCamera.m_postProcessing.m_vignette;
+                    m_vignettePost = m_fpsCamera.m_postProcessing.m_vignette;
                 }
                 return;
             }
-            vignettePost.active = VRConfig.configUseVignetteWhenMoving.Value;
 
-            if (vignettePost == null || !VRConfig.configUseVignetteWhenMoving.Value)
+            if (!m_setup)
             {
-                return;
+                m_vignettePost.color.Override(Color.black);
+                m_vignettePost.mode.Override(VignetteMode.Classic);
+                m_vignettePost.opacity.Override(1f);
+                m_vignettePost.rounded.Override(true);
+                m_vignettePost.roundness.Override(1f);
+                m_setup = true;
             }
 
-            targetIntensity = GetVignetteIntensityForVelocityPerGamestate();
+            bool shouldBeActive = VRConfig.configPostVignette.Value || VRConfig.configUseVignetteWhenMoving.Value;
+            m_vignettePost.enabled.Override(shouldBeActive);
+
+            m_targetIntensity = GetVignetteIntensityForVelocityPerGamestate();
 
             // Lerp to vignette intensity. Ramp up faster and ramp down slower.
-            if(vignettePost.intensity <= targetIntensity)
-            {
-                vignettePost.intensity.Override(Mathf.Lerp(vignettePost.intensity.value, targetIntensity, 20f * Time.deltaTime));
-            } else
-            {
-                vignettePost.intensity.Override(Mathf.Lerp(vignettePost.intensity.value, targetIntensity, 8f * Time.deltaTime));
-            }
+            float lerpSpeed = m_vignettePost.intensity < m_targetIntensity ? 20f : 8f;
+            m_currentIntensity = Mathf.Lerp(m_currentIntensity, m_targetIntensity, lerpSpeed * Time.deltaTime);
+
+            m_vignettePost.intensity.Override(m_currentIntensity);
         }
 
         private float GetVignetteIntensityForVelocityPerGamestate()
         {
             float intensity = .25f;
-            if (FocusStateEvents.currentState == eFocusState.InElevator)
+
+            if (FocusStateEvents.currentState == eFocusState.InElevator || !VRConfig.configUseVignetteWhenMoving.Value)
             {
-                return VRConfig.configMovementVignetteIntensity.Value;
+                return VRConfig.configMovementVignetteIntensity.Value / 2f; ;
             }
 
             if (FocusStateEvents.currentState == eFocusState.FPS)
             {
-                intensity = Mathf.Clamp(m_playerLocomotion.HorizontalVelocity.magnitude, 0.25f, 3f);
-                intensity = intensity.RemapClamped(0, 2.5f, 0, VRConfig.configMovementVignetteIntensity.Value);
+                intensity = Mathf.Clamp(m_playerLocomotion.HorizontalVelocity.magnitude, 0.25f, 2f);
+                intensity = intensity.RemapClamped(0, 3f, 0, VRConfig.configMovementVignetteIntensity.Value);
             }
 
             return intensity;
