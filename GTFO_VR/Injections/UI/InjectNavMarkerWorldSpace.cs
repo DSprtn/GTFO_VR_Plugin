@@ -127,7 +127,6 @@ namespace GTFO_VR.Injections.UI
 
         internal static void UpdateAllNavMarkers(HashSet<NavMarker> m_markersActive)
         {
-            float tempScale = 1f;
             bool inElevator = FocusStateManager.CurrentState.Equals(eFocusState.InElevator);
 
             Vector3 hmdPos = HMD.GetWorldPosition();
@@ -183,7 +182,7 @@ namespace GTFO_VR.Injections.UI
 
                         // Scale up to camera culling distance
                         // If nav marker is beyond that it will place itself back to 60m away
-                        tempScale = 1 + Mathf.Clamp(distanceToCamera / 25f, 0, 2.4f);
+                        float tempScale = 1 + Mathf.Clamp(distanceToCamera / 25f, 0, 2.4f);
 
                         n.transform.localScale = n.m_initScale * tempScale;
                     }

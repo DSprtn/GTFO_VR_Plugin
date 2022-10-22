@@ -147,7 +147,7 @@ namespace GTFO_VR.UI
             SetupElement(m_commsElement);
 
             SetSpriteRendererShader(compass.transform, VRAssets.SpriteSphereClip);
-            setSharedMaterialShader();
+            SetSharedMaterialShader();
 
             m_intelHolder.SetActive(true);
 
@@ -330,7 +330,7 @@ namespace GTFO_VR.UI
             ui.Element.transform.localRotation = Quaternion.identity;
         }
 
-        private static void setSharedMaterialShader()
+        private static void SetSharedMaterialShader()
         {
             if ( comms != null )
             {
