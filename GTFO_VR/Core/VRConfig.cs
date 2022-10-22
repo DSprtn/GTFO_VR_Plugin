@@ -10,7 +10,6 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configUseControllers;
         internal static ConfigEntry<bool> configIRLCrouch;
         internal static ConfigEntry<bool> configUseLeftHand;
-        internal static ConfigEntry<bool> configAlternateEyeRendering;
         internal static ConfigEntry<bool> configUseTwoHanded;
         internal static ConfigEntry<bool> configAlwaysDoubleHanded;
         internal static ConfigEntry<bool> configEarlyTransparentRendererFix;
@@ -28,7 +27,6 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<int> configWeaponRotationOffset;
 
         internal static ConfigEntry<bool> configPostVignette;
-        internal static ConfigEntry<bool> configPostEyeAdaptation;
         internal static ConfigEntry<bool> configOculusCrashWorkaround;
         internal static ConfigEntry<float> configRenderResolutionMultiplier;
         internal static ConfigEntry<int> configFloorOffset;
@@ -126,14 +124,9 @@ namespace GTFO_VR.Core
             configRenderResolutionMultiplier = BindFloat(file, "Rendering", "Render resolution multiplier", 1f, 0.2f, 2.5f, "Global rendering resolution multiplier", "Rendering resolution multiplier");
 
             configPostVignette = BindBool(file, "Rendering - PostProcessing", "Use vignette effect? (Darkened edges of screen)", false, "If false, will disable the vignette effect in-game.", "Vignette");
-            configPostEyeAdaptation = BindBool(file, "Rendering - PostProcessing", "Use eye adaptation? (Simulate the way a human eye adapts to light changes)", true,
-                "If false, will disable eye adaptation. Gives a very slight performance boost if disabled (0.1-0.2ms.) Will make dark areas much darker though!", "Eye adaptation");
 
             configCameraBlood = BindBool(file, "Rendering - Postprocessing", "Enable Camera liquid effects?", true, "If false, will disable camera liquid effects. Will give a little FPS boost.", "Camera liquid effects");
 
-            configAlternateEyeRendering = BindBool(file, "Rendering - Experimental", "Alternate eye rendering (janky!)", false,
-                "If true will alternate between eyes when drawing lights and shadows each frame, \n might look really janky so only use this if you absolutely want to play this in VR but don't have the rig for it!",
-                "Alternate rendering per eye");
             
             configEarlyTransparentRendererFix = BindBool(file, "Rendering", "Use water performance fix?", true,
                 "If true, water surfaces and water tanks will be modified to not degrade performance. Should be toggled before cage drop. Disable if transparent objects suddenly stop rendering.",

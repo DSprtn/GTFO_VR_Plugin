@@ -21,7 +21,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private FPSCamera m_fpsCamera;
         private FPS_Render m_fpsRender;
         private UI_Apply m_uiBlitter;
-        private static bool m_skipLeftEye;
 
         private void Awake()
         {
@@ -72,8 +71,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void PrepareFrameForEye(EVREye eye, SteamVR_CameraMask mask)
         {
-            m_skipLeftEye = Time.frameCount % 2 == 0;
-
             DoUglyCameraHack();
 
             FixHeadAttachedFlashlightPos(eye);
@@ -84,18 +81,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_fpsCamera.m_preLightingCmds.Clear();
 
             m_fpsRender.ForceMatrixUpdate();
-
-            if (VRConfig.configAlternateEyeRendering.Value)
-            {
-                if (m_skipLeftEye && eye == EVREye.Eye_Left)
-                {
-                    return;
-                }
-                if (!m_skipLeftEye && eye == EVREye.Eye_Right)
-                {
-                    return;
-                }
-            }
 
             gOverwrite.Clear();
             gOverwrite.DrawMesh(mask.meshFilter.mesh, mask.transform.localToWorldMatrix, SteamVR_CameraMask.occlusionMaterial);
