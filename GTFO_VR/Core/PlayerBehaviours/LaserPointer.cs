@@ -49,7 +49,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void LaserPointerColorChanged(object sender, EventArgs e)
         {
-            if(!m_setup)
+            if(!m_setup) 
             {
                 return;
             }
@@ -81,7 +81,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 Vector3 offsetHit = (transform.parent.position - hit.point).normalized * 0.1f;  // Offset vector
                 dist = hit.distance - offsetHit.magnitude;
 
-                if (!m_dot.active)
+                if (!m_dot.active && VRConfig.configUseLaserPointerOnWeapons.Value)
                     m_dot.SetActive(true);
 
                 m_dot.transform.rotation = Quaternion.LookRotation(m_pointer.transform.up);
