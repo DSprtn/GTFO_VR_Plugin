@@ -1,3 +1,11 @@
+Total changelog: (1.1.9b13):
+- Fixed laserpointer toggling
+- Fixed bloom being overly bright
+- Forced toggle crouch to be off when using VR 
+- Fixed Vignette effect
+- Fixed movenebt-based Vignette effect
+- Removed some graphical options that won't work anymore (eye adaptation, alternate eye rendering)
+
 Total changelog: (1.1.9b12) - [Roughy]
 - Fix various terminal bugs/issues
 - Possibly fix rare state that would make you unable to exit the terminal

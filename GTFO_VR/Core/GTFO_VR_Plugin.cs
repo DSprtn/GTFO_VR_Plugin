@@ -24,7 +24,7 @@ namespace GTFO_VR.Core
             MODNAME = "GTFO_VR_Plugin",
             AUTHOR = "Spartan",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "1.1.9.12";
+            VERSION = "1.1.9.13";
 
 
         public static bool DEBUG_ENABLED = false;
