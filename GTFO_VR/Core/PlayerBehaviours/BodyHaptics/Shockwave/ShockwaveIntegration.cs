@@ -12,6 +12,10 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
     {
         private LocalPlayerAgent m_player;
 
+        public ShockwaveIntegration(IntPtr value) : base(value)
+        {
+        }
+
         public void Setup(LocalPlayerAgent player)
         {
             m_player = player;

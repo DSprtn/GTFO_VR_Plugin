@@ -14,6 +14,10 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
     {
         private List<BodyHapticAgent> m_hapticAgents = new List<BodyHapticAgent>();
 
+        public BodyHapticsIntegrator(IntPtr value) : base(value)
+        {
+        }
+
         public void Setup(LocalPlayerAgent player)
         {
             BhapticsIntegration bhapticsIntegration = gameObject.AddComponent<BhapticsIntegration>();
