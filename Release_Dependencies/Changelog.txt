@@ -5,6 +5,7 @@ Total changelog: (1.1.9b13):
 - Fixed Vignette effect
 - Fixed movement-based Vignette effect
 - Removed some graphical options that won't work anymore (eye adaptation, alternate eye rendering)
+- Greatly overhauled KB+M/Gamepad mode to actually be playable again
 
 Total changelog: (1.1.9b12) - [Roughy]
 - Fix various terminal bugs/issues
