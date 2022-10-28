@@ -325,7 +325,7 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ShockwaveManager, Version=1.0.0.1, Culture=neutral, PublicKeyToken=null">
-      <HintPath>$(GTFO_PATH)BepInEx\plugins\ShockwaveManager.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\plugins\ShockwaveManager.dll</HintPath>
     </Reference>
     <Reference Include="SNet_ASM">
       <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\SNet_ASM.dll</HintPath>
