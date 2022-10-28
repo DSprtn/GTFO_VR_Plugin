@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using Player;
 
-namespace GTFO_VR.Core.PlayerBehaviours
+namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 {
     public class BhapticsElevatorSequence : MonoBehaviour
     {

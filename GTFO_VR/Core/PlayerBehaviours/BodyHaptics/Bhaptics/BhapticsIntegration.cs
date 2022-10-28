@@ -7,7 +7,7 @@ using Player;
 using ChainedPuzzles;
 using Il2CppSystem.Collections.Generic;
 
-namespace GTFO_VR.Core.PlayerBehaviours
+namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 {
     public class BhapticsIntegration : MonoBehaviour
     {

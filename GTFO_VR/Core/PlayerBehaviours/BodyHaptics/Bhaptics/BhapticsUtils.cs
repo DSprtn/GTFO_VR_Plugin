@@ -2,7 +2,7 @@
 using System.IO;
 using System;
 
-namespace GTFO_VR.Core.PlayerBehaviours
+namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 {
     public class BhapticsUtils
     {
