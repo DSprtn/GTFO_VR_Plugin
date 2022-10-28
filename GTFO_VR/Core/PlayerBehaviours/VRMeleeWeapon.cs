@@ -132,7 +132,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 if (m_weapon.ModelData != null)
                 {
-                    m_weapon.ModelData.m_damageRefAttack.transform.position = Controllers.mainController.transform.TransformPoint(new Vector3(0, m_offset.y, m_offset.z));
+                    m_weapon.ModelData.m_damageRefAttack.transform.position = Controllers.MainController.transform.TransformPoint(new Vector3(0, m_offset.y, m_offset.z));
                 }
             }
         }

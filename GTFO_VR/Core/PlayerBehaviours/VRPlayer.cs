@@ -68,8 +68,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             FpsCamera.UpdateUI = false;
 
-            m_watch = Instantiate(VRAssets.GetWatchPrefab(), Vector3.zero, Quaternion.identity, null).AddComponent<Watch>();
-            m_watch.Setup(m_origin.transform);
+            if (VRConfig.configUseControllers.Value)
+            {
+                m_watch = Instantiate(VRAssets.GetWatchPrefab(), Vector3.zero, Quaternion.identity, null).AddComponent<Watch>();
+                m_watch.Setup(m_origin.transform);
+            }
 
             m_haptics = gameObject.AddComponent<Haptics>();
             m_haptics.Setup();
@@ -116,11 +119,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
             if(!VRConfig.configUseLeftHand.Value)
             {
                 PlayerAgent.FPItemHolder.FPSArms.SetRightArmTargetPosRot(PlayerAgent.FPItemHolder.WieldedItem.RightHandGripTrans);
-                PlayerAgent.FPItemHolder.FPSArms.SetLeftArmTargetPosRot(Controllers.offhandController.transform);
+                PlayerAgent.FPItemHolder.FPSArms.SetLeftArmTargetPosRot(Controllers.OffhandController.transform);
             } else
             {
                 PlayerAgent.FPItemHolder.FPSArms.SetLeftArmTargetPosRot(PlayerAgent.FPItemHolder.WieldedItem.RightHandGripTrans);
-                PlayerAgent.FPItemHolder.FPSArms.SetRightArmTargetPosRot(Controllers.offhandController.transform);
+                PlayerAgent.FPItemHolder.FPSArms.SetRightArmTargetPosRot(Controllers.OffhandController.transform);
             }
 
         }

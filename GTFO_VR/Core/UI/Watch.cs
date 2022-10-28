@@ -398,7 +398,7 @@ namespace GTFO_VR.UI
 
         private void SetHandedness()
         {
-            transform.SetParent(Controllers.offhandController.transform);
+            transform.SetParent(Controllers.OffhandController.transform);
             transform.localPosition = m_handOffset;
             if (!VRConfig.configUseLeftHand.Value)
             {

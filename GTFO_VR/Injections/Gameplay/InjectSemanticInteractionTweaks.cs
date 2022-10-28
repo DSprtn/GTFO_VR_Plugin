@@ -37,12 +37,20 @@ namespace GTFO_VR.Injections.Gameplay
 
         private static void Prefix(PlayerInteraction __instance)
         {
+            if (!VRConfig.configUseControllers.Value)
+            {
+                return;
+            }
             cachedCamPos = __instance.m_owner.m_camPos;
             __instance.m_owner.m_camPos = HMD.GetVRInteractionFromPosition();
         }
 
         private static void Postfix(PlayerInteraction __instance)
         {
+            if (!VRConfig.configUseControllers.Value)
+            {
+                return;
+            }
             __instance.m_owner.m_camPos = cachedCamPos;
         }
     }

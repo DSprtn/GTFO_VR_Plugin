@@ -1,4 +1,5 @@
 ﻿using Gear;
+using GTFO_VR.Core;
 using HarmonyLib;
 
 namespace GTFO_VR.Injections.Gameplay
@@ -12,7 +13,7 @@ namespace GTFO_VR.Injections.Gameplay
     {
         private static void Postfix(MeleeWeaponFirstPerson __instance)
         {
-            if(__instance.MeleeArchetypeData != null) 
+            if(__instance.MeleeArchetypeData != null && VRConfig.configUseControllers.Value) 
             {
                 __instance.MeleeArchetypeData.CameraDamageRayLength = 0f;
             }

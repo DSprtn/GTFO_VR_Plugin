@@ -50,7 +50,7 @@ namespace GTFO_VR.Core.VR_Input
         /// <returns></returns>
         public static Vector3 GetVRInteractionLookDir()
         {
-            if (ItemEquippableEvents.CurrentItemHasFlashlight())
+            if (ItemEquippableEvents.CurrentItemHasFlashlight() && VRConfig.configUseControllers.Value)
             {
                 return Controllers.GetAimForward();
             }
@@ -62,13 +62,13 @@ namespace GTFO_VR.Core.VR_Input
 
         /// <summary>
         /// Returns the camera's position or the controller's or weapons' if the player is
-        /// holding a weapon that has a flashlight (and by an extension a lasersight)
+        /// holding a weapon that has a flashlight (and by extension a lasersight)
         /// </summary>
         /// <returns></returns>
 
         public static Vector3 GetVRInteractionFromPosition()
         {
-            if (ItemEquippableEvents.CurrentItemHasFlashlight())
+            if (ItemEquippableEvents.CurrentItemHasFlashlight() && VRConfig.configUseControllers.Value)
             {
                 return Controllers.GetAimFromPos();
             }

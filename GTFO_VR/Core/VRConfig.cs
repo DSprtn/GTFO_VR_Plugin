@@ -114,9 +114,9 @@ namespace GTFO_VR.Core
                 "Change this to rotate all weapons forward by the given amount of degrees (-45,45) --- \n'12' seems to work really well for the Quest and Index with the 'tip' action pose", "Weapon Tilt (angles, forward)");
 
 
-            BindHeader("Hammer");
-            configUseVisualHammerIndicator = BindBool(file, "Misc", "Show light for hammer charge?", true, "If true, will show a light indicator when hammer is half/fully charged", "Flash on 50%/100% charge");
-            configUseOldHammer = BindBool(file, "Misc", "Use old hammer?", false, "If true, will use the old hammer that uses animations and moves by itself.", "(OLD) Auto-swing hammer");
+            BindHeader("Melee");
+            configUseVisualHammerIndicator = BindBool(file, "Misc", "Show light for melee weapon charge?", true, "If true, will show a light indicator when hammer is half/fully charged", "Flash on 50%/100% charge");
+            configUseOldHammer = BindBool(file, "Misc", "Use old melee weapon swing?", false, "If true, will use the in-game system for melee that uses animations and moves by itself.", "(OLD) Auto-swing melee");
 
 
             BindHeader("Rendering");

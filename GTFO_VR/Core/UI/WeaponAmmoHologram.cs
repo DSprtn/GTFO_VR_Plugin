@@ -107,9 +107,11 @@ namespace GTFO_VR.Core.UI
             if(ItemEquippableEvents.IsCurrentItemShootableWeapon() && PlayerLocomotionEvents.InControllablePLOCState())
             {
                 Toggle(true);
+                m_holoHolder.transform.SetParent(ItemEquippableEvents.currentItem.MuzzleAlign);
             } else
             {
                 Toggle(false);
+                m_holoHolder.transform.SetParent(null);
             }
         }
 

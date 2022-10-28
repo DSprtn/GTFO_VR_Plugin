@@ -177,7 +177,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             bool isReloading = (m_nextReloadHapticPatternTime > 0);
             if (isReloading && currentTime >= m_nextReloadHapticPatternTime)
             {
-                if (Controllers.mainControllerType == HandType.Left)
+                if (Controllers.MainControllerType == HandType.Left)
                 {
                     m_hapticPlayer.SubmitRegistered(VEST_RELOAD_L_KEY);
                     m_hapticPlayer.SubmitRegistered(ARMS_RELOAD_L_KEY);
@@ -235,7 +235,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-			if (Controllers.mainControllerType == HandType.Left)
+			if (Controllers.MainControllerType == HandType.Left)
 			{
 				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_SMACK_L_KEY);
 				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_SMACK_L_KEY);
@@ -254,7 +254,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-			if (Controllers.mainControllerType == HandType.Left)
+			if (Controllers.MainControllerType == HandType.Left)
 			{
 				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_FULLY_CHARGED_L_KEY);
 				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_FULLY_CHARGED_L_KEY);
@@ -275,7 +275,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
 			var scaleOption = new ScaleOption(pressure, 1f); // pressure goes from 0 to 1
 
-			if (Controllers.mainControllerType == HandType.Left)
+			if (Controllers.MainControllerType == HandType.Left)
 			{
 				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_L_KEY, scaleOption);
 				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_L_KEY, scaleOption);
@@ -326,13 +326,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
 			float intensity = Haptics.GetFireHapticStrength(weapon);
 			var scaleOption = new ScaleOption(intensity, 1.0f);
 
-			if (Controllers.mainControllerType == HandType.Left || Controllers.aimingTwoHanded)
+			if (Controllers.MainControllerType == HandType.Left || Controllers.AimingTwoHanded)
 			{
 				m_hapticPlayer.SubmitRegistered(VEST_FIRE_L_KEY, scaleOption);
 				m_hapticPlayer.SubmitRegistered(ARMS_FIRE_L_KEY, scaleOption);
 			}
 
-			if (Controllers.mainControllerType == HandType.Right || Controllers.aimingTwoHanded)
+			if (Controllers.MainControllerType == HandType.Right || Controllers.AimingTwoHanded)
 			{
 				m_hapticPlayer.SubmitRegistered(VEST_FIRE_R_KEY, scaleOption);
 				m_hapticPlayer.SubmitRegistered(ARMS_FIRE_R_KEY, scaleOption);
@@ -436,7 +436,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-			if (Controllers.mainControllerType == HandType.Left)
+			if (Controllers.MainControllerType == HandType.Left)
 			{
 				m_hapticPlayer.SubmitRegistered(ARMS_INTERACT_ITEM_L_KEY);
 			}
@@ -478,7 +478,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 return;
             }
 
-            if (Controllers.mainControllerType == HandType.Left)
+            if (Controllers.MainControllerType == HandType.Left)
             {
                 m_hapticPlayer.SubmitRegistered(ARMS_FLASHLIGHT_TOGGLE_L_KEY);
             }
@@ -497,7 +497,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             StopWeaponReloadHaptics();
 
-            if (Controllers.mainControllerType == HandType.Left)
+            if (Controllers.MainControllerType == HandType.Left)
             {
                 m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_L_KEY);
             }
@@ -587,12 +587,12 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 {
                     if (clipleft == 0)
                     {
-                        if (Controllers.mainControllerType == HandType.Left || Controllers.aimingTwoHanded)
+                        if (Controllers.MainControllerType == HandType.Left || Controllers.AimingTwoHanded)
                         {
                             m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_L_KEY);
                         }
 
-                        if (Controllers.mainControllerType == HandType.Right || Controllers.aimingTwoHanded)
+                        if (Controllers.MainControllerType == HandType.Right || Controllers.AimingTwoHanded)
                         {
                             m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_R_KEY);
                         }

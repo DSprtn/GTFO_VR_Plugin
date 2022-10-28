@@ -37,7 +37,7 @@ namespace GTFO_VR.Injections
         static void Postfix(MWS_ChargeUp __instance)
         {
 
-            if (Controllers.mainControllerPose.GetVelocity().magnitude > 0.5f)
+            if (Controllers.MainControllerPose.GetVelocity().magnitude > 0.5f)
             {
                 if (GTFO_VR_Plugin.DEBUG_ENABLED)
                 {
@@ -51,7 +51,7 @@ namespace GTFO_VR.Injections
                 Collider[] enemyColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .75f, LayerManager.MASK_ENEMY_DAMAGABLE);
                 bool shouldReleaseCharge = enemyColliders.Length > 0;
 
-                if(Controllers.mainControllerPose.GetVelocity().magnitude > 1.2f) {
+                if(Controllers.MainControllerPose.GetVelocity().magnitude > 1.2f) {
                     Collider[] staticColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .25f, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC);
                     shouldReleaseCharge = shouldReleaseCharge || staticColliders.Length > 0;
                 }
@@ -131,7 +131,7 @@ namespace GTFO_VR.Injections
             {
                 return;
             }
-            Vector3 velocity = Controllers.mainControllerPose.GetVelocity() * 3f;
+            Vector3 velocity = Controllers.MainControllerPose.GetVelocity() * 3f;
             data.sourcePos = data.hitPos - data.hitNormal * velocity.magnitude;
             if(isPush)
             {

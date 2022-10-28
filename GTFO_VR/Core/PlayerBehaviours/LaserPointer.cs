@@ -103,10 +103,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 return;
             }
-            if (item.HasFlashlight && item.AmmoType != Player.AmmoType.None && VRConfig.configUseLaserPointerOnWeapons.Value)
+
+            if (item.HasFlashlight && item.AmmoType != Player.AmmoType.None)
             {
-                TogglePointer(true);
                 SetHolderTransform(item.MuzzleAlign);
+                TogglePointer(VRConfig.configUseLaserPointerOnWeapons.Value);
             }
             else
             {

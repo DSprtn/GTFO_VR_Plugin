@@ -47,7 +47,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             SteamVR_InputHandler.TriggerHapticPulse(Mathf.Lerp(duration, duration * 2.5f, dmg),
                 Mathf.Lerp(frequency, frequency * 1.3f, dmg),
                 Mathf.Lerp(0.1f, 1f, dmg),
-                Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
+                Controllers.GetDeviceFromHandType(Controllers.MainControllerType));
         }
 
         private void HammerChargingHaptics(float pressure)
@@ -77,7 +77,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
               Mathf.Lerp(duration, duration * 1.5f, intensity),
               Mathf.Lerp(frequency, frequency * 1.5f, intensity),
               2f,
-              Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
+              Controllers.GetDeviceFromHandType(Controllers.MainControllerType));
 
                 lastVibrateTime = Time.time + vibrateDelay;
             }
@@ -111,7 +111,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
               Mathf.Lerp(duration, duration * 1.5f, intensity),
               Mathf.Lerp(frequency, frequency * 1.5f, intensity),
               intensity,
-              Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
+              Controllers.GetDeviceFromHandType(Controllers.MainControllerType));
 
                 lastVibrateTime = Time.time + vibrateDelay;
             }
@@ -127,7 +127,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                Mathf.Lerp(duration, duration * 1.5f, intensity),
                Mathf.Lerp(frequency, frequency * 1.5f, intensity),
                intensity,
-               Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
+               Controllers.GetDeviceFromHandType(Controllers.MainControllerType));
         }
 
         private void PlayWeaponFireHaptics(Weapon weapon)
@@ -142,7 +142,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             float duration = 0.03f;
             float frequency = 40f;
 
-            if (Controllers.aimingTwoHanded)
+            if (Controllers.AimingTwoHanded)
             {
                 intensity *= .5f;
                 intensity = Mathf.Max(intensity, 0.075f);
@@ -156,7 +156,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 Mathf.Lerp(duration, duration * 1.5f, intensity),
                 Mathf.Lerp(frequency, frequency * 1.5f, intensity),
                 intensity,
-                Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
+                Controllers.GetDeviceFromHandType(Controllers.MainControllerType));
         }
 
         private void PlayReceiveDamageHaptics(float dmg, Vector3 direction)
@@ -176,7 +176,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 SteamVR_InputHandler.TriggerHapticPulse(Mathf.Lerp(duration, duration * 2.5f, dmg),
                     Mathf.Lerp(frequency, frequency * 1.3f, dmg),
                     Mathf.Lerp(0.1f, 1f, dmg),
-                    Controllers.GetDeviceFromHandType(Controllers.mainControllerType));
+                    Controllers.GetDeviceFromHandType(Controllers.MainControllerType));
             }
         }
 

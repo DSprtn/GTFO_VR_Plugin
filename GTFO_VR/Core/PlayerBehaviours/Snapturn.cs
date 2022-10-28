@@ -42,7 +42,12 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private void HandleInput()
         {
             float smoothTurnX = smoothTurn.GetAxis(SteamVR_Input_Sources.Any).x;
-            if (VRConfig.configSmoothSnapTurn.Value)
+
+            if(!VRConfig.configUseControllers.Value)
+            {
+                smoothTurnX = InputMapper.GetAxisKeyMouse(InputAction.LookHorizontal);
+            }
+            if (VRConfig.configSmoothSnapTurn.Value || !VRConfig.configUseControllers.Value)
             {
                 if (Mathf.Abs(smoothTurnX) > 0.01f)
                 {

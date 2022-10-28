@@ -38,13 +38,11 @@ namespace GTFO_VR.Core
             SteamVR_Camera.useHeadTracking = false;
             SteamVR_Settings.instance.poseUpdateMode = SteamVR_UpdateModes.OnLateUpdate;
 
-            FocusStateEvents.OnFocusStateChange += FocusChanged;
-            Setup();
 
-            // Disable crouch toggle because it doesn't work in VR
-            CellSettingsApply.ApplyCrouchToggle(false);
+            Setup();
             SteamVR_Camera.sceneResolutionScaleMultiplier = VRConfig.configRenderResolutionMultiplier.Value;
             VRConfig.configRenderResolutionMultiplier.SettingChanged += VRResolutionChanged;
+            FocusStateEvents.OnFocusStateChange += FocusChanged;
             GuiManager.ForceOnResolutionChange();
         }
 
