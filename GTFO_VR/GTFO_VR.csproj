@@ -40,6 +40,14 @@
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\Bhaptics\BhapticsElevatorSequence.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\Bhaptics\BhapticsIntegration.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\Bhaptics\BhapticsUtils.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\BodyHapticAgent.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\BodyHapticsIntegrator.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\HapticGroupInfo.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\HapticGroupPattern.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\HapticIndex.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\HapticIndexPattern.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\ShockwaveEngine.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\ShockwaveIntegration.cs" />
     <Compile Include="Core\PlayerBehaviours\MovementVignette.cs" />
     <Compile Include="Core\UI\Terminal\Pointer\TerminalPointer.cs" />
     <Compile Include="Core\UI\Terminal\Pointer\MonoPointerEvent.cs" />
@@ -316,6 +324,9 @@
       <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Shards-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="ShockwaveManager, Version=1.0.0.1, Culture=neutral, PublicKeyToken=null">
+      <HintPath>$(GTFO_PATH)BepInEx\plugins\ShockwaveManager.dll</HintPath>
+    </Reference>
     <Reference Include="SNet_ASM">
       <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\SNet_ASM.dll</HintPath>
       <Private>False</Private>
@@ -515,9 +526,6 @@
       <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Wwise-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Core\PlayerBehaviours\BodyHaptics" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

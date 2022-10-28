@@ -1,11 +1,11 @@
 ﻿using GTFO_VR.Core.UI;
 using GTFO_VR.Core.VR_Input;
+using GTFO_VR.Core.PlayerBehaviours.BodyHaptics;
 using GTFO_VR.Events;
 using GTFO_VR.UI;
 using Player;
 using System;
 using UnityEngine;
-using UnityEngine.PostProcessing;
 using Valve.VR;
 
 namespace GTFO_VR.Core.PlayerBehaviours
@@ -26,7 +26,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private LaserPointer m_pointer;
         private CollisionFade m_fade;
         private Haptics m_haptics;
-        private BhapticsIntegration m_bhapticsIntegration;
         private MovementVignette m_movementVignette;
         private WeaponRadialMenu m_weaponRadial;
         private WeaponAmmoHologram m_weaponAmmoHolo;
@@ -77,8 +76,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_haptics = gameObject.AddComponent<Haptics>();
             m_haptics.Setup();
 
-            m_bhapticsIntegration = gameObject.AddComponent<BhapticsIntegration>();
-            m_bhapticsIntegration.Setup(agent);
+            BodyHapticsIntegrator bodyHapticsIntegrator = gameObject.AddComponent<BodyHapticsIntegrator>();
+            bodyHapticsIntegrator.Setup(agent);
 
             PlayerLocomotionEvents.OnPlayerEnterLadder += PlayerEnteredLadder;
             SteamVR_Events.NewPosesApplied.Listen(new Action(OnNewPoses));
