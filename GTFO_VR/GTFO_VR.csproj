@@ -37,9 +37,9 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsElevatorSequence.cs" />
-    <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsIntegration.cs" />
-    <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsUtils.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Bhaptics\BhapticsElevatorSequence.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Bhaptics\BhapticsIntegration.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Bhaptics\BhapticsUtils.cs" />
     <Compile Include="Core\PlayerBehaviours\MovementVignette.cs" />
     <Compile Include="Core\UI\Terminal\Pointer\TerminalPointer.cs" />
     <Compile Include="Core\UI\Terminal\Pointer\MonoPointerEvent.cs" />
@@ -516,7 +516,9 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Core\PlayerBehaviours\BodyHaptics" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetPath)" "$(GTFO_PATH)\BepInEx\plugins" /E /Y</PostBuildEvent>
