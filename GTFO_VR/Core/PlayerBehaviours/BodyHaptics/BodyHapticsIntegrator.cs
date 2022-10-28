@@ -12,7 +12,8 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
 {
     public class BodyHapticsIntegrator : MonoBehaviour, BodyHapticAgent
     {
-        private List<BodyHapticAgent> m_hapticAgents = new List<BodyHapticAgent>();
+        private BhapticsIntegration m_bhapticsIntegration;
+        private ShockwaveIntegration m_shockwaveIntegration;
 
         public BodyHapticsIntegrator(IntPtr value) : base(value)
         {
@@ -20,13 +21,12 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
 
         public void Setup(LocalPlayerAgent player)
         {
-            BhapticsIntegration bhapticsIntegration = gameObject.AddComponent<BhapticsIntegration>();
-            bhapticsIntegration.Setup(player);
-            m_hapticAgents.Add(bhapticsIntegration);
 
-            ShockwaveIntegration shockwaveIntegration = gameObject.AddComponent<ShockwaveIntegration>();
-            shockwaveIntegration.Setup(player);
-            m_hapticAgents.Add(shockwaveIntegration);
+            m_bhapticsIntegration = gameObject.AddComponent<BhapticsIntegration>();
+            m_bhapticsIntegration.Setup(player);
+
+            m_shockwaveIntegration = gameObject.AddComponent<ShockwaveIntegration>();
+            m_shockwaveIntegration.Setup(player);
         }
 
         private void Awake()
@@ -73,122 +73,169 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             PlayerLocomotionEvents.OnStateChange -= OnPlayerLocomotionStateChanged;
         }
 
-        private List<BodyHapticAgent> GetAgents()
+        private BodyHapticAgent[] GetAgents()
         {
-            return m_hapticAgents;
-        }
-
-        private void Execute(Action<BodyHapticAgent> fn)
-        {
-            foreach (BodyHapticAgent agent in GetAgents())
-            {
-                fn(agent);
-            }
+            return new BodyHapticAgent[] { m_bhapticsIntegration, m_shockwaveIntegration };
         }
 
         public void HammerSmackHaptics(float dmg)
         {
-            Execute((agent) => agent.HammerSmackHaptics(dmg));
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.HammerSmackHaptics(dmg);
+            }
         }
 
         public void HammerFullyChargedHaptics()
         {
-            Execute((agent) => agent.HammerFullyChargedHaptics());
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.HammerFullyChargedHaptics();
+            }
         }
 
         public void HammerChargingHaptics(float pressure)
         {
-            Execute((agent) => agent.HammerChargingHaptics(pressure));
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.HammerChargingHaptics(pressure);
+            }
         }
 
         public void PlayWeaponReloadedHaptics()
         {
-            Execute((agent) => agent.PlayWeaponReloadedHaptics());
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.PlayWeaponReloadedHaptics();
+            }
         }
 
         public void StopWeaponReloadHaptics()
         {
-            Execute((agent) => agent.StopWeaponReloadHaptics());
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.StopWeaponReloadHaptics();
+            }
         }
 
         public void PlayTriggerWeaponReloadHaptics()
         {
-            Execute((agent) => agent.PlayTriggerWeaponReloadHaptics());
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.PlayTriggerWeaponReloadHaptics();
+            }
         }
 
         public void PlayWeaponFireHaptics(Weapon weapon)
         {
-            Execute((agent) => agent.PlayWeaponFireHaptics(weapon));
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.PlayWeaponFireHaptics(weapon);
+            }
         }
 
         public void PlayReceiveDamageHaptics(float dmg, Vector3 direction)
         {
-            Execute((agent) => agent.PlayReceiveDamageHaptics(dmg, direction));
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.PlayReceiveDamageHaptics(dmg, direction);
+            }
         }
 
         public void MineExplosionHaptics(Vector3 explosionPosition)
         {
-            Execute((agent) => agent.MineExplosionHaptics(explosionPosition));
         }
 
         public void TentacleAttackHaptics(float dmg, Agent sourceAgent, Vector3 position)
         {
-            Execute((agent) => agent.TentacleAttackHaptics(dmg, sourceAgent, position));
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.TentacleAttackHaptics(dmg, sourceAgent, position);
+            }
         }
 
         public void FocusStateChangedHaptics(eFocusState focusState)
         {
-            Execute((agent) => agent.FocusStateChangedHaptics(focusState));
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.FocusStateChangedHaptics(focusState);
+            }
         }
 
         public void PlayerInteractedHaptics(PlayerAgent source)
         {
-            Execute((agent) => agent.PlayerInteractedHaptics(source));
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.PlayerInteractedHaptics(source);
+            }
         }
 
         public void PlayerBioscanSetStateHaptics(eBioscanStatus status, float progress, List<PlayerAgent> playersInScan)
         {
-            Execute((agent) => agent.PlayerBioscanSetStateHaptics(status, progress, playersInScan));
+            foreach (BodyHapticAgent agent in GetAgents())
+			{
+                agent.PlayerBioscanSetStateHaptics(status, progress, playersInScan);
+			}
         }
 
         public void FlashlightToggledHaptics()
         {
-            Execute((agent) => agent.FlashlightToggledHaptics());
+            foreach (BodyHapticAgent agent in GetAgents())
+			{
+                agent.FlashlightToggledHaptics();
+			}
         }
 
         public void PlayerChangedItemHaptics(ItemEquippable item)
         {
-            Execute((agent) => agent.PlayerChangedItemHaptics(item));
+            foreach (BodyHapticAgent agent in GetAgents())
+			{
+                agent.PlayerChangedItemHaptics(item);
+			}
         }
 
         public void AmmoGainedHaptics(float ammoStandardRel, float ammoSpecialRel, float ammoClassRel)
         {
-            Execute((agent) => agent.AmmoGainedHaptics(ammoStandardRel, ammoSpecialRel, ammoClassRel));
+            foreach (BodyHapticAgent agent in GetAgents())
+			{
+                agent.AmmoGainedHaptics(ammoStandardRel, ammoSpecialRel, ammoClassRel);
+			}
         }
 
         public void InfectionUpdatedHaptics(float infection)
         {
-            Execute((agent) => agent.InfectionUpdatedHaptics(infection));
+            foreach (BodyHapticAgent agent in GetAgents())
+			{
+                agent.InfectionUpdatedHaptics(infection);
+			}
         }
 
         public void OnHealthUpdated(float health)
         {
-            Execute((agent) => agent.OnHealthUpdated(health));
+            foreach (BodyHapticAgent agent in GetAgents())
+			{
+                agent.OnHealthUpdated(health);
+			}
         }
 
         public void OnAmmoUpdate(InventorySlotAmmo item, int clipleft)
         {
-            Execute((agent) => agent.OnAmmoUpdate(item, clipleft));
         }
 
         public void OnPlayerLocomotionStateChanged(PlayerLocomotion.PLOC_State state)
         {
-            Execute((agent) => agent.OnPlayerLocomotionStateChanged(state));
+            foreach (BodyHapticAgent agent in GetAgents())
+			{
+                agent.OnPlayerLocomotionStateChanged(state);
+			}
         }
 
         public void CrouchToggleHaptics(bool isCrouched)
         {
-            Execute((agent) => agent.CrouchToggleHaptics(isCrouched));
+            foreach (BodyHapticAgent agent in GetAgents())
+			{
+                agent.CrouchToggleHaptics(isCrouched);
+			}
         }
     }
 }
