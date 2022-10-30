@@ -42,6 +42,7 @@
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\Bhaptics\BhapticsUtils.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\BodyHapticAgent.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\BodyHapticsIntegrator.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\BodyHapticsUtils.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\HapticGroupInfo.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\HapticGroupPattern.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\HapticIndex.cs" />

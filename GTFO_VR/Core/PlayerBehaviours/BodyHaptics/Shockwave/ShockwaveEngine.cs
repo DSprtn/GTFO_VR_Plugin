@@ -132,5 +132,27 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
             return pattern;
         }
+
+        public static HapticIndexPattern GetPatternMirror(HapticIndexPattern basePattern)
+        {
+            HapticIndexPattern pattern = new HapticIndexPattern(basePattern);
+
+            for (int i = 0; i < pattern.indices.Count; i++)
+            {
+                List<int> patternIndices = new List<int>();
+                foreach (HapticIndex hapticIndex in pattern.indices[i])
+                {
+                    patternIndices.Add(hapticIndex.index);
+                }
+
+                int[] mirror = GetPatternMirror(patternIndices.ToArray());
+                for (int j = 0; j < patternIndices.Count; j++)
+                {
+                    pattern.indices[i][j] = new HapticIndex(mirror[j], pattern.indices[i][j].intensity);
+                }
+            }
+
+            return pattern;
+        }
     }
 }

@@ -10,12 +10,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
         void HammerSmackHaptics(float dmg);
         void HammerFullyChargedHaptics();
         void HammerChargingHaptics(float pressure);
-        void PlayWeaponReloadedHaptics();
+        void PlayWeaponReloadHaptics();
         void StopWeaponReloadHaptics();
-        void PlayTriggerWeaponReloadHaptics();
         void PlayWeaponFireHaptics(Weapon weapon);
         void PlayReceiveDamageHaptics(float dmg, Vector3 direction);
-        void MineExplosionHaptics(Vector3 explosionPosition);
+        void MineExplosionHaptics(OrientationSettings orientationSettings, float intensity);
         void TentacleAttackHaptics(float dmg, Agents.Agent sourceAgent, Vector3 position);
         void FocusStateChangedHaptics(eFocusState focusState);
         void PlayerInteractedHaptics(PlayerAgent source);
@@ -23,9 +22,9 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
         void FlashlightToggledHaptics();
         void PlayerChangedItemHaptics(ItemEquippable item);
         void AmmoGainedHaptics(float ammoStandardRel, float ammoSpecialRel, float ammoClassRel);
-        void InfectionUpdatedHaptics(float infection);
+        void InfectionHealed(float infection);
         void OnHealthUpdated(float health);
-        void OnAmmoUpdate(InventorySlotAmmo item, int clipleft);
+        void WeaponAmmoEmpty(bool leftArm);
         void OnPlayerLocomotionStateChanged(PlayerLocomotion.PLOC_State state);
         void CrouchToggleHaptics(bool isCrouched);
     }
