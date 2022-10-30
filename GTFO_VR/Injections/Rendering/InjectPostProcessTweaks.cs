@@ -10,13 +10,13 @@ namespace GTFO_VR.Injections.Rendering
 {
 
     [HarmonyPatch(typeof(FPSCamera), nameof(FPSCamera.RefreshPostEffectsEnabled))]
-    internal class InjectPostProcessTweaksInit
+    internal class InjectPostProcessTweaks
     {
         private static void Postfix(FPSCamera __instance)
         {
             __instance.m_postProcessing.m_bloom.intensity.Override(.275f);
             __instance.m_postProcessing.m_bloom.threshold.Override(1.1f);
-
+            __instance.m_postProcessing.m_motionBlur.active = false;
         }
     }
 
