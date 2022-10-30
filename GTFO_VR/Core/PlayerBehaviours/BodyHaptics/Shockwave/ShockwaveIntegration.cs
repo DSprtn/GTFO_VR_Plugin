@@ -95,7 +95,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             };
 
             HapticIndexPattern rightPattern = new HapticIndexPattern(rightIndices, 1.0f, 30);
-            HapticIndexPattern pattern = (Controllers.mainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightPattern) : rightPattern;
+            HapticIndexPattern pattern = (Controllers.MainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightPattern) : rightPattern;
             ShockwaveEngine.PlayPattern(pattern);
         }
 
@@ -116,14 +116,14 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             };
 
             HapticIndexPattern rightPattern = new HapticIndexPattern(rightIndices, 0.8f, 40);
-            HapticIndexPattern pattern = (Controllers.mainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightPattern) : rightPattern;
+            HapticIndexPattern pattern = (Controllers.MainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightPattern) : rightPattern;
             ShockwaveEngine.PlayPattern(pattern);
         }
 
         public void HammerChargingHaptics(float pressure)
         {
             int[] rightArmIndices = { 54, 53 };
-            int[] indices = (Controllers.mainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightArmIndices) : rightArmIndices;
+            int[] indices = (Controllers.MainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightArmIndices) : rightArmIndices;
             ShockwaveEngine.PlayPattern(new HapticIndexPattern(indices, 0.4f, 25));
         }
 
@@ -132,11 +132,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             const int delay = 150;
 
             int[] rightArmIndices = { 54, 52, 50, 51, 53, 55 };
-            int[] armIndices = (Controllers.mainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightArmIndices) : rightArmIndices;
+            int[] armIndices = (Controllers.MainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightArmIndices) : rightArmIndices;
             HapticIndexPattern armPattern = new HapticIndexPattern(armIndices, 0.5f, delay);
 
             int[] rightBodyIndices = { 38, 39, 31, 23, 22, 30 };
-            int[] bodyIndices = (Controllers.mainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightBodyIndices) : rightBodyIndices;
+            int[] bodyIndices = (Controllers.MainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightBodyIndices) : rightBodyIndices;
             HapticIndexPattern bodyPattern = new HapticIndexPattern(bodyIndices, 0.2f, delay);
 
             Debug.Assert(armIndices.Length == bodyIndices.Length && armPattern.delay == bodyPattern.delay,
@@ -166,7 +166,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
         {
 			float intensity = Haptics.GetFireHapticStrength(weapon);
 
-			if (Controllers.mainControllerType == HandType.Left || Controllers.aimingTwoHanded)
+			if (Controllers.MainControllerType == HandType.Left || Controllers.AimingTwoHanded)
             {
                 var pattern = new HapticGroupPattern(new List<HapticGroupInfo>
                 {
@@ -178,7 +178,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 ShockwaveEngine.PlayPattern(pattern);
             }
 
-			if (Controllers.mainControllerType == HandType.Right || Controllers.aimingTwoHanded)
+			if (Controllers.MainControllerType == HandType.Right || Controllers.AimingTwoHanded)
             {
                 var pattern = new HapticGroupPattern(new List<HapticGroupInfo>
                 {
@@ -272,7 +272,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
         public void PlayerInteractedHaptics(PlayerAgent source)
         {
             int[] rightArmIndices = { 54, 55 };
-            int[] indices = (Controllers.mainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightArmIndices) : rightArmIndices;
+            int[] indices = (Controllers.MainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightArmIndices) : rightArmIndices;
             ShockwaveEngine.PlayPattern(new HapticIndexPattern(indices, 0.6f, 25));
         }
 
@@ -325,7 +325,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
         public void FlashlightToggledHaptics()
         {
             int[] rightArmIndices = { 54 };
-            int[] indices = (Controllers.mainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightArmIndices) : rightArmIndices;
+            int[] indices = (Controllers.MainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightArmIndices) : rightArmIndices;
             ShockwaveEngine.PlayPattern(new HapticIndexPattern(indices, 0.6f, 25));
         }
 
@@ -345,7 +345,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
         {
             StopWeaponReloadHaptics();
 
-            bool isLeftHand = Controllers.mainControllerType == HandType.Left;
+            bool isLeftHand = Controllers.MainControllerType == HandType.Left;
             int delay = 50;
             ShockwaveEngine.PlayPattern(GetSidePattern(new HapticIndexPattern(new[,]{{48, 49}}, 0.4f, delay), isLeftHand));
             ShockwaveEngine.PlayPattern(GetSidePattern(new HapticIndexPattern(new[,]{{50, 51}}, 0.5f, delay), isLeftHand));

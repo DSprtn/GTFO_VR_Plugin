@@ -277,7 +277,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
                     {
                         foreach (BodyHapticAgent agent in GetAgents())
                         {
-                            agent.WeaponAmmoEmpty(Controllers.mainControllerType == HandType.Left);
+                            agent.WeaponAmmoEmpty(Controllers.MainControllerType == HandType.Left);
                         }
                     }
                 }
