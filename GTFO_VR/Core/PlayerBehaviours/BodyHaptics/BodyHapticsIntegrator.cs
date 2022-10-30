@@ -195,9 +195,12 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
 
         public void FocusStateChangedHaptics(eFocusState focusState)
         {
-            foreach (BodyHapticAgent agent in GetAgents())
+            if (FocusStateEvents.lastState.Equals(eFocusState.InElevator) && focusState == eFocusState.FPS)
             {
-                agent.FocusStateChangedHaptics(focusState);
+                foreach (BodyHapticAgent agent in GetAgents())
+                {
+                    agent.LandedFromElevator(focusState);
+                }
             }
         }
 
@@ -211,8 +214,6 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
 
         public void PlayerBioscanSetStateHaptics(eBioscanStatus status, float progress, List<PlayerAgent> playersInScan)
         {
-            Log.Debug($"Bioscan state: {status}, progress: {progress}, playersCount: {playersInScan.Count}, hasLocalPlayer? {playersInScan.Contains(m_player)}");
-
             foreach (BodyHapticAgent agent in GetAgents())
 			{
                 agent.PlayerBioscanSetStateHaptics(status, progress, playersInScan);

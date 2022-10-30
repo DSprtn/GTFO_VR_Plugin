@@ -347,18 +347,15 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 			}
         }
 
-        public void FocusStateChangedHaptics(eFocusState focusState)
+        public void LandedFromElevator(eFocusState focusState)
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
                 return;
             }
 
-			if (FocusStateEvents.lastState.Equals(eFocusState.InElevator) && focusState == eFocusState.FPS)
-			{
-                m_hapticPlayer.SubmitRegistered(VEST_LANDING_KEY);
-                m_hapticPlayer.SubmitRegistered(ARMS_LANDING_KEY);
-            }
+            m_hapticPlayer.SubmitRegistered(VEST_LANDING_KEY);
+            m_hapticPlayer.SubmitRegistered(ARMS_LANDING_KEY);
         }
 
         public void PlayerInteractedHaptics(PlayerAgent source)

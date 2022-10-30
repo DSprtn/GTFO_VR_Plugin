@@ -16,7 +16,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
         void PlayReceiveDamageHaptics(float dmg, Vector3 direction);
         void MineExplosionHaptics(OrientationSettings orientationSettings, float intensity);
         void TentacleAttackHaptics(float dmg, Agents.Agent sourceAgent, Vector3 position);
-        void FocusStateChangedHaptics(eFocusState focusState);
+        void LandedFromElevator(eFocusState focusState);
         void PlayerInteractedHaptics(PlayerAgent source);
         void PlayerBioscanSetStateHaptics(eBioscanStatus status, float progress, List<PlayerAgent> playersInScan);
         void FlashlightToggledHaptics();

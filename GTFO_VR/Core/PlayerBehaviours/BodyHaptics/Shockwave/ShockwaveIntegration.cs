@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Agents;
 using ChainedPuzzles;
 using GTFO_VR.Core.VR_Input;
+using GTFO_VR.Events;
 using Player;
 using UnityEngine;
 
@@ -93,7 +94,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 new List<int>{ 58, 59 },
             };
 
-            HapticIndexPattern rightPattern = new HapticIndexPattern(rightIndices, 1.0f, 60);
+            HapticIndexPattern rightPattern = new HapticIndexPattern(rightIndices, 1.0f, 30);
             HapticIndexPattern pattern = (Controllers.mainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightPattern) : rightPattern;
             ShockwaveEngine.PlayPattern(pattern);
         }
@@ -114,7 +115,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 new List<int>{ 1, 2 },
             };
 
-            HapticIndexPattern rightPattern = new HapticIndexPattern(rightIndices, 0.6f, 40);
+            HapticIndexPattern rightPattern = new HapticIndexPattern(rightIndices, 0.8f, 40);
             HapticIndexPattern pattern = (Controllers.mainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightPattern) : rightPattern;
             ShockwaveEngine.PlayPattern(pattern);
         }
@@ -134,9 +135,9 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             int[] armIndices = (Controllers.mainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightArmIndices) : rightArmIndices;
             HapticIndexPattern armPattern = new HapticIndexPattern(armIndices, 0.5f, delay);
 
-            int[] rightBodyIndices = { 38, 39, 24, 23, 22, 30 };
+            int[] rightBodyIndices = { 38, 39, 31, 23, 22, 30 };
             int[] bodyIndices = (Controllers.mainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightBodyIndices) : rightBodyIndices;
-            HapticIndexPattern bodyPattern = new HapticIndexPattern(bodyIndices, 0.5f, delay);
+            HapticIndexPattern bodyPattern = new HapticIndexPattern(bodyIndices, 0.2f, delay);
 
             Debug.Assert(armIndices.Length == bodyIndices.Length && armPattern.delay == bodyPattern.delay,
                 "Arm and body reload haptics should have same indices length and delay, or the Task.Delay must be adapted to match both durations");
@@ -197,7 +198,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 			m_lastDamageOrientationSettings = orientationSettings;
         }
 
-        private void SendTorsoOrientedHaptic(float offsetAngleX, float offsetY, float strength = 1f, float duration = 150f)
+        private void SendTorsoOrientedHaptic(float offsetAngleX, float offsetY, float strength = 1f, int duration = 150)
         {
             const int regionHeight = 10;
             SendOrientedHapticPulse(ShockwaveManager.HapticRegion.TORSO, strength, regionHeight, duration,
@@ -210,8 +211,9 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             const float offsetAngleXStep = 45f;
             const int range = 3;
 
+            const int delay = 150;
             SendTorsoOrientedHaptic(orientation.OffsetAngleX, orientation.OffsetY);
-            await Task.Delay(150);
+            await Task.Delay(delay);
 
             for (int i = 1; i <= range; i++)
             {
@@ -230,7 +232,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 SendTorsoOrientedHaptic(right, up, strength);
                 SendTorsoOrientedHaptic(left, down, strength);
                 SendTorsoOrientedHaptic(right, down, strength);
-                await Task.Delay(150);
+
+                ShockwaveEngine.PlayPattern(new HapticIndexPattern(
+                    new[,]{{ 52, 50, 42, 44, 43, 45, 51, 53, 64, 66, 56, 58, 57, 59, 65, 67 }}, 0.2f, delay));
+
+                await Task.Delay(delay);
             }
         }
 
@@ -240,28 +246,32 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             {
                 const float offsetYStep = 0.2f;
                 const float offsetAngleXStep = 45f;
+                const float strength = 1f;
+                const int duration = 80;
 				var orientation = m_lastDamageOrientationSettings;
 
                 for (int i = 1; i <= 3; i++)
                 {
-                    SendTorsoOrientedHaptic(orientation.OffsetAngleX, orientation.OffsetY - (offsetYStep * i));
-                    SendTorsoOrientedHaptic(orientation.OffsetAngleX, orientation.OffsetY + (offsetYStep * i));
-                    SendTorsoOrientedHaptic(
-                        BodyHapticsUtils.NormalizeOrientation(orientation.OffsetAngleX - (offsetAngleXStep * i)), orientation.OffsetY);
-                    SendTorsoOrientedHaptic(
-                        BodyHapticsUtils.NormalizeOrientation(orientation.OffsetAngleX + (offsetAngleXStep * i)), orientation.OffsetY);
-                    await Task.Delay(150);
+                    SendTorsoOrientedHaptic(orientation.OffsetAngleX, orientation.OffsetY - (offsetYStep * i), strength, duration);
+                    SendTorsoOrientedHaptic(orientation.OffsetAngleX, orientation.OffsetY + (offsetYStep * i), strength, duration);
+                    SendTorsoOrientedHaptic(BodyHapticsUtils.NormalizeOrientation(orientation.OffsetAngleX - (offsetAngleXStep * i)),
+                        orientation.OffsetY, strength, duration);
+                    SendTorsoOrientedHaptic(BodyHapticsUtils.NormalizeOrientation(orientation.OffsetAngleX + (offsetAngleXStep * i)),
+                        orientation.OffsetY, strength, duration);
+                    await Task.Delay(duration);
                 }
             }
         }
 
-        public void FocusStateChangedHaptics(eFocusState focusState)
+        public async void LandedFromElevator(eFocusState focusState)
         {
+            await Task.Delay(50);
+            ShockwaveEngine.PlayPattern(new HapticIndexPattern(FeetToShoulders, 1f, 30));
         }
 
         public void PlayerInteractedHaptics(PlayerAgent source)
         {
-            int[] rightArmIndices = { 54, 53 };
+            int[] rightArmIndices = { 54, 55 };
             int[] indices = (Controllers.mainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightArmIndices) : rightArmIndices;
             ShockwaveEngine.PlayPattern(new HapticIndexPattern(indices, 0.6f, 25));
         }
@@ -319,18 +329,35 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             ShockwaveEngine.PlayPattern(new HapticIndexPattern(indices, 0.6f, 25));
         }
 
+        private HapticIndexPattern GetSidePattern(HapticIndexPattern rightSidePattern, bool isLeft)
+        {
+            if (isLeft)
+            {
+                return ShockwaveEngine.GetPatternMirror(rightSidePattern);
+            }
+            else
+            {
+                return rightSidePattern;
+            }
+        }
+
         public void PlayerChangedItemHaptics(ItemEquippable item)
         {
             StopWeaponReloadHaptics();
 
-            int[] rightArmIndices = { 55, 54 };
-            int[] indices = (Controllers.mainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightArmIndices) : rightArmIndices;
-            ShockwaveEngine.PlayPattern(new HapticIndexPattern(indices, 0.6f, 25));
+            bool isLeftHand = Controllers.mainControllerType == HandType.Left;
+            int delay = 50;
+            ShockwaveEngine.PlayPattern(GetSidePattern(new HapticIndexPattern(new[,]{{48, 49}}, 0.4f, delay), isLeftHand));
+            ShockwaveEngine.PlayPattern(GetSidePattern(new HapticIndexPattern(new[,]{{50, 51}}, 0.5f, delay), isLeftHand));
+            ShockwaveEngine.PlayPattern(GetSidePattern(new HapticIndexPattern(new[,]{{52, 53}}, 0.6f, delay), isLeftHand));
+            ShockwaveEngine.PlayPattern(GetSidePattern(new HapticIndexPattern(new[,]{{54, 55}}, 0.8f, delay), isLeftHand));
         }
 
         private void PlayGainAmmoPattern()
         {
             const float intensity = 0.7f;
+            const int delay = 300;
+
             int[,] rightArmIndices =
             {
                 { 54, 55 },
@@ -338,7 +365,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 { 50, 51 },
                 { 48, 49 },
             };
-            ShockwaveEngine.PlayPattern(new HapticIndexPattern(rightArmIndices, intensity, 400));
+            ShockwaveEngine.PlayPattern(new HapticIndexPattern(rightArmIndices, intensity, delay));
 
             int[,] leftArmIndices =
             {
@@ -347,7 +374,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 { 42, 43 },
                 { 40, 41 },
             };
-            ShockwaveEngine.PlayPattern(new HapticIndexPattern(leftArmIndices, intensity, 400));
+            ShockwaveEngine.PlayPattern(new HapticIndexPattern(leftArmIndices, intensity, delay));
 
             int[,] bodyIndices =
             {
@@ -357,7 +384,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 { 24, 25, 26, 27, 28, 29, 30, 31 },
                 { 32, 33, 34, 35, 36, 37, 38, 39 },
             };
-            ShockwaveEngine.PlayPattern(new HapticIndexPattern(bodyIndices, intensity, 400));
+            ShockwaveEngine.PlayPattern(new HapticIndexPattern(bodyIndices, intensity, delay));
         }
 
         private async void PlayGainToolsPattern()
@@ -443,29 +470,9 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             await ShockwaveEngine.PlayPatternFunc(bodyPattern);
         }
 
-            /*
-        private async void PlayDeathPattern()
-        {
-            ShockwaveManager.HapticGroup[][] groups = ShouldersToLegsGroups;
-
-            for (int i = 0; i < groups.Length; i++)
-            {
-                int delay = 30;
-
-                for (int j = 0; j < groups[i].Length; j++)
-                {
-                    ShockwaveEngine.PlayPattern(new HapticGroupPattern(groups[i][j], 1.0f, delay));
-                }
-
-                await Task.Delay(delay);
-            }
-        }
-            */
-
         private async void PlayHeartbeatPattern()
         {
             const float VERY_LOW_HEALTH = 0.10f;
-            const float TOO_LOW_HEALTH = 0.05f;
 
             while (m_isLowHealth)
             {
@@ -476,17 +483,12 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                     delay = 600;
                     intensity = 0.4f;
                 }
-                else if (m_lastHealth <= TOO_LOW_HEALTH)
-                {
-                    delay = 400;
-                    intensity = 0.6f;
-                }
 
                 ShockwaveEngine.PlayPattern(new HapticIndexPattern(new[,]
                 {
                     {16, 17, 24},
                 }, intensity, 25));
-                await Task.Delay(125);
+                await Task.Delay(185);
                 ShockwaveEngine.PlayPattern(new HapticIndexPattern(new[,]
                 {
                     {16, 17, 24},
@@ -518,12 +520,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 StopWeaponReloadHaptics();
                 m_isBioScanning = false;
 
-                // PlayDeathPattern();
                 ShockwaveEngine.PlayPattern(new HapticIndexPattern(ShouldersToFeet, 1.0f, 30));
 
                 Task.Run(async () => // Stop heartbeat after a couple seconds
                 {
-                    await Task.Delay(2000);
+                    await Task.Delay(3000);
                     m_isLowHealth = false;
                 });
             }
@@ -533,9 +534,9 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public void WeaponAmmoEmpty(bool leftArm)
         {
-            int[] rightArmIndices = { 53, 55 };
+            int[] rightArmIndices = { 54, 55 };
             int[] indices = leftArm ? ShockwaveEngine.GetPatternMirror(rightArmIndices) : rightArmIndices;
-            ShockwaveEngine.PlayPattern(new HapticIndexPattern(indices, 0.8f, 25));
+            ShockwaveEngine.PlayPattern(new HapticIndexPattern(indices, 1.0f, 25));
         }
 
         public void OnPlayerLocomotionStateChanged(PlayerLocomotion.PLOC_State state)
