@@ -14,12 +14,16 @@ Grab newest beta versions from the Discord. Join the beta testers under gt-getti
 
 Try to get used to the game in Non-VR mode first before using this mod! 
 
+## Recommendation: VRPerfkit
+	As GTFO is quite a performance-hog, it is recommended to use the VRPerformanceKit to upscale your game resolution. For the time being, a version of VRPerformanceKit is included with GTFO VR 
+	as some GTFO-specific fixes had to be made.
+
 ## Recommendation: Wireless VR Solution
 	If you are using Wireless PCVR to play, and the weapon handling feels 'floaty' or 'unresponsive', try using ALVR (https://github.com/alvr-org/ALVR). Other users report this provides a smoother experience.
 
 ## Installation: 
 
-	If you are upgrading to R6 or have an old Bepinex/GTFO_VR installation, delete it! 
+	If you are upgrading to R7/R1:Ext or have an old Bepinex/GTFO_VR installation, delete it! 
 	Removing the bepinex folder should suffice. You'll have to redo your config!
 
  	1. Download BepInEx 6.0.0b553
@@ -44,7 +48,7 @@ Try to get used to the game in Non-VR mode first before using this mod!
 	│       ├── openvr_api.dll
 	│       ├── SteamVR_Standalone_IL2CPP.dll
 	│       └── etc.
-	|   └── unhollowed/ - Delete this folder if you're having issues!
+	|   └── etc.
 	├── GTFO_DATA/
 	|	├── Plugins/
 	|	│	├── openvr_api.dll
@@ -111,6 +115,7 @@ Try to get used to the game in Non-VR mode first before using this mod!
 	Turn off SSAO, bloom, subsurface scattering, depth of field, motion blur etc.
 	Lower texture resolution, fog resolution and fog diffusion quality. 
 	If you're experiencing crashing lower the texture resolution! 
+	Use the VR Performance Toolkit!
 	
 ### MISC IN-GAME ACTIONS
 
@@ -204,14 +209,14 @@ Try to get used to the game in Non-VR mode first before using this mod!
 ## Known issues: 
 	SteamVR games crash often on v28 of Oculus. There's a workaround in the config that should
 	reduce crashing with some small side effects (Oculus Crash workaround.)
+	
+	WMR HMDs may have issues if you're not using the lkg_release of WMR. (In Steam go into Windows Mixed Reality ->Betas to change.)
 
 	If a crash occurs send me the output log from the path given below (before starting another game!):
 	\Users\$USER\AppData\LocalLow\10 Chambers Collective\GTFO\player.log OR player-prev.log if you already played another game of GTFO.
 	
-	R6 is very VRAM hungry! If your texture or render resolution settings are too high and you're using too much VRAM your game will be very unstable!
-	changing resolution in-game or even playing some maps might cause crashes!
-	
-	Vignette effect is broken at the moment
+	The game is very VRAM hungry! If your texture or render resolution settings are too high and you're using too much VRAM your game will be very unstable!
+	Changing resolution in-game or even playing some maps might cause crashes unless you lower your texture resolution/game resolution.
 	
 	Random crashing may occur. Be sure to send logs! (See above)
 	

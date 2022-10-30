@@ -1,3 +1,8 @@
+Total changelog: (1.1.9b14):
+- Force disable motion blur as it is broken
+- Add possible fix for KB+M/Gamepad melee hit detection
+- Fixed darkened output in VRPerfkit (Included in release, until VRPerfkit updates.)
+
 Total changelog: (1.1.9b13):
 - Fixed laserpointer toggling
 - Fixed bloom being overly bright
