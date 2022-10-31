@@ -1,12 +1,11 @@
-﻿using System;
-using Bhaptics.Tact;
+﻿using Bhaptics.Tact;
 using GTFO_VR.Core.VR_Input;
 using Player;
 using UnityEngine;
 
 namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 {
-    public class BhapticsIntegration : MonoBehaviour, BodyHapticAgent
+    public class BhapticsIntegration : BodyHapticAgent
     {
         private static readonly string VEST_DAMAGE_KEY = "vest_damage";
         private static readonly string VEST_TENTACLE_ATTACK_KEY = "vest_tentacle_attack";
@@ -70,10 +69,6 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         private static readonly float HEARTBEAT_REPEAT_DELAY = 1.0f;
         private static readonly float BODY_SCAN_REPEAT_DELAY = 13.5f;
 
-        public BhapticsIntegration(IntPtr value) : base(value)
-        {
-        }
-
         public void Setup(LocalPlayerAgent player, HapticPlayer hapticPlayer)
         {
             m_player = player;
@@ -129,7 +124,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_EXPLOSION_KEY);
         }
 
-        void FixedUpdate()
+        public void Update()
         {
             if (VRConfig.configUseBhaptics.Value)
             {

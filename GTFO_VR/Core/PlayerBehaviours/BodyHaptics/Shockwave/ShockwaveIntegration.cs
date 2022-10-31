@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 {
-    public class ShockwaveIntegration : MonoBehaviour, BodyHapticAgent
+    public class ShockwaveIntegration : BodyHapticAgent
     {
         private LocalPlayerAgent m_player;
         private OrientationSettings m_lastDamageOrientationSettings;
@@ -19,24 +19,10 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
         private bool m_isLowHealth;
         private bool m_isBioScanning;
 
-        public ShockwaveIntegration(IntPtr value) : base(value)
-        {
-        }
-
         public void Setup(LocalPlayerAgent player)
         {
             m_player = player;
             m_lastLocState = player.Locomotion.m_currentStateEnum;
-        }
-
-        private void Awake()
-        {
-            ShockwaveManager.Instance.InitializeSuit();
-        }
-
-        private void OnDestroy()
-        {
-            ShockwaveManager.Instance.DisconnectSuit();
         }
 
         private void SendOrientedHapticPulse(ShockwaveManager.HapticRegion region, float strength, int regionHeight,
@@ -47,6 +33,10 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
             ShockwaveManager.Instance.sendHapticsPulsewithPositionInfo(region, strength,
                 angYaw, longitudinalPosition, regionHeight, duration);
+        }
+
+        public void Update()
+        {
         }
 
         public void HammerSmackHaptics(float dmg)

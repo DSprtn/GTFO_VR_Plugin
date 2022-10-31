@@ -36,14 +36,24 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             m_lastFlashlightEnabledState = player.Inventory.FlashlightEnabled;
 
             HapticPlayer hapticPlayer = new HapticPlayer();
-            m_bhapticsIntegration = gameObject.AddComponent<BhapticsIntegration>();
+            m_bhapticsIntegration = new BhapticsIntegration();
             m_bhapticsIntegration.Setup(player, hapticPlayer);
 
-            m_shockwaveIntegration = gameObject.AddComponent<ShockwaveIntegration>();
+            m_shockwaveIntegration = new ShockwaveIntegration();
             m_shockwaveIntegration.Setup(player);
 
             var elevatorSequenceIntegrator = gameObject.AddComponent<ElevatorSequenceIntegrator>();
             elevatorSequenceIntegrator.Setup(player, hapticPlayer);
+        }
+
+        public static void Initialize()
+        {
+            ShockwaveManager.Instance.InitializeSuit();
+        }
+
+        public static void Destroy()
+        {
+            ShockwaveManager.Instance.DisconnectSuit();
         }
 
         private void Awake()
@@ -114,6 +124,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
                 {
                     agent.StopBioscanHaptics();
                 }
+            }
+
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.Update();
             }
         }
 

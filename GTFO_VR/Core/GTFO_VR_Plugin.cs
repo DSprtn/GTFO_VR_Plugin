@@ -77,8 +77,6 @@ namespace GTFO_VR.Core
             ClassInjector.RegisterTypeInIl2Cpp<Haptics>();
             ClassInjector.RegisterTypeInIl2Cpp<BodyHapticsIntegrator>();
             ClassInjector.RegisterTypeInIl2Cpp<ElevatorSequenceIntegrator>();
-            ClassInjector.RegisterTypeInIl2Cpp<BhapticsIntegration>();
-            ClassInjector.RegisterTypeInIl2Cpp<ShockwaveIntegration>();
             ClassInjector.RegisterTypeInIl2Cpp<Snapturn>();
             ClassInjector.RegisterTypeInIl2Cpp<Watch>();
             ClassInjector.RegisterTypeInIl2Cpp<VRMeleeWeapon>();
