@@ -33,11 +33,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             else if (elevatorState == ElevatorState.FirstDescentPattern
                      || elevatorState == ElevatorState.SlowingDown)
             {
-                PlayRidePattern();
+                // PlayRidePattern();
             }
             else if (elevatorState == ElevatorState.Descending)
             {
-                PlayRidePattern();
+                // PlayRidePattern();
                 PlayDescendingPattern();
             }
             else if (elevatorState == ElevatorState.PendingTopDeploying)
@@ -71,7 +71,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
         private async void PlayRidePattern()
         {
             ElevatorState startingState = m_elevatorState;
-            int[,] indices =
+            int[,] bodyIndices =
             {
                 { 6, 15, 16, 25,    2, 11, 20, 29 },
                 { 14, 23, 24, 33,   10, 19, 28, 37 },
@@ -80,10 +80,29 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 { 38, 7, 8, 17,     34, 3, 12, 21 },
             };
 
+            int[,] legsIndices =
+            {
+                { 70, 60,   63, 69 },
+                { 68, 58,   61, 67 },
+                { 66, 56,   59, 65 },
+                { 64, 62,   57, 71 },
+            };
+
+            int[,] armsIndices =
+            {
+                { 54, 46, 47, 55 },
+                { 52, 44, 45, 53 },
+                { 50, 42, 43, 51 },
+                { 48, 40, 41, 49 },
+            };
+
+            int repeatDelay = 1000;
             while (m_elevatorState == startingState)
             {
-                int delay = 10;
-                await ShockwaveEngine.PlayPatternFunc(new HapticIndexPattern(indices, 0.2f, delay));
+                ShockwaveEngine.PlayPattern(new HapticIndexPattern(bodyIndices, 0.05f, repeatDelay / bodyIndices.GetLength(0)));
+                ShockwaveEngine.PlayPattern(new HapticIndexPattern(legsIndices, 0.05f, repeatDelay / legsIndices.GetLength(0)));
+                ShockwaveEngine.PlayPattern(new HapticIndexPattern(armsIndices, 0.05f, repeatDelay / armsIndices.GetLength(0)));
+                await Task.Delay(repeatDelay);
             }
         }
 
