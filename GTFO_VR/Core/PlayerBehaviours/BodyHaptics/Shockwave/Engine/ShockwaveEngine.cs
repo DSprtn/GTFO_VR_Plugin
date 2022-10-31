@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
+namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave.Engine
 {
     public class ShockwaveEngine
     {

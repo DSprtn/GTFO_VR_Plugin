@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave.Engine;
 
 namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
+namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave.Engine
 {
     public class HapticIndexPattern
     {

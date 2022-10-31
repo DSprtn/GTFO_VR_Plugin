@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Agents;
+using GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave.Engine;
 using GTFO_VR.Core.VR_Input;
 using Player;
 using UnityEngine;
