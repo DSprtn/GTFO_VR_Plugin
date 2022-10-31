@@ -1,5 +1,6 @@
 ﻿using System;
 using Agents;
+using Bhaptics.Tact;
 using ChainedPuzzles;
 using GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics;
 using GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave;
@@ -20,6 +21,8 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
         private bool m_lastFlashlightEnabledState;
         private bool m_lastIsCrouchedPhysically;
         private float m_lastInfection;
+        private int m_bioscanStopFramesCount;
+        private bool m_isBioscanning;
 
         private static readonly float MIN_DISINFECTION_GAIN_FOR_HAPTIC = 0.05f;
 
@@ -32,11 +35,15 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             m_player = player;
             m_lastFlashlightEnabledState = player.Inventory.FlashlightEnabled;
 
+            HapticPlayer hapticPlayer = new HapticPlayer();
             m_bhapticsIntegration = gameObject.AddComponent<BhapticsIntegration>();
-            m_bhapticsIntegration.Setup(player);
+            m_bhapticsIntegration.Setup(player, hapticPlayer);
 
             m_shockwaveIntegration = gameObject.AddComponent<ShockwaveIntegration>();
             m_shockwaveIntegration.Setup(player);
+
+            var elevatorSequenceIntegrator = gameObject.AddComponent<ElevatorSequenceIntegrator>();
+            elevatorSequenceIntegrator.Setup(player, hapticPlayer);
         }
 
         private void Awake()
@@ -96,6 +103,17 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             {
                 CrouchToggleHaptics(isCrouchedPhysically);
                 m_lastIsCrouchedPhysically = isCrouchedPhysically;
+            }
+
+            if (m_bioscanStopFramesCount > 0 && ++m_bioscanStopFramesCount >= 5)
+            {
+                m_bioscanStopFramesCount = 0;
+                m_isBioscanning = false;
+
+                foreach (BodyHapticAgent agent in GetAgents())
+                {
+                    agent.StopBioscanHaptics();
+                }
             }
         }
 
@@ -214,10 +232,31 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
 
         public void PlayerBioscanSetStateHaptics(eBioscanStatus status, float progress, List<PlayerAgent> playersInScan)
         {
-            foreach (BodyHapticAgent agent in GetAgents())
-			{
-                agent.PlayerBioscanSetStateHaptics(status, progress, playersInScan);
-			}
+            if (playersInScan == null)
+            {
+                return;
+            }
+
+            if (status == eBioscanStatus.Scanning && playersInScan.Contains(m_player) && m_player.Alive)
+            {
+                if (!m_isBioscanning)
+                {
+                    m_bioscanStopFramesCount = 0;
+                    m_isBioscanning = true;
+
+                    foreach (BodyHapticAgent agent in GetAgents())
+                    {
+                        agent.PlayBioscanHaptics();
+                    }
+                }
+            }
+            else if (m_bioscanStopFramesCount == 0 && m_isBioscanning)
+            {
+                // Indicate that bioscan stopped, and stop haptic pattern only after a few FixedUpdate() calls if we don't receive any other scan activations until then.
+                // When multiple players are in different single-person scans, we receive this event every fixed frame for *each* currently scanned player,
+                // and m_player is only in a single playersInScan list, so we don't want to stop the scan right when we receive the scan of someone else.
+                m_bioscanStopFramesCount = 1;
+            }
         }
 
         public void FlashlightToggledHaptics()

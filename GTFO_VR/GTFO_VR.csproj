@@ -43,10 +43,14 @@
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\BodyHapticAgent.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\BodyHapticsIntegrator.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\BodyHapticsUtils.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\ElevatorSequenceAgent.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\ElevatorSequenceIntegrator.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\ElevatorState.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\HapticGroupInfo.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\HapticGroupPattern.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\HapticIndex.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\HapticIndexPattern.cs" />
+    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\ShockwaveElevatorSequence.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\ShockwaveEngine.cs" />
     <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\ShockwaveIntegration.cs" />
     <Compile Include="Core\PlayerBehaviours\MovementVignette.cs" />

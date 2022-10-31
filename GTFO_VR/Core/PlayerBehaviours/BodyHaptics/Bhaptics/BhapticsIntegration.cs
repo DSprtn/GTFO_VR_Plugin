@@ -1,9 +1,6 @@
 ﻿using System;
 using Bhaptics.Tact;
-using ChainedPuzzles;
 using GTFO_VR.Core.VR_Input;
-using GTFO_VR.Events;
-using Il2CppSystem.Collections.Generic;
 using Player;
 using UnityEngine;
 
@@ -68,7 +65,6 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         private float m_lastHealth = 1f;
         private RotationOption m_lastDamageRotationOption;
         private PlayerLocomotion.PLOC_State m_lastLocState;
-        private int m_bioscanStopFramesCount;
 
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
         private static readonly float HEARTBEAT_REPEAT_DELAY = 1.0f;
@@ -78,12 +74,12 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         {
         }
 
-        public void Setup(LocalPlayerAgent player)
+        public void Setup(LocalPlayerAgent player, HapticPlayer hapticPlayer)
         {
             m_player = player;
             m_lastLocState = player.Locomotion.m_currentStateEnum;
+            m_hapticPlayer = hapticPlayer;
 
-            m_hapticPlayer = new HapticPlayer();
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_DAMAGE_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_TENTACLE_ATTACK_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_FIRE_R_KEY);
@@ -131,9 +127,6 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_GAIN_AMMO_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_GAIN_TOOL_AMMO_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_EXPLOSION_KEY);
-
-            var elevatorSequence = gameObject.AddComponent<BhapticsElevatorSequence>();
-            elevatorSequence.Setup(m_player, m_hapticPlayer);
         }
 
         void FixedUpdate()
@@ -174,13 +167,6 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
             {
                 m_hapticPlayer.SubmitRegistered(VEST_BODY_SCAN_KEY);
                 m_nextBodyscanPatternTime += BODY_SCAN_REPEAT_DELAY;
-            }
-
-            if (m_bioscanStopFramesCount > 0 && ++m_bioscanStopFramesCount >= 5)
-            {
-                m_nextBodyscanPatternTime = 0f;
-                m_hapticPlayer.TurnOff(VEST_BODY_SCAN_KEY);
-                m_bioscanStopFramesCount = 0;
             }
         }
 
@@ -375,29 +361,23 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 			}
         }
 
-        public void PlayerBioscanSetStateHaptics(eBioscanStatus status, float progress, List<PlayerAgent> playersInScan)
+        public void PlayBioscanHaptics()
         {
-            if (!VRConfig.configUseBhaptics.Value || playersInScan == null)
+            if (!VRConfig.configUseBhaptics.Value)
             {
                 return;
             }
 
-            if (status == eBioscanStatus.Scanning && playersInScan.Contains(m_player) && m_player.Alive)
+            if (m_nextBodyscanPatternTime <= 0)
             {
-                if (m_nextBodyscanPatternTime <= 0)
-                {
-                    m_nextBodyscanPatternTime = Time.time;
-                }
-                
-                m_bioscanStopFramesCount = 0;
+                m_nextBodyscanPatternTime = Time.time;
             }
-            else if (m_bioscanStopFramesCount == 0 && m_nextBodyscanPatternTime > 0)
-            {
-                // Indicate that bioscan stopped, and stop haptic pattern only after a few FixedUpdate() calls if we don't receive any other scan activations until then.
-                // When multiple players are in different single-person scans, we receive this event every fixed frame for *each* currently scanned player,
-                // and m_player is only in a single playersInScan list, so we don't want to stop the scan right when we receive the scan of someone else.
-                m_bioscanStopFramesCount = 1;
-            }
+        }
+
+        public void StopBioscanHaptics()
+        {
+            m_nextBodyscanPatternTime = 0f;
+            m_hapticPlayer.TurnOff(VEST_BODY_SCAN_KEY);
         }
 
         public void FlashlightToggledHaptics()

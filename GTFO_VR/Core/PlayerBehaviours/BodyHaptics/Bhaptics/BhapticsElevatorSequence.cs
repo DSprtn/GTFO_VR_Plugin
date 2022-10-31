@@ -7,7 +7,7 @@ using Player;
 
 namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 {
-    public class BhapticsElevatorSequence : MonoBehaviour
+    public class BhapticsElevatorSequence : ElevatorSequenceAgent
     {
         private static readonly string VEST_ELEVATOR_RIDE_NOISE_KEY = "vest_elevator_ride_noise";
         private static readonly string VEST_ELEVATOR_RIDE_WAVE_KEY = "vest_elevator_ride_wave";
@@ -17,55 +17,19 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         private static readonly string ARMS_ELEVATOR_RIDE_WAVE_KEY = "arms_elevator_ride_wave";
         private static readonly string ARMS_ELEVATOR_DEPLOYING_KEY = "arms_elevator_deploying";
 
-        private LocalPlayerAgent m_player;
         private HapticPlayer m_hapticPlayer;
 
-        private int m_movingFramesCount;
-        private Vector3 m_lastPlayerPosition;
         private ElevatorState m_elevatorState = ElevatorState.None;
-        private float m_currentStateStartTime;
         private Dictionary<string, float> m_nextHapticPatternTimes = new Dictionary<string, float>();
-        private Vector3 m_elevatorPosition;
 
-        private static readonly float ELEVATOR_RIDE_FEEDBACK_DURATION = 0.75f;
         private static readonly float ELEVATOR_DEPLOYING_FEEDBACK_DURATION = 1.0f;
 
-        private static readonly float PENDING_DOOR_PRE_OPENING_DURATION = 3.5f;
-        private static readonly float PENDING_TOP_DEPLOYING_DURATION = 7f;
-        private static readonly float TOP_DEPLOYING_STATE_DURATION = 5f;
-        private static readonly float ELEVATOR_END_PATTERN_FLOOR_DISTANCE = 100f;
-
-        enum ElevatorState
+        public void Setup(HapticPlayer hapticPlayer)
         {
-            None,
-            SceneLoaded,
-            FirstMovement,
-            PendingCageRotating,
-            CageRotating,
-            PendingDoorOpening,
-            PendingTopDeploying,
-            TopDeploying,
-            Preparing,
-            FirstDescentPattern,
-            Descending,
-            SlowingDown,
-            Landed,
-            Deploying,
-        }
-
-        public BhapticsElevatorSequence(IntPtr value) : base(value)
-        {
-        }
-
-        public void Setup(LocalPlayerAgent player, HapticPlayer hapticPlayer)
-        {
-            m_player = player;
             m_hapticPlayer = hapticPlayer;
 
-            m_lastPlayerPosition = m_player.transform.position;
             m_elevatorState = ElevatorState.None;
             m_nextHapticPatternTimes.Clear();
-            m_elevatorPosition = Vector3.zero;
 
             BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_RIDE_NOISE_KEY);
             BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_RIDE_WAVE_KEY);
@@ -74,112 +38,41 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
             BhapticsUtils.RegisterArmsTactKey(hapticPlayer, ARMS_ELEVATOR_RIDE_WAVE_KEY);
             BhapticsUtils.RegisterArmsTactKey(hapticPlayer, ARMS_ELEVATOR_DEPLOYING_KEY);
-
-            ElevatorEvents.OnElevatorPositionChanged += OnElevatorPositionChanged;
-            ElevatorEvents.OnPreReleaseSequenceStarted += OnPreReleaseSequenceStarted;
-            ElevatorEvents.OnPreReleaseSequenceSkipped += OnPreReleaseSequenceSkipped;
         }
 
-        void FixedUpdate()
+        public void Update()
         {
             if (m_elevatorState != ElevatorState.None)
             {
-                UpdateCurrentState();
                 ResubmitCompletedHapticPatterns();
-                
-                if (m_lastPlayerPosition != m_player.transform.position)
-                {
-                    m_movingFramesCount++;
-                }
-                else
-                {
-                    m_movingFramesCount = 0;
-                }
-
-                m_lastPlayerPosition = m_player.transform.position;
             }
         }
 
-        private bool HasJustStartedMoving()
+        public void ElevatorStateChanged(ElevatorState elevatorState)
         {
-            const int MIN_MOVING_FRAMES_BEFORE_START_MOVING = 5; // To fix cases where the player moves just one frame, but is not really moving around
-            return m_movingFramesCount == MIN_MOVING_FRAMES_BEFORE_START_MOVING;
-        }
+            m_elevatorState = elevatorState;
 
-        private bool HasJustStoppedMoving()
-        {
-            return m_movingFramesCount > 0 && m_lastPlayerPosition == m_player.transform.position;
-        }
-
-        private void UpdateCurrentState()
-        {
-            float timeSinceStateStart = Time.time - m_currentStateStartTime;
-
-            if (m_elevatorState == ElevatorState.SceneLoaded && HasJustStartedMoving())
+            if (elevatorState == ElevatorState.FirstMovement
+                || elevatorState == ElevatorState.CageRotating
+                || elevatorState == ElevatorState.TopDeploying
+                || elevatorState == ElevatorState.FirstDescentPattern
+                || elevatorState == ElevatorState.Descending
+                || elevatorState == ElevatorState.SlowingDown
+                || elevatorState == ElevatorState.Deploying)
             {
-                ChangeElevatorState(ElevatorState.FirstMovement);
                 AddNextHapticPatternTimes();
             }
-            else if (m_elevatorState == ElevatorState.FirstMovement && HasJustStoppedMoving())
+            else if (elevatorState == ElevatorState.PendingCageRotating
+                     || elevatorState == ElevatorState.PendingDoorOpening
+                     || elevatorState == ElevatorState.Preparing
+                     || elevatorState == ElevatorState.Landed
+                     || elevatorState == ElevatorState.None)
             {
-                ChangeElevatorState(ElevatorState.PendingCageRotating);
                 TurnOffHapticPatterns();
             }
-            else if (m_elevatorState == ElevatorState.PendingCageRotating && HasJustStartedMoving())
-            {
-                ChangeElevatorState(ElevatorState.CageRotating);
-                AddNextHapticPatternTimes();
-            }
-            else if (m_elevatorState == ElevatorState.CageRotating && HasJustStoppedMoving())
-            {
-                ChangeElevatorState(ElevatorState.PendingDoorOpening);
-                TurnOffHapticPatterns();
-            }
-            else if (m_elevatorState == ElevatorState.PendingDoorOpening && timeSinceStateStart >= PENDING_DOOR_PRE_OPENING_DURATION)
+            else if (elevatorState == ElevatorState.PendingTopDeploying)
             {
                 m_hapticPlayer.SubmitRegistered(VEST_ELEVATOR_DOOR_OPENING_KEY);
-                ChangeElevatorState(ElevatorState.PendingTopDeploying);
-            }
-            else if (m_elevatorState == ElevatorState.PendingTopDeploying && timeSinceStateStart >= PENDING_TOP_DEPLOYING_DURATION)
-            {
-                ChangeElevatorState(ElevatorState.TopDeploying);
-                AddNextHapticPatternTimes();
-            }
-            else if (m_elevatorState == ElevatorState.TopDeploying && timeSinceStateStart >= TOP_DEPLOYING_STATE_DURATION)
-            {
-                ChangeElevatorState(ElevatorState.Preparing);
-                TurnOffHapticPatterns();
-            }
-            else if (m_elevatorState == ElevatorState.Preparing && GetElevatorVelocity() > 0)
-            {
-                ChangeElevatorState(ElevatorState.FirstDescentPattern);
-                AddNextHapticPatternTimes(); // play ride pattern
-            }
-            else if (m_elevatorState == ElevatorState.FirstDescentPattern && timeSinceStateStart >= ELEVATOR_RIDE_FEEDBACK_DURATION)
-            {
-                // When ride pattern has ended, start wave pattern as well
-                ChangeElevatorState(ElevatorState.Descending);
-                AddNextHapticPatternTimes();
-            }
-            else if (m_elevatorState == ElevatorState.Descending && m_elevatorPosition.y < ELEVATOR_END_PATTERN_FLOOR_DISTANCE)
-            {
-                ChangeElevatorState(ElevatorState.SlowingDown);
-                AddNextHapticPatternTimes();
-            }
-            else if (m_elevatorState == ElevatorState.SlowingDown && m_elevatorPosition.y <= 0.1f)
-            {
-                ChangeElevatorState(ElevatorState.Landed);
-                TurnOffHapticPatterns();
-            }
-            else if (m_elevatorState == ElevatorState.Landed && HasJustStartedMoving())
-            {
-                ChangeElevatorState(ElevatorState.Deploying);
-                AddNextHapticPatternTimes();
-            }
-            else if (m_elevatorState == ElevatorState.Deploying && HasJustStoppedMoving())
-            {
-                ChangeElevatorState(ElevatorState.None);
-                TurnOffHapticPatterns();
             }
         }
 
@@ -190,9 +83,9 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
                 return;
             }
 
-            var m_nextHapticPatternTimesClone = new Dictionary<string, float>(m_nextHapticPatternTimes); // to avoid modifying original dictionary while looping on it
+            var nextHapticPatternTimesClone = new Dictionary<string, float>(m_nextHapticPatternTimes); // to avoid modifying original dictionary while looping on it
 
-            foreach (KeyValuePair<string, float> pair in m_nextHapticPatternTimesClone)
+            foreach (KeyValuePair<string, float> pair in nextHapticPatternTimesClone)
             {
                 string patternKey = pair.Key;
                 float nextHapticPatternTime = pair.Value;
@@ -213,11 +106,6 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
                     }
                 }
             }
-        }
-
-        private float GetElevatorVelocity()
-        {
-            return ElevatorRide.CurrentVelocity;
         }
 
         private void AddNextHapticPatternTimes()
@@ -248,14 +136,14 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
                 case ElevatorState.FirstDescentPattern:
                 case ElevatorState.SlowingDown:
                     {
-                        float durationScale = GetElevatorRideDurationScale();
-                        result.Add(new FeedbackDetails(VEST_ELEVATOR_RIDE_NOISE_KEY, ELEVATOR_RIDE_FEEDBACK_DURATION, durationScale));
+                        float durationScale = BodyHapticsUtils.GetElevatorRideDurationScale();
+                        result.Add(new FeedbackDetails(VEST_ELEVATOR_RIDE_NOISE_KEY, BodyHapticsUtils.ELEVATOR_RIDE_FEEDBACK_DURATION, durationScale));
                     }
                     break;
                 case ElevatorState.Descending:
                     {
-                        float duration = ELEVATOR_RIDE_FEEDBACK_DURATION;
-                        float durationScale = GetElevatorRideDurationScale();
+                        float duration = BodyHapticsUtils.ELEVATOR_RIDE_FEEDBACK_DURATION;
+                        float durationScale = BodyHapticsUtils.GetElevatorRideDurationScale();
                         result.Add(new FeedbackDetails(VEST_ELEVATOR_RIDE_NOISE_KEY, duration, durationScale));
                         result.Add(new FeedbackDetails(VEST_ELEVATOR_RIDE_WAVE_KEY, duration, durationScale));
                         result.Add(new FeedbackDetails(ARMS_ELEVATOR_RIDE_WAVE_KEY, duration, durationScale));
@@ -286,14 +174,6 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
             return result;
         }
 
-        private float GetElevatorRideDurationScale()
-        {
-            const float MAX_ELEVATOR_VELOCITY = 400f;
-            const float MIN_PATTERN_SCALE = 0.6f;
-            const float MAX_PATTERN_SCALE = 1.3f;
-            return MAX_PATTERN_SCALE - ((GetElevatorVelocity() / MAX_ELEVATOR_VELOCITY) * (MAX_PATTERN_SCALE - MIN_PATTERN_SCALE));
-        }
-
         private FeedbackDetails GetElevatorStateFeedback(ElevatorState elevatorState, string patternKey)
         {
             foreach (FeedbackDetails feedback in GetElevatorStateFeedbacks(elevatorState))
@@ -305,41 +185,6 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
             }
 
             return null;
-        }
-
-        private void OnPreReleaseSequenceStarted()
-        {
-            if (!VRConfig.configUseBhaptics.Value)
-            {
-                return;
-            }
-
-            ChangeElevatorState(ElevatorState.SceneLoaded);
-            AddNextHapticPatternTimes();
-        }
-
-        private void OnPreReleaseSequenceSkipped()
-        {
-            ChangeElevatorState(ElevatorState.Preparing);
-            TurnOffHapticPatterns();
-        }
-
-        private void OnElevatorPositionChanged(Vector3 position)
-        {
-            m_elevatorPosition = position;
-        }
-
-        private void ChangeElevatorState(ElevatorState elevatorState)
-        {
-            m_elevatorState = elevatorState;
-            m_currentStateStartTime = Time.time;
-        }
-
-        private void OnDestroy()
-        {
-            ElevatorEvents.OnElevatorPositionChanged -= OnElevatorPositionChanged;
-            ElevatorEvents.OnPreReleaseSequenceStarted -= OnPreReleaseSequenceStarted;
-            ElevatorEvents.OnPreReleaseSequenceSkipped -= OnPreReleaseSequenceSkipped;
         }
 
         class FeedbackDetails

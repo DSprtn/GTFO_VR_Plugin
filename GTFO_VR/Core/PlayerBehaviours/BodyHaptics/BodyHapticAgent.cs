@@ -1,6 +1,4 @@
-﻿using ChainedPuzzles;
-using Il2CppSystem.Collections.Generic;
-using Player;
+﻿using Player;
 using UnityEngine;
 
 namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
@@ -18,7 +16,8 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
         void TentacleAttackHaptics(float dmg, Agents.Agent sourceAgent, Vector3 position);
         void LandedFromElevator(eFocusState focusState);
         void PlayerInteractedHaptics(PlayerAgent source);
-        void PlayerBioscanSetStateHaptics(eBioscanStatus status, float progress, List<PlayerAgent> playersInScan);
+        void PlayBioscanHaptics();
+        void StopBioscanHaptics();
         void FlashlightToggledHaptics();
         void PlayerChangedItemHaptics(ItemEquippable item);
         void AmmoGainedHaptics(float ammoStandardRel, float ammoSpecialRel, float ammoClassRel);
