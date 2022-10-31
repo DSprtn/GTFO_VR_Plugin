@@ -273,10 +273,10 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 switch (i % 4)
                 {
                     case 0:
-                        pattern = new HapticIndexPattern(BodyHapticsIndices.FeetToShoulders, 0.5f, 300);
+                        pattern = new HapticIndexPattern(BodyHapticsIndices.FeetToShoulders, 0.4f, 300);
                         break;
                     case 1:
-                        pattern = new HapticIndexPattern(BodyHapticsIndices.ShouldersToFeet, 0.5f, 300);
+                        pattern = new HapticIndexPattern(BodyHapticsIndices.ShouldersToFeet, 0.4f, 300);
                         break;
                     case 2:
                         pattern = new HapticIndexPattern(RightToLeft, 0.4f, 300);
@@ -397,14 +397,15 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
                 for (int j = 0; j < 2; j++)
                 {
-                    int delay = 250;
+                    int delay = 100;
                     ShockwaveEngine.PlayPattern(new HapticIndexPattern(rightArmIndices, intensity, delay));
                     ShockwaveEngine.PlayPattern(new HapticIndexPattern(leftArmIndices, intensity, delay));
                     ShockwaveEngine.PlayPattern(new HapticIndexPattern(bodyIndices, intensity, delay));
-                    await Task.Delay(200);
+                    await Task.Delay(delay + 100);
                 }
-            }
 
+                await Task.Delay(300);
+            }
         }
 
         public void AmmoGainedHaptics(float ammoStandardRel, float ammoSpecialRel, float ammoClassRel)
