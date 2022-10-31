@@ -23,7 +23,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             if (elevatorState == ElevatorState.FirstMovement
                 || elevatorState == ElevatorState.CageRotating)
             {
-                PlayDeployingPattern(0.3f);
+                PlayDeployingPattern(0.2f);
             }
             else if (elevatorState == ElevatorState.TopDeploying
                      || elevatorState == ElevatorState.Deploying)
@@ -118,7 +118,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 await ShockwaveEngine.PlayPatternFunc(new HapticIndexPattern(BodyHapticsIndices.FeetToShoulders, intensity, patternDuration));
                 await ShockwaveEngine.PlayPatternFunc(new HapticIndexPattern(BodyHapticsIndices.FeetToShoulders, intensity, patternDuration));
 
-                await Task.Delay((int) (600 * durationScale));
+                await Task.Delay((int) (500 * durationScale));
             }
         }
 
