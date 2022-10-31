@@ -118,7 +118,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 await ShockwaveEngine.PlayPatternFunc(new HapticIndexPattern(BodyHapticsIndices.FeetToShoulders, intensity, patternDuration));
                 await ShockwaveEngine.PlayPatternFunc(new HapticIndexPattern(BodyHapticsIndices.FeetToShoulders, intensity, patternDuration));
 
-                await Task.Delay((int) (500 * durationScale));
+                await Task.Delay((int) (400 * durationScale));
             }
         }
 
