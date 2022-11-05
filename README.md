@@ -14,12 +14,11 @@ Grab newest beta versions from the Discord. Join the beta testers under gt-getti
 
 Try to get used to the game in Non-VR mode first before using this mod! 
 
-## Recommendation: VRPerfkit
-	As GTFO is quite a performance-hog, it is recommended to use the VRPerformanceKit to upscale your game resolution. For the time being, a version of VRPerformanceKit is included with GTFO VR 
-	as some GTFO-specific fixes had to be made.
+#### Recommendation: VRPerfkit
+As GTFO is quite a performance-hog, it is recommended to use the VRPerformanceKit to upscale your game resolution. For the time being, a version of VRPerformanceKit is included with GTFO VR as some GTFO-specific fixes had to be made.
 
-## Recommendation: Wireless VR Solution
-	If you are using Wireless PCVR to play, and the weapon handling feels 'floaty' or 'unresponsive', try using ALVR (https://github.com/alvr-org/ALVR). Other users report this provides a smoother experience.
+#### Recommendation: Wireless VR Solution
+If you are using Wireless PCVR to play, and the weapon handling feels 'floaty' or 'unresponsive', try using ALVR (https://github.com/alvr-org/ALVR). Other users report this provides a smoother experience.
 
 ## Installation: 
 
