@@ -15,7 +15,7 @@ namespace GTFO_VR.Injections.Gameplay
     {
         private static void Postfix(FirstPersonItemHolder __instance)
         {
-            if(__instance.m_owner.IsLocallyOwned)
+            if(__instance.m_owner.IsLocallyOwned && __instance.m_owner.FPSCamera != null)
             {
                 VRPlayer.UpdateHeldItemTransform();
             }
@@ -25,10 +25,10 @@ namespace GTFO_VR.Injections.Gameplay
     /// <summary>
     /// This is probably obsolete, TODO - test
     /// </summary>
-    [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateInfectionLocal))]
+    [HarmonyPatch(typeof(LocalPlayerAgent), nameof(LocalPlayerAgent.UpdateInfectionLocal))]
     internal class InjectAimFlashlightFixBegin
     {
-        private static void Postfix(PlayerAgent __instance)
+        private static void Postfix(LocalPlayerAgent __instance)
         {
             if(!__instance.IsLocallyOwned)
             {
@@ -39,10 +39,10 @@ namespace GTFO_VR.Injections.Gameplay
         }
     }
 
-    [HarmonyPatch(typeof(PlayerAgent), nameof(PlayerAgent.UpdateGlobalInput))]
+    [HarmonyPatch(typeof(LocalPlayerAgent), nameof(LocalPlayerAgent.UpdateGlobalInput))]
     internal class InjectGlobalInteractionTweakFix
     {
-        private static void Prefix(PlayerAgent __instance)
+        private static void Prefix(LocalPlayerAgent __instance)
         {
             if (!__instance.IsLocallyOwned)
             {
@@ -52,7 +52,7 @@ namespace GTFO_VR.Injections.Gameplay
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = true;
         }
 
-        private static void Postfix(PlayerAgent __instance)
+        private static void Postfix(LocalPlayerAgent __instance)
         {
             if (!__instance.IsLocallyOwned)
             {
@@ -72,34 +72,37 @@ namespace GTFO_VR.Injections.Gameplay
     {
         private static bool Prefix(FPSCamera __instance)
         {
-            bool vis = false;
-            if (VRConfig.configUseControllers.Value)
+            if(!VRConfig.configUseControllers.Value)
             {
-                //Used for throwing weapons
-                __instance.CameraRayDir = HMD.GetVRInteractionLookDir();
+                return true;
+            }
+            bool vis = false;
 
-                RaycastHit hit;
-                if (Physics.Raycast(Controllers.GetAimFromPos(), Controllers.GetAimForward(), out hit, 50f, LayerManager.MASK_CAMERA_RAY))
+            //Used for throwing weapons
+            __instance.CameraRayDir = HMD.GetVRInteractionLookDir();
+
+            RaycastHit hit;
+            if (Physics.Raycast(Controllers.GetAimFromPos(), Controllers.GetAimForward(), out hit, 50f, LayerManager.MASK_CAMERA_RAY))
+            {
+                __instance.CameraRayPos = hit.point;
+                __instance.CameraRayCollider = hit.collider;
+                __instance.CameraRayNormal = hit.normal;
+                __instance.CameraRayObject = hit.collider.gameObject;
+                __instance.CameraRayDist = hit.distance;
+                if (FPSCamera.FriendlyTargetVisAllowed && hit.collider.gameObject.layer == LayerManager.LAYER_PLAYER_SYNCED)
                 {
-                    __instance.CameraRayPos = hit.point;
-                    __instance.CameraRayCollider = hit.collider;
-                    __instance.CameraRayNormal = hit.normal;
-                    __instance.CameraRayObject = hit.collider.gameObject;
-                    __instance.CameraRayDist = hit.distance;
-                    if (FPSCamera.FriendlyTargetVisAllowed && hit.collider.gameObject.layer == LayerManager.LAYER_PLAYER_SYNCED)
-                    {
-                        vis = true;
-                    }
-                }
-                else
-                {
-                    __instance.CameraRayPos = Controllers.GetAimFromPos() + Controllers.GetAimForward() * 50f;
-                    __instance.CameraRayCollider = null;
-                    __instance.CameraRayNormal = -Controllers.GetAimForward();
-                    __instance.CameraRayObject = null;
-                    __instance.CameraRayDist = 0.0f;
+                    vis = true;
                 }
             }
+            else
+            {
+                __instance.CameraRayPos = Controllers.GetAimFromPos() + Controllers.GetAimForward() * 50f;
+                __instance.CameraRayCollider = null;
+                __instance.CameraRayNormal = -Controllers.GetAimForward();
+                __instance.CameraRayObject = null;
+                __instance.CameraRayDist = 0.0f;
+            }
+            
             GuiManager.CrosshairLayer.SetFriendlyTargetVisible(vis);
             return false;
         }

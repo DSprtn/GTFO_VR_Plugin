@@ -1,4 +1,5 @@
 ﻿using Agents;
+using GameData;
 using Gear;
 using GTFO_VR.Core;
 using GTFO_VR.Core.PlayerBehaviours;
@@ -22,7 +23,7 @@ namespace GTFO_VR.Injections
 
         static void Postfix(MeleeWeaponFirstPerson __instance)
         {
-            __instance.gameObject.AddComponent<VRHammer>().Setup(__instance);
+            __instance.gameObject.AddComponent<VRMeleeWeapon>().Setup(__instance);
         }
     }
 
@@ -36,21 +37,22 @@ namespace GTFO_VR.Injections
         static void Postfix(MWS_ChargeUp __instance)
         {
 
-            if (Controllers.mainControllerPose.GetVelocity().magnitude > 0.5f)
+            if (Controllers.MainControllerPose.GetVelocity().magnitude > 0.5f)
             {
-               
-                Collider[] enemyColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRHammer.hammerSizeMult * .75f, LayerManager.MASK_ENEMY_DAMAGABLE);
-                bool shouldReleaseCharge = enemyColliders.Length > 0;
                 if (GTFO_VR_Plugin.DEBUG_ENABLED)
                 {
-                    if(VRConfig.configDebugShowHammerHitbox.Value)
+                    if (VRConfig.configDebugShowHammerHitbox.Value)
                     {
-                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRHammer.hammerSizeMult * .75f, ColorExt.Blue(0.2f));
-                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRHammer.hammerSizeMult * .25f, ColorExt.Red(0.2f));
+                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .75f, ColorExt.Blue(0.2f));
+                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .1f, ColorExt.Red(0.2f));
                     }
                 }
-                if(Controllers.mainControllerPose.GetVelocity().magnitude > 1.6f) {
-                    Collider[] staticColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRHammer.hammerSizeMult * .25f, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC);
+
+                Collider[] enemyColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .75f, LayerManager.MASK_ENEMY_DAMAGABLE);
+                bool shouldReleaseCharge = enemyColliders.Length > 0;
+
+                if(Controllers.MainControllerPose.GetVelocity().magnitude > 1.2f) {
+                    Collider[] staticColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .25f, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC);
                     shouldReleaseCharge = shouldReleaseCharge || staticColliders.Length > 0;
                 }
 
@@ -59,6 +61,23 @@ namespace GTFO_VR.Injections
                     __instance.OnChargeupRelease();
                 }
             }
+        }
+    }
+
+
+    /// <summary>
+    /// Patch animation data to remove attack delay --- attacks in VR should always hit instantly because the player is swinging the weapon physically instead of with an animation
+    /// </summary>
+    [HarmonyPatch(typeof(MWS_AttackSwingBase), nameof(MWS_AttackSwingBase.Update))]
+    static class InjectAllowInstantDamageInVRSwing
+    {
+
+        static void Prefix(MWS_AttackSwingBase __instance)
+        {
+            __instance.m_data.m_damageStartTime = 0f;
+
+            // Do not check for hits from camera
+            __instance.m_weapon.MeleeArchetypeData.CameraDamageRayLength = 0f;
         }
     }
 
@@ -96,6 +115,7 @@ namespace GTFO_VR.Injections
                 hits.Remove(closestData);
             }
             __instance.m_weapon.HitsForDamage = sortedHits;
+
         }
     }
 
@@ -111,15 +131,15 @@ namespace GTFO_VR.Injections
             {
                 return;
             }
-            Vector3 velocity = Controllers.mainControllerPose.GetVelocity() * 3f;
+            Vector3 velocity = Controllers.MainControllerPose.GetVelocity() * 3f;
             data.sourcePos = data.hitPos - data.hitNormal * velocity.magnitude;
             if(isPush)
             {
-                HammerEvents.HammerSmacked(0f);
+                VRMeleeWeaponEvents.HammerSmacked(0f);
             }
             else
             {
-                HammerEvents.HammerSmacked(__instance.m_damageToDeal / __instance.m_damageHeavy);
+                VRMeleeWeaponEvents.HammerSmacked(__instance.m_damageToDeal / __instance.MeleeArchetypeData.ChargedAttackDamage);
             }
         }
     }
@@ -144,12 +164,12 @@ namespace GTFO_VR.Injections
             float progress = Mathf.Min(__instance.m_elapsed / __instance.m_maxDamageTime, 1f);
             if (progress >= 1 && !fullChargeEventFired)
             {
-                HammerEvents.HammerFullyCharged();
+                VRMeleeWeaponEvents.HammerFullyCharged();
                 fullChargeEventFired = true;
             }
             if (progress >= .5f && !halfChargeEventFired)
             {
-                HammerEvents.HammerHalfCharged();
+                VRMeleeWeaponEvents.HammerHalfCharged();
                 halfChargeEventFired = true;
             }
         }

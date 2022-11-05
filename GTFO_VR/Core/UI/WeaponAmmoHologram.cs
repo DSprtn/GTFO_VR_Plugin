@@ -19,7 +19,7 @@ namespace GTFO_VR.Core.UI
 
         Vector3 offset = new Vector3(-.1f, 0, 0);
 
-        Color m_defaultHoloColor = new Color(0, 1, 1, 1);
+        Color m_defaultHoloColor = new Color(0, .5f, .5f, 1);
 
         public void Setup()
         {
@@ -32,7 +32,7 @@ namespace GTFO_VR.Core.UI
             m_light = m_holoHolder.AddComponent<Light>();
             m_light.range = 0.15f;
             m_light.shadows = LightShadows.None;
-            m_light.intensity = 1.4f;
+            m_light.intensity = 1.1f;
             m_light.color = m_defaultHoloColor;
 
             m_holoHolder.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
@@ -107,9 +107,11 @@ namespace GTFO_VR.Core.UI
             if(ItemEquippableEvents.IsCurrentItemShootableWeapon() && PlayerLocomotionEvents.InControllablePLOCState())
             {
                 Toggle(true);
+                m_holoHolder.transform.SetParent(ItemEquippableEvents.currentItem.MuzzleAlign);
             } else
             {
                 Toggle(false);
+                m_holoHolder.transform.SetParent(null);
             }
         }
 
@@ -144,9 +146,9 @@ namespace GTFO_VR.Core.UI
             holoText.faceColor = m_defaultHoloColor;
             holoText.fontMaterial.EnableKeyword(ShaderUtilities.Keyword_Glow);
             holoText.fontMaterial.SetColor(ShaderUtilities.ID_GlowColor, m_defaultHoloColor);
-            holoText.fontMaterial.SetFloat("_GlowPower", 0.085f);
-            holoText.fontMaterial.SetFloat("_GlowOuter", 0.202f);
-            holoText.fontMaterial.SetFloat("_GlowInner", 0.275f);
+            holoText.fontMaterial.SetFloat("_GlowPower", 0.065f);
+            holoText.fontMaterial.SetFloat("_GlowOuter", 0.162f);
+            holoText.fontMaterial.SetFloat("_GlowInner", 0.215f);
             holoText.fontMaterial.SetFloat(ShaderUtilities.ID_FaceDilate, -.5f);
             holoText.alignment = TextAlignmentOptions.CenterGeoAligned;
             holoText.fontStyle = FontStyles.Bold;
@@ -162,7 +164,7 @@ namespace GTFO_VR.Core.UI
 
             SpriteRenderer holoBG = spriteHolder.AddComponent<SpriteRenderer>();
             holoBG.sprite = VRAssets.holoBG;
-            holoBG.color = m_defaultHoloColor * new Vector4(1, 1, 1, 0.04f);
+            holoBG.color = m_defaultHoloColor * new Vector4(1, 1, 1, 0.025f);
             m_holoBGs.Add(holoBG);
 
 

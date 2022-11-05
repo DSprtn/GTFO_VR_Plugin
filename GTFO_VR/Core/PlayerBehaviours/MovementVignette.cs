@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.PostProcessing;
 using GTFO_VR.Util;
 using Valve.VR.InteractionSystem;
+using UnityEngine.Rendering.PostProcessing;
 
 namespace GTFO_VR.Core.PlayerBehaviours
 {
@@ -13,59 +14,73 @@ namespace GTFO_VR.Core.PlayerBehaviours
         public MovementVignette(IntPtr value)
 : base(value) { }
 
-        public static PostProcessingBehaviour postProcessing;
+        private FPSCamera m_fpsCamera;
 
         private PlayerLocomotion m_playerLocomotion;
 
-        private float targetIntensity = 0.25f;
+        private Vignette m_vignettePost;
+
+        private float m_targetIntensity = 0.25f;
+
+        float m_currentIntensity = 0f;
+
+        bool m_setup = false;
 
         private void Update()
         {
-            VignetteModel vignettePost = postProcessing.m_Vignette.model;
-            if (vignettePost == null || !VRConfig.configUseVignetteWhenMoving.Value)
+            if(m_vignettePost == null)
             {
+                if(m_fpsCamera.m_postProcessing != null)
+                {
+                    m_vignettePost = m_fpsCamera.m_postProcessing.m_vignette;
+                }
                 return;
             }
 
-            targetIntensity = GetVignetteIntensityForVelocityPerGamestate();
+            if (!m_setup)
+            {
+                m_vignettePost.color.Override(Color.black);
+                m_vignettePost.mode.Override(VignetteMode.Classic);
+                m_vignettePost.opacity.Override(1f);
+                m_vignettePost.rounded.Override(true);
+                m_vignettePost.roundness.Override(1f);
+                m_setup = true;
+            }
 
-            VignetteModel.Settings newSettings = vignettePost.settings;
+            bool shouldBeActive = VRConfig.configPostVignette.Value || VRConfig.configUseVignetteWhenMoving.Value;
+            m_vignettePost.enabled.Override(shouldBeActive);
 
+            m_targetIntensity = GetVignetteIntensityForVelocityPerGamestate();
 
             // Lerp to vignette intensity. Ramp up faster and ramp down slower.
-            if(newSettings.intensity <= targetIntensity)
-            {
-                newSettings.intensity = Mathf.Lerp(vignettePost.settings.intensity, targetIntensity, 20f * Time.deltaTime);
-            } else
-            {
-                newSettings.intensity = Mathf.Lerp(vignettePost.settings.intensity, targetIntensity, 8f * Time.deltaTime);
-            }
-            
-            vignettePost.settings = newSettings;
+            float lerpSpeed = m_vignettePost.intensity < m_targetIntensity ? 20f : 8f;
+            m_currentIntensity = Mathf.Lerp(m_currentIntensity, m_targetIntensity, lerpSpeed * Time.deltaTime);
+
+            m_vignettePost.intensity.Override(m_currentIntensity);
         }
 
         private float GetVignetteIntensityForVelocityPerGamestate()
         {
             float intensity = .25f;
-            if (FocusStateEvents.currentState == eFocusState.InElevator)
-            {
-                return VRConfig.configMovementVignetteIntensity.Value;
-            }
 
+            if (FocusStateEvents.currentState == eFocusState.InElevator || !VRConfig.configUseVignetteWhenMoving.Value)
+            {
+                return VRConfig.configMovementVignetteIntensity.Value / 2f; ;
+            }
 
             if (FocusStateEvents.currentState == eFocusState.FPS)
             {
-                intensity = Mathf.Clamp(m_playerLocomotion.HorizontalVelocity.magnitude, 0.25f, 3f);
-                intensity = intensity.RemapClamped(0, 2.5f, 0, VRConfig.configMovementVignetteIntensity.Value);
+                intensity = Mathf.Clamp(m_playerLocomotion.HorizontalVelocity.magnitude, 0.25f, 2f);
+                intensity = intensity.RemapClamped(0, 3f, 0, VRConfig.configMovementVignetteIntensity.Value);
             }
 
             return intensity;
         }
 
-        public void Setup(PlayerLocomotion agentLocomotion, PostProcessingBehaviour postprocess)
+        public void Setup(PlayerLocomotion agentLocomotion, FPSCamera cam)
         {
             m_playerLocomotion = agentLocomotion;
-            postProcessing = postprocess;
+            m_fpsCamera = cam;
         }
     }
 }

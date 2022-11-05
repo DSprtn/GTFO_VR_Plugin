@@ -12,7 +12,7 @@ namespace GTFO_VR.Core.UI
         public RadialMenu(IntPtr value)
 : base(value) { }
 
-        private Canvas m_canvas;
+        private UnityEngine.Canvas m_canvas;
 
         private InteractionHand targetHand;
         private GameObject originOverride;
@@ -34,7 +34,7 @@ namespace GTFO_VR.Core.UI
         {
             this.originOverride = originOverride;
             targetHand = hand;
-            m_canvas = gameObject.AddComponent<Canvas>();
+            m_canvas = gameObject.AddComponent<UnityEngine.Canvas>();
             m_canvas.renderMode = RenderMode.WorldSpace;
             m_canvas.enabled = false;
             RectTransform canvasTransform = m_canvas.GetComponent<RectTransform>();

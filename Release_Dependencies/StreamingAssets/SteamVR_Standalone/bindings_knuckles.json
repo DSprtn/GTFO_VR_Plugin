@@ -83,7 +83,7 @@
                },
                "mode" : "joystick",
                "parameters" : {
-                  "deadzone_pct" : "0"
+                  "deadzone_pct" : "35"
                },
                "path" : "/user/hand/left/input/thumbstick"
             },
@@ -108,41 +108,14 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/sprint"
+                     "output" : "/actions/default/in/ping"
+                  },
+                  "double" : {
+                     "output" : "/actions/default/in/togglewatchmode"
                   }
                },
                "mode" : "button",
                "path" : "/user/hand/left/input/thumbstick"
-            },
-            {
-               "inputs" : {
-                  "north" : {
-                     "output" : "/actions/default/in/weaponswitchleft"
-                  },
-                  "south" : {
-                     "output" : "/actions/default/in/weaponswitchright"
-                  }
-               },
-               "mode" : "dpad",
-               "parameters" : {
-                  "sub_mode" : "click"
-               },
-               "path" : "/user/hand/right/input/trackpad"
-            },
-            {
-               "inputs" : {
-                  "east" : {
-                     "output" : "/actions/default/in/snapturnright"
-                  },
-                  "west" : {
-                     "output" : "/actions/default/in/snapturnleft"
-                  }
-               },
-               "mode" : "dpad",
-               "parameters" : {
-                  "sub_mode" : "touch"
-               },
-               "path" : "/user/hand/right/input/thumbstick"
             },
             {
                "inputs" : {
@@ -161,17 +134,15 @@
                },
                "mode" : "grab",
                "parameters" : {
-                  "value_hold_threshold" : "1.2"
+                  "value_hold_threshold" : "1.3",
+                  "value_release_threshold" : "1.05"
                },
                "path" : "/user/hand/left/input/grip"
             },
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/default/in/togglewatchmode"
-                  },
-                  "double" : {
-                     "output" : "/actions/default/in/ping"
+                     "output" : "/actions/default/in/sprint"
                   }
                },
                "mode" : "button",
@@ -193,6 +164,10 @@
                   }
                },
                "mode" : "grab",
+               "parameters" : {
+                  "value_hold_threshold" : "1.15",
+                  "value_release_threshold" : "1.05"
+               },
                "path" : "/user/hand/right/input/grip"
             },
             {
@@ -202,6 +177,9 @@
                   },
                   "double" : {
                      "output" : "/actions/default/in/openmenu"
+                  },
+                  "long" : {
+                     "output" : "/actions/default/in/openobjectives"
                   }
                },
                "mode" : "button",
@@ -210,11 +188,66 @@
             {
                "inputs" : {
                   "click" : {
+                     "output" : "/actions/default/in/watchradialmenu"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/left/input/trackpad"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/togglelaserpointer"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/right/input/thumbstick"
+            },
+            {
+               "inputs" : {
+                  "touch" : {
                      "output" : "/actions/default/in/pushtotalk"
                   }
                },
                "mode" : "toggle_button",
-               "path" : "/user/hand/left/input/trackpad"
+               "path" : "/user/hand/left/input/system"
+            },
+            {
+               "inputs" : {
+                  "position" : {
+                     "output" : "/actions/default/in/snapturn"
+                  }
+               },
+               "mode" : "joystick",
+               "path" : "/user/hand/right/input/thumbstick"
+            },
+            {
+               "inputs" : {
+                  "click" : {
+                     "output" : "/actions/default/in/aimorshove"
+                  }
+               },
+               "mode" : "button",
+               "path" : "/user/hand/right/input/thumbstick"
+            },
+            {
+               "inputs" : {
+                  "center" : {
+                     "output" : "/actions/default/in/weaponradialmenu"
+                  },
+                  "north" : {
+                     "output" : "/actions/default/in/weaponswitchleft"
+                  },
+                  "south" : {
+                     "output" : "/actions/default/in/weaponswitchright"
+                  }
+               },
+               "mode" : "dpad",
+               "parameters" : {
+                  "deadzone_pct" : "50",
+                  "sub_mode" : "click"
+               },
+               "path" : "/user/hand/right/input/trackpad"
             }
          ]
       },
@@ -229,7 +262,7 @@
    "category" : "steamvr_input",
    "controller_type" : "knuckles",
    "description" : "",
-   "name" : "Saved GTFO VR configuration for Index Controller",
+   "name" : "GTFO VR 1.0",
    "options" : {},
    "simulated_actions" : []
 }

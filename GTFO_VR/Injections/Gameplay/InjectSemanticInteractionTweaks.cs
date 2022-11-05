@@ -37,12 +37,20 @@ namespace GTFO_VR.Injections.Gameplay
 
         private static void Prefix(PlayerInteraction __instance)
         {
+            if (!VRConfig.configUseControllers.Value)
+            {
+                return;
+            }
             cachedCamPos = __instance.m_owner.m_camPos;
             __instance.m_owner.m_camPos = HMD.GetVRInteractionFromPosition();
         }
 
         private static void Postfix(PlayerInteraction __instance)
         {
+            if (!VRConfig.configUseControllers.Value)
+            {
+                return;
+            }
             __instance.m_owner.m_camPos = cachedCamPos;
         }
     }
@@ -148,6 +156,55 @@ namespace GTFO_VR.Injections.Gameplay
         {
             InjectFPSCameraForwardTweakForInteraction.useVRInteractionForward = false;
             InjectFPSCameraPositionTweakForInteraction.useInteractionControllersPosition = false;
+        }
+    }
+
+    [HarmonyPatch(typeof(PUI_CommunicationMenu), nameof(PUI_CommunicationMenu.UpdateCmdTripMine))]
+    internal class InjectCommsMinerPlacementTweak
+    {
+        private static void Prefix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = true;
+        }
+
+        private static void Postfix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = false;
+        }
+    }
+
+    [HarmonyPatch(typeof(PUI_CommunicationMenu), nameof(PUI_CommunicationMenu.UpdateCmdSentryGun))]
+    internal class InjectCommsSentryPlacementTweak
+    {
+        private static void Prefix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = true;
+        }
+
+        private static void Postfix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = false;
+        }
+    }
+
+
+    [HarmonyPatch(typeof(PUI_CommunicationMenu), nameof(PUI_CommunicationMenu.UpdateButtonsForNode))]
+    internal class InjectCommsFinalPlacementTweak
+    {
+        private static void Prefix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = true;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = true;
+        }
+
+        private static void Postfix()
+        {
+            InjectFPSCameraForwardTweakForInteraction.useVRControllerForward = false;
+            InjectFPSCameraPositionTweakForInteraction.useControllerPosition = false;
         }
     }
 

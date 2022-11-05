@@ -23,7 +23,7 @@ namespace GTFO_VR.Core
         private VRPlayer m_player;
 
         private static FPSCamera m_currentFPSCameraRef;
-        private static PlayerAgent m_currentPlayerAgentRef;
+        private static LocalPlayerAgent m_currentPlayerAgentRef;
 
         private void Awake()
         {
@@ -38,12 +38,30 @@ namespace GTFO_VR.Core
             SteamVR_Camera.useHeadTracking = false;
             SteamVR_Settings.instance.poseUpdateMode = SteamVR_UpdateModes.OnLateUpdate;
 
-            FocusStateEvents.OnFocusStateChange += FocusChanged;
-            Setup();
 
-            // Disable crouch toggle because it doesn't work in VR
-            CellSettingsApply.ApplyCrouchToggle(false);
+            Setup();
+            SteamVR_Camera.sceneResolutionScaleMultiplier = VRConfig.configRenderResolutionMultiplier.Value;
             VRConfig.configRenderResolutionMultiplier.SettingChanged += VRResolutionChanged;
+            FocusStateEvents.OnFocusStateChange += FocusChanged;
+            GuiManager.ForceOnResolutionChange();
+        }
+
+        /// <summary>
+        /// Some events like the checkpoint respawn are hard to handle in events. That's why we make do with this hack.
+        /// </summary>
+        /// <param name="__instance"></param>
+        internal static void Heartbeat(LocalPlayerAgent __instance)
+        {
+            if(Current.m_player == null)
+            {
+                if(FocusStateEvents.currentState.Equals(eFocusState.FPS))
+                {
+                    m_currentPlayerAgentRef = __instance;
+                    m_currentFPSCameraRef = __instance.FPSCamera;
+                    Current.AppendVRComponents();
+                    Current.HandleIngameFocus();
+                }
+            }
         }
 
         private void VRResolutionChanged(object sender, EventArgs e)
@@ -58,8 +76,11 @@ namespace GTFO_VR.Core
         private void Setup()
         {
             DontDestroyOnLoad(gameObject);
-
-            SteamVR.Initialize(false);
+            if(!SteamVR.active)
+            {
+                Log.Info("Starting SteamVR...");
+                SteamVR.Initialize(false);
+            }
             var res = SteamVR_Camera.GetSceneResolution();
             Log.Info($"SteamVR Setup - HMD Res: {res.width}x{res.height}");
             WeaponArchetypeVRData.Setup();
@@ -72,7 +93,7 @@ namespace GTFO_VR.Core
             Invoke(nameof(VRSystems.SetupOverlay), .5f);
         }
 
-        public static void OnPlayerSpawned(FPSCamera fpsCamera, PlayerAgent playerAgent)
+        public static void OnPlayerSpawned(FPSCamera fpsCamera, LocalPlayerAgent playerAgent)
         {
             if(!playerAgent.IsLocallyOwned)
             {
@@ -113,6 +134,7 @@ namespace GTFO_VR.Core
         {
             if (state.Equals(eFocusState.FPS) || state.Equals(eFocusState.InElevator))
             {
+                ForceApplyVRControlSettings();
                 HandleIngameFocus();
             }
 
@@ -122,6 +144,14 @@ namespace GTFO_VR.Core
             }
 
             ClearUIRenderTex();
+        }
+
+        private static void ForceApplyVRControlSettings()
+        {
+            // VR bindings require these to be disabled.
+            // It is overriden if player accesses settings, so refresh when returning to FPS.
+            CellSettingsManager.SetBoolValue(eCellSettingID.Gameplay_HoldToShowComsList, false);
+            CellSettingsManager.SetBoolValue(eCellSettingID.Gameplay_CrouchToggle, false);
         }
 
         private void HandleOutOfGameFocus()

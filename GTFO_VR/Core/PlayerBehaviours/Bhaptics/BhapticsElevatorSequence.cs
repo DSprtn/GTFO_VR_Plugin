@@ -17,7 +17,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string ARMS_ELEVATOR_RIDE_WAVE_KEY = "arms_elevator_ride_wave";
         private static readonly string ARMS_ELEVATOR_DEPLOYING_KEY = "arms_elevator_deploying";
 
-        private PlayerAgent m_player;
+        private LocalPlayerAgent m_player;
         private HapticPlayer m_hapticPlayer;
 
         private int m_movingFramesCount;
@@ -57,7 +57,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
         }
 
-        public void Setup(PlayerAgent player, HapticPlayer hapticPlayer)
+        public void Setup(LocalPlayerAgent player, HapticPlayer hapticPlayer)
         {
             m_player = player;
             m_hapticPlayer = hapticPlayer;

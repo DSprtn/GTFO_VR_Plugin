@@ -1,4 +1,5 @@
 ﻿using CellMenu;
+using GTFO_VR.Core;
 using HarmonyLib;
 using UnityEngine;
 
@@ -13,6 +14,10 @@ namespace GTFO_VR.Injections.Input
     {
         private static void Postfix()
         {
+            if (!VRConfig.configUseControllers.Value)
+            {
+                return;
+            }
             Cursor.lockState = CursorLockMode.None;
         }
     }
@@ -22,6 +27,10 @@ namespace GTFO_VR.Injections.Input
     {
         private static void Postfix()
         {
+            if (!VRConfig.configUseControllers.Value)
+            {
+                return;
+            }
             Cursor.lockState = CursorLockMode.None;
         }
     }
@@ -31,6 +40,10 @@ namespace GTFO_VR.Injections.Input
     {
         private static void Postfix()
         {
+            if (!VRConfig.configUseControllers.Value)
+            {
+                return;
+            }
             Cursor.lockState = CursorLockMode.None;
         }
     }

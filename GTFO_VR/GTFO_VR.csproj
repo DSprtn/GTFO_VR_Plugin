@@ -41,9 +41,23 @@
     <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsIntegration.cs" />
     <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsUtils.cs" />
     <Compile Include="Core\PlayerBehaviours\MovementVignette.cs" />
+    <Compile Include="Core\UI\Terminal\Pointer\TerminalPointer.cs" />
+    <Compile Include="Core\UI\Terminal\Pointer\MonoPointerEvent.cs" />
+    <Compile Include="Core\UI\Terminal\Pointer\PhysicalButton.cs" />
+    <Compile Include="Core\UI\Terminal\Pointer\PointerHistory.cs" />
+    <Compile Include="Core\UI\Terminal\Pointer\PointerEvent.cs" />
+    <Compile Include="Core\UI\Terminal\TerminalReader.cs" />
+    <Compile Include="Core\UI\Terminal\KeyboardDefinition\KeyboardLayout.cs" />
+    <Compile Include="Core\UI\Terminal\KeyboardDefinition\LayoutParameters.cs" />
+    <Compile Include="Core\UI\Terminal\KeyboardDefinition\KeyboardStyle.cs" />
+    <Compile Include="Core\UI\Terminal\KeyboardDefinition\KeyDefinition.cs" />
+    <Compile Include="Core\UI\Terminal\KeyboardDefinition\LinearLayout.cs" />
+    <Compile Include="Core\UI\Terminal\RoundedCubeBackground.cs" />
+    <Compile Include="Core\UI\Terminal\TerminalKeyboardCanvas.cs" />
+    <Compile Include="Core\UI\Terminal\TerminalKeyboardInterface.cs" />
     <Compile Include="Core\UI\RadialItem.cs" />
     <Compile Include="Core\UI\RadialMenu.cs" />
-    <Compile Include="Core\PlayerBehaviours\VRHammer.cs" />
+    <Compile Include="Core\PlayerBehaviours\VRMeleeWeapon.cs" />
     <Compile Include="Core\UI\WeaponAmmoHologram.cs" />
     <Compile Include="Core\UI\WeaponRadialMenu.cs" />
     <Compile Include="Core\VRConfig.cs" />
@@ -51,6 +65,7 @@
     <Compile Include="Core\PlayerBehaviours\ColisionFade.cs" />
     <Compile Include="Core\PlayerBehaviours\Haptics.cs" />
     <Compile Include="Core\PlayerBehaviours\VRRendering.cs" />
+    <Compile Include="Core\VR_Input\Dummy_InputHandler.cs" />
     <Compile Include="Detours\BioscannerDetours.cs" />
     <Compile Include="Detours\HammerAttackCheckDetour.cs" />
     <Compile Include="Detours\TerminalInputDetours.cs" />
@@ -62,7 +77,7 @@
     <Compile Include="Events\ChatMsgEvents.cs" />
     <Compile Include="Events\ElevatorEvents.cs" />
     <Compile Include="Events\FocusStateEvents.cs" />
-    <Compile Include="Events\HammerEvents.cs" />
+    <Compile Include="Events\VRMeleeWeaponEvents.cs" />
     <Compile Include="Events\InventoryAmmoEvents.cs" />
     <Compile Include="Events\PlayerInteractionEvents.cs" />
     <Compile Include="Events\PlayerLocomotionEvents.cs" />
@@ -92,16 +107,19 @@
     <Compile Include="Injections\Events\InjectTentacleAttackEvents.cs" />
     <Compile Include="Injections\GameHooks\InjectPlayerGUIRef.cs" />
     <Compile Include="Injections\GameHooks\InjectVRStart.cs" />
+    <Compile Include="Injections\Gameplay\InjectDisablePlayerMoveTo.cs" />
+    <Compile Include="Injections\Input\InjectKeyInput.cs" />
+    <Compile Include="Injections\Rendering\InjectClusteredRenderingResolutionTweak.cs" />
+    <Compile Include="Injections\Rendering\InjectDisableFPSCameraRenderUpdate.cs" />
     <Compile Include="Injections\Rendering\InjectPostProcessTweaks.cs" />
     <Compile Include="Injections\Input\InjectAimCursorWithVRControllerInOverlay.cs" />
     <Compile Include="Injections\Gameplay\InjectBioscannerFixes.cs" />
-    <Compile Include="Injections\Rendering\InjectClusteredRenderingResolutionTweak.cs" />
     <Compile Include="Injections\Gameplay\InjectControllerAim.cs" />
     <Compile Include="Injections\Gameplay\InjectCrouchHeight.cs" />
     <Compile Include="Injections\Rendering\InjectForceVRResolution.cs" />
     <Compile Include="Injections\Rendering\InjectScreenLiquidVRTweak.cs" />
     <Compile Include="Injections\UI\InjectChatMsgEvents.cs" />
-    <Compile Include="Injections\Rendering\InjectDisableFPSCameraRendering.cs" />
+    <Compile Include="Injections\Rendering\InjectDisableFPSRenderPreCull.cs" />
     <Compile Include="Injections\Gameplay\InjectDisableHipFireAimSpreadInVR.cs" />
     <Compile Include="Injections\Gameplay\InjectDisableRecoilCameraOffset.cs" />
     <Compile Include="Injections\Gameplay\InjectFireFromMuzzle.cs" />
@@ -112,6 +130,7 @@
     <Compile Include="Injections\GameHooks\InjectInteractionPromptRef.cs" />
     <Compile Include="Injections\Gameplay\InjectSemanticInteractionTweaks.cs" />
     <Compile Include="Injections\Gameplay\InjectMeleeIgnoreCameraDir.cs" />
+    <Compile Include="Injections\UI\InjectLocalizedVRText.cs" />
     <Compile Include="Injections\UI\InjectMenuConfigUI.cs" />
     <Compile Include="Injections\UI\InjectNavMarkerWorldSpace.cs" />
     <Compile Include="Injections\Gameplay\InjectNoVRCamHIjack.cs" />
@@ -124,12 +143,14 @@
     <Compile Include="Injections\Gameplay\InjectVRHammer.cs" />
     <Compile Include="Injections\UI\InjectWatchObjectives.cs" />
     <Compile Include="Injections\UI\InjectWatchUpdateStatus.cs" />
+    <Compile Include="Injections\UI\InjectCommsMenu.cs" />
     <Compile Include="Injections\Gameplay\InjectWeaponAimFlashlightAggro.cs" />
     <Compile Include="Core\GTFO_VR_Plugin.cs" />
     <Compile Include="Core\UI\DividedBarShaderController.cs" />
     <Compile Include="Core\UI\Watch.cs" />
     <Compile Include="Core\UI\VRWorldSpaceUI.cs" />
     <Compile Include="Core\VR_Input\HandType.cs" />
+    <Compile Include="Injections\Rendering\InjectEarlyTransparentRendererFix.cs" />
     <Compile Include="Util\ExtensionMethods.cs" />
     <Compile Include="Core\WeaponArchetypeVRData.cs" />
     <Compile Include="Core\VR_Input\Controllers.cs" />
@@ -150,10 +171,6 @@
     </Reference>
     <Reference Include="Addons-ASM">
       <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Addons-ASM.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="AlienFXManagedWrapper3.5">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\AlienFXManagedWrapper3.5.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="AssetPrefabs-ASM">
@@ -267,11 +284,6 @@
       <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Modules-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\base\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="PlayFab-ASM">
       <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\PlayFab-ASM.dll</HintPath>
       <Private>False</Private>
@@ -335,6 +347,9 @@
     </Reference>
     <Reference Include="UnhollowerRuntimeLib">
       <HintPath>$(GTFO_PATH)\BepInEx\core\UnhollowerRuntimeLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Postprocessing.Runtime">
+      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Unity.Postprocessing.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Unity.TextMeshPro.dll</HintPath>
@@ -501,6 +516,7 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "$(TargetPath)" "$(GTFO_PATH)\BepInEx\plugins" /E /Y</PostBuildEvent>

@@ -10,14 +10,14 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configUseControllers;
         internal static ConfigEntry<bool> configIRLCrouch;
         internal static ConfigEntry<bool> configUseLeftHand;
-        internal static ConfigEntry<string> configLightResMode;
-        internal static ConfigEntry<bool> configAlternateEyeRendering;
         internal static ConfigEntry<bool> configUseTwoHanded;
         internal static ConfigEntry<bool> configAlwaysDoubleHanded;
+        internal static ConfigEntry<bool> configEarlyTransparentRendererFix;
 
         internal static ConfigEntry<float> configWatchScaling;
         internal static ConfigEntry<bool> configUseNumbersForAmmoDisplay;
         internal static ConfigEntry<string> configWatchColor;
+        internal static ConfigEntry<bool> configDisplayChatOnWatch;
         internal static ConfigEntry<int> configCrouchHeight;
         internal static ConfigEntry<bool> configUseLaserPointerOnWeapons;
         internal static ConfigEntry<bool> configUseWeaponHaptics;
@@ -27,8 +27,6 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<int> configWeaponRotationOffset;
 
         internal static ConfigEntry<bool> configPostVignette;
-        internal static ConfigEntry<bool> configPostBloom;
-        internal static ConfigEntry<bool> configPostEyeAdaptation;
         internal static ConfigEntry<bool> configOculusCrashWorkaround;
         internal static ConfigEntry<float> configRenderResolutionMultiplier;
         internal static ConfigEntry<int> configFloorOffset;
@@ -46,17 +44,20 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configWeaponInfoText;
         internal static ConfigEntry<bool> configCheckSteamVR;
 
+        internal static ConfigEntry<bool> configTerminalKeyboard;
+
         internal static ConfigEntry<bool> configWeaponAmmoHoloText;
 
         private static List<BepinGTFOSettingBase> VRSettings = new List<BepinGTFOSettingBase>();
 
-        private static int baseVRConfigID = 11000;
+        private static uint baseVRConfigID = 110000;
 
         private static Dictionary<eCellSettingID, ConfigEntryBase> configBindings = new Dictionary<eCellSettingID, ConfigEntryBase>();
 
         internal static ConfigEntry<bool> configDebugShowTwoHHitboxes;
         internal static ConfigEntry<bool> configDebugShowHammerHitbox;
-        internal static ConfigEntry<float> configDebugHammersizeMult;
+
+        public static Dictionary<uint, string> VRTextMappings = new Dictionary<uint, string>();
 
 
         internal static void SetupConfig(ConfigFile file)
@@ -66,7 +67,6 @@ namespace GTFO_VR.Core
                 BindHeader("DEBUG");
                 configDebugShowTwoHHitboxes = BindBool(file, "Debug - If you see this, I screwed up!", "Show 2H hitboxes", false, "Shows two handed weapon hitboxes", "Show 2H hitboxes");
                 configDebugShowHammerHitbox = BindBool(file, "Debug - If you see this, I screwed up!", "Show hammer hitbox", false, "Shows hammer hitbox", "Hammer hitbox debug");
-                configDebugHammersizeMult = BindFloat(file, "Debug - If you see this, I screwed up!", "Hammer hitbox size mult", 1f, 0.5f, 3f, "Hammer hitbox size multiplier", "Hammer hitbox size");
             }
 
 
@@ -95,6 +95,7 @@ namespace GTFO_VR.Core
             configWatchColor = BindStringDropdown(file, "Watch", "Watch color", "WHITE", "Color to use for watch", "Watch color", new string[] { "WHITE", "RED", "GREEN", "BLUE", "CYAN", "YELLOW", "MAGENTA", "ORANGE", "BLACK" });
             configWatchScaling = BindFloat(file, "Watch", "Watch scale multiplier", 1f, 0.8f, 1.5f, "Watch size multiplier", "Watch size");
             configUseNumbersForAmmoDisplay = BindBool(file, "Watch", "Use numbers for ammo display?", false, "If true, current ammo and max ammo will be displayed as numbers on the watch", "Use number display for ammo");
+            configDisplayChatOnWatch = BindBool(file, "Watch", "Display chat on watch?", false, "If true, the watch will also display the chat when toggled, in addition to player status and objectives. This does not affect the radial menu", "Display chat on watch?");
 
             BindHeader("Weapons");
             configUseWeaponHaptics = BindBool(file, "Haptics", "Use haptics for shooting?", true, "If true, haptics effect will trigger when shooting weapons.", "Weapon haptics");
@@ -113,31 +114,27 @@ namespace GTFO_VR.Core
                 "Change this to rotate all weapons forward by the given amount of degrees (-45,45) --- \n'12' seems to work really well for the Quest and Index with the 'tip' action pose", "Weapon Tilt (angles, forward)");
 
 
-            BindHeader("Hammer");
-            configUseVisualHammerIndicator = BindBool(file, "Misc", "Show light for hammer charge?", true, "If true, will show a light indicator when hammer is half/fully charged", "Flash on 50%/100% charge");
-            configUseOldHammer = BindBool(file, "Misc", "Use old hammer?", false, "If true, will use the old hammer that uses animations and moves by itself.", "(OLD) Auto-swing hammer");
+            BindHeader("Melee");
+            configUseVisualHammerIndicator = BindBool(file, "Misc", "Show light for melee weapon charge?", true, "If true, will show a light indicator when hammer is half/fully charged", "Flash on 50%/100% charge");
+            configUseOldHammer = BindBool(file, "Misc", "Use old melee weapon swing?", false, "If true, will use the in-game system for melee that uses animations and moves by itself.", "(OLD) Auto-swing melee");
 
 
             BindHeader("Rendering");
 
-            configLightResMode = BindStringDropdown(file, "Rendering - Experimental", "Light/fog render resolution tweak - the lower the resolution the greater the performance gain!", "75%",
-    "0 = Native HMD resolution, looks great but requires a beastly PC" +
-    "\n1 = 75% resolution (Almost unnoticeable light shimmering on fog, good performance increase)" +
-    "\n2 = 50% resolution (Medium shimmering, small light artifacts, big performance increase)" +
-    "\n3 = 30% resolution (Small artifacting on lights/shadows, shimmering on fog, great performance increase)", "Light/Fog Resolution", new string[] { "NATIVE", "75%", "50%", "30%" });
-
             configRenderResolutionMultiplier = BindFloat(file, "Rendering", "Render resolution multiplier", 1f, 0.2f, 2.5f, "Global rendering resolution multiplier", "Rendering resolution multiplier");
 
             configPostVignette = BindBool(file, "Rendering - PostProcessing", "Use vignette effect? (Darkened edges of screen)", false, "If false, will disable the vignette effect in-game.", "Vignette");
-            configPostBloom = BindBool(file, "Rendering - PostProcessing", "Use bloom effect? (Glow on bright lights)", false, "If false, will disable the bloom effect in-game. Gives a VERY nice performance boost if it's disabled! (1.5-2.0 ms!)", "Bloom");
-            configPostEyeAdaptation = BindBool(file, "Rendering - PostProcessing", "Use eye adaptation? (Simulate the way a human eye adapts to light changes)", true,
-                "If false, will disable eye adaptation. Gives a very slight performance boost if disabled (0.1-0.2ms.) Will make dark areas much darker though!", "Eye adaptation");
 
             configCameraBlood = BindBool(file, "Rendering - Postprocessing", "Enable Camera liquid effects?", true, "If false, will disable camera liquid effects. Will give a little FPS boost.", "Camera liquid effects");
 
-            configAlternateEyeRendering = BindBool(file, "Rendering - Experimental", "Alternate eye rendering (janky!)", false,
-    "If true will alternate between eyes when drawing lights and shadows each frame, \n might look really janky so only use this if you absolutely want to play this in VR but don't have the rig for it!",
-    "Alternate rendering per eye");
+            
+            configEarlyTransparentRendererFix = BindBool(file, "Rendering", "Use water performance fix?", true,
+                "If true, water surfaces and water tanks will be modified to not degrade performance. Should be toggled before cage drop. Disable if transparent objects suddenly stop rendering.",
+                "Water performance fix");
+
+            configTerminalKeyboard = BindBool(file, "Input", "Use terminal keyboard?", true,
+                "If true, a fancy in-game keyboard will be displayed when using the terminal, instead of the SteamVR overlay keyboard.",
+                "Use terminal keyboard");
 
             BindHeader("Misc");
             configOculusCrashWorkaround = BindBool(file, "Misc", "Use Oculus crash workaround?", false, "If true, map and menu might look a little janky but it should crash less. Blame Zuck!", "Oculus crash workaround");
@@ -242,8 +239,8 @@ namespace GTFO_VR.Core
 
             internal virtual iSettingsFieldData Register(Dictionary<eCellSettingID, ConfigEntryBase> configs)
             {
-                CellSettingGlobals.m_titles.Add(settingID, title);
-
+                VRTextMappings.Add((uint)settingID, title);
+                CellSettingGlobals.m_titles.Add(settingID, (uint)settingID);
                 SettingsFieldData settingData = new SettingsFieldData
                 {
                     Type = inputType,

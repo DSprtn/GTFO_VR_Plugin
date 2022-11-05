@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 3332087345
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 764554a3bc82df9389740483f2efa1bb
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 7e9ee104d6bb707fb2602b751e6f78b1
+HashAppended: 0
+ClassTypes:
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/GTFOVR_Thermal_Glow.shader
+Dependencies: []

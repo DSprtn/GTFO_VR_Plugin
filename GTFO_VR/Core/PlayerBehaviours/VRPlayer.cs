@@ -31,10 +31,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private WeaponRadialMenu m_weaponRadial;
         private WeaponAmmoHologram m_weaponAmmoHolo;
 
-        public static PlayerAgent PlayerAgent;
+        public static LocalPlayerAgent PlayerAgent;
         public static FPSCamera FpsCamera;
 
-        public void Setup(FPSCamera camera, PlayerAgent agent)
+        public void Setup(FPSCamera camera, LocalPlayerAgent agent)
         {
             FpsCamera = camera;
             PlayerAgent = agent;
@@ -47,7 +47,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             gameObject.AddComponent<VRWorldSpaceUI>();
 
             m_movementVignette = gameObject.AddComponent<MovementVignette>();
-            m_movementVignette.Setup(agent.Locomotion, GetComponent<PostProcessingBehaviour>());
+            m_movementVignette.Setup(agent.Locomotion, camera);
 
             m_weaponRadial = gameObject.AddComponent<WeaponRadialMenu>();
             m_weaponRadial.Setup(m_origin.transform);
@@ -66,8 +66,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
             FpsCamera.gameObject.AddComponent<VRRendering>();
             FpsCamera.gameObject.AddComponent<SteamVR_Fade>();
 
-            m_watch = Instantiate(VRAssets.GetWatchPrefab(), Vector3.zero, Quaternion.identity, null).AddComponent<Watch>();
-            m_watch.Setup(m_origin.transform);
+            FpsCamera.UpdateUI = false;
+
+            if (VRConfig.configUseControllers.Value)
+            {
+                m_watch = Instantiate(VRAssets.GetWatchPrefab(), Vector3.zero, Quaternion.identity, null).AddComponent<Watch>();
+                m_watch.Setup(m_origin.transform);
+            }
 
             m_haptics = gameObject.AddComponent<Haptics>();
             m_haptics.Setup();
@@ -77,7 +82,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             PlayerLocomotionEvents.OnPlayerEnterLadder += PlayerEnteredLadder;
             SteamVR_Events.NewPosesApplied.Listen(new Action(OnNewPoses));
-            VRConfig.configLightResMode.SettingChanged += LightResChanged;
 
             RefreshClusteredRenderingResolution();
         }
@@ -92,13 +96,12 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ClusteredRendering.Current.OnResolutionChange(new Resolution());
         }
 
-        private void OnNewPoses()
+        public void OnNewPoses()
         {
             if (!FpsCamera || !m_origin)
             {
                 return;
             }
-
             m_origin.UpdateOrigin();
             UpdateVRCameraTransform(FpsCamera);
             UpdateHeldItemTransform();
@@ -116,18 +119,17 @@ namespace GTFO_VR.Core.PlayerBehaviours
             if(!VRConfig.configUseLeftHand.Value)
             {
                 PlayerAgent.FPItemHolder.FPSArms.SetRightArmTargetPosRot(PlayerAgent.FPItemHolder.WieldedItem.RightHandGripTrans);
-                PlayerAgent.FPItemHolder.FPSArms.SetLeftArmTargetPosRot(Controllers.offhandController.transform);
+                PlayerAgent.FPItemHolder.FPSArms.SetLeftArmTargetPosRot(Controllers.OffhandController.transform);
             } else
             {
                 PlayerAgent.FPItemHolder.FPSArms.SetLeftArmTargetPosRot(PlayerAgent.FPItemHolder.WieldedItem.RightHandGripTrans);
-                PlayerAgent.FPItemHolder.FPSArms.SetRightArmTargetPosRot(Controllers.offhandController.transform);
+                PlayerAgent.FPItemHolder.FPSArms.SetRightArmTargetPosRot(Controllers.OffhandController.transform);
             }
 
         }
 
         public static void UpdateVRCameraTransform(FPSCamera fpsCamera)
         {
-
             if (!FocusStateManager.CurrentState.Equals(eFocusState.InElevator))
             {
                 fpsCamera.transform.position = HMD.GetWorldPosition();
@@ -139,7 +141,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public static void UpdateHeldItemTransform()
         {
-            if (!VRConfig.configUseControllers.Value)
+            if (!VRConfig.configUseControllers.Value || !PlayerAgent)
             {
                 return;
             }
@@ -160,6 +162,47 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
+        public static LevelGeneration.LG_ComputerTerminal GetInteractingTerminal()
+        {
+            Interact_ComputerTerminal terminalInteract = null;
+
+            // Sometimes this will be null, and then not null after entering and exiting once
+            ICameraRayInteractor interactor = PlayerAgent?.Interaction?.m_currentCamInteractor;
+            if (interactor != null)
+            {
+                terminalInteract = interactor.TryCast<Interact_ComputerTerminal>();
+                if (terminalInteract != null)
+                {
+                    return terminalInteract.m_terminal; ;
+                }
+            }
+
+            // When the above is null, it will be listed here instead, and vice-versa.
+            Il2CppSystem.Collections.Generic.List<IInteractable> interactables = PlayerAgent?.Interaction?.m_proximityInteracts;
+            if (interactables != null)
+            {
+                foreach (IInteractable interactable in interactables)
+                {
+                    terminalInteract = interactable.TryCast<Interact_ComputerTerminal>();
+                    if (terminalInteract != null)
+                    {
+                        return terminalInteract.m_terminal;
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public static void SetWieldedItemVisibility(bool visible)
+        {
+            ItemEquippable heldItem = PlayerAgent?.FPItemHolder?.WieldedItem;
+            if (heldItem != null)
+            {
+                heldItem.gameObject.SetActive(visible);
+            }
+        }
+
         private void PlayerEnteredLadder(LG_Ladder ladder)
         {
             m_snapTurn.DoSnapTurnTowards(Quaternion.LookRotation(ladder.transform.forward).eulerAngles, 2f);
@@ -167,7 +210,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
-            VRConfig.configLightResMode.SettingChanged -= LightResChanged;
             PlayerLocomotionEvents.OnPlayerEnterLadder -= PlayerEnteredLadder;
             SteamVR_Events.NewPosesApplied.Remove(OnNewPoses);
 

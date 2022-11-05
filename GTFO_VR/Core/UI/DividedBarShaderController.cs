@@ -12,7 +12,7 @@ namespace GTFO_VR.UI
         public DividedBarShaderController(IntPtr value)
 : base(value) { }
 
-        public static Color NormalColor = new Color(0.83f, 1f, 0.964f);
+        public static Color NormalColor = new Color(0.83f, 1f, 0.964f) * .8f;
         public static Color SelectedColor = new Color(1f, 0.5f, 0f);
 
         public int MaxValue = 10;

@@ -18,6 +18,11 @@ namespace GTFO_VR.Detours
 
         public unsafe static void HookAll()
         {
+            if(!VRConfig.configUseControllers.Value)
+            {
+                Log.Info("Not using motion controllers, skipping hammer attack checks detour...");
+                return;
+            }
             Log.Info("Creating detours for hammer attack checks...");
 
             var hammerAttackTargetCheckPointer = *(IntPtr*)(IntPtr)UnhollowerUtils
@@ -32,9 +37,9 @@ namespace GTFO_VR.Detours
 
         private unsafe static bool OurAttackCheck(IntPtr thisPtr, IntPtr attackData, float sphereRad, float elapsedTime, out IntPtr hits)
         {
-            bool result = OriginalHammerMethod(thisPtr, attackData, sphereRad * VRHammer.hammerSizeMult, elapsedTime, out hits);
+            bool result = OriginalHammerMethod(thisPtr, attackData, sphereRad * VRMeleeWeapon.WeaponHitboxSize, elapsedTime, out hits);
 
-            if ((!VRConfig.configUseOldHammer.Value || !VRConfig.configUseControllers.Value) && Controllers.mainControllerPose.GetVelocity().magnitude < 0.4f)
+            if (!VRConfig.configUseOldHammer.Value && Controllers.MainControllerPose.GetVelocity().magnitude < 0.4f)
             {
                 return false;
             }

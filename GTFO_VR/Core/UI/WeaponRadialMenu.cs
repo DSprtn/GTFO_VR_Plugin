@@ -170,7 +170,7 @@ namespace GTFO_VR.Core.UI
                         }
                         else
                         {
-                            radialItem.SetIcon(icon);
+                            radialItem.SetIcon(icon, 0.7f);
                         }
 
                         Log.Debug($"Retrieved icon for {equippable.ArchetypeName}!");

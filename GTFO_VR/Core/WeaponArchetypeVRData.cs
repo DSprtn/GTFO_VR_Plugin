@@ -53,6 +53,7 @@ namespace GTFO_VR.Core
         }
 
         public static Dictionary<string, VRWeaponData> weaponArchetypes;
+        public static Dictionary<string, VRWeaponData> publicWeaponNames; // Testing for localization issues with melee weapons---
 
         public static VRWeaponData GetVRWeaponData(ItemEquippable item)
         {
@@ -64,11 +65,25 @@ namespace GTFO_VR.Core
         {
             ItemEquippableEvents.OnPlayerWieldItem += PlayerSwitchedWeapon;
             // WeaponTransform (z+ forward, y+ up, x+ right)
+
+            publicWeaponNames = new Dictionary<string, VRWeaponData>
+            {
+                { "SANTONIAN HDH", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f - VRConfig.configWeaponRotationOffset.Value, 0, 0)), false, 1.15f) },
+                { "MASTABA FIXED BLADE", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f - VRConfig.configWeaponRotationOffset.Value, 0, 0)), false, 1f) },
+                { "MACO DRILLHEAD", new VRWeaponData(new Vector3(0f, -.3f, 0f), Quaternion.Euler(new Vector3(45f - VRConfig.configWeaponRotationOffset.Value, 0, 0)), false, 1.1f) },
+                { "KOVAC PEACEKEEPER", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f - VRConfig.configWeaponRotationOffset.Value, 0, 0)), false, 1.25f) }
+            };
+
+
             weaponArchetypes = new Dictionary<string, VRWeaponData>
             {
                 { "Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
-                { "Melee", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f - VRConfig.configWeaponRotationOffset.Value, 0, 0)), false, 1.15f) },
-                
+
+                { "Sledgehammer", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f - VRConfig.configWeaponRotationOffset.Value, 0, 0)), false, 1.15f) },
+                { "Knife", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f - VRConfig.configWeaponRotationOffset.Value, 0, 0)), false, 1f) },
+                { "Spear", new VRWeaponData(new Vector3(0f, -.3f, 0f), Quaternion.Euler(new Vector3(45f - VRConfig.configWeaponRotationOffset.Value, 0, 0)), false, 1.1f) },
+                { "Bat", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f - VRConfig.configWeaponRotationOffset.Value, 0, 0)), false, 1.25f) },
+
                 { "Mine deployer", new VRWeaponData(new Vector3(0f, 0f, -.05f), false) },
                 { "Bio Tracker", new VRWeaponData(new Vector3(0f, 0f, -.05f), false, 1.3f) },
 
@@ -115,7 +130,7 @@ namespace GTFO_VR.Core
             
             Log.Debug($"Item {item.ArchetypeName} - MuzzleDistance {muzzleDistance} - Allows DH? {muzzleDistance > 0.25f}");
 
-            if (weaponArchetypes.TryGetValue(item.ArchetypeName, out VRWeaponData data))
+            if (weaponArchetypes.TryGetValue(item.ArchetypeName, out VRWeaponData data) || publicWeaponNames.TryGetValue(item.PublicName.ToUpper(), out data))
             {
                 m_current = data;
 

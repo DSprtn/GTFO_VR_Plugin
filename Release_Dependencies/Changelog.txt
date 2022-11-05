@@ -1,0 +1,122 @@
+Total changelog: (1.1.9b14):
+- Force disable motion blur as it is broken
+- Add possible fix for KB+M/Gamepad melee hit detection
+- Fixed darkened output in VRPerfkit (Included in release, until VRPerfkit updates.)
+
+VRPerformanceKit is included as a separate archive. If you want to use the VRPerformanceKit, use this archive as it contains
+fixes for the darkened game output!
+
+Total changelog: (1.1.9b13):
+- Fixed laserpointer toggling
+- Fixed bloom being overly bright
+- Forced toggle crouch to be off when using VR 
+- Fixed Vignette effect
+- Fixed movement-based Vignette effect
+- Removed some graphical options that won't work anymore (eye adaptation, alternate eye rendering)
+- Greatly overhauled KB+M/Gamepad mode to actually be playable again
+
+Total changelog: (1.1.9b12) - [Roughy]
+- Fix various terminal bugs/issues
+- Possibly fix rare state that would make you unable to exit the terminal
+- Add arrows/esc key
+
+Total changelog: (1.1.9b11) - [Roughy]
+- Fixed VR UI elements clipping into world 
+- Added bot command menu (new keybind.) You can now make bots use their equipment in VR!
+- Fixed selecting commands with brackets on terminal
+- Added key modifiers (i.e. ctrl, alt etc.) to keyboard so you can cancel repeating terminal pings for instance
+- Added square bracket keys to keyboard
+
+Total changelog: (1.1.9b10) - (Roughy's great work, yet again)
+- Fixed watch objectives, made objectives more verbose/complete 
+- Fixed laser sight in thermal scopes
+- Fixed thermal scope reticles
+- Added option to skip chat when toggling watch screens (inv/obj)
+
+Total changelog: (1.1.9b9) - Roughy MVP again!
+- Improved performance of world markers and fixed their degrading performance
+
+Total changelog: (1.1.9b8) - 
+- Fixed melee weapons not getting correct orientations/scales/hitboxes when using different localizations
+- Improved performance by fixing the VR occlusion mesh. This should be around a 5-10% improvement depending on hardware.
+- Possibly fixed stuttering when opening menus when approaching VRAM limit.
+
+Total changelog: (1.1.9b7) - Roughy is MVP!
+- Made to work in rundown 7
+- Added mission timers (like in R6C3 to the world UI)
+- Added subtitles to the world UI
+
+Known issues:
+- (Watch) Objective UI may not work 
+- UI is not visible through objects
+- 2D UI is visible on edges of the screen on some configurations.
+- Everything that was broken in R6 is still broken.
+
+
+Total changelog: (1.1.9b6)
+- Fixes to keyboard not working correctly with audio logs or y/n prompts.
+
+Total changelog: (1.1.9b5)
+- Complete new VR keyboard system added by Nordskog. Great work!
+- Water performance workaround - Transparent objects won't render in other transparent objects, but it's worth it for the performance improvement.
+- Upgraded to a newer version of bepinex. This makes the installation much simpler, but a game file wipe might be needed. Be sure to look at the new install instructions!
+
+
+Total changelog: (1.1.9b4)
+- Recompiled for R6.5
+
+Total changelog: (1.1.9b3)
+
+Bugfixes:
+- (R6 Specific) - Fix getting downed stopping VR rendering
+- (R6 Specific) - Fix loading checkpoints disabling VR
+- (R6 Specific) - Fix joining on-going games disabling VR (hopefully)
+- (R6 Specific) - Fix game win/loss breaking VR
+
+Tweaks:
+- (R6 Specific) - Tweak all UI sizes to be much better readable, especially in lower resolutions
+- (R6 Specific) - Improve knife hitbox, mainly for stabbing motions
+
+
+Total changelog: (1.1.9b2)
+
+Bugfixes:
+- (R6 Specific) - Fix bioscanner crashing the game
+
+Total changelog: (1.1.9b1)
+
+Ported to R6! The game is very performance hungry, even moreso this update, so I recommend lowering your in-game settings greatly!
+Turn off SSAO, bloom, subsurface scattering, depth of field, motion blur etc
+Lower fog resolution, fog diffusion quality
+
+Bugfixes:
+- Fix headlight rendering for pimax, odd shadow rendering for all HMDs
+- Opening audio logs in terminals with VR keyboard (casing issue)
+- Fix VR render resolution config not applying at the start
+- (R6 Specific) - Gun flashlight rendering fixed
+- (R6 Specific) - Terminal exit influencing camera
+- (R6 Specific) - Weapon lagging behind player movement
+- (R6 Specific) - Gun flashlight rendering fixed
+- (R6 Specific) - Decal rendering
+- (R6 Specific) - Fixed melee weapon hit delay
+- (R6 Specific) - Laserpointer color always white due to new color space
+- (R6 Specific) - Fog/Light resolution changes in VR
+
+Tweaks:
+- Weapon ammo hologram BG is now a little less bright
+- (R6 Specific) - Weapon icon sizes reduced to fit into radial menu
+- Tweaked weapon zeroing to be more accurate at short distances
+- All melee weapon hitboxes
+
+Additions:
+- All new melee weapons work in VR
+- (By Devs!) All gun sights are now rendered correctly in VR
+
+Removals:
+- Removed light/fog resolution config tweak, it gave more artifact and very little performance. Devs added more fog resolution options so use those instead!
+- Removed bloom from VR options, it's now in the base game, tweakable under graphics
+
+Known issues:
+- R6 is very VRAM hungry! If your texture or render resolution settings are too high and you're using too much VRAM your game will be very unstable!
+  changing resolution in-game or even playing some maps might cause crashes! 
+- Vignette effect is broken at the moment

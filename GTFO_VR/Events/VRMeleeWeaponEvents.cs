@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GTFO_VR.Events
 {
-    class HammerEvents
+    class VRMeleeWeaponEvents
     {
         public static event Action<float> OnHammerSmack;
         public static event Action OnHammerFullyCharged;

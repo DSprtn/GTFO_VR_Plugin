@@ -1,6 +1,8 @@
-﻿using GTFO_VR.Core.UI;
+﻿using GTFO_VR.Core;
+using GTFO_VR.Core.UI;
 using GTFO_VR.Core.VR_Input;
 using HarmonyLib;
+using UnityEngine;
 
 namespace GTFO_VR.Injections.Input
 {
@@ -25,7 +27,7 @@ namespace GTFO_VR.Injections.Input
     {
         private static void Postfix(InputAction action, ref bool __result)
         {
-            __result = __result || SteamVR_InputHandler.GetActionUp(action);
+            __result = __result || SteamVR_InputHandler.GetActionUp(action) || Dummy_InputHandler.GetActionUp(action);
         }
     }
 
@@ -34,7 +36,7 @@ namespace GTFO_VR.Injections.Input
     {
         private static void Postfix(InputAction action, ref bool __result)
         {
-            __result = __result || SteamVR_InputHandler.GetActionDown(action) || WeaponRadialMenu.GetSpecialActionMappingDown(action);
+            __result = __result || SteamVR_InputHandler.GetActionDown(action) || Dummy_InputHandler.GetActionDown(action) || WeaponRadialMenu.GetSpecialActionMappingDown(action);
         }
     }
 
@@ -43,7 +45,7 @@ namespace GTFO_VR.Injections.Input
     {
         private static void Postfix(InputAction action, ref bool __result)
         {
-            __result = __result || SteamVR_InputHandler.GetAction(action) || WeaponRadialMenu.GetSpecialActionMappingDown(action);
+            __result = __result || SteamVR_InputHandler.GetAction(action) || Dummy_InputHandler.GetAction(action) ||  WeaponRadialMenu.GetSpecialActionMappingDown(action);
         }
     }
 }

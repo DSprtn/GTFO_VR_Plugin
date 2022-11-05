@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 725888836
+CRC: 4022278629
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 16d787fed99ecd12dcab3fc599eb2918
+    Hash: ef4d6493b968c7090fe6f4a342162c34
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 31b2f3f205ca46fbe3b0062f4cdc33e3
+    Hash: 136bdbfb2fc6f34ff509ce379a45d812
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -25,13 +25,32 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
 - Class: 222
   Script: {instanceID: 0}
 - Class: 224
   Script: {instanceID: 0}
 Assets:
+- Assets/RadialIcons/ChatType.png
+- Assets/RadialIcons/PackFallback.png
+- Assets/RadialIcons/Objective.png
+- Assets/RadialIcons/Throwable.png
+- Assets/RadialIcons/Melee.png
 - Assets/P_VRWatch.prefab
+- Assets/RadialIcons/Tool.png
+- Assets/RadialIcons/Primary.png
 - Assets/TextMesh Pro/Resources/Shaders/TMP_ClipSphere.shader
+- Assets/RadialIcons/HackingTool.png
+- Assets/blob.png
+- Assets/RadialIcons/Chat.png
+- Assets/RadialIcons/BG.png
+- Assets/HoloText/Share-TechMono.asset
+- Assets/RadialIcons/Secondary.png
 - Assets/SpriteNoZTestAndClip.shader
 - Assets/TextMesh Pro/Resources/Shaders/TMP_NoZTest.shader
 - Assets/SpriteNoZTest.shader

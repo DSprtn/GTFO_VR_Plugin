@@ -57,11 +57,28 @@ namespace GTFO_VR.Injections.UI
 
             if(stringValues != null) {
                 __instance.m_values = stringValues;
-
+                __instance.m_displayValues = stringValues;
                 __instance.UpdateValueWithSelected();
             }
         }
     }
+
+    /// <summary>
+    /// "Display" gets prefixed on all string dropdowns, for some reason so we remove it
+    /// </summary>
+    [HarmonyPatch(typeof(CM_SettingsStringArrayDropdownButton), nameof(CM_SettingsStringArrayDropdownButton.UpdateValueWithSelected))]
+    internal class InjectStringDropdownValueRemoveDisplayString
+    {
+        private static void Postfix(CM_SettingsStringArrayDropdownButton __instance)
+        {
+            if(__instance.m_specialDataType != eSettingSpecialDataType.Displays)
+            {
+                __instance.m_currentValue.text = __instance.m_currentValue.text.Replace("Display ", "");
+            }
+        }
+    }
+
+
 
     /// <summary>
     /// Add config menu for VR stuff
@@ -72,9 +89,11 @@ namespace GTFO_VR.Injections.UI
         private static void Postfix(CM_PageSettings __instance)
         {
             int VR_SETTINGS_MENU_ID = 1001;
+            const int VR_SETTINGS_TITLE_TEXT_ID = 10000001;
 
             List<iSettingsFieldData> pageSettings = VRConfig.InjectConfigIntoGame();
-           __instance.CreateSubmenu("VR Settings", (eSettingsSubMenuId)VR_SETTINGS_MENU_ID, pageSettings, false, false);
+            VRConfig.VRTextMappings.Add(VR_SETTINGS_TITLE_TEXT_ID, "VR Settings");
+           __instance.CreateSubmenu(VR_SETTINGS_TITLE_TEXT_ID, (eSettingsSubMenuId)VR_SETTINGS_MENU_ID, pageSettings, false, false);
         }
     }
 

@@ -9,32 +9,74 @@ namespace GTFO_VR.Core.PlayerBehaviours
     /// <summary>
     /// Disable animations, tweak hitbox size and position
     /// </summary>
-    public class VRHammer : MonoBehaviour
+    public class VRMeleeWeapon : MonoBehaviour
     {
-        public VRHammer(IntPtr value) : base(value)
+        public VRMeleeWeapon(IntPtr value) : base(value)
         {
         }
 
-        public static float hammerSizeMult = .61f;
+        public static float WeaponHitboxSize = .61f;
+        public static float WeaponHitDetectionSphereCollisionSize = .61f;
 
         private MeleeWeaponFirstPerson m_weapon;
         private Transform m_animatorRoot;
         private Light m_chargeupIndicatorLight;
 
+        public Vector3 m_offset = new Vector3(0, .68f, .45f);
+
         public void Setup(MeleeWeaponFirstPerson weapon)
         {
+            if(GTFO_VR_Plugin.DEBUG_ENABLED)
+            {
+                MeleeWeaponFirstPerson.DEBUG_ENABLED = VRConfig.configDebugShowHammerHitbox.Value;
+                VRConfig.configDebugShowHammerHitbox.SettingChanged += ToggleDebug;
+            }
+
+
             m_weapon = weapon;
             m_animatorRoot = m_weapon.ModelData.m_damageRefAttack.parent;
-            m_chargeupIndicatorLight = new GameObject("VR_Hammer_Chargeup_Light").AddComponent<Light>();
+            m_chargeupIndicatorLight = new GameObject("VR_Weapon_Chargeup_Light").AddComponent<Light>();
             m_chargeupIndicatorLight.color = Color.white;
 
             m_chargeupIndicatorLight.enabled = false;
             m_chargeupIndicatorLight.shadows = LightShadows.None;
-            HammerEvents.OnHammerFullyCharged += HammerFullyCharged;
-            HammerEvents.OnHammerHalfCharged += HammerHalfCharged;
+            VRMeleeWeaponEvents.OnHammerFullyCharged += WeaponFullyCharged;
+            VRMeleeWeaponEvents.OnHammerHalfCharged += WeaponHalfCharged;
+
+            Vector3 baseOffset = new Vector3(0, .68f, .45f);
+            switch (weapon.ArchetypeName)
+            {
+                case "Spear":
+                    m_offset = baseOffset * 1.5f;
+                    WeaponHitDetectionSphereCollisionSize = 0.2f;
+                    WeaponHitboxSize = .25f;
+                    break;
+                case "Knife":
+                    m_offset = baseOffset * .35f;
+                    WeaponHitDetectionSphereCollisionSize = 0.22f;
+                    WeaponHitboxSize = .22f;
+                    break;
+                case "Bat":
+                    WeaponHitDetectionSphereCollisionSize = 0.35f;
+                    WeaponHitboxSize = .45f;
+                    m_offset = baseOffset * .7f;
+                    break;
+                case "Sledgehammer":
+                    WeaponHitDetectionSphereCollisionSize = .61f;
+                    m_offset = baseOffset;
+                    break;
+                default:
+                    Log.Error($"Unknown melee weapon detected {weapon.name}");
+                    return;
+            }
         }
 
-        private void HammerHalfCharged()
+        private void ToggleDebug(object sender, EventArgs e)
+        {
+            MeleeWeaponFirstPerson.DEBUG_ENABLED = VRConfig.configDebugShowHammerHitbox.Value;
+        }
+
+        private void WeaponHalfCharged()
         {
             if (!VRConfig.configUseVisualHammerIndicator.Value)
             {
@@ -47,10 +89,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 m_chargeupIndicatorLight.intensity = .75f;
                 m_chargeupIndicatorLight.enabled = true;
             }
-            Invoke(nameof(VRHammer.TurnChargeLightOff), 0.10f);
+            Invoke(nameof(VRMeleeWeapon.TurnChargeLightOff), 0.10f);
         }
 
-        private void HammerFullyCharged()
+        private void WeaponFullyCharged()
         {
             if (!VRConfig.configUseVisualHammerIndicator.Value)
             {
@@ -63,7 +105,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 m_chargeupIndicatorLight.intensity = 1.75f;
                 m_chargeupIndicatorLight.enabled = true;
             }
-            Invoke(nameof(VRHammer.TurnChargeLightOff), 0.15f);
+            Invoke(nameof(VRMeleeWeapon.TurnChargeLightOff), 0.15f);
         }
 
         private void TurnChargeLightOff()
@@ -90,9 +132,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 if (m_weapon.ModelData != null)
                 {
-                    float YOffset = .68f;
-                    float zOffset = .45f;
-                    m_weapon.ModelData.m_damageRefAttack.transform.position = Controllers.mainController.transform.TransformPoint(new Vector3(0, YOffset, zOffset));
+                    m_weapon.ModelData.m_damageRefAttack.transform.position = Controllers.MainController.transform.TransformPoint(new Vector3(0, m_offset.y, m_offset.z));
                 }
             }
         }
@@ -102,14 +142,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             if (VRConfig.configUseOldHammer.Value || !VRConfig.configUseControllers.Value)
             {
                 return;
-            }
-
-            if (GTFO_VR_Plugin.DEBUG_ENABLED)
-            {
-                m_weapon._DEBUG_TARGETING_ENABLED_k__BackingField = VRConfig.configDebugShowHammerHitbox.Value;
-                m_weapon._DEBUG_TARGETING_ENABLED_k__BackingField = VRConfig.configDebugShowHammerHitbox.Value;
-
-                hammerSizeMult = VRConfig.configDebugHammersizeMult.Value;
             }
 
             if (m_weapon.Owner && m_weapon.Owner.IsLocallyOwned)
@@ -124,8 +156,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
-            HammerEvents.OnHammerHalfCharged -= HammerHalfCharged;
-            HammerEvents.OnHammerFullyCharged -= HammerFullyCharged;
+            if (GTFO_VR_Plugin.DEBUG_ENABLED)
+            {
+                VRConfig.configDebugShowHammerHitbox.SettingChanged -= ToggleDebug;
+            }
+
+            VRMeleeWeaponEvents.OnHammerHalfCharged -= WeaponHalfCharged;
+            VRMeleeWeaponEvents.OnHammerFullyCharged -= WeaponFullyCharged;
         }
     }
 }

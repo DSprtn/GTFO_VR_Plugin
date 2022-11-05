@@ -2,6 +2,8 @@
 using BepInEx.IL2CPP;
 using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.UI;
+using GTFO_VR.Core.UI.Terminal.Pointer;
+using GTFO_VR.Core.UI.Terminal;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Detours;
 using GTFO_VR.UI;
@@ -9,7 +11,6 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnhollowerRuntimeLib;
-using static GTFO_VR.Util.ExtensionMethods;
 
 namespace GTFO_VR.Core
 {
@@ -23,7 +24,7 @@ namespace GTFO_VR.Core
             MODNAME = "GTFO_VR_Plugin",
             AUTHOR = "Spartan",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "1.1.0.0";
+            VERSION = "1.2.0";
 
 
         public static bool DEBUG_ENABLED = false;
@@ -31,7 +32,7 @@ namespace GTFO_VR.Core
         public override void Load()
         {
             Core.Log.Setup(BepInEx.Logging.Logger.CreateLogSource(MODNAME));
-            Core.Log.Info($"Loading VR plugin {VERSION}");
+            Core.Log.Info($"Loading VR plugin v.{VERSION}");
 
             VRConfig.SetupConfig(Config);
 
@@ -75,13 +76,21 @@ namespace GTFO_VR.Core
             ClassInjector.RegisterTypeInIl2Cpp<BhapticsElevatorSequence>();
             ClassInjector.RegisterTypeInIl2Cpp<Snapturn>();
             ClassInjector.RegisterTypeInIl2Cpp<Watch>();
-            ClassInjector.RegisterTypeInIl2Cpp<VRHammer>();
+            ClassInjector.RegisterTypeInIl2Cpp<VRMeleeWeapon>();
             ClassInjector.RegisterTypeInIl2Cpp<DividedBarShaderController>();
             ClassInjector.RegisterTypeInIl2Cpp<MovementVignette>();
             ClassInjector.RegisterTypeInIl2Cpp<RadialMenu>();
             ClassInjector.RegisterTypeInIl2Cpp<RadialItem>();
             ClassInjector.RegisterTypeInIl2Cpp<WeaponRadialMenu>();
             ClassInjector.RegisterTypeInIl2Cpp<WeaponAmmoHologram>();
+
+            ClassInjector.RegisterTypeInIl2Cpp<MonoPointerEvent>();
+            ClassInjector.RegisterTypeInIl2Cpp<RoundedCubeBackground>();       
+            ClassInjector.RegisterTypeInIl2Cpp<PhysicalButton>();              
+            ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardCanvas>();      
+            ClassInjector.RegisterTypeInIl2Cpp<TerminalPointer>();
+            ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardInterface>();
+            ClassInjector.RegisterTypeInIl2Cpp<TerminalReader>();
         }
 
         private bool SteamVRRunningCheck()

@@ -21,7 +21,7 @@ namespace GTFO_VR.Events
             OnStateChange?.Invoke(newState);
         }
 
-        public static void LadderEntered(PlayerAgent owner)
+        public static void LadderEntered(LocalPlayerAgent owner)
         {
             if (OnPlayerEnterLadder != null && owner.IsLocallyOwned)
             {
