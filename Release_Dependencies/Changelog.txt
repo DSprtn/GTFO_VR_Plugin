@@ -3,6 +3,9 @@ Total changelog: (1.1.9b14):
 - Add possible fix for KB+M/Gamepad melee hit detection
 - Fixed darkened output in VRPerfkit (Included in release, until VRPerfkit updates.)
 
+VRPerformanceKit is included as a separate archive. If you want to use the VRPerformanceKit, use this archive as it contains
+fixes for the darkened game output!
+
 Total changelog: (1.1.9b13):
 - Fixed laserpointer toggling
 - Fixed bloom being overly bright

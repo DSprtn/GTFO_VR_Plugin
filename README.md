@@ -212,13 +212,15 @@ Try to get used to the game in Non-VR mode first before using this mod!
 	
 	WMR HMDs may have issues if you're not using the lkg_release of WMR. (In Steam go into Windows Mixed Reality ->Betas to change.)
 
-	If a crash occurs send me the output log from the path given below (before starting another game!):
-	\Users\$USER\AppData\LocalLow\10 Chambers Collective\GTFO\player.log OR player-prev.log if you already played another game of GTFO.
-	
 	The game is very VRAM hungry! If your texture or render resolution settings are too high and you're using too much VRAM your game will be very unstable!
 	Changing resolution in-game or even playing some maps might cause crashes unless you lower your texture resolution/game resolution.
+
+	Having dithering on in in-game and fixed foveated rendering in VRPerfomanceToolKit will cause flickering. Turn dithering off!
+
+	Having upscaling on with VRPerfomanceToolKit will cause crashes with some HMDs (Pimax, Quest 2), if you get crashing try to turn this off first.
 	
-	Random crashing may occur. Be sure to send logs! (See above)
+	If a crash occurs send me the output log from the path given below (before starting another game!):
+	\Users\$USER\AppData\LocalLow\10 Chambers Collective\GTFO\player.log OR player-prev.log if you already played another game of GTFO.
 	
 
 ## Want to contribute?
