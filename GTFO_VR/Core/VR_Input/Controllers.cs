@@ -126,7 +126,7 @@ namespace GTFO_VR.Core.VR_Input
 
         public static bool IsFiringFromADS()
         {
-            return !VRConfig.configUseTwoHanded.Value || (AimingTwoHanded || !GetVRWeaponData(ItemEquippableEvents.currentItem).allowsDoubleHanded) || !VRConfig.configUseControllers.Value;
+            return !VRConfig.configUseTwoHanded.Value || (AimingTwoHanded || !GetVRWeaponData().allowsDoubleHanded) || !VRConfig.configUseControllers.Value;
         }
 
         private GameObject SetupController(SteamVR_Input_Sources source)
@@ -148,7 +148,7 @@ namespace GTFO_VR.Core.VR_Input
             bool isInDoubleHandPos = false;
             if (FocusStateEvents.currentState == eFocusState.FPS)
             {
-                VRWeaponData itemData = GetVRWeaponData(ItemEquippableEvents.currentItem);
+                VRWeaponData itemData = GetVRWeaponData();
 
                 if (itemData.allowsDoubleHanded)
                 {
@@ -214,7 +214,7 @@ namespace GTFO_VR.Core.VR_Input
             {
                 return;
             }
-            VRWeaponData itemData = GetVRWeaponData(item);
+            VRWeaponData itemData = GetVRWeaponData();
             if (itemData.allowsDoubleHanded)
             {
                 Log.Debug("Item allows double hand!");

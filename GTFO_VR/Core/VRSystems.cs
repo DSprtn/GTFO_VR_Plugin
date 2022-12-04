@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.Core.PlayerBehaviours;
+using GTFO_VR.Core.PlayerBehaviours.ForceTube;
 using GTFO_VR.Core.UI;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
@@ -46,6 +47,17 @@ namespace GTFO_VR.Core
             GuiManager.ForceOnResolutionChange();
         }
 
+        void Update()
+        {
+            if(GTFO_VR.Core.GTFO_VR_Plugin.DEBUG_ENABLED)
+            {
+                if (Input.GetKeyDown(KeyCode.F11))
+                {
+                    WeaponArchetypeVRData.LoadHapticsData();
+                }
+            }
+        }
+
         /// <summary>
         /// Some events like the checkpoint respawn are hard to handle in events. That's why we make do with this hack.
         /// </summary>
@@ -85,6 +97,7 @@ namespace GTFO_VR.Core
             Log.Info($"SteamVR Setup - HMD Res: {res.width}x{res.height}");
             WeaponArchetypeVRData.Setup();
             SteamVR_InputHandler.Setup();
+            ForceTube.Setup();
             gameObject.AddComponent<HMD>();
             gameObject.AddComponent<Controllers>();
             gameObject.AddComponent<VRKeyboard>();

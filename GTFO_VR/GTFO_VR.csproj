@@ -30,13 +30,15 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;UNITY_STANDALONE_WIN</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Core\ForceTube\ForceTube.cs" />
+    <Compile Include="Core\ForceTube\ForceTubeVRInterface.cs" />
     <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsElevatorSequence.cs" />
     <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsIntegration.cs" />
     <Compile Include="Core\PlayerBehaviours\Bhaptics\BhapticsUtils.cs" />
@@ -66,6 +68,7 @@
     <Compile Include="Core\PlayerBehaviours\Haptics.cs" />
     <Compile Include="Core\PlayerBehaviours\VRRendering.cs" />
     <Compile Include="Core\VR_Input\Dummy_InputHandler.cs" />
+    <Compile Include="Core\WeaponArchetypeVRData.VRWeaponData.cs" />
     <Compile Include="Detours\BioscannerDetours.cs" />
     <Compile Include="Detours\HammerAttackCheckDetour.cs" />
     <Compile Include="Detours\TerminalInputDetours.cs" />
@@ -328,6 +331,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(GTFO_PATH)\BepInEx\plugins\SteamVR_Standalone_IL2CPP.dll</HintPath>
       <Private>False</Private>
+	</Reference>
+	<Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(GTFO_PATH)\BepInEx\plugins\Newtonsoft.Json.dll</HintPath>
+	  <Private>False</Private>
     </Reference>
     <Reference Include="SteamWorks_ASM">
       <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\SteamWorks_ASM.dll</HintPath>
