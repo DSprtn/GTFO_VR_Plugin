@@ -26,9 +26,6 @@ namespace GTFO_VR.Core
             GUID = "com." + AUTHOR + "." + MODNAME,
             VERSION = "1.2.1";
 
-
-        public static bool DEBUG_ENABLED = false;
-
         public override void Load()
         {
             Core.Log.Setup(BepInEx.Logging.Logger.CreateLogSource(MODNAME));

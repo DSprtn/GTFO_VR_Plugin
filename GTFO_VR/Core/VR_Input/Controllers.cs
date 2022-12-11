@@ -242,15 +242,12 @@ namespace GTFO_VR.Core.VR_Input
                 if (currentHeldItem.LeftHandGripTrans)
                 {
                     Vector3 correctedGripPosition = ItemEquippableEvents.GetCorrectedGripPosition();
-
-                    if (GTFO_VR_Plugin.DEBUG_ENABLED)
+#if DEBUG_GTFO_VR
+                    if (VRConfig.configDebugShowTwoHHitboxes.Value)
                     {
-                        if (VRConfig.configDebugShowTwoHHitboxes.Value)
-                        {
-                            DebugDraw3D.DrawSphere(correctedGripPosition, m_doubleHandStartDistance, ColorExt.Blue(0.2f));
-                        }
+                        DebugDraw3D.DrawSphere(correctedGripPosition, m_doubleHandStartDistance, ColorExt.Blue(0.2f));
                     }
-
+#endif
                     return Vector3.Distance(OffhandController.transform.position, ItemEquippableEvents.GetCorrectedGripPosition()) < m_doubleHandStartDistance;
                 }
             }
@@ -274,13 +271,12 @@ namespace GTFO_VR.Core.VR_Input
                 if (currentHeldItem.LeftHandGripTrans)
                 {
                     Vector3 correctedGripPosition = ItemEquippableEvents.GetCorrectedGripPosition();
-                    if (GTFO_VR_Plugin.DEBUG_ENABLED)
+#if DEBUG_GTFO_VR
+                    if (VRConfig.configDebugShowTwoHHitboxes.Value)
                     {
-                        if (VRConfig.configDebugShowTwoHHitboxes.Value)
-                        {
-                            DebugDraw3D.DrawSphere(correctedGripPosition, m_doubleHandLeaveDistance, ColorExt.Red(0.1f));
-                        }
+                        DebugDraw3D.DrawSphere(correctedGripPosition, m_doubleHandLeaveDistance, ColorExt.Red(0.1f));
                     }
+#endif
                     return Vector3.Distance(OffhandController.transform.position, ItemEquippableEvents.GetCorrectedGripPosition()) > m_doubleHandLeaveDistance;
                 }
             }

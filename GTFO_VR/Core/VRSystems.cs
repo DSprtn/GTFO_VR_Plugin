@@ -35,6 +35,10 @@ namespace GTFO_VR.Core
             }
             Current = this;
 
+#if DEBUG_GTFO_VR
+            Log.Warning("Running a dev build!");
+#endif 
+
             // Prevent SteamVR from adding a tracking script automatically. We handle this manually in VR_Input.HMD
             SteamVR_Camera.useHeadTracking = false;
             SteamVR_Settings.instance.poseUpdateMode = SteamVR_UpdateModes.OnLateUpdate;
@@ -47,17 +51,16 @@ namespace GTFO_VR.Core
             GuiManager.ForceOnResolutionChange();
         }
 
+
+#if DEBUG_GTFO_VR
         void Update()
         {
-            if(GTFO_VR.Core.GTFO_VR_Plugin.DEBUG_ENABLED)
+            if (Input.GetKeyDown(KeyCode.F11))
             {
-                if (Input.GetKeyDown(KeyCode.F11))
-                {
-                    WeaponArchetypeVRData.LoadHapticsData();
-                }
+                WeaponArchetypeVRData.LoadHapticsData();
             }
         }
-
+#endif
         /// <summary>
         /// Some events like the checkpoint respawn are hard to handle in events. That's why we make do with this hack.
         /// </summary>

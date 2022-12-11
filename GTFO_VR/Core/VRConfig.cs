@@ -64,13 +64,11 @@ namespace GTFO_VR.Core
 
         internal static void SetupConfig(ConfigFile file)
         {
-            if(GTFO_VR_Plugin.DEBUG_ENABLED)
-            {
-                BindHeader("DEBUG");
-                configDebugShowTwoHHitboxes = BindBool(file, "Debug - If you see this, I screwed up!", "Show 2H hitboxes", false, "Shows two handed weapon hitboxes", "Show 2H hitboxes");
-                configDebugShowHammerHitbox = BindBool(file, "Debug - If you see this, I screwed up!", "Show hammer hitbox", false, "Shows hammer hitbox", "Hammer hitbox debug");
-            }
-
+#if DEBUG_GTFO_VR
+            BindHeader("DEBUG");
+            configDebugShowTwoHHitboxes = BindBool(file, "Debug - If you see this, I screwed up!", "Show 2H hitboxes", false, "Shows two handed weapon hitboxes", "Show 2H hitboxes");
+            configDebugShowHammerHitbox = BindBool(file, "Debug - If you see this, I screwed up!", "Show hammer hitbox", false, "Shows hammer hitbox", "Hammer hitbox debug");
+#endif
 
             BindHeader("Input");
             configUseLeftHand = BindBool(file, "Input", "Use left hand as main hand?", false, "If true, all items will appear in the left hand", "Left handed mode");

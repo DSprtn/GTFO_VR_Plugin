@@ -39,14 +39,13 @@ namespace GTFO_VR.Injections
 
             if (Controllers.MainControllerPose.GetVelocity().magnitude > 0.5f)
             {
-                if (GTFO_VR_Plugin.DEBUG_ENABLED)
+#if DEBUG_GTFO_VR
+                if (VRConfig.configDebugShowHammerHitbox.Value)
                 {
-                    if (VRConfig.configDebugShowHammerHitbox.Value)
-                    {
-                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .75f, ColorExt.Blue(0.2f));
-                        DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .1f, ColorExt.Red(0.2f));
-                    }
+                    DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .75f, ColorExt.Blue(0.2f));
+                    DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .1f, ColorExt.Red(0.2f));
                 }
+#endif
 
                 Collider[] enemyColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .75f, LayerManager.MASK_ENEMY_DAMAGABLE);
                 bool shouldReleaseCharge = enemyColliders.Length > 0;
