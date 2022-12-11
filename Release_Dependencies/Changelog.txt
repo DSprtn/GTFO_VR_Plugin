@@ -1,4 +1,4 @@
-Total changelog: (1.2.1b):
+Total changelog: (1.2.1):
 - Added ProtubeVR Haptics support
 - Tweaked every weapon in the game to have its own haptics 'identity'
 
