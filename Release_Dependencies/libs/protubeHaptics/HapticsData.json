@@ -34,6 +34,11 @@
     "RumblePower": 10,
     "RumbleDuration": 0.1
   },
+  "RAPTUS TREFFEN 2": {
+    "KickPower": 65,
+    "RumblePower": 70,
+    "RumbleDuration": 0.05
+  },
   "ACCRAT GOLOK DA": {
     "KickPower": 55,
     "RumblePower": 25,
