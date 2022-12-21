@@ -1,0 +1,127 @@
+{
+  "SANTONIAN HDH": {
+    "KickPower": 255,
+    "RumblePower": 185,
+    "RumbleDuration": 0.3
+  },
+  "MASTABA FIXED BLADE": {
+    "KickPower": 80,
+    "RumblePower": 125,
+    "RumbleDuration": 0.1
+  },
+  "MACO DRILLHEAD": {
+    "KickPower": 210,
+    "RumblePower": 90,
+    "RumbleDuration": 0.3
+  },
+  "KOVAC PEACEKEEPER": {
+    "KickPower": 255,
+    "RumblePower": 150,
+    "RumbleDuration": 0.2
+  },
+  "STALWART FLOW G2": {
+    "KickPower": 125,
+    "RumblePower": 30,
+    "RumbleDuration": 0.1
+  },
+  "SHELLING S49": {
+    "KickPower": 45,
+    "RumblePower": 25,
+    "RumbleDuration": 0.1
+  },
+  "BATALDO 3RB": {
+    "KickPower": 145,
+    "RumblePower": 10,
+    "RumbleDuration": 0.1
+  },
+  "RAPTUS TREFFEN 2": {
+    "KickPower": 65,
+    "RumblePower": 70,
+    "RumbleDuration": 0.05
+  },
+  "ACCRAT GOLOK DA": {
+    "KickPower": 55,
+    "RumblePower": 25,
+    "RumbleDuration": 0.05
+  },
+  "VAN AUKEN LTC5": {
+    "KickPower": 45,
+    "RumblePower": 85,
+    "RumbleDuration": 0.05
+  },
+  "ACCRAT STB": {
+    "KickPower": 55,
+    "RumblePower": 85,
+    "RumbleDuration": 0.1
+  },
+  "VAN AUKEN CAB F4": {
+    "KickPower": 65,
+    "RumblePower": 55,
+    "RumbleDuration": 0.07
+  },
+  "TR22 HANAWAY": {
+    "KickPower": 180,
+    "RumblePower": 160,
+    "RumbleDuration": 0.2
+  },
+  "MALATACK LX": {
+    "KickPower": 120,
+    "RumblePower": 125,
+    "RumbleDuration": 0.15
+  },
+  "BATALDO J 300": {
+    "KickPower": 190,
+    "RumblePower": 110,
+    "RumbleDuration": 0.15
+  },
+  "MALATACK HXC": {
+    "KickPower": 135,
+    "RumblePower": 135,
+    "RumbleDuration": 0.1
+  },
+  "BUCKLAND S870": {
+    "KickPower": 255,
+    "RumblePower": 190,
+    "RumbleDuration": 0.35
+  },
+  "BUCKLAND AF6": {
+    "KickPower": 225,
+    "RumblePower": 130,
+    "RumbleDuration": 0.2
+  },
+  "BUCKLAND XDIST2": {
+    "KickPower": 255,
+    "RumblePower": 210,
+    "RumbleDuration": 0.35
+  },
+  "MASTABA R66": {
+    "KickPower": 220,
+    "RumblePower": 210,
+    "RumbleDuration": 0.25
+  },
+  "TECHMAN ARBALIST V": {
+    "KickPower": 200,
+    "RumblePower": 160,
+    "RumbleDuration": 0.12
+  },
+  "TECHMAN VERUTA XII": {
+    "KickPower": 140,
+    "RumblePower": 180,
+    "RumbleDuration": 0.1
+  },
+  "SHELLING ARID 5": {
+    "KickPower": 255,
+    "RumblePower": 205,
+    "RumbleDuration": 0.25
+  },
+  "DREKKER DEL P1": {
+    "KickPower": 200,
+    "RumblePower": 180,
+    "RumbleDuration": 0.18
+  },
+  "KÖNING PR 11": {
+    "KickPower": 255,
+    "RumblePower": 200,
+    "RumbleDuration": 0.4
+  }
+}

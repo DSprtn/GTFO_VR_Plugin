@@ -48,6 +48,8 @@ namespace GTFO_VR.Core
 
         internal static ConfigEntry<bool> configWeaponAmmoHoloText;
 
+        internal static ConfigEntry<bool> configProtube;
+
         private static List<BepinGTFOSettingBase> VRSettings = new List<BepinGTFOSettingBase>();
 
         private static uint baseVRConfigID = 110000;
@@ -62,17 +64,16 @@ namespace GTFO_VR.Core
 
         internal static void SetupConfig(ConfigFile file)
         {
-            if(GTFO_VR_Plugin.DEBUG_ENABLED)
-            {
-                BindHeader("DEBUG");
-                configDebugShowTwoHHitboxes = BindBool(file, "Debug - If you see this, I screwed up!", "Show 2H hitboxes", false, "Shows two handed weapon hitboxes", "Show 2H hitboxes");
-                configDebugShowHammerHitbox = BindBool(file, "Debug - If you see this, I screwed up!", "Show hammer hitbox", false, "Shows hammer hitbox", "Hammer hitbox debug");
-            }
-
+#if DEBUG_GTFO_VR
+            BindHeader("DEBUG");
+            configDebugShowTwoHHitboxes = BindBool(file, "Debug - If you see this, I screwed up!", "Show 2H hitboxes", false, "Shows two handed weapon hitboxes", "Show 2H hitboxes");
+            configDebugShowHammerHitbox = BindBool(file, "Debug - If you see this, I screwed up!", "Show hammer hitbox", false, "Shows hammer hitbox", "Hammer hitbox debug");
+#endif
 
             BindHeader("Input");
             configUseLeftHand = BindBool(file, "Input", "Use left hand as main hand?", false, "If true, all items will appear in the left hand", "Left handed mode");
-
+            configProtube = BindBool(file, "Input", "Enable ProTubeVR support?", true, "If true, will enable ProTubeVR events", "ProtubeVR Support");
+            configUseBhaptics = BindBool(file, "Bhaptics", "Enable bhaptics", true, "If true, bhaptics integration will be enabled", "Bhaptics");
 
             configIRLCrouch = BindBool(file, "Input", "Crouch in-game when you crouch IRL?", true, "If true, when crouching down below a certain threshold IRL, the in-game character will also crouch", "Crouch on IRL crouch");
             configCrouchHeight = BindInt(file, "Input", "Crouch height in centimeters", 115, 90, 145, "In-game character will be crouching if your head is lower than this height above the playspace", "Crouch height (cm)");
@@ -140,7 +141,6 @@ namespace GTFO_VR.Core
             configOculusCrashWorkaround = BindBool(file, "Misc", "Use Oculus crash workaround?", false, "If true, map and menu might look a little janky but it should crash less. Blame Zuck!", "Oculus crash workaround");
             configUseControllers = BindBool(file, "Input", "Use VR Controllers?", true, "If true, will use VR controllers. You can play with a gamepad and head aiming if you set this to false", "Motion Controllers (Restart if turning off!)");
             configCheckSteamVR = BindBool(file, "Misc", "Check if SteamVR running", true, "If true, will check if SteamVR is running before launching in VR.", "SteamVR running check");
-            configUseBhaptics = BindBool(file, "Bhaptics", "Enable bhaptics", true, "If true, bhaptics integration will be enabled", "Bhaptics");
         }
 
         internal static Il2CppSystem.Collections.Generic.List<iSettingsFieldData> InjectConfigIntoGame()

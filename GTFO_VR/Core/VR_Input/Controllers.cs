@@ -126,7 +126,7 @@ namespace GTFO_VR.Core.VR_Input
 
         public static bool IsFiringFromADS()
         {
-            return !VRConfig.configUseTwoHanded.Value || (AimingTwoHanded || !GetVRWeaponData(ItemEquippableEvents.currentItem).allowsDoubleHanded) || !VRConfig.configUseControllers.Value;
+            return !VRConfig.configUseTwoHanded.Value || (AimingTwoHanded || !GetVRWeaponData().allowsDoubleHanded) || !VRConfig.configUseControllers.Value;
         }
 
         private GameObject SetupController(SteamVR_Input_Sources source)
@@ -148,7 +148,7 @@ namespace GTFO_VR.Core.VR_Input
             bool isInDoubleHandPos = false;
             if (FocusStateEvents.currentState == eFocusState.FPS)
             {
-                VRWeaponData itemData = GetVRWeaponData(ItemEquippableEvents.currentItem);
+                VRWeaponData itemData = GetVRWeaponData();
 
                 if (itemData.allowsDoubleHanded)
                 {
@@ -214,7 +214,7 @@ namespace GTFO_VR.Core.VR_Input
             {
                 return;
             }
-            VRWeaponData itemData = GetVRWeaponData(item);
+            VRWeaponData itemData = GetVRWeaponData();
             if (itemData.allowsDoubleHanded)
             {
                 Log.Debug("Item allows double hand!");
@@ -242,15 +242,12 @@ namespace GTFO_VR.Core.VR_Input
                 if (currentHeldItem.LeftHandGripTrans)
                 {
                     Vector3 correctedGripPosition = ItemEquippableEvents.GetCorrectedGripPosition();
-
-                    if (GTFO_VR_Plugin.DEBUG_ENABLED)
+#if DEBUG_GTFO_VR
+                    if (VRConfig.configDebugShowTwoHHitboxes.Value)
                     {
-                        if (VRConfig.configDebugShowTwoHHitboxes.Value)
-                        {
-                            DebugDraw3D.DrawSphere(correctedGripPosition, m_doubleHandStartDistance, ColorExt.Blue(0.2f));
-                        }
+                        DebugDraw3D.DrawSphere(correctedGripPosition, m_doubleHandStartDistance, ColorExt.Blue(0.2f));
                     }
-
+#endif
                     return Vector3.Distance(OffhandController.transform.position, ItemEquippableEvents.GetCorrectedGripPosition()) < m_doubleHandStartDistance;
                 }
             }
@@ -274,13 +271,12 @@ namespace GTFO_VR.Core.VR_Input
                 if (currentHeldItem.LeftHandGripTrans)
                 {
                     Vector3 correctedGripPosition = ItemEquippableEvents.GetCorrectedGripPosition();
-                    if (GTFO_VR_Plugin.DEBUG_ENABLED)
+#if DEBUG_GTFO_VR
+                    if (VRConfig.configDebugShowTwoHHitboxes.Value)
                     {
-                        if (VRConfig.configDebugShowTwoHHitboxes.Value)
-                        {
-                            DebugDraw3D.DrawSphere(correctedGripPosition, m_doubleHandLeaveDistance, ColorExt.Red(0.1f));
-                        }
+                        DebugDraw3D.DrawSphere(correctedGripPosition, m_doubleHandLeaveDistance, ColorExt.Red(0.1f));
                     }
+#endif
                     return Vector3.Distance(OffhandController.transform.position, ItemEquippableEvents.GetCorrectedGripPosition()) > m_doubleHandLeaveDistance;
                 }
             }

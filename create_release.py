@@ -5,14 +5,12 @@ from pathlib import Path
 from argparse import ArgumentParser
 
 
-dependency_targets = ["Newtonsoft.Json.dll", "openvr_api.dll", "Bhaptics.Tact.dll", "SteamVR_Standalone_IL2CPP.dll"]
-dependency_dir_targets = ["bhaptics-patterns"]
+dependency_targets = ["Newtonsoft.Json.dll", "openvr_api.dll", "Bhaptics.Tact.dll", "SteamVR_Standalone_IL2CPP.dll", "ForceTubeVR_API_x64.dll"]
+dependency_dir_targets = ["bhaptics-patterns", "protubeHaptics"]
 plugin_targets = ["GTFO_VR.dll"]
 
 gtfo_data_plugin_targets = ["openvr_api.dll"]
 gtfo_data_dir_targets = ["StreamingAssets"]
-
-unhollower_lib_targets = ['AssemblyUnhollower.dll', 'UnhollowerBaseLib.dll', 'UnhollowerRuntimeLib.dll']
 
 readme_target = ["README.MD"]
 changelog_target = ["Changelog.txt"]
@@ -103,7 +101,6 @@ print("Found plugin dir...")
 
 release_dependencies_dir = current_dir / "Release_Dependencies"
 release_dependencies_lib_dir = release_dependencies_dir / "libs"
-release_dependencies_lib_unhollower_dir = release_dependencies_lib_dir / "Unhollower"
 
 staging_dir = Path(current_dir / "Staging")
 print("Setting up stating directory at - " + str(staging_dir))
