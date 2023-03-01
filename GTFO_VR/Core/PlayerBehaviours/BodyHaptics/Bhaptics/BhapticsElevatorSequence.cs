@@ -1,9 +1,6 @@
 ﻿using UnityEngine;
 using Bhaptics.Tact;
-using GTFO_VR.Events;
-using System;
 using System.Collections.Generic;
-using Player;
 
 namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 {
@@ -21,6 +18,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         private ElevatorState m_elevatorState = ElevatorState.None;
         private Dictionary<string, float> m_nextHapticPatternTimes = new Dictionary<string, float>();
+        private bool m_isInElevator = true;
 
         private static readonly float ELEVATOR_DEPLOYING_FEEDBACK_DURATION = 1.0f;
 
@@ -42,7 +40,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void Update()
         {
-            if (m_elevatorState != ElevatorState.None)
+            if (m_elevatorState != ElevatorState.None && m_isInElevator)
             {
                 ResubmitCompletedHapticPatterns();
             }
@@ -74,6 +72,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
             {
                 m_hapticPlayer.SubmitRegistered(VEST_ELEVATOR_DOOR_OPENING_KEY);
             }
+        }
+
+        public void SetIsInElevator(bool inElevator)
+        {
+            m_isInElevator = inElevator;
         }
 
         private void ResubmitCompletedHapticPatterns()
@@ -130,6 +133,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         private List<FeedbackDetails> GetElevatorStateFeedbacks(ElevatorState elevatorState)
         {
             var result = new List<FeedbackDetails>();
+
+            if (!m_isInElevator)
+            {
+                return result;
+            }
 
             switch (elevatorState)
             {

@@ -49,6 +49,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             ElevatorEvents.OnElevatorPositionChanged += OnElevatorPositionChanged;
             ElevatorEvents.OnPreReleaseSequenceStarted += OnPreReleaseSequenceStarted;
             ElevatorEvents.OnPreReleaseSequenceSkipped += OnPreReleaseSequenceSkipped;
+            PlayerLocomotionEvents.OnStateChange += OnPlayerLocomotionStateChanged;
         }
 
         private void OnDestroy()
@@ -56,6 +57,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             ElevatorEvents.OnElevatorPositionChanged -= OnElevatorPositionChanged;
             ElevatorEvents.OnPreReleaseSequenceStarted -= OnPreReleaseSequenceStarted;
             ElevatorEvents.OnPreReleaseSequenceSkipped -= OnPreReleaseSequenceSkipped;
+            PlayerLocomotionEvents.OnStateChange -= OnPlayerLocomotionStateChanged;
         }
 
         private ElevatorSequenceAgent[] GetAgents()
@@ -169,6 +171,14 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
         private void OnPreReleaseSequenceSkipped()
         {
             ChangeElevatorState(ElevatorState.Preparing);
+        }
+
+        private void OnPlayerLocomotionStateChanged(PlayerLocomotion.PLOC_State state)
+        {
+            foreach (ElevatorSequenceAgent agent in GetAgents())
+            {
+                agent.SetIsInElevator(state == PlayerLocomotion.PLOC_State.InElevator);
+            }
         }
 
         private void OnElevatorPositionChanged(Vector3 position)

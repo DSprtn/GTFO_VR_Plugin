@@ -7,6 +7,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
     public class ShockwaveElevatorSequence : ElevatorSequenceAgent
     {
         private ElevatorState m_elevatorState = ElevatorState.None;
+        private bool m_isInElevator = true;
 
         public void Setup()
         {
@@ -46,6 +47,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             }
         }
 
+        public void SetIsInElevator(bool inElevator)
+        {
+            m_isInElevator = inElevator;
+        }
+
         private async void PlayDeployingPattern(float intensity)
         {
             ElevatorState startingState = m_elevatorState;
@@ -60,7 +66,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 }
             };
 
-            while (m_elevatorState == startingState)
+            while (m_elevatorState == startingState && m_isInElevator)
             {
                 ShockwaveEngine.PlayPattern(new HapticIndexPattern(indices, intensity, delay));
 
@@ -97,7 +103,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             };
 
             int repeatDelay = 1000;
-            while (m_elevatorState == startingState)
+            while (m_elevatorState == startingState && m_isInElevator)
             {
                 ShockwaveEngine.PlayPattern(new HapticIndexPattern(bodyIndices, 0.05f, repeatDelay / bodyIndices.GetLength(0)));
                 ShockwaveEngine.PlayPattern(new HapticIndexPattern(legsIndices, 0.05f, repeatDelay / legsIndices.GetLength(0)));
@@ -111,7 +117,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             ElevatorState startingState = m_elevatorState;
             float intensity = 0.8f;
 
-            while (m_elevatorState == startingState)
+            while (m_elevatorState == startingState && m_isInElevator)
             {
                 float durationScale = BodyHapticsUtils.GetElevatorRideDurationScale();
                 int patternDuration = (int) (30 * durationScale);

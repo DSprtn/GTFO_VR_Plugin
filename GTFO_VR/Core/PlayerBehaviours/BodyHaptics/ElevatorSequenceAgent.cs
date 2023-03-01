@@ -4,5 +4,6 @@
     {
         void Update();
         void ElevatorStateChanged(ElevatorState elevatorState);
+        void SetIsInElevator(bool inElevator);
     }
 }
