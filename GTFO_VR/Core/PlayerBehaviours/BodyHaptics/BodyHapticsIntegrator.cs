@@ -277,25 +277,25 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
         public void FlashlightToggledHaptics()
         {
             foreach (BodyHapticAgent agent in GetAgents())
-			{
+            {
                 agent.FlashlightToggledHaptics();
-			}
+            }
         }
 
         public void PlayerChangedItemHaptics(ItemEquippable item)
         {
             foreach (BodyHapticAgent agent in GetAgents())
-			{
+            {
                 agent.PlayerChangedItemHaptics(item);
-			}
+            }
         }
 
         public void AmmoGainedHaptics(float ammoStandardRel, float ammoSpecialRel, float ammoClassRel)
         {
             foreach (BodyHapticAgent agent in GetAgents())
-			{
+            {
                 agent.AmmoGainedHaptics(ammoStandardRel, ammoSpecialRel, ammoClassRel);
-			}
+            }
         }
 
         public void InfectionUpdatedHaptics(float infection)
@@ -314,9 +314,9 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
         public void OnHealthUpdated(float health)
         {
             foreach (BodyHapticAgent agent in GetAgents())
-			{
+            {
                 agent.OnHealthUpdated(health);
-			}
+            }
         }
 
         public void OnAmmoUpdate(InventorySlotAmmo item, int clipleft)
@@ -341,17 +341,17 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
         public void OnPlayerLocomotionStateChanged(PlayerLocomotion.PLOC_State state)
         {
             foreach (BodyHapticAgent agent in GetAgents())
-			{
+            {
                 agent.OnPlayerLocomotionStateChanged(state);
-			}
+            }
         }
 
         public void CrouchToggleHaptics(bool isCrouched)
         {
             foreach (BodyHapticAgent agent in GetAgents())
-			{
+            {
                 agent.CrouchToggleHaptics(isCrouched);
-			}
+            }
         }
     }
 }

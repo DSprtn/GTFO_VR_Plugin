@@ -132,9 +132,9 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public void PlayWeaponFireHaptics(Weapon weapon)
         {
-			float intensity = Haptics.GetFireHapticStrength(weapon);
+            float intensity = Haptics.GetFireHapticStrength(weapon);
 
-			if (Controllers.MainControllerType == HandType.Left || Controllers.AimingTwoHanded)
+            if (Controllers.MainControllerType == HandType.Left || Controllers.AimingTwoHanded)
             {
                 var pattern = new HapticGroupPattern(new List<HapticGroupInfo>
                 {
@@ -146,7 +146,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 ShockwaveEngine.PlayPattern(pattern);
             }
 
-			if (Controllers.MainControllerType == HandType.Right || Controllers.AimingTwoHanded)
+            if (Controllers.MainControllerType == HandType.Right || Controllers.AimingTwoHanded)
             {
                 var pattern = new HapticGroupPattern(new List<HapticGroupInfo>
                 {
@@ -163,7 +163,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
         {
             OrientationSettings orientationSettings = BodyHapticsUtils.GetOrientationSettingsFromDirection(m_player, direction);
             SendOrientedHapticPulse(ShockwaveManager.HapticRegion.TORSO, 1, 10, 50, orientationSettings);
-			m_lastDamageOrientationSettings = orientationSettings;
+            m_lastDamageOrientationSettings = orientationSettings;
         }
 
         private void SendTorsoOrientedHaptic(float offsetAngleX, float offsetY, float strength = 1f, int duration = 150)
@@ -210,13 +210,13 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public async void TentacleAttackHaptics(float dmg, Agent sourceAgent, Vector3 position)
         {
-			if (m_lastDamageOrientationSettings != null)
+            if (m_lastDamageOrientationSettings != null)
             {
                 const float offsetYStep = 0.2f;
                 const float offsetAngleXStep = 45f;
                 const float strength = 1f;
                 const int duration = 80;
-				var orientation = m_lastDamageOrientationSettings;
+                var orientation = m_lastDamageOrientationSettings;
 
                 for (int i = 1; i <= 3; i++)
                 {
