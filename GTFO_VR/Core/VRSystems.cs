@@ -1,5 +1,6 @@
 ﻿using GTFO_VR.Core.PlayerBehaviours;
 using GTFO_VR.Core.PlayerBehaviours.ForceTube;
+using GTFO_VR.Core.PlayerBehaviours.BodyHaptics;
 using GTFO_VR.Core.UI;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
@@ -101,6 +102,7 @@ namespace GTFO_VR.Core
             WeaponArchetypeVRData.Setup();
             SteamVR_InputHandler.Setup();
             ForceTube.Setup();
+            BodyHapticsIntegrator.Initialize();
             gameObject.AddComponent<HMD>();
             gameObject.AddComponent<Controllers>();
             gameObject.AddComponent<VRKeyboard>();
@@ -247,6 +249,7 @@ namespace GTFO_VR.Core
         {
             VRConfig.configRenderResolutionMultiplier.SettingChanged -= VRResolutionChanged;
             FocusStateEvents.OnFocusStateChange -= FocusChanged;
+            BodyHapticsIntegrator.Destroy();
         }
     }
 }

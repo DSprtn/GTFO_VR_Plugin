@@ -1,8 +1,7 @@
-﻿using Bhaptics.Tact;
-using System.IO;
-using System;
+﻿using System.IO;
+using Bhaptics.Tact;
 
-namespace GTFO_VR.Core.PlayerBehaviours
+namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 {
     public class BhapticsUtils
     {
@@ -23,11 +22,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             string fileName = key.Substring(key.IndexOf("_") + 1);
             string patternFileContent = File.ReadAllText(folder + fileName + ".tact");
             hapticPlayer.RegisterTactFileStr(key, patternFileContent);
-        }
-
-        public static float Clamp(float v, float min, float max)
-        {
-            return Math.Min(Math.Max(v, min), max);
         }
     }
 }
