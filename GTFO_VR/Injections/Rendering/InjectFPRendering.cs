@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
+using Assets.SteamVR_Standalone.Standalone;
 using Player;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GTFO_VR.Injections.Rendering
@@ -32,14 +34,77 @@ namespace GTFO_VR.Injections.Rendering
     }
 
     /// <summary>
-    /// Set zeroing to work better up close/midrange, and fix sights for thermals
+    /// Set zeroing to work better up close/midrange, and fix thermals and other broken sights.
     /// Note: Might make sniper overshoot on long range shots, need to test this
     /// </summary>
     [HarmonyPatch(typeof(PlayerBackpackManager), nameof(PlayerBackpackManager.SetFPSRendering))]
     internal class InjectTweakSights
     {
+        private static Material blitMaterial;
+
+        private static Dictionary<string, Texture2D> crosshairTextureCache = new Dictionary<string, Texture2D>();
+
+        private static Texture2D flipAndShiftCrosshairTexture( Texture2D source, float verticalShift )
+        {
+            if (blitMaterial == null)
+            {
+                blitMaterial = new Material(VRShaders.GetShader(VRShaders.VRShader.blitFlip));
+            }
+
+            // Texture is not writable, so we need to render a copy and work with that instead.
+            RenderTexture renderTex = RenderTexture.GetTemporary(
+                        source.width,
+                        source.height,
+                        0,
+                        RenderTextureFormat.Default,
+                        RenderTextureReadWrite.Linear);
+
+            RenderTexture tempTex = RenderTexture.GetTemporary(
+                        source.width,
+                        source.height,
+                        0,
+                        RenderTextureFormat.Default,
+                        RenderTextureReadWrite.Linear);
+
+
+            Graphics.Blit(source, tempTex, new Vector2(1, 1f), new Vector2(0, verticalShift));  // Shift texture up.
+            Graphics.Blit(tempTex, renderTex, blitMaterial); // flip texture using another blip, because negative scale above doesn't work.
+
+            RenderTexture previous = RenderTexture.active;
+            RenderTexture.active = renderTex;
+            Texture2D readableText = new Texture2D(source.width, source.height);
+            readableText.ReadPixels(new Rect(0, 0, renderTex.width, renderTex.height), 0, 0 );
+            readableText.Apply();
+            RenderTexture.active = previous;
+            RenderTexture.ReleaseTemporary(renderTex);
+            RenderTexture.ReleaseTemporary(tempTex);
+            return readableText;
+        }
+
+        private static void fixCenteredCrosshairTexture( Material mat, string textureName, float verticalShift )
+        {
+            var texture = mat.GetTexture(textureName).Cast<Texture2D>();
+            string cacheKey = mat.name + textureName;
+
+            // Cache textures so we don't generate a million copies
+            // Not really necessary as game only calls hook once for each object and caches them
+            if (crosshairTextureCache.ContainsKey(cacheKey))
+            {
+                crosshairTextureCache.TryGetValue(cacheKey, out texture);
+            }
+            else
+            {
+                texture = flipAndShiftCrosshairTexture(texture, verticalShift);
+                crosshairTextureCache.Add(cacheKey, texture);
+            }
+ 
+            mat.SetTexture(textureName, texture);
+        }
+
         private static void Prefix(ref bool enable, GameObject go)
         {
+            
+
             // This probably only needs to be run once for each unique GO, but I'm not going to be the one to break it.
             foreach (var m in go.GetComponentsInChildren<MeshRenderer>(true))
             {
@@ -71,6 +136,66 @@ namespace GTFO_VR.Injections.Rendering
                             mat.SetFloat("_ProjSize1", 0);                           
                             mat.SetFloat("_ProjSize2", 0);
                             mat.SetFloat("_ProjSize3", 0);
+                        }
+
+                        // As of writing, all problematic sights use this shader
+                        if (mat.shader.name.Equals("Unlit/HolographicSight_3Layers"))
+                        {
+                            // All working sights already have this keyword enabled
+                            if (!mat.IsKeywordEnabled("ALTERNATIVE_PROJECTION_MODE"))
+                            {
+                                // And enabling it makes most of them at least usable
+                                mat.EnableKeyword("ALTERNATIVE_PROJECTION_MODE");
+
+                                // Techman Klaust 6 Burst Cannon
+                                if (mat.name.Equals("Sight_9_1"))
+                                {
+                                    mat.SetFloat("_ProjSize2", 1.5f);
+                                    mat.SetFloat("_ProjSize3", 0.5f);
+                                }
+
+                                //Drekker Pres Mod 556
+                                if (mat.name.Equals("Sight_15_1"))
+                                {
+                                    mat.SetFloat("_ProjSize1", 0.75f);
+                                    mat.SetFloat("_ProjSize3", 0.5f);
+
+                                    // Tune down the dirt so you're not blinded, but still get the sight outline
+                                    mat.SetFloat("_SightDirt", 1);
+
+                                    // Reticle is basically invisible unless completely center because of how it blends with the sight.
+                                    // Make it glow like a dotsight should.
+                                    float sightGlowMultiplier = 9;
+                                    mat.SetColor("_ReticuleColorA", new Color(0, sightGlowMultiplier, 0.13f * sightGlowMultiplier, 1f));
+                                    mat.SetColor("_ReticuleColorB", new Color(0, sightGlowMultiplier, 0, 1f));
+                                    mat.SetColor("_ReticuleColorC", new Color(0, sightGlowMultiplier, 0, 1f));
+                                }
+
+                                // Techman Arbalist
+                                if (mat.name.Equals("Sight_21_1"))
+                                {
+                                    // Axis is reversed and only visible from the front
+                                    mat.SetColor("_AxisX", new Color(-1, 0, 0, 0));
+                                    mat.SetColor("_AxisY", new Color(0, 1, 0, 0));
+                                    mat.SetColor("_AxisZ", new Color(0, 0, -1, 0));
+
+                                    mat.SetFloat("_ZeroOffset", -1);
+
+                                    mat.SetFloat("_ProjSize1", 31f);
+                                    mat.SetFloat("_ProjDist1", 0.001f);
+
+                                    mat.SetFloat("_ProjSize2", 0.75f);
+
+                                    mat.SetFloat("_ProjDist3", 15);
+                                    mat.SetFloat("_ProjSize3", 0.5f);
+
+                                    // The crosshair texture is centered, but the other two reticles are not.
+                                    // This results in nothing lining up. The crosshair texture is also upside down.
+                                    // Flip it and shift its position to match the others
+                                    fixCenteredCrosshairTexture(mat, "_ReticuleB", 0.04f);
+                                }
+                            }
+
                         }
                     }
                 }
