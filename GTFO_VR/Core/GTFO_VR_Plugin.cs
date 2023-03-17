@@ -10,6 +10,9 @@ using GTFO_VR.UI;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Diagnostics;
+using GTFO_VR.Core.PlayerBehaviours.BodyHaptics;
+using GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics;
+using GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave;
 using UnhollowerRuntimeLib;
 
 namespace GTFO_VR.Core
@@ -69,8 +72,8 @@ namespace GTFO_VR.Core
             ClassInjector.RegisterTypeInIl2Cpp<PlayerOrigin>();
             ClassInjector.RegisterTypeInIl2Cpp<VRPlayer>();
             ClassInjector.RegisterTypeInIl2Cpp<Haptics>();
-            ClassInjector.RegisterTypeInIl2Cpp<BhapticsIntegration>();
-            ClassInjector.RegisterTypeInIl2Cpp<BhapticsElevatorSequence>();
+            ClassInjector.RegisterTypeInIl2Cpp<BodyHapticsIntegrator>();
+            ClassInjector.RegisterTypeInIl2Cpp<ElevatorSequenceIntegrator>();
             ClassInjector.RegisterTypeInIl2Cpp<Snapturn>();
             ClassInjector.RegisterTypeInIl2Cpp<Watch>();
             ClassInjector.RegisterTypeInIl2Cpp<VRMeleeWeapon>();

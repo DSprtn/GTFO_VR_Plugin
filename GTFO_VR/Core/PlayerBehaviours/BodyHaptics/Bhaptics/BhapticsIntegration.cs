@@ -1,15 +1,11 @@
-﻿using UnityEngine;
-using Bhaptics.Tact;
-using GTFO_VR.Events;
+﻿using Bhaptics.Tact;
 using GTFO_VR.Core.VR_Input;
-using System;
 using Player;
-using ChainedPuzzles;
-using Il2CppSystem.Collections.Generic;
+using UnityEngine;
 
-namespace GTFO_VR.Core.PlayerBehaviours
+namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 {
-    public class BhapticsIntegration : MonoBehaviour
+    public class BhapticsIntegration : BodyHapticAgent
     {
         private static readonly string VEST_DAMAGE_KEY = "vest_damage";
         private static readonly string VEST_TENTACLE_ATTACK_KEY = "vest_tentacle_attack";
@@ -65,32 +61,20 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private float m_nextReloadHapticPatternTime;
         private float m_nextHeartbeatPatternTime;
         private float m_nextBodyscanPatternTime;
-        private float m_lastInfection;
         private float m_lastHealth = 1f;
-        private bool m_lastFlashlightEnabledState;
         private RotationOption m_lastDamageRotationOption;
         private PlayerLocomotion.PLOC_State m_lastLocState;
-        private bool m_lastIsCrouchedPhysically;
-        private int m_bioscanStopFramesCount;
 
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
         private static readonly float HEARTBEAT_REPEAT_DELAY = 1.0f;
         private static readonly float BODY_SCAN_REPEAT_DELAY = 13.5f;
-        private static readonly float LOW_HEALTH = 0.20f;
-        private static readonly float MIN_HEALTH_GAIN_FOR_HAPTIC = 0.05f;
-        private static readonly float MIN_DISINFECTION_GAIN_FOR_HAPTIC = 0.05f;
 
-        public BhapticsIntegration(IntPtr value) : base(value)
-        {
-        }
-
-        public void Setup(LocalPlayerAgent player)
+        public void Setup(LocalPlayerAgent player, HapticPlayer hapticPlayer)
         {
             m_player = player;
-            m_lastFlashlightEnabledState = player.Inventory.FlashlightEnabled;
             m_lastLocState = player.Locomotion.m_currentStateEnum;
+            m_hapticPlayer = hapticPlayer;
 
-            m_hapticPlayer = new HapticPlayer();
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_DAMAGE_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_TENTACLE_ATTACK_KEY);
             BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_FIRE_R_KEY);
@@ -138,31 +122,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_GAIN_AMMO_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_GAIN_TOOL_AMMO_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_EXPLOSION_KEY);
-
-            PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
-            PlayerReceivedDamageEvents.OnMineExplosion += MineExplosionHaptics;
-            TentacleAttackEvents.OnTentacleAttack += TentacleAttackHaptics;
-            PlayerFireWeaponEvents.OnPlayerFireWeapon += PlayWeaponFireHaptics;
-            PlayerReloadEvents.OnPlayerReloaded += PlayWeaponReloadedHaptics;
-            PlayerTriggerReloadEvents.OnTriggerWeaponReloaded += PlayTriggerWeaponReloadHaptics;
-            HeldItemEvents.OnItemCharging += HammerChargingHaptics;
-            VRMeleeWeaponEvents.OnHammerSmack += HammerSmackHaptics;
-            VRMeleeWeaponEvents.OnHammerFullyCharged += HammerFullyChargedHaptics;
-            FocusStateEvents.OnFocusStateChange += FocusStateChangedHaptics;
-            PlayerInteractionEvents.OnPlayerInteracted += PlayerInteractedHaptics;
-            PlayerInteractionEvents.OnBioscanSetState += PlayerBioscanSetStateHaptics;
-            ItemEquippableEvents.OnPlayerWieldItem += PlayerChangedItemHaptics;
-            ResourceUpdatedEvents.OnAmmoGained += AmmoGainedHaptics;
-            ResourceUpdatedEvents.OnInfectionUpdated += InfectionUpdatedHaptics;
-            ResourceUpdatedEvents.OnHealthUpdated += OnHealthUpdated;
-            InventoryAmmoEvents.OnInventoryAmmoUpdate += OnAmmoUpdate;
-            PlayerLocomotionEvents.OnStateChange += OnPlayerLocomotionStateChanged;
-
-            var elevatorSequence = gameObject.AddComponent<BhapticsElevatorSequence>();
-            elevatorSequence.Setup(m_player, m_hapticPlayer);
         }
 
-        void FixedUpdate()
+        public void Update()
         {
             if (VRConfig.configUseBhaptics.Value)
             {
@@ -195,99 +157,84 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 m_hapticPlayer.SubmitRegistered(VEST_NEED_HEALTH_KEY);
                 m_nextHeartbeatPatternTime += HEARTBEAT_REPEAT_DELAY;
             }
-            
+
             if (m_nextBodyscanPatternTime > 0f && currentTime >= m_nextBodyscanPatternTime)
             {
                 m_hapticPlayer.SubmitRegistered(VEST_BODY_SCAN_KEY);
                 m_nextBodyscanPatternTime += BODY_SCAN_REPEAT_DELAY;
             }
-
-            if (m_lastFlashlightEnabledState != m_player.Inventory.FlashlightEnabled)
-            {
-                FlashlightToggledHaptics();
-                m_lastFlashlightEnabledState = m_player.Inventory.FlashlightEnabled;
-            }
-
-            bool isCrouchedPhysically = IsCrouchedPhysically();
-            if (m_lastIsCrouchedPhysically != isCrouchedPhysically)
-            {
-                CrouchToggleHaptics(isCrouchedPhysically);
-                m_lastIsCrouchedPhysically = isCrouchedPhysically;
-            }
-
-            if (m_bioscanStopFramesCount > 0 && ++m_bioscanStopFramesCount >= 5)
-            {
-                m_nextBodyscanPatternTime = 0f;
-                m_hapticPlayer.TurnOff(VEST_BODY_SCAN_KEY);
-                m_bioscanStopFramesCount = 0;
-            }
         }
 
-        private bool IsCrouchedPhysically()
-        {
-            return HMD.Hmd.transform.localPosition.y + VRConfig.configFloorOffset.Value / 100f < VRConfig.configCrouchHeight.Value / 100f;
-        }
-
-        private void HammerSmackHaptics(float dmg)
+        public void HammerSmackHaptics(float dmg)
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
                 return;
             }
 
-			if (Controllers.MainControllerType == HandType.Left)
-			{
-				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_SMACK_L_KEY);
-				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_SMACK_L_KEY);
-			}
-			else
-			{
-				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_SMACK_R_KEY);
-				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_SMACK_R_KEY);
-			}
+            if (Controllers.MainControllerType == HandType.Left)
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_SMACK_L_KEY);
+                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_SMACK_L_KEY);
+            }
+            else
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_SMACK_R_KEY);
+                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_SMACK_R_KEY);
+            }
         }
 
-        private void HammerFullyChargedHaptics()
+        public void HammerFullyChargedHaptics()
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
                 return;
             }
 
-			if (Controllers.MainControllerType == HandType.Left)
-			{
-				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_FULLY_CHARGED_L_KEY);
-				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_FULLY_CHARGED_L_KEY);
-			}
-			else
-			{
-				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_FULLY_CHARGED_R_KEY);
-				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_FULLY_CHARGED_R_KEY);
-			}
+            if (Controllers.MainControllerType == HandType.Left)
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_FULLY_CHARGED_L_KEY);
+                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_FULLY_CHARGED_L_KEY);
+            }
+            else
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_FULLY_CHARGED_R_KEY);
+                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_FULLY_CHARGED_R_KEY);
+            }
         }
 
-        private void HammerChargingHaptics(float pressure)
+        public void HammerChargingHaptics(float pressure)
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
                 return;
             }
 
-			var scaleOption = new ScaleOption(pressure, 1f); // pressure goes from 0 to 1
+            var scaleOption = new ScaleOption(pressure, 1f); // pressure goes from 0 to 1
 
-			if (Controllers.MainControllerType == HandType.Left)
-			{
-				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_L_KEY, scaleOption);
-				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_L_KEY, scaleOption);
-			}
-			else
-			{
-				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_R_KEY, scaleOption);
-				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_R_KEY, scaleOption);
-			}
+            if (Controllers.MainControllerType == HandType.Left)
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_L_KEY, scaleOption);
+                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_L_KEY, scaleOption);
+            }
+            else
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_R_KEY, scaleOption);
+                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_R_KEY, scaleOption);
+            }
         }
 
-        private void StopWeaponReloadHaptics()
+        public void PlayWeaponReloadHaptics()
+        {
+            if (!VRConfig.configUseBhaptics.Value)
+            {
+                return;
+            }
+
+            m_nextReloadHapticPatternTime = Time.time;
+        }
+
+        public void StopWeaponReloadHaptics()
         {
             m_nextReloadHapticPatternTime = 0;
             m_hapticPlayer.TurnOff(VEST_RELOAD_R_KEY);
@@ -296,182 +243,139 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_hapticPlayer.TurnOff(ARMS_RELOAD_L_KEY);
         }
 
-        private void PlayWeaponReloadedHaptics()
+        public void PlayWeaponFireHaptics(Weapon weapon)
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
                 return;
             }
 
-            StopWeaponReloadHaptics();
+            float intensity = Haptics.GetFireHapticStrength(weapon);
+            var scaleOption = new ScaleOption(intensity, 1.0f);
+
+            if (Controllers.MainControllerType == HandType.Left || Controllers.AimingTwoHanded)
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_FIRE_L_KEY, scaleOption);
+                m_hapticPlayer.SubmitRegistered(ARMS_FIRE_L_KEY, scaleOption);
+            }
+
+            if (Controllers.MainControllerType == HandType.Right || Controllers.AimingTwoHanded)
+            {
+                m_hapticPlayer.SubmitRegistered(VEST_FIRE_R_KEY, scaleOption);
+                m_hapticPlayer.SubmitRegistered(ARMS_FIRE_R_KEY, scaleOption);
+            }
         }
 
-        private void PlayTriggerWeaponReloadHaptics()
+        RotationOption ToRotationOption(OrientationSettings orientationSettings)
         {
-            if (!VRConfig.configUseBhaptics.Value)
-            {
-                return;
-            }
-
-			m_nextReloadHapticPatternTime = Time.time;
-        }
-
-        private void PlayWeaponFireHaptics(Weapon weapon)
-        {
-            if (!VRConfig.configUseBhaptics.Value)
-            {
-                return;
-            }
-
-			float intensity = Haptics.GetFireHapticStrength(weapon);
-			var scaleOption = new ScaleOption(intensity, 1.0f);
-
-			if (Controllers.MainControllerType == HandType.Left || Controllers.AimingTwoHanded)
-			{
-				m_hapticPlayer.SubmitRegistered(VEST_FIRE_L_KEY, scaleOption);
-				m_hapticPlayer.SubmitRegistered(ARMS_FIRE_L_KEY, scaleOption);
-			}
-
-			if (Controllers.MainControllerType == HandType.Right || Controllers.AimingTwoHanded)
-			{
-				m_hapticPlayer.SubmitRegistered(VEST_FIRE_R_KEY, scaleOption);
-				m_hapticPlayer.SubmitRegistered(ARMS_FIRE_R_KEY, scaleOption);
-			}
+            return new RotationOption(orientationSettings.OffsetAngleX, orientationSettings.OffsetY);
         }
 
         private RotationOption GetRotationOptionFromDirection(Vector3 direction)
         {
-            /*
-             * direction coordinates are [-1, 1]
-             * offsetAngleX: [0, 360]
-             * offsetY: [-0.5, 0.5]
-             */
-            float angleRadians = (float)Math.Atan2(direction.z, direction.x);
-            float angleDegrees = (float)(angleRadians * 180 / Math.PI);
-            float cameraYRotation = m_player.FPSCamera.Rotation.eulerAngles.y;
-            float offsetAngleX = NormalizeOrientation(angleDegrees + cameraYRotation + 90f);
-            float offsetY = BhapticsUtils.Clamp(0.5f - (direction.y * 2), -0.5f, 0.5f);
-            return new RotationOption(offsetAngleX, offsetY);
+            var orientationSettings = BodyHapticsUtils.GetOrientationSettingsFromDirection(m_player, direction);
+            return ToRotationOption(orientationSettings);
         }
 
-        private void PlayReceiveDamageHaptics(float dmg, Vector3 direction)
+        public void PlayReceiveDamageHaptics(float dmg, Vector3 direction)
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
                 return;
             }
 
-			var rotationOption = GetRotationOptionFromDirection(direction);
+            var rotationOption = GetRotationOptionFromDirection(direction);
 
-			float intensity = dmg * 0.3f + 0.3f;
-			float duration = 1f;
-			var scaleOption = new ScaleOption(intensity, duration);
+            float intensity = dmg * 0.3f + 0.3f;
+            float duration = 1f;
+            var scaleOption = new ScaleOption(intensity, duration);
 
-			m_hapticPlayer.SubmitRegisteredVestRotation(VEST_DAMAGE_KEY, "", rotationOption, scaleOption);
+            m_hapticPlayer.SubmitRegisteredVestRotation(VEST_DAMAGE_KEY, "", rotationOption, scaleOption);
 
-			m_lastDamageRotationOption = rotationOption;
+            m_lastDamageRotationOption = rotationOption;
         }
 
-        private void MineExplosionHaptics(Vector3 explosionPosition)
+        public void MineExplosionHaptics(OrientationSettings orientationSettings, float intensity)
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
                 return;
             }
 
-            const float MAX_DISTANCE = 30f;
-            Vector3 playerPosition = m_player.transform.position;
-            playerPosition.y = 1f; // for directional haptic (a mine height of 1 will hit horizontally)
-            Vector3 direction = playerPosition - explosionPosition;
-            float distance = direction.magnitude;
+            RotationOption rotationOption = ToRotationOption(orientationSettings);
+            var scaleOption = new ScaleOption(intensity, 1f);
 
-            if (distance < MAX_DISTANCE)
-            {
-                var rotationOption = GetRotationOptionFromDirection(direction);
-                float intensity = 1 - (Math.Max(0, distance - 5) / MAX_DISTANCE);
-                var scaleOption = new ScaleOption(intensity, 1f);
-
-                m_hapticPlayer.SubmitRegisteredVestRotation(VEST_EXPLOSION_KEY, "", rotationOption, scaleOption);
-                m_hapticPlayer.SubmitRegistered(ARMS_EXPLOSION_KEY, scaleOption);
-            }
+            m_hapticPlayer.SubmitRegisteredVestRotation(VEST_EXPLOSION_KEY, "", rotationOption, scaleOption);
+            m_hapticPlayer.SubmitRegistered(ARMS_EXPLOSION_KEY, scaleOption);
         }
 
-        private void TentacleAttackHaptics(float dmg, Agents.Agent sourceAgent, Vector3 position)
+        public void TentacleAttackHaptics(float dmg, Agents.Agent sourceAgent, Vector3 position)
         {
             if (!VRConfig.configUseBhaptics.Value || sourceAgent != m_player)
             {
                 return;
             }
 
-			if (m_lastDamageRotationOption != null)
-			{
-				var rotationOption = m_lastDamageRotationOption;
-				//var rotationOption = GetRotationOptionFromDirection(position - sourceAgent.TentacleTarget.position); // could maybe calculate direction with this, but offsetY is not right
-				m_hapticPlayer.SubmitRegisteredVestRotation(VEST_TENTACLE_ATTACK_KEY, rotationOption);
-			}
-			else
-			{
-				Log.Error("Received tentacle attack with no last damage rotation option!");
-			}
+            if (m_lastDamageRotationOption != null)
+            {
+                var rotationOption = m_lastDamageRotationOption;
+                //var rotationOption = GetRotationOptionFromDirection(position - sourceAgent.TentacleTarget.position); // could maybe calculate direction with this, but offsetY is not right
+                m_hapticPlayer.SubmitRegisteredVestRotation(VEST_TENTACLE_ATTACK_KEY, rotationOption);
+            }
+            else
+            {
+                Log.Error("Received tentacle attack with no last damage rotation option!");
+            }
         }
 
-        private void FocusStateChangedHaptics(eFocusState focusState)
+        public void LandedFromElevator(eFocusState focusState)
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
                 return;
             }
 
-			if (FocusStateEvents.lastState.Equals(eFocusState.InElevator) && focusState == eFocusState.FPS)
-			{
-                m_hapticPlayer.SubmitRegistered(VEST_LANDING_KEY);
-                m_hapticPlayer.SubmitRegistered(ARMS_LANDING_KEY);
-            }
+            m_hapticPlayer.SubmitRegistered(VEST_LANDING_KEY);
+            m_hapticPlayer.SubmitRegistered(ARMS_LANDING_KEY);
         }
 
-        private void PlayerInteractedHaptics(PlayerAgent source)
+        public void PlayerInteractedHaptics(PlayerAgent source)
         {
             if (!VRConfig.configUseBhaptics.Value || (source != null && source != m_player))
             {
                 return;
             }
 
-			if (Controllers.MainControllerType == HandType.Left)
-			{
-				m_hapticPlayer.SubmitRegistered(ARMS_INTERACT_ITEM_L_KEY);
-			}
-			else
-			{
-				m_hapticPlayer.SubmitRegistered(ARMS_INTERACT_ITEM_R_KEY);
-			}
+            if (Controllers.MainControllerType == HandType.Left)
+            {
+                m_hapticPlayer.SubmitRegistered(ARMS_INTERACT_ITEM_L_KEY);
+            }
+            else
+            {
+                m_hapticPlayer.SubmitRegistered(ARMS_INTERACT_ITEM_R_KEY);
+            }
         }
 
-        private void PlayerBioscanSetStateHaptics(eBioscanStatus status, float progress, List<PlayerAgent> playersInScan)
+        public void PlayBioscanHaptics()
         {
-            if (!VRConfig.configUseBhaptics.Value || playersInScan == null)
+            if (!VRConfig.configUseBhaptics.Value)
             {
                 return;
             }
 
-            if (status == eBioscanStatus.Scanning && playersInScan.Contains(m_player) && m_player.Alive)
+            if (m_nextBodyscanPatternTime <= 0)
             {
-                if (m_nextBodyscanPatternTime <= 0)
-                {
-                    m_nextBodyscanPatternTime = Time.time;
-                }
-                
-                m_bioscanStopFramesCount = 0;
-            }
-            else if (m_bioscanStopFramesCount == 0 && m_nextBodyscanPatternTime > 0)
-            {
-                // Indicate that bioscan stopped, and stop haptic pattern only after a few FixedUpdate() calls if we don't receive any other scan activations until then.
-                // When multiple players are in different single-person scans, we receive this event every fixed frame for *each* currently scanned player,
-                // and m_player is only in a single playersInScan list, so we don't want to stop the scan right when we receive the scan of someone else.
-                m_bioscanStopFramesCount = 1;
+                m_nextBodyscanPatternTime = Time.time;
             }
         }
 
-        private void FlashlightToggledHaptics()
+        public void StopBioscanHaptics()
+        {
+            m_nextBodyscanPatternTime = 0f;
+            m_hapticPlayer.TurnOff(VEST_BODY_SCAN_KEY);
+        }
+
+        public void FlashlightToggledHaptics()
         {
             if (!VRConfig.configUseBhaptics.Value || !m_player.Alive)
             {
@@ -488,7 +392,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
-        private void PlayerChangedItemHaptics(ItemEquippable item)
+        public void PlayerChangedItemHaptics(ItemEquippable item)
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
@@ -501,13 +405,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_L_KEY);
             }
-			else
+            else
             {
                 m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_R_KEY);
             }
         }
 
-        private void AmmoGainedHaptics(float ammoStandardRel, float ammoSpecialRel, float ammoClassRel)
+        public void AmmoGainedHaptics(float ammoStandardRel, float ammoSpecialRel, float ammoClassRel)
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
@@ -526,35 +430,30 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
-        private void InfectionUpdatedHaptics(float infection)
+        public void InfectionHealed(float infection)
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
                 return;
             }
 
-            if (m_lastInfection - infection > MIN_DISINFECTION_GAIN_FOR_HAPTIC) // Gained some disinfection
-            {
-                m_hapticPlayer.SubmitRegistered(VEST_GAIN_DISINFECTION_KEY);
-            }
-
-            m_lastInfection = infection;
+            m_hapticPlayer.SubmitRegistered(VEST_GAIN_DISINFECTION_KEY);
         }
 
-        private void OnHealthUpdated(float health)
+        public void OnHealthUpdated(float health)
         {
             if (VRConfig.configUseBhaptics.Value)
             {
-                if (health <= LOW_HEALTH && m_nextHeartbeatPatternTime <= 0)
+                if (health <= BodyHapticsUtils.LOW_HEALTH && m_nextHeartbeatPatternTime <= 0)
                 {
                     m_nextHeartbeatPatternTime = Time.time;
                 }
-                else if (health > LOW_HEALTH && m_nextHeartbeatPatternTime > 0)
+                else if (health > BodyHapticsUtils.LOW_HEALTH && m_nextHeartbeatPatternTime > 0)
                 {
                     m_nextHeartbeatPatternTime = 0;
                 }
 
-                if (health - m_lastHealth > MIN_HEALTH_GAIN_FOR_HAPTIC) // Gained some health
+                if (health - m_lastHealth > BodyHapticsUtils.MIN_HEALTH_GAIN_FOR_HAPTIC) // Gained some health
                 {
                     m_hapticPlayer.SubmitRegistered(VEST_GAIN_HEALTH_KEY);
                 }
@@ -572,36 +471,20 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_lastHealth = health;
         }
 
-        private void OnAmmoUpdate(InventorySlotAmmo item, int clipleft)
+        public void WeaponAmmoEmpty(bool leftArm)
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (leftArm || Controllers.AimingTwoHanded)
             {
-                return;
+                m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_L_KEY);
             }
 
-            if (ItemEquippableEvents.IsCurrentItemShootableWeapon() &&
-                ItemEquippableEvents.currentItem.ItemDataBlock.inventorySlot.Equals(item.Slot))
+            if (!leftArm || Controllers.AimingTwoHanded)
             {
-                AmmoType ammoType = item.AmmoType;
-                if (ammoType == AmmoType.Standard || ammoType == AmmoType.Special)
-                {
-                    if (clipleft == 0)
-                    {
-                        if (Controllers.MainControllerType == HandType.Left || Controllers.AimingTwoHanded)
-                        {
-                            m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_L_KEY);
-                        }
-
-                        if (Controllers.MainControllerType == HandType.Right || Controllers.AimingTwoHanded)
-                        {
-                            m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_R_KEY);
-                        }
-                    }
-                }
+                m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_R_KEY);
             }
         }
 
-        private void OnPlayerLocomotionStateChanged(PlayerLocomotion.PLOC_State state)
+        public void OnPlayerLocomotionStateChanged(PlayerLocomotion.PLOC_State state)
         {
             if (!VRConfig.configUseBhaptics.Value)
             {
@@ -617,7 +500,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_lastLocState = state;
         }
 
-        private void CrouchToggleHaptics(bool isCrouched)
+        public void CrouchToggleHaptics(bool isCrouched)
         {
             if (!VRConfig.configUseBhaptics.Value || m_lastLocState == PlayerLocomotion.PLOC_State.InElevator)
             {
@@ -632,40 +515,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 m_hapticPlayer.SubmitRegistered(VEST_STAND_KEY);
             }
-        }
-
-        private float NormalizeOrientation(float orientation)
-        {
-            float result = orientation % 360;
-
-            if (result < 0)
-            {
-                result += 360;
-            }
-
-            return result;
-        }
-
-        private void OnDestroy()
-        {
-            PlayerReceivedDamageEvents.OnPlayerTakeDamage -= PlayReceiveDamageHaptics;
-            PlayerReceivedDamageEvents.OnMineExplosion -= MineExplosionHaptics;
-            TentacleAttackEvents.OnTentacleAttack -= TentacleAttackHaptics;
-            PlayerFireWeaponEvents.OnPlayerFireWeapon -= PlayWeaponFireHaptics;
-            PlayerReloadEvents.OnPlayerReloaded -= PlayWeaponReloadedHaptics;
-            PlayerTriggerReloadEvents.OnTriggerWeaponReloaded -= PlayTriggerWeaponReloadHaptics;
-            HeldItemEvents.OnItemCharging -= HammerChargingHaptics;
-            VRMeleeWeaponEvents.OnHammerSmack -= HammerSmackHaptics;
-            VRMeleeWeaponEvents.OnHammerFullyCharged -= HammerFullyChargedHaptics;
-            FocusStateEvents.OnFocusStateChange -= FocusStateChangedHaptics;
-            PlayerInteractionEvents.OnPlayerInteracted -= PlayerInteractedHaptics;
-            PlayerInteractionEvents.OnBioscanSetState -= PlayerBioscanSetStateHaptics;
-            ItemEquippableEvents.OnPlayerWieldItem -= PlayerChangedItemHaptics;
-            ResourceUpdatedEvents.OnAmmoGained -= AmmoGainedHaptics;
-            ResourceUpdatedEvents.OnInfectionUpdated -= InfectionUpdatedHaptics;
-            ResourceUpdatedEvents.OnHealthUpdated -= OnHealthUpdated;
-            InventoryAmmoEvents.OnInventoryAmmoUpdate -= OnAmmoUpdate;
-            PlayerLocomotionEvents.OnStateChange -= OnPlayerLocomotionStateChanged;
         }
     }
 }
