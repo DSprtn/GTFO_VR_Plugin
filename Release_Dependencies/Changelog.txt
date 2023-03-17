@@ -1,7 +1,13 @@
+Total changelog: (1.2.2):
+- Added Shockwave suit integration
+- Fixed the following weapon sights:
+* Drekker Pres MOD 556 Rifle
+* Techman Arbalist machine gun
+* Techman Klust 6 Burst Cannon
+
 Total changelog: (1.2.1):
 - Added ProtubeVR Haptics support
 - Tweaked every weapon in the game to have its own haptics 'identity'
-
 
 Known issues:
 - GTFO is very VRAM hungry! If your texture or render resolution settings are too high and you're using too much VRAM your game will be very unstable!
