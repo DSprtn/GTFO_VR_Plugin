@@ -5,7 +5,7 @@ from pathlib import Path
 from argparse import ArgumentParser
 
 
-dependency_targets = ["Newtonsoft.Json.dll", "openvr_api.dll", "Bhaptics.Tact.dll", "SteamVR_Standalone_IL2CPP.dll", "ForceTubeVR_API_x64.dll"]
+dependency_targets = ["Newtonsoft.Json.dll", "openvr_api.dll", "Bhaptics.Tact.dll", "SteamVR_Standalone_IL2CPP.dll", "ForceTubeVR_API_x64.dll", "ShockWaveIMU.dll", "ShockwaveManager.dll"]
 dependency_dir_targets = ["bhaptics-patterns", "protubeHaptics"]
 plugin_targets = ["GTFO_VR.dll"]
 
