@@ -1,10 +1,10 @@
 ﻿using System;
-using UnhollowerBaseLib;
-using BepInEx.IL2CPP.Hook;
 using System.Runtime.InteropServices;
 using GTFO_VR.Core;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Core.UI.Terminal;
+using Il2CppInterop.Runtime;
+using BepInEx.Unity.IL2CPP.Hook;
 
 namespace GTFO_VR.Detours
 {
@@ -17,12 +17,12 @@ namespace GTFO_VR.Detours
         public static void HookAll()
         {
             Log.Info($"Patching all terminal functions...");
+            
+            INativeDetour.CreateAndApply(IL2CPP.il2cpp_resolve_icall("UnityEngine.Input::" + "get_inputString"),
+                OurGetInputString, out originalInputStringGetter);
 
-            FastNativeDetour.CreateAndApply(IL2CPP.il2cpp_resolve_icall("UnityEngine.Input::" + "get_inputString"),
-                OurGetInputString, out originalInputStringGetter, CallingConvention.Cdecl);
-
-            FastNativeDetour.CreateAndApply(IL2CPP.il2cpp_resolve_icall("UnityEngine.Input::" + "get_anyKeyDown"),
-                OurGetAnyInput, out originalAnyInputDownGetter, CallingConvention.Cdecl);
+            INativeDetour.CreateAndApply(IL2CPP.il2cpp_resolve_icall("UnityEngine.Input::" + "get_anyKeyDown"),
+                OurGetAnyInput, out originalAnyInputDownGetter);   
         }
 
         private unsafe static IntPtr OurGetInputString()

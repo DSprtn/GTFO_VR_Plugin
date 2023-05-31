@@ -1,11 +1,12 @@
 ﻿using System;
-using UnhollowerBaseLib;
-using BepInEx.IL2CPP.Hook;
 using System.Runtime.InteropServices;
 using Gear;
 using UnityEngine;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Core;
+using Il2CppInterop.Runtime;
+using BepInEx.Unity.IL2CPP.Hook;
+using Il2CppInterop.Common;
 
 namespace GTFO_VR.Detours
 {
@@ -21,19 +22,18 @@ namespace GTFO_VR.Detours
         public unsafe static void HookAll()
         {
             Log.Info("Patching bioscanner functions...");
-
-            var tryGetTaggableEnemiesPointer = *(IntPtr*)(IntPtr)UnhollowerUtils
+            
+            var tryGetTaggableEnemiesPointer = *(IntPtr*)(IntPtr)Il2CppInteropUtils
                    .GetIl2CppMethodInfoPointerFieldForGeneratedMethod(typeof(EnemyScanner).GetMethod(nameof(EnemyScanner.TryGetTaggableEnemies)))
                    .GetValue(null);
 
-            FastNativeDetour.CreateAndApply(tryGetTaggableEnemiesPointer,
+            INativeDetour.CreateAndApply(tryGetTaggableEnemiesPointer,
                 OurScannerMethod,
-                out OriginalScannerMethod,
-                CallingConvention.Cdecl);
+                out OriginalScannerMethod);
 
-            FastNativeDetour.CreateAndApply(
+            INativeDetour.CreateAndApply(
                 IL2CPP.il2cpp_resolve_icall("UnityEngine.Transform::" + nameof(Transform.get_rotation_Injected)),
-                OurGetRotation, out ourOriginalRotationGetter, CallingConvention.Cdecl);
+                OurGetRotation, out ourOriginalRotationGetter);
         }
 
         private unsafe static void OurGetRotation(IntPtr thisPtr, out Quaternion quat)

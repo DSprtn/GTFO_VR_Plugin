@@ -1,5 +1,5 @@
-﻿using System;
-using UnhollowerBaseLib.Attributes;
+﻿using Il2CppInterop.Runtime.Attributes;
+using System;
 using UnityEngine;
 
 namespace GTFO_VR.Core.UI.Terminal.Pointer

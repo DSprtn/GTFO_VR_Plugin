@@ -196,7 +196,7 @@ namespace GTFO_VR.Core
                 {
                     AppendVRComponents();
                 }
-            } catch(UnhollowerBaseLib.ObjectCollectedException e)
+            } catch(Il2CppInterop.Runtime.ObjectCollectedException e)
             {
                 Log.Warning("Got GC'D object, falling back..." + e.ToString());
                 m_player = null;

@@ -1,6 +1,6 @@
 ﻿using GTFO_VR.Core.UI.Terminal.KeyboardDefinition;
+using Il2CppInterop.Runtime.Attributes;
 using System;
-using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 using UnityEngine.UI;
 

@@ -1,12 +1,12 @@
 ﻿using System;
-using UnhollowerBaseLib;
-using BepInEx.IL2CPP.Hook;
 using System.Runtime.InteropServices;
 using GTFO_VR.Core;
 using GTFO_VR.Core.VR_Input;
 using Gear;
 using System.Collections.Generic;
 using GTFO_VR.Core.PlayerBehaviours;
+using BepInEx.Unity.IL2CPP.Hook;
+using Il2CppInterop.Common;
 
 namespace GTFO_VR.Detours
 {
@@ -25,14 +25,13 @@ namespace GTFO_VR.Detours
             }
             Log.Info("Creating detours for hammer attack checks...");
 
-            var hammerAttackTargetCheckPointer = *(IntPtr*)(IntPtr)UnhollowerUtils
+            var hammerAttackTargetCheckPointer = *(IntPtr*)(IntPtr)Il2CppInteropUtils
                    .GetIl2CppMethodInfoPointerFieldForGeneratedMethod(typeof(MeleeWeaponFirstPerson).GetMethod(nameof(MeleeWeaponFirstPerson.CheckForAttackTargets)))
                    .GetValue(null);
 
-            FastNativeDetour.CreateAndApply(hammerAttackTargetCheckPointer,
+            INativeDetour.CreateAndApply(hammerAttackTargetCheckPointer,
                 OurAttackCheck,
-                out OriginalHammerMethod,
-                CallingConvention.Cdecl);
+                out OriginalHammerMethod);
         }
 
         private unsafe static bool OurAttackCheck(IntPtr thisPtr, IntPtr attackData, float sphereRad, float elapsedTime, out IntPtr hits)
