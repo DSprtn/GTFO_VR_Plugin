@@ -1,5 +1,6 @@
 ﻿using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
+using Il2CppInterop.Runtime.Attributes;
 using System;
 using UnityEngine;
 using Valve.VR;
@@ -44,6 +45,7 @@ namespace GTFO_VR.Core.UI
             FocusStateEvents.OnFocusStateChange += FocusChanged;
         }
 
+        [HideFromIl2Cpp]
         private void FocusChanged(eFocusState newState)
         {
            if(UI_Camera && Popup_Camera)
@@ -60,6 +62,7 @@ namespace GTFO_VR.Core.UI
             SetupOverlay();
         }
 
+        [HideFromIl2Cpp]
         public bool GetPlayerPointingAtPositionOnScreen(out Vector2 uv)
         {
             if (Controllers.GetLocalPosition().magnitude < 0.01f)
@@ -131,6 +134,7 @@ namespace GTFO_VR.Core.UI
             public float distance;
         }
 
+        [HideFromIl2Cpp]
         public bool ComputeIntersection(Vector3 source, Vector3 direction, ref IntersectionResults results)
         {
             var overlay = OpenVR.Overlay;
@@ -195,6 +199,7 @@ namespace GTFO_VR.Core.UI
             }
         }
 
+        [HideFromIl2Cpp]
         // From SteamVR_LoadLevel
         // Helper to create (or reuse, if possible) each of our different overlay types.
         private ulong GetOverlayHandle(string overlayName, Transform transform, float widthInMeters = 1.0f)
