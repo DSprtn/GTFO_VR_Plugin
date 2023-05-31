@@ -51,12 +51,13 @@
       <HintPath>$(GTFO_PATH)\BepInEx\core\BepInEx.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="BepInEx.Unity.IL2CPP, Version=6.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="BepInEx.Unity.IL2CPP">
       <HintPath>$(GTFO_PATH)\BepInEx\core\BepInEx.Unity.IL2CPP.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Bhaptics.Tact">
       <HintPath>$(GTFO_PATH)\BepInEx\plugins\Bhaptics.Tact.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="CellSound-ASM">
       <HintPath>$(GTFO_PATH)\BepInEx\interop\CellSound-ASM.dll</HintPath>
@@ -66,9 +67,10 @@
       <HintPath>$(GTFO_PATH)\BepInEx\interop\CommandSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Cpp2IL.Core, Version=2022.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Cpp2IL.Core">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(GTFO_PATH)\BepInEx\core\Cpp2IL.Core.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="DevConsoleCommands-ASM">
       <HintPath>$(GTFO_PATH)\BepInEx\interop\DevConsoleCommands-ASM.dll</HintPath>
@@ -110,17 +112,17 @@
       <HintPath>$(GTFO_PATH)\BepInEx\interop\GUIX-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Il2CppInterop.Common, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Il2CppInterop.Common">
       <HintPath>$(GTFO_PATH)\BepInEx\core\Il2CppInterop.Common.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Il2CppInterop.Generator, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Il2CppInterop.Generator">
       <HintPath>$(GTFO_PATH)\BepInEx\core\Il2CppInterop.Generator.dll</HintPath>
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Il2CppInterop.Runtime, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Il2CppInterop.Runtime">
       <HintPath>$(GTFO_PATH)\BepInEx\core\Il2CppInterop.Runtime.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppMono.Security">
       <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppMono.Security.dll</HintPath>
@@ -166,9 +168,10 @@
       <HintPath>$(GTFO_PATH)\BepInEx\interop\Modules-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(GTFO_PATH)\BepInEx\plugins\Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="PlayFab-ASM">
       <HintPath>$(GTFO_PATH)\BepInEx\interop\PlayFab-ASM.dll</HintPath>
@@ -204,6 +207,7 @@
     </Reference>
     <Reference Include="ShockwaveManager, Version=1.0.0.1, Culture=neutral, PublicKeyToken=null">
       <HintPath>$(GTFO_PATH)\BepInEx\plugins\ShockwaveManager.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SNet_ASM">
       <HintPath>$(GTFO_PATH)\BepInEx\interop\SNet_ASM.dll</HintPath>
@@ -213,8 +217,7 @@
       <HintPath>$(GTFO_PATH)\BepInEx\interop\StandardAssets-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SteamVR_Standalone_IL2CPP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="SteamVR_Standalone_IL2CPP">
       <HintPath>$(GTFO_PATH)\BepInEx\plugins\SteamVR_Standalone_IL2CPP.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -232,6 +235,7 @@
     </Reference>
     <Reference Include="Unity.Postprocessing.Runtime">
       <HintPath>$(GTFO_PATH)\BepInEx\interop\Unity.Postprocessing.Runtime.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>$(GTFO_PATH)\BepInEx\interop\Unity.TextMeshPro.dll</HintPath>
