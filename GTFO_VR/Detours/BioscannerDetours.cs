@@ -19,6 +19,10 @@ namespace GTFO_VR.Detours
         public static Quaternion cachedControllerRotation = Quaternion.identity;
         public static bool inBioScannerFunction;
 
+        // Will be garbage collected and cause hard crash unless referenced 
+        private static INativeDetour tryGetTaggableEnemiesDetour;
+        private static INativeDetour get_rotation_InjectedDetour;
+
         public unsafe static void HookAll()
         {
             Log.Info("Patching bioscanner functions...");
@@ -27,13 +31,15 @@ namespace GTFO_VR.Detours
                    .GetIl2CppMethodInfoPointerFieldForGeneratedMethod(typeof(EnemyScanner).GetMethod(nameof(EnemyScanner.TryGetTaggableEnemies)))
                    .GetValue(null);
 
-            INativeDetour.CreateAndApply(tryGetTaggableEnemiesPointer,
+            tryGetTaggableEnemiesDetour = INativeDetour.CreateAndApply(tryGetTaggableEnemiesPointer,
                 OurScannerMethod,
                 out OriginalScannerMethod);
 
-            INativeDetour.CreateAndApply(
+
+            get_rotation_InjectedDetour = INativeDetour.CreateAndApply(
                 IL2CPP.il2cpp_resolve_icall("UnityEngine.Transform::" + nameof(Transform.get_rotation_Injected)),
                 OurGetRotation, out ourOriginalRotationGetter);
+            
         }
 
         private unsafe static void OurGetRotation(IntPtr thisPtr, out Quaternion quat)

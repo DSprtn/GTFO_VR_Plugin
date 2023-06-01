@@ -15,9 +15,12 @@ namespace GTFO_VR.Detours
     /// </summary>
     public static class HammerAttackCheckDetour
     {
+        // Will be garbage collected and cause hard crash unless referenced 
+        private static INativeDetour checkForAttackTargetsDetour;
 
         public unsafe static void HookAll()
         {
+            
             if(!VRConfig.configUseControllers.Value)
             {
                 Log.Info("Not using motion controllers, skipping hammer attack checks detour...");
@@ -29,9 +32,10 @@ namespace GTFO_VR.Detours
                    .GetIl2CppMethodInfoPointerFieldForGeneratedMethod(typeof(MeleeWeaponFirstPerson).GetMethod(nameof(MeleeWeaponFirstPerson.CheckForAttackTargets)))
                    .GetValue(null);
 
-            INativeDetour.CreateAndApply(hammerAttackTargetCheckPointer,
-                OurAttackCheck,
+            checkForAttackTargetsDetour = INativeDetour.CreateAndApply(hammerAttackTargetCheckPointer,
+               OurAttackCheck,
                 out OriginalHammerMethod);
+            
         }
 
         private unsafe static bool OurAttackCheck(IntPtr thisPtr, IntPtr attackData, float sphereRad, float elapsedTime, out IntPtr hits)
