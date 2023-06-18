@@ -13,7 +13,8 @@ using System.Diagnostics;
 using GTFO_VR.Core.PlayerBehaviours.BodyHaptics;
 using GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics;
 using GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave;
-using UnhollowerRuntimeLib;
+using BepInEx.Unity.IL2CPP;
+using Il2CppInterop.Runtime.Injection;
 
 namespace GTFO_VR.Core
 {

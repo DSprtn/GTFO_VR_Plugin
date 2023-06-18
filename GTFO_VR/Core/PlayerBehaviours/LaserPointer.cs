@@ -207,7 +207,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_thermalPointer = CreatePointer(m_pointer.transform, false);
             m_thermalDot = CreateDot(m_dot.transform, false);
 
-            Material thermalMaterial = new Material(VRAssets.ThermalGlowShader); // Normal facing camera, writes _ShadingType to emission texture
+            Material thermalMaterial = new Material(VRAssets.GetThermalGlowShader()); // Normal facing camera, writes _ShadingType to emission texture
 
             thermalMaterial.SetColor("_EmissionColor", origColor * 0.25f);  // Alpha replaced by shader. Too bright and it does funny things to glass.
             thermalMaterial.SetColor("_Bump", new Color(1, 1, 1, 1f));      // Makes thermal color brighter?

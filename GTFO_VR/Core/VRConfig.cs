@@ -1,5 +1,6 @@
 ﻿using BepInEx.Configuration;
 using CellMenu;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using System;
 using System.Collections.Generic;
 
@@ -288,7 +289,7 @@ namespace GTFO_VR.Core
             {
                 configs.Add(settingID, entry);
                 new CS_Value<int>(settingID, new Action<eCellSettingID, CS_Value<int>>(CellSettingsManager.RegIntVal), null, entry.Value);
-                UnhollowerBaseLib.Il2CppStructArray<int> minMaxVals = new UnhollowerBaseLib.Il2CppStructArray<int>(2);
+                Il2CppStructArray<int> minMaxVals = new Il2CppStructArray<int>(2);
 
                 minMaxVals[0] = minValue;
                 minMaxVals[1] = maxValue;
@@ -319,7 +320,7 @@ namespace GTFO_VR.Core
                 configs.Add(settingID, entry);
                 new CS_Value<float>(settingID, new Action<eCellSettingID, CS_Value<float>>(CellSettingsManager.RegFloatVal), null, entry.Value);
 
-                UnhollowerBaseLib.Il2CppStructArray<float> minMaxVals = new UnhollowerBaseLib.Il2CppStructArray<float>(2);
+                Il2CppStructArray<float> minMaxVals = new Il2CppStructArray<float>(2);
 
                 minMaxVals[0] = minValue;
                 minMaxVals[1] = maxValue;

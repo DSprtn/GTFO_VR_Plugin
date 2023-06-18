@@ -1,547 +1,415 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A11A2774-4115-4E28-A803-8F3FC4868F01}</ProjectGuid>
+    <TargetFramework>net6.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GTFO_VR</RootNamespace>
-    <AssemblyName>GTFO_VR</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
     <_HasReferenceToSystemRuntime>true</_HasReferenceToSystemRuntime>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;UNITY_STANDALONE_WIN DEBUG_GTFO_VR</DefineConstants>
+    <DefineConstants>$(DefineConstants);UNITY_STANDALONE_WIN;DEBUG_GTFO_VR</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE;UNITY_STANDALONE_WIN</DefineConstants>
+    <DefineConstants>$(DefineConstants);UNITY_STANDALONE_WIN</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Core\ForceTube\ForceTube.cs" />
-    <Compile Include="Core\ForceTube\ForceTubeVRInterface.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Bhaptics\BhapticsElevatorSequence.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Bhaptics\BhapticsIntegration.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Bhaptics\BhapticsUtils.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\BodyHapticAgent.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\BodyHapticsIntegrator.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\BodyHapticsUtils.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\ElevatorSequenceAgent.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\ElevatorSequenceIntegrator.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\ElevatorState.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\Engine\HapticGroupInfo.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\Engine\HapticGroupPattern.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\Engine\HapticIndex.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\Engine\HapticIndexPattern.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\Engine\ShockwaveEngine.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\ShockwaveElevatorSequence.cs" />
-    <Compile Include="Core\PlayerBehaviours\BodyHaptics\Shockwave\ShockwaveIntegration.cs" />
-    <Compile Include="Core\PlayerBehaviours\MovementVignette.cs" />
-    <Compile Include="Core\UI\Terminal\Pointer\TerminalPointer.cs" />
-    <Compile Include="Core\UI\Terminal\Pointer\MonoPointerEvent.cs" />
-    <Compile Include="Core\UI\Terminal\Pointer\PhysicalButton.cs" />
-    <Compile Include="Core\UI\Terminal\Pointer\PointerHistory.cs" />
-    <Compile Include="Core\UI\Terminal\Pointer\PointerEvent.cs" />
-    <Compile Include="Core\UI\Terminal\TerminalReader.cs" />
-    <Compile Include="Core\UI\Terminal\KeyboardDefinition\KeyboardLayout.cs" />
-    <Compile Include="Core\UI\Terminal\KeyboardDefinition\LayoutParameters.cs" />
-    <Compile Include="Core\UI\Terminal\KeyboardDefinition\KeyboardStyle.cs" />
-    <Compile Include="Core\UI\Terminal\KeyboardDefinition\KeyDefinition.cs" />
-    <Compile Include="Core\UI\Terminal\KeyboardDefinition\LinearLayout.cs" />
-    <Compile Include="Core\UI\Terminal\RoundedCubeBackground.cs" />
-    <Compile Include="Core\UI\Terminal\TerminalKeyboardCanvas.cs" />
-    <Compile Include="Core\UI\Terminal\TerminalKeyboardInterface.cs" />
-    <Compile Include="Core\UI\RadialItem.cs" />
-    <Compile Include="Core\UI\RadialMenu.cs" />
-    <Compile Include="Core\PlayerBehaviours\VRMeleeWeapon.cs" />
-    <Compile Include="Core\UI\WeaponAmmoHologram.cs" />
-    <Compile Include="Core\UI\WeaponRadialMenu.cs" />
-    <Compile Include="Core\VRConfig.cs" />
-    <Compile Include="Core\Log.cs" />
-    <Compile Include="Core\PlayerBehaviours\ColisionFade.cs" />
-    <Compile Include="Core\PlayerBehaviours\Haptics.cs" />
-    <Compile Include="Core\PlayerBehaviours\VRRendering.cs" />
-    <Compile Include="Core\VR_Input\Dummy_InputHandler.cs" />
-    <Compile Include="Core\WeaponArchetypeVRData.VRWeaponData.cs" />
-    <Compile Include="Detours\BioscannerDetours.cs" />
-    <Compile Include="Detours\HammerAttackCheckDetour.cs" />
-    <Compile Include="Detours\TerminalInputDetours.cs" />
-    <Compile Include="Core\PlayerBehaviours\PlayerOrigin.cs" />
-    <Compile Include="Core\PlayerBehaviours\Snapturn.cs" />
-    <Compile Include="Core\VRAssets.cs" />
-    <Compile Include="Core\VR_Input\VRKeyboard.cs" />
-    <Compile Include="Events\BackpackEvents.cs" />
-    <Compile Include="Events\ChatMsgEvents.cs" />
-    <Compile Include="Events\ElevatorEvents.cs" />
-    <Compile Include="Events\FocusStateEvents.cs" />
-    <Compile Include="Events\VRMeleeWeaponEvents.cs" />
-    <Compile Include="Events\InventoryAmmoEvents.cs" />
-    <Compile Include="Events\PlayerInteractionEvents.cs" />
-    <Compile Include="Events\PlayerLocomotionEvents.cs" />
-    <Compile Include="Events\PlayerReloadEvents.cs" />
-    <Compile Include="Events\GlueGunEvents.cs" />
-    <Compile Include="Events\HeldItemEvents.cs" />
-    <Compile Include="Events\PlayerTriggerReloadEvents.cs" />
-    <Compile Include="Events\ResourceUpdatedEvents.cs" />
-    <Compile Include="Events\TentacleAttackEvents.cs" />
-    <Compile Include="Events\WeaponRecoilEvents.cs" />
-    <Compile Include="Events\PlayerReceivedDamageEvents.cs" />
-    <Compile Include="Injections\Events\InjectBackpackEvents.cs" />
-    <Compile Include="Injections\Events\InjectElevatorEvents.cs" />
-    <Compile Include="Injections\Events\InjectFocusStateEvents.cs" />
-    <Compile Include="Injections\Events\InjectResourceGainEvent.cs" />
-    <Compile Include="Injections\Events\InjectInventoryAmmoUpdateEvent.cs" />
-    <Compile Include="Injections\Events\InjectItemEquippableEvents.cs" />
-    <Compile Include="Injections\Events\InjectHeldItemEvents.cs" />
-    <Compile Include="Injections\Events\InjectPlayerInteractionEvents.cs" />
-    <Compile Include="Injections\Events\InjectPlayerReloadEvents.cs" />
-    <Compile Include="Injections\Events\InjectGlueGunEvents.cs" />
-    <Compile Include="Injections\Events\InjectPlayerTriggerReloadEvents.cs" />
-    <Compile Include="Injections\Events\InjectPlayerWeaponFireEvents.cs" />
-    <Compile Include="Injections\Events\InjectPlayerDamageEvents.cs" />
-    <Compile Include="Injections\Events\InjectLadderPLOCEvent.cs" />
-    <Compile Include="Injections\Events\InjectPLOCEvents.cs" />
-    <Compile Include="Injections\Events\InjectTentacleAttackEvents.cs" />
-    <Compile Include="Injections\GameHooks\InjectPlayerGUIRef.cs" />
-    <Compile Include="Injections\GameHooks\InjectVRStart.cs" />
-    <Compile Include="Injections\Gameplay\InjectDisablePlayerMoveTo.cs" />
-    <Compile Include="Injections\Input\InjectKeyInput.cs" />
-    <Compile Include="Injections\Rendering\InjectClusteredRenderingResolutionTweak.cs" />
-    <Compile Include="Injections\Rendering\InjectDisableFPSCameraRenderUpdate.cs" />
-    <Compile Include="Injections\Rendering\InjectPostProcessTweaks.cs" />
-    <Compile Include="Injections\Input\InjectAimCursorWithVRControllerInOverlay.cs" />
-    <Compile Include="Injections\Gameplay\InjectBioscannerFixes.cs" />
-    <Compile Include="Injections\Gameplay\InjectControllerAim.cs" />
-    <Compile Include="Injections\Gameplay\InjectCrouchHeight.cs" />
-    <Compile Include="Injections\Rendering\InjectForceVRResolution.cs" />
-    <Compile Include="Injections\Rendering\InjectScreenLiquidVRTweak.cs" />
-    <Compile Include="Injections\UI\InjectChatMsgEvents.cs" />
-    <Compile Include="Injections\Rendering\InjectDisableFPSRenderPreCull.cs" />
-    <Compile Include="Injections\Gameplay\InjectDisableHipFireAimSpreadInVR.cs" />
-    <Compile Include="Injections\Gameplay\InjectDisableRecoilCameraOffset.cs" />
-    <Compile Include="Injections\Gameplay\InjectFireFromMuzzle.cs" />
-    <Compile Include="Injections\Rendering\InjectFPRendering.cs" />
-    <Compile Include="Injections\Input\InjectFreeTheCursor.cs" />
-    <Compile Include="Injections\Gameplay\InjectHMDMovement.cs" />
-    <Compile Include="Injections\Input\InjectInput.cs" />
-    <Compile Include="Injections\GameHooks\InjectInteractionPromptRef.cs" />
-    <Compile Include="Injections\Gameplay\InjectSemanticInteractionTweaks.cs" />
-    <Compile Include="Injections\Gameplay\InjectMeleeIgnoreCameraDir.cs" />
-    <Compile Include="Injections\UI\InjectLocalizedVRText.cs" />
-    <Compile Include="Injections\UI\InjectMenuConfigUI.cs" />
-    <Compile Include="Injections\UI\InjectNavMarkerWorldSpace.cs" />
-    <Compile Include="Injections\Gameplay\InjectNoVRCamHIjack.cs" />
-    <Compile Include="Injections\GameHooks\InjectPlayerAgentRef.cs" />
-    <Compile Include="Injections\Input\InjectSkipButton.cs" />
-    <Compile Include="Injections\UI\InjectRemoveCrosshair.cs" />
-    <Compile Include="Injections\UI\InjectInteractionPromptActionNames.cs" />
-    <Compile Include="Injections\UI\InjectSmallerMarkers.cs" />
-    <Compile Include="Injections\Rendering\InjectDisableUIRendering.cs" />
-    <Compile Include="Injections\Gameplay\InjectVRHammer.cs" />
-    <Compile Include="Injections\UI\InjectWatchObjectives.cs" />
-    <Compile Include="Injections\UI\InjectWatchUpdateStatus.cs" />
-    <Compile Include="Injections\UI\InjectCommsMenu.cs" />
-    <Compile Include="Injections\Gameplay\InjectWeaponAimFlashlightAggro.cs" />
-    <Compile Include="Core\GTFO_VR_Plugin.cs" />
-    <Compile Include="Core\UI\DividedBarShaderController.cs" />
-    <Compile Include="Core\UI\Watch.cs" />
-    <Compile Include="Core\UI\VRWorldSpaceUI.cs" />
-    <Compile Include="Core\VR_Input\HandType.cs" />
-    <Compile Include="Injections\Rendering\InjectEarlyTransparentRendererFix.cs" />
-    <Compile Include="Util\ExtensionMethods.cs" />
-    <Compile Include="Core\WeaponArchetypeVRData.cs" />
-    <Compile Include="Core\VR_Input\Controllers.cs" />
-    <Compile Include="Core\VR_Input\HMD.cs" />
-    <Compile Include="Events\ItemEquippableEvents.cs" />
-    <Compile Include="Core\PlayerBehaviours\LaserPointer.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Core\VR_Input\TrackingType.cs" />
-    <Compile Include="Core\UI\VR_UI_Overlay.cs" />
-    <Compile Include="Core\VRSystems.cs" />
-    <Compile Include="Core\PlayerBehaviours\VRPlayer.cs" />
-    <Compile Include="Core\VR_Input\SteamVR_InputHandler.cs" />
-  </ItemGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
       <HintPath>$(GTFO_PATH)\BepInEx\core\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
+        <Reference Include="MonoMod.RuntimeDetour">
+      <HintPath>$(GTFO_PATH)\BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Addons-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Addons-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Addons-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="AssetPrefabs-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\AssetPrefabs-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\AssetPrefabs-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assets-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Assets-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Assets-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx.Core">
       <HintPath>$(GTFO_PATH)\BepInEx\core\BepInEx.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="BepInEx.IL2CPP">
-      <HintPath>$(GTFO_PATH)\BepInEx\core\BepInEx.IL2CPP.dll</HintPath>
+    <Reference Include="BepInEx.Unity.IL2CPP">
+      <HintPath>$(GTFO_PATH)\BepInEx\core\BepInEx.Unity.IL2CPP.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Bhaptics.Tact">
       <HintPath>$(GTFO_PATH)\BepInEx\plugins\Bhaptics.Tact.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="CellSound-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\CellSound-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\CellSound-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="CommandSystem">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\CommandSystem.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\CommandSystem.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Cpp2IL.Core">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(GTFO_PATH)\BepInEx\core\Cpp2IL.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DevConsoleCommands-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\DevConsoleCommands-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\DevConsoleCommands-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DevConsoloe-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\DevConsoloe-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\DevConsoloe-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Dissonance-integrations-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Dissonance-integrations-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Dissonance-integrations-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DissonanceVoip">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\DissonanceVoip.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\DissonanceVoip.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DropServerSDK-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\DropServerSDK-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\DropServerSDK-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ExcludeInBuild-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\ExcludeInBuild-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\ExcludeInBuild-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="FluffyUnderware.DevTools">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\FluffyUnderware.DevTools.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\FluffyUnderware.DevTools.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GameData-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\GameData-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\GameData-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GlobalFramework-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\GlobalFramework-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\GlobalFramework-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GUIX-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\GUIX-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\GUIX-ASM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Il2CppInterop.Common">
+      <HintPath>$(GTFO_PATH)\BepInEx\core\Il2CppInterop.Common.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Il2CppInterop.Generator">
+      <HintPath>$(GTFO_PATH)\BepInEx\core\Il2CppInterop.Generator.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Il2CppInterop.Runtime">
+      <HintPath>$(GTFO_PATH)\BepInEx\core\Il2CppInterop.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppMono.Security">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppMono.Security.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppMono.Security.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2Cppmscorlib.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppSystem.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Configuration">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppSystem.Configuration.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppSystem.Configuration.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Core">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppSystem.Core.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppSystem.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Net.Http">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppSystem.Net.Http.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppSystem.Net.Http.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Runtime.Serialization">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppSystem.Runtime.Serialization.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppSystem.Runtime.Serialization.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Xml">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppSystem.Xml.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppSystem.Xml.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Xml.Linq">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Il2CppSystem.Xml.Linq.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppSystem.Xml.Linq.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="LibTessDotNet">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\LibTessDotNet.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\LibTessDotNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Modules-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Modules-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Modules-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="PlayFab-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\PlayFab-ASM.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Plugins-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Plugins-ASM.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Prototype">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Prototype.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Prototypes_ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Prototypes_ASM.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Resources-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Resources-ASM.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="RootMotion-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\RootMotion-ASM.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Scenes-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Scenes-ASM.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Shards-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Shards-ASM.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="ShockwaveManager, Version=1.0.0.1, Culture=neutral, PublicKeyToken=null">
-      <HintPath>$(GTFO_PATH)\BepInEx\plugins\ShockwaveManager.dll</HintPath>
-    </Reference>
-    <Reference Include="SNet_ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\SNet_ASM.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="StandardAssets-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\StandardAssets-ASM.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="SteamVR_Standalone_IL2CPP, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>$(GTFO_PATH)\BepInEx\plugins\SteamVR_Standalone_IL2CPP.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+    <Reference Include="Newtonsoft.Json">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(GTFO_PATH)\BepInEx\plugins\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SteamWorks_ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\SteamWorks_ASM.dll</HintPath>
+    <Reference Include="PlayFab-ASM">
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\PlayFab-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System" />
+    <Reference Include="Plugins-ASM">
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Plugins-ASM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Prototype">
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Prototype.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Prototypes_ASM">
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Prototypes_ASM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Resources-ASM">
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Resources-ASM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RootMotion-ASM">
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\RootMotion-ASM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Scenes-ASM">
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Scenes-ASM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Shards-ASM">
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Shards-ASM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ShockwaveManager, Version=1.0.0.1, Culture=neutral, PublicKeyToken=null">
+      <HintPath>$(GTFO_PATH)\BepInEx\plugins\ShockwaveManager.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SNet_ASM">
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\SNet_ASM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="StandardAssets-ASM">
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\StandardAssets-ASM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SteamVR_Standalone_IL2CPP">
+      <HintPath>$(GTFO_PATH)\BepInEx\plugins\SteamVR_Standalone_IL2CPP.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SteamWorks_ASM">
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\SteamWorks_ASM.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="ToolBuddy.Curvy">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\ToolBuddy.Curvy.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\ToolBuddy.Curvy.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ToolBuddy.Curvy.Examples">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\ToolBuddy.Curvy.Examples.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\ToolBuddy.Curvy.Examples.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnhollowerBaseLib">
-      <HintPath>$(GTFO_PATH)\BepInEx\core\UnhollowerBaseLib.dll</HintPath>
-    </Reference>
-    <Reference Include="UnhollowerRuntimeLib">
-      <HintPath>$(GTFO_PATH)\BepInEx\core\UnhollowerRuntimeLib.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.Postprocessing.Runtime">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Unity.Postprocessing.Runtime.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Unity.Postprocessing.Runtime.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Unity.TextMeshPro.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Unity.TextMeshPro.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.AIModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.AIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AndroidJNIModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.AndroidJNIModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.AndroidJNIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.AnimationModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.AnimationModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.AssetBundleModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AudioModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.AudioModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.AudioModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ClothModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.ClothModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.ClothModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CrashReportingModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.CrashReportingModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.CrashReportingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.DirectorModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.DirectorModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.DirectorModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.GridModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.GridModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.GridModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.ImageConversionModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.ImageConversionModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.IMGUIModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.InputLegacyModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.InputLegacyModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.InputModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.InputModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.InputModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.ParticleSystemModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.PerformanceReportingModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.PerformanceReportingModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.PerformanceReportingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.Physics2DModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.Physics2DModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.Physics2DModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.PhysicsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ScreenCaptureModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.ScreenCaptureModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.SharedInternalsModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.SharedInternalsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.SharedInternalsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.SpriteMaskModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.SpriteMaskModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.SpriteMaskModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.SubsystemsModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.SubsystemsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.SubsystemsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TerrainModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.TerrainModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.TerrainModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TextCoreModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.TextCoreModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.TextCoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.TextRenderingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TilemapModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.TilemapModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.TilemapModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.UI.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UIElementsModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.UIElementsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.UIElementsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.UIModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.UIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityAnalyticsModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.UnityAnalyticsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.UnityWebRequestModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestWWWModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.VFXModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.VFXModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.VFXModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.VideoModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.VideoModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.VideoModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.VRModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.VRModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.VRModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.XRModule">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityEngine.XRModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.XRModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityFileDebug-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\UnityFileDebug-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityFileDebug-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Utils-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Utils-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Utils-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Wwise-ASM">
-      <HintPath>$(GTFO_PATH)\BepInEx\unhollowed\Wwise-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Wwise-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>xcopy "$(TargetPath)" "$(GTFO_PATH)\BepInEx\plugins" /E /Y</PostBuildEvent>
-  </PropertyGroup>
+  
+  <Target Name="PostBuild" BeforeTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetPath)&quot; &quot;$(GTFO_PATH)\BepInEx\plugins&quot; /E /Y" />
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.421302">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
 </Project>
