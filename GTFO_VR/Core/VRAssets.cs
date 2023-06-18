@@ -70,6 +70,21 @@ namespace GTFO_VR.Core
             return TextAlwaysRender;
         }
 
+        public static Shader GetThermalGlowShader()
+        {
+            if (ThermalGlowShader == null)
+            {
+                if (secondaryAssetBundle == null)
+                {
+                    secondaryAssetBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/gtfovr_thermal_glow");
+                }
+
+                ThermalGlowShader = secondaryAssetBundle.LoadAsset("assets/GTFOVR_Thermal_Glow.shader").Cast<Shader>();
+            }
+
+            return ThermalGlowShader;
+        }
+
         public Sprite CreateSpriteFromTexture2D(Texture2D tex)
         {
             return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f,0.5f), 100f);
