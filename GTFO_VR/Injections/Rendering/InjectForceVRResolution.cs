@@ -1,4 +1,5 @@
 ﻿using GTFO_VR.Core;
+using GTFO_VR.Core.UI;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace GTFO_VR.Injections.Rendering
         {
             Log.Info("Updating global resolution to 16:9 HMD res...");
             // We use a scaled 16:9 resolution because that's the best aspect for rendering the UI of GTFO
-            Resolution scaledHMDRes = SteamVR_Camera.GetResolutionForAspect(16, 9);
+            Resolution scaledHMDRes = SteamVR_Camera.GetResolutionForAspect(16, 9, VR_UI_Overlay.MAX_GUI_RESOLUTION);
             res.width = scaledHMDRes.width;
             res.height = scaledHMDRes.height;
         }
@@ -33,7 +34,7 @@ namespace GTFO_VR.Injections.Rendering
         private static void Postfix(GuiManager __instance)
         {
             Log.Info("Updating menu page resolution to HMD res...");
-            Resolution scaledHMDResolution = SteamVR_Camera.GetResolutionForAspect(16, 9);
+            Resolution scaledHMDResolution = SteamVR_Camera.GetResolutionForAspect(16, 9, VR_UI_Overlay.MAX_GUI_RESOLUTION);
             GuiManager.ScreenRes = scaledHMDResolution;
             GuiManager.ScreenCenter = new Vector2(GuiManager.ScreenRes.width / 2, GuiManager.ScreenRes.height / 2);
             __instance.CalcSafeArea();

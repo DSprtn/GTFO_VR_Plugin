@@ -18,6 +18,9 @@ namespace GTFO_VR.Core.UI
 
         public static VR_UI_Overlay Current;
 
+        // UI breaks at very high resolutions, so limit to UHD
+        public const int MAX_GUI_RESOLUTION = 3840;
+
         Camera UI_Camera;
         Camera Popup_Camera;
 
@@ -105,7 +108,7 @@ namespace GTFO_VR.Core.UI
 
         internal void CreateRenderTexture()
         {
-            Resolution res = SteamVR_Camera.GetResolutionForAspect(16, 9);
+            Resolution res = SteamVR_Camera.GetResolutionForAspect(16, 9, VR_UI_Overlay.MAX_GUI_RESOLUTION);
             m_overlayTarget = new RenderTexture(res.width, res.height, 16, RenderTextureFormat.ARGBFloat);
         }
 
