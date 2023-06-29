@@ -5,6 +5,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
 {
     public interface BodyHapticAgent
     {
+        bool AgentActive();
         void Update();
         void HammerSmackHaptics(float dmg);
         void HammerFullyChargedHaptics();

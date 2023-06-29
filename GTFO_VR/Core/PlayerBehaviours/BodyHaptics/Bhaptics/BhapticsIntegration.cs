@@ -516,5 +516,9 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
                 m_hapticPlayer.SubmitRegistered(VEST_STAND_KEY);
             }
         }
+        public bool AgentActive()
+        {
+            return VRConfig.configUseBhaptics.Value;
+        }
     }
 }

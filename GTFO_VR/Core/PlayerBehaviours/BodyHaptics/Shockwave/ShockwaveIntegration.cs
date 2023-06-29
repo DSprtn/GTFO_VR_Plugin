@@ -41,6 +41,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public void HammerSmackHaptics(float dmg)
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             List<List<int>> rightIndices = new List<List<int>>
             {
                 new List<int>{ 54, 55 },
@@ -64,6 +69,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public void HammerFullyChargedHaptics()
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             List<List<int>> rightIndices = new List<List<int>>
             {
                 new List<int>{ 54 },
@@ -85,6 +95,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public void HammerChargingHaptics(float pressure)
         {
+            if (!AgentActive())
+            {
+                return;
+            }       
+
             if (IsInElevator())
             {
                 return;
@@ -97,6 +112,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         private async void PlayWeaponReloadHapticsFunc()
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             const int delay = 150;
 
             int[] rightArmIndices = { 54, 52, 50, 51, 53, 55 };
@@ -122,6 +142,12 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
         public void PlayWeaponReloadHaptics()
         {
             m_isReloading = true;
+
+            if (!AgentActive())
+            {
+                return;
+            }
+
             PlayWeaponReloadHapticsFunc();
         }
 
@@ -132,6 +158,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public void PlayWeaponFireHaptics(Weapon weapon)
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             float intensity = Haptics.GetFireHapticStrength(weapon);
 
             if (Controllers.MainControllerType == HandType.Left || Controllers.AimingTwoHanded)
@@ -162,12 +193,23 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
         public void PlayReceiveDamageHaptics(float dmg, Vector3 direction)
         {
             OrientationSettings orientationSettings = BodyHapticsUtils.GetOrientationSettingsFromDirection(m_player, direction);
-            SendOrientedHapticPulse(ShockwaveManager.HapticRegion.TORSO, 1, 10, 50, orientationSettings);
             m_lastDamageOrientationSettings = orientationSettings;
+
+            if (!AgentActive())
+            {
+                return;
+            }
+
+            SendOrientedHapticPulse(ShockwaveManager.HapticRegion.TORSO, 1, 10, 50, orientationSettings);
         }
 
         private void SendTorsoOrientedHaptic(float offsetAngleX, float offsetY, float strength = 1f, int duration = 150)
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             const int regionHeight = 10;
             SendOrientedHapticPulse(ShockwaveManager.HapticRegion.TORSO, strength, regionHeight, duration,
                 new OrientationSettings(offsetAngleX, offsetY));
@@ -175,6 +217,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public async void MineExplosionHaptics(OrientationSettings orientation, float intensity)
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             const float offsetYStep = 0.2f;
             const float offsetAngleXStep = 45f;
             const int range = 3;
@@ -210,6 +257,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public async void TentacleAttackHaptics(float dmg, Agent sourceAgent, Vector3 position)
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             if (m_lastDamageOrientationSettings != null)
             {
                 const float offsetYStep = 0.2f;
@@ -233,12 +285,22 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public async void LandedFromElevator(eFocusState focusState)
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             await Task.Delay(500);
             ShockwaveEngine.PlayPattern(new HapticIndexPattern(BodyHapticsIndices.FeetToShoulders, 1f, 30));
         }
 
         public void PlayerInteractedHaptics(PlayerAgent source)
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             int[] rightArmIndices = { 54, 55 };
             int[] indices = (Controllers.MainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightArmIndices) : rightArmIndices;
             ShockwaveEngine.PlayPattern(new HapticIndexPattern(indices, 0.6f, 25));
@@ -246,6 +308,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         private async void PlayBioscanPatternFunc()
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             List<List<int>> RightToLeft = new List<List<int>>
             {
                 new List<int>{ 54, 52, 50, 48, 55, 53, 51, 49 },
@@ -284,6 +351,12 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
         public void PlayBioscanHaptics()
         {
             m_isBioScanning = true;
+
+            if (!AgentActive())
+            {
+                return;
+            }
+
             PlayBioscanPatternFunc();
         }
 
@@ -294,6 +367,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public void FlashlightToggledHaptics()
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             int[] rightArmIndices = { 54 };
             int[] indices = (Controllers.MainControllerType == HandType.Left) ? ShockwaveEngine.GetPatternMirror(rightArmIndices) : rightArmIndices;
             ShockwaveEngine.PlayPattern(new HapticIndexPattern(indices, 0.6f, 25));
@@ -313,6 +391,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public void PlayerChangedItemHaptics(ItemEquippable item)
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             if (IsInElevator())
             {
                 return;
@@ -330,6 +413,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         private void PlayGainAmmoPattern()
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             const float intensity = 0.7f;
             const int delay = 300;
 
@@ -364,6 +452,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         private async void PlayGainToolsPattern()
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             const float intensity = 0.7f;
 
             for (int i = 0; i < 2; i++)
@@ -400,6 +493,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public void AmmoGainedHaptics(float ammoStandardRel, float ammoSpecialRel, float ammoClassRel)
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             if (ammoStandardRel > 0 || ammoSpecialRel > 0)
             {
                 PlayGainAmmoPattern();
@@ -412,6 +510,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public async void InfectionHealed(float infection)
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             int[] indices = {
                 6, 14, 22, 30, 38, 39, 31, 23, 15, 7, 0, 8, 16, 24, 32, 33, 25, 17, 9, 1,
                 2, 10, 18, 26, 34, 35, 27, 19, 11, 3, 4, 12, 20, 28, 36, 37, 29, 21, 13, 5
@@ -431,6 +534,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         private async void PlayLifeGainPattern()
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             const int bodyPointsCount = 40;
             int[] indices = new int[bodyPointsCount];
             for (int i = 0; i < bodyPointsCount; i++)
@@ -448,6 +556,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         private async void PlayHeartbeatPattern()
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             const float VERY_LOW_HEALTH = 0.10f;
 
             while (m_isLowHealth)
@@ -476,6 +589,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         private void PlayDeathPattern()
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             ShockwaveEngine.PlayPattern(new HapticIndexPattern(BodyHapticsIndices.ShouldersToFeet, 1.0f, 40));
         }
 
@@ -515,6 +633,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public async void WeaponAmmoEmpty(bool leftArm)
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             if (IsInElevator())
             {
                 return;
@@ -528,19 +651,22 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public void OnPlayerLocomotionStateChanged(PlayerLocomotion.PLOC_State state)
         {
-            if ((m_lastLocState == PlayerLocomotion.PLOC_State.Fall || m_lastLocState == PlayerLocomotion.PLOC_State.Jump)
-                && (state == PlayerLocomotion.PLOC_State.Stand || state == PlayerLocomotion.PLOC_State.Crouch))
+            if (AgentActive())
             {
-                var indices = new List<List<int>>
+                if ((m_lastLocState == PlayerLocomotion.PLOC_State.Fall || m_lastLocState == PlayerLocomotion.PLOC_State.Jump)
+                    && (state == PlayerLocomotion.PLOC_State.Stand || state == PlayerLocomotion.PLOC_State.Crouch))
                 {
-                    new List<int>{ 8, 9, 10, 11, 12, 13, 14, 15 },
-                    new List<int>{ 0, 1, 2, 3, 4, 5, 6, 7 },
-                    new List<int>{ 64, 56, 57, 65 },
-                    new List<int>{ 66, 58, 59, 67 },
-                    new List<int>{ 68, 60, 61, 69 },
-                    new List<int>{ 70, 62, 63, 71 },
-                };
-                ShockwaveEngine.PlayPattern(new HapticIndexPattern(indices, 0.4f, 25));
+                    var indices = new List<List<int>>
+                    {
+                        new List<int>{ 8, 9, 10, 11, 12, 13, 14, 15 },
+                        new List<int>{ 0, 1, 2, 3, 4, 5, 6, 7 },
+                        new List<int>{ 64, 56, 57, 65 },
+                        new List<int>{ 66, 58, 59, 67 },
+                        new List<int>{ 68, 60, 61, 69 },
+                        new List<int>{ 70, 62, 63, 71 },
+                    };
+                    ShockwaveEngine.PlayPattern(new HapticIndexPattern(indices, 0.4f, 25));
+                }
             }
 
             m_lastLocState = state;
@@ -548,6 +674,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public void CrouchToggleHaptics(bool isCrouched)
         {
+            if (!AgentActive())
+            {
+                return;
+            }
+
             if (IsInElevator())
             {
                 return;
@@ -578,6 +709,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
         private bool IsInElevator()
         {
             return m_lastLocState == PlayerLocomotion.PLOC_State.InElevator;
+        }
+
+        public bool AgentActive()
+        {
+            return VRConfig.configUseShockwave.Value && ShockwaveManager.Instance.Ready && ShockwaveManager.Instance.suitConnected();
         }
     }
 }
