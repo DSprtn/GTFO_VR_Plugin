@@ -103,9 +103,7 @@ namespace GTFO_VR.Injections.Rendering
 
         private static void Prefix(ref bool enable, GameObject go)
         {
-            
-
-            // This probably only needs to be run once for each unique GO, but I'm not going to be the one to break it.
+            // This hook is only called once for each GO
             foreach (var m in go.GetComponentsInChildren<MeshRenderer>(true))
             {
                 if (m == null || m.sharedMaterials == null)
@@ -146,6 +144,34 @@ namespace GTFO_VR.Injections.Rendering
                             {
                                 // And enabling it makes most of them at least usable
                                 mat.EnableKeyword("ALTERNATIVE_PROJECTION_MODE");
+
+                                // Accrat ND6 Heavy SMG
+                                if (mat.name.Equals("Sight_2_1"))
+                                {
+                                    // The muzzle is also misaligned
+                                    // This is corrected in InjectMuzzleAlignCorrection
+
+                                    mat.SetFloat("_ProjSize1", 0.6f);
+                                    mat.SetFloat("_ProjSize2", 0.2f);
+                                    mat.SetFloat("_ProjSize3", 0.6f);
+
+                                    mat.SetFloat("_ProjDist1", 100);
+                                    mat.SetFloat("_ProjDist2", 20);
+                                    mat.SetFloat("_ProjDist3", 5);
+
+                                    mat.SetFloat("_ZeroOffset", 0.25f);
+
+                                    // Tune down the dirt so you're not blinded
+                                    mat.SetFloat("_SightDirt", 1);
+
+                                    // Reticle is basically invisible unless completely center because of how it blends with the sight.
+                                    // Make it glow like a dotsight should.
+                                    float sightGlowMultiplier = 9;
+                                    float SlightsightGlowMultiplier = 3;
+                                    mat.SetColor("_ReticuleColorA", new Color(0, sightGlowMultiplier, 0.7935257f * sightGlowMultiplier, 1f));
+                                    mat.SetColor("_ReticuleColorB", new Color(0, SlightsightGlowMultiplier, 0.7935257f * SlightsightGlowMultiplier, 1f));
+                                    mat.SetColor("_ReticuleColorC", new Color(0, SlightsightGlowMultiplier, 0.7935257f * SlightsightGlowMultiplier, 1f));
+                                }
 
                                 // Techman Klaust 6 Burst Cannon
                                 if (mat.name.Equals("Sight_9_1"))
