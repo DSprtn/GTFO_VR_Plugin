@@ -131,7 +131,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
                 "Arm and body reload haptics should have same indices length and delay, or the Task.Delay must be adapted to match both durations");
             int sleepDuration = bodyIndices.Length * bodyPattern.delay;
 
-            while (m_isReloading)
+            while (m_isReloading && AgentActive())
             {
                 ShockwaveEngine.PlayPattern(armPattern);
                 ShockwaveEngine.PlayPattern(bodyPattern);
@@ -324,7 +324,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             };
 
             int i = 0;
-            while (m_isBioScanning)
+            while (m_isBioScanning && AgentActive())
             {
                 HapticIndexPattern pattern = null;
                 switch (i % 4)
@@ -563,7 +563,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
             const float VERY_LOW_HEALTH = 0.10f;
 
-            while (m_isLowHealth)
+            while (m_isLowHealth && AgentActive())
             {
                 float intensity = 0.2f;
                 int delay = 1000;
