@@ -126,7 +126,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void Update()
         {
-            if (VRConfig.configUseBhaptics.Value)
+            if (AgentActive())
             {
                 UpdateBhapticsState();
             }
@@ -167,7 +167,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void HammerSmackHaptics(float dmg)
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!AgentActive())
             {
                 return;
             }
@@ -186,7 +186,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void HammerFullyChargedHaptics()
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!AgentActive())
             {
                 return;
             }
@@ -205,7 +205,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void HammerChargingHaptics(float pressure)
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!AgentActive())
             {
                 return;
             }
@@ -226,7 +226,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void PlayWeaponReloadHaptics()
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!AgentActive())
             {
                 return;
             }
@@ -245,7 +245,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void PlayWeaponFireHaptics(Weapon weapon)
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!AgentActive())
             {
                 return;
             }
@@ -279,7 +279,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void PlayReceiveDamageHaptics(float dmg, Vector3 direction)
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!AgentActive())
             {
                 return;
             }
@@ -297,7 +297,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void MineExplosionHaptics(OrientationSettings orientationSettings, float intensity)
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!AgentActive())
             {
                 return;
             }
@@ -311,7 +311,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void TentacleAttackHaptics(float dmg, Agents.Agent sourceAgent, Vector3 position)
         {
-            if (!VRConfig.configUseBhaptics.Value || sourceAgent != m_player)
+            if (!AgentActive() || sourceAgent != m_player)
             {
                 return;
             }
@@ -330,7 +330,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void LandedFromElevator(eFocusState focusState)
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!AgentActive())
             {
                 return;
             }
@@ -341,7 +341,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void PlayerInteractedHaptics(PlayerAgent source)
         {
-            if (!VRConfig.configUseBhaptics.Value || (source != null && source != m_player))
+            if (!AgentActive() || (source != null && source != m_player))
             {
                 return;
             }
@@ -358,7 +358,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void PlayBioscanHaptics()
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!AgentActive())
             {
                 return;
             }
@@ -377,7 +377,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void FlashlightToggledHaptics()
         {
-            if (!VRConfig.configUseBhaptics.Value || !m_player.Alive)
+            if (!AgentActive() || !m_player.Alive)
             {
                 return;
             }
@@ -394,7 +394,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void PlayerChangedItemHaptics(ItemEquippable item)
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!AgentActive())
             {
                 return;
             }
@@ -413,7 +413,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void AmmoGainedHaptics(float ammoStandardRel, float ammoSpecialRel, float ammoClassRel)
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!AgentActive())
             {
                 return;
             }
@@ -432,7 +432,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void InfectionHealed(float infection)
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!AgentActive())
             {
                 return;
             }
@@ -442,7 +442,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void OnHealthUpdated(float health)
         {
-            if (VRConfig.configUseBhaptics.Value)
+            if (AgentActive())
             {
                 if (health <= BodyHapticsUtils.LOW_HEALTH && m_nextHeartbeatPatternTime <= 0)
                 {
@@ -486,7 +486,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void OnPlayerLocomotionStateChanged(PlayerLocomotion.PLOC_State state)
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            if (!AgentActive())
             {
                 return;
             }
@@ -502,7 +502,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         public void CrouchToggleHaptics(bool isCrouched)
         {
-            if (!VRConfig.configUseBhaptics.Value || m_lastLocState == PlayerLocomotion.PLOC_State.InElevator)
+            if (!AgentActive() || m_lastLocState == PlayerLocomotion.PLOC_State.InElevator)
             {
                 return;
             }
