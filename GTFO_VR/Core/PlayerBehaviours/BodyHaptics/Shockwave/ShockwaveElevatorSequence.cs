@@ -21,6 +21,13 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
         {
             m_elevatorState = elevatorState;
 
+            // If not active update state so any while() loops below are exited,
+            // but don't trigger nay new patterns
+            if (!AgentActive())
+            {
+                return;
+            }
+
             if (elevatorState == ElevatorState.FirstMovement
                 || elevatorState == ElevatorState.CageRotating)
             {
@@ -178,6 +185,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
             List<List<int>> listIndices = BodyHapticsIndices.FeetToShoulders;
             int duration = 2000 / listIndices.Count;
             await ShockwaveEngine.PlayPatternFunc(new HapticIndexPattern(listIndices, 0.7f, duration));
+        }
+
+        public bool AgentActive()
+        {
+            return VRConfig.configUseShockwave.Value && ShockwaveManager.Instance.Ready && ShockwaveManager.Instance.suitConnected();
         }
     }
 }
