@@ -25,8 +25,8 @@ If you are using Wireless PCVR to play, and the weapon handling feels 'floaty' o
 	If you are upgrading to R7/R1:Ext or have an old Bepinex/GTFO_VR installation, delete it! 
 	Removing the bepinex folder should suffice. You'll have to redo your config!
 
- 	1. Download BepInEx 6.0.0b553
-	from https://builds.bepinex.dev/projects/bepinex_be/553/BepInEx_UnityIL2CPP_x64_fa9b1ab_6.0.0-be.553.zip
+ 	1. Download BepInEx 6.0.0b670
+	from https://builds.bepinex.dev/projects/bepinex_be/670/BepInEx-Unity.IL2CPP-win-x64-6.0.0-be.670%2B42a6727.zip
 	
 	2. Download the latest version of the GTFO_VR plugin from https://github.com/DSprtn/GTFO_VR_Plugin/releases
 	   OR grab one of the beta versions from the discord mentioned above!
