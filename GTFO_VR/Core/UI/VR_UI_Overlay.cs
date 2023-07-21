@@ -101,6 +101,10 @@ namespace GTFO_VR.Core.UI
                 }
                 RenderUI();
             }
+
+            // SteamVR_Render will set targetFrameRate to -1 in its Update(), resulting in unconstrainted framerate in overlay.
+            // Each component sets the value when active/rendering, so we can set-and-forget.
+            Application.targetFrameRate = (int)SteamVR.instance.hmd_DisplayFrequency;
         }
 
         internal void CreateRenderTexture()
