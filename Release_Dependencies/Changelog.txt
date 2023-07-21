@@ -1,3 +1,28 @@
+Total changelog (1.3.1b3):
+
+- Added FPS limit in menu. This is a possible fix for the menu stutter issue. Let us know if it still happens! 
+- Made Bhaptics and shockwave integrations optional. You can now disable/enable these whenever. 
+- Fixed and improved Accrat ND6 heavy SMG sight
+- Fixed menu issues where high HMD resolutions would prevent UI at the edges of the screen from being accessible.
+- (Hopefully) fixed BHaptics related issues.
+
+Total changelog (1.3.0b2):
+
+- Fixed unupdated library causing issues
+
+Total changelog (1.3.0):
+
+!!! IMPORTANT !!! 
+
+- Upgraded mod to BepInEx 670 (now compatible with other GTFO mods!) 
+... This does mean you will need to upgrade. A new BepInEx version has been linked in the readme. The mod will NOT work without upgrading! 
+... Other mods might overwrite your BepInEx version. This will break things!
+
+- Fix laser disappearing in thermal sights when starting multiple missions without restarting
+
+The BepInEx version shipped with other mods will NOT work at this time! 
+
+
 Total changelog: (1.2.2):
 - Added Shockwave suit integration
 - Fixed the following weapon sights:
