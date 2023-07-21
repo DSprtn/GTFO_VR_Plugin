@@ -81,7 +81,8 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         private void ResubmitCompletedHapticPatterns()
         {
-            if (!VRConfig.configUseBhaptics.Value)
+            // If inactive, just skip submitting the next pattern.
+            if (!AgentActive())
             {
                 return;
             }
@@ -209,6 +210,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
                 FeedbackDurationScale = feedbackDurationScale;
                 FeedbackIntensity = feedbackIntensity;
             }
+        }
+
+        public bool AgentActive()
+        {
+            return VRConfig.configUseBhaptics.Value;
         }
     }
 }

@@ -23,6 +23,7 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configUseLaserPointerOnWeapons;
         internal static ConfigEntry<bool> configUseWeaponHaptics;
         internal static ConfigEntry<bool> configUseBhaptics;
+        internal static ConfigEntry<bool> configUseShockwave;
         internal static ConfigEntry<string> configLaserPointerColor;
         internal static ConfigEntry<float> configShootingHapticsStrength;
         internal static ConfigEntry<int> configWeaponRotationOffset;
@@ -74,7 +75,8 @@ namespace GTFO_VR.Core
             BindHeader("Input");
             configUseLeftHand = BindBool(file, "Input", "Use left hand as main hand?", false, "If true, all items will appear in the left hand", "Left handed mode");
             configProtube = BindBool(file, "Input", "Enable ProTubeVR support?", true, "If true, will enable ProTubeVR events", "ProtubeVR Support");
-            configUseBhaptics = BindBool(file, "Bhaptics", "Enable bhaptics", true, "If true, bhaptics integration will be enabled", "Bhaptics");
+            configUseBhaptics = BindBool(file, "Bhaptics", "Enable bhaptics", true, "If true, bhaptics integration will be enabled", "Bhaptics Support");
+            configUseShockwave = BindBool(file, "Shockwave", "Enable Shockwave", true, "If true, Shockwave integration will be enabled", "Shockwave Support");
 
             configIRLCrouch = BindBool(file, "Input", "Crouch in-game when you crouch IRL?", true, "If true, when crouching down below a certain threshold IRL, the in-game character will also crouch", "Crouch on IRL crouch");
             configCrouchHeight = BindInt(file, "Input", "Crouch height in centimeters", 115, 90, 145, "In-game character will be crouching if your head is lower than this height above the playspace", "Crouch height (cm)");

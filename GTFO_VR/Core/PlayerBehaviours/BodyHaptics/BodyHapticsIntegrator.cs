@@ -48,12 +48,36 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
 
         public static void Initialize()
         {
-            ShockwaveManager.Instance.InitializeSuit();
+            // This component is not awake until cagedrop, and we want to be able to toggle this before then.
+            // Initialize() is only called once per run.
+            VRConfig.configUseShockwave.SettingChanged += shockwaveConfigChanged;
+
+            InitializeShockwave();
+        }
+
+        private static void InitializeShockwave()
+        {
+            // Initialize if enabled and not already initialized
+            if (VRConfig.configUseShockwave.Value && !ShockwaveManager.Instance.Ready)
+            {
+                Log.Info("Initializing Shockwave suit");
+                ShockwaveManager.Instance.InitializeSuit();
+            }
         }
 
         public static void Destroy()
         {
             ShockwaveManager.Instance.DisconnectSuit();
+        }
+
+        private static void shockwaveConfigChanged(object sender, EventArgs e)
+        {
+            // Initialize if enabled after initial launch.
+            // I could not find any documentation, so safest to just leave connected even if disabled later.
+            if (VRConfig.configUseShockwave.Value)
+            {
+                InitializeShockwave();
+            }
         }
 
         private void Awake()
