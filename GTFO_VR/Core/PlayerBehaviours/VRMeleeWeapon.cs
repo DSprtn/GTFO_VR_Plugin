@@ -1,4 +1,6 @@
 ﻿using Gear;
+using GTFO_VR.Core.PlayerBehaviours.Melee;
+using GTFO_VR.Core.UI.Terminal.Pointer;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
 using System;
@@ -15,8 +17,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
         }
 
+        public static VRMeleeWeapon Current;
+
         public static float WeaponHitboxSize = .61f;
         public static float WeaponHitDetectionSphereCollisionSize = .61f;
+        public MeleeTracker VelocityTracker = new MeleeTracker();
 
         private MeleeWeaponFirstPerson m_weapon;
         private Transform m_animatorRoot;
@@ -30,6 +35,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             MeleeWeaponFirstPerson.DEBUG_ENABLED = VRConfig.configDebugShowHammerHitbox.Value;
             VRConfig.configDebugShowHammerHitbox.SettingChanged += ToggleDebug;
 #endif
+            Current = this;
 
             m_weapon = weapon;
             m_animatorRoot = m_weapon.ModelData.m_damageRefAttack.parent;
@@ -121,6 +127,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 ForceDamageRefPosition();
                 m_chargeupIndicatorLight.transform.position = m_weapon.ModelData.m_damageRefAttack.transform.position;
+                TrackPositionAndVelocity();
             }
         }
 
@@ -132,6 +139,24 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 {
                     m_weapon.ModelData.m_damageRefAttack.transform.position = Controllers.MainController.transform.TransformPoint(new Vector3(0, m_offset.y, m_offset.z));
                 }
+            }
+        }
+
+        public void TrackPositionAndVelocity()
+        {
+            if (m_weapon.ModelData != null)
+            {
+                // Position of melee damage ref is used to calculate velocity.
+                // This must be done in local space as the units are tiny and rounding errors throw off the velocity otherwise.
+                // This is basically a reapeat of ForceDamageRefPosition() but in local space of the controller
+
+                // Global position. Used for accurate hit detection.
+                Vector3 damageRefPosition = m_weapon.ModelData.m_damageRefAttack.position;
+                // Local position. Used for accurate velocity calculation
+                Vector3 localPosition = Controllers.MainControllerPose.transform.localPosition;     
+                localPosition = localPosition + (Controllers.MainControllerPose.transform.rotation * m_offset); 
+
+                VelocityTracker.AddPosition(damageRefPosition, localPosition, Time.deltaTime);
             }
         }
 

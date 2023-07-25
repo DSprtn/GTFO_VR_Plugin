@@ -10,6 +10,7 @@ using Il2CppInterop.Common;
 
 namespace GTFO_VR.Detours
 {
+    
     /// <summary>
     /// Patches the hammer so it can only hit things if the player is swinging his controller
     /// </summary>
@@ -42,7 +43,8 @@ namespace GTFO_VR.Detours
         {
             bool result = OriginalHammerMethod(thisPtr, attackData, sphereRad * VRMeleeWeapon.WeaponHitboxSize, elapsedTime, out hits);
 
-            if (!VRConfig.configUseOldHammer.Value && Controllers.MainControllerPose.GetVelocity().magnitude < 0.4f)
+            float velocity = VRMeleeWeapon.Current.VelocityTracker.GetSmoothVelocity();
+            if (!VRConfig.configUseOldHammer.Value && velocity < 1.8f)
             {
                 return false;
             }
@@ -55,4 +57,5 @@ namespace GTFO_VR.Detours
         private static AttackCheckDelegate OriginalHammerMethod;
 
     }
+    
 }

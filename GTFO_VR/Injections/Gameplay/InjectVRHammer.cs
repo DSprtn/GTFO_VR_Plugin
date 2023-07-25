@@ -33,11 +33,11 @@ namespace GTFO_VR.Injections
     [HarmonyPatch(typeof(MWS_ChargeUp), nameof(MWS_ChargeUp.Update))]
     static class InjectAutoReleaseHammerSmack
     {
-
         static void Postfix(MWS_ChargeUp __instance)
         {
+            float velocity = VRMeleeWeapon.Current ? VRMeleeWeapon.Current.VelocityTracker.GetSmoothVelocity() : -1;
 
-            if (Controllers.MainControllerPose.GetVelocity().magnitude > 0.5f)
+            if (velocity > 2f)
             {
 #if DEBUG_GTFO_VR
                 if (VRConfig.configDebugShowHammerHitbox.Value)
@@ -50,7 +50,7 @@ namespace GTFO_VR.Injections
                 Collider[] enemyColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .75f, LayerManager.MASK_ENEMY_DAMAGABLE);
                 bool shouldReleaseCharge = enemyColliders.Length > 0;
 
-                if(Controllers.MainControllerPose.GetVelocity().magnitude > 1.2f) {
+                if(velocity > 5f) {
                     Collider[] staticColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .25f, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC);
                     shouldReleaseCharge = shouldReleaseCharge || staticColliders.Length > 0;
                 }
@@ -130,7 +130,7 @@ namespace GTFO_VR.Injections
             {
                 return;
             }
-            Vector3 velocity = Controllers.MainControllerPose.GetVelocity() * 3f;
+            Vector3 velocity = VRMeleeWeapon.Current ? VRMeleeWeapon.Current.VelocityTracker.getVelocityVector() : Vector3.zero;
             data.sourcePos = data.hitPos - data.hitNormal * velocity.magnitude;
             if(isPush)
             {
