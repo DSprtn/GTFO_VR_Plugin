@@ -83,38 +83,27 @@ namespace GTFO_VR.Injections
 
     /// <summary>
     /// Sort hits to prioritize them based on proximity to hammer center (only first enemy hit counts)
+    /// Light attacks
     /// </summary>
     [HarmonyPatch(typeof(MWS_AttackSwingBase), nameof(MWS_AttackSwingBase.OnAttackHit))]
-    static class InjectPrioritizeProximityTargetsOnHit
+    static class InjectPrioritizeProximityTargetsOnLightHit
     {
-
         static void Postfix(MWS_AttackSwingBase __instance)
         {
-            var hits = __instance.m_weapon.HitsForDamage;
+            __instance.m_weapon.HitsForDamage = VRMeleeWeapon.sortHits(__instance.m_weapon.HitsForDamage, __instance.m_data.m_damageRef.position);
+        }
+    }
 
-            List<MeleeWeaponDamageData> sortedHits = new List<MeleeWeaponDamageData>();
-            
-            Vector3 damageRefPos = __instance.m_data.m_damageRef.position;
-
-            
-            while(hits.Count > 0)
-            {
-                float lowest = 999999f;
-                MeleeWeaponDamageData closestData = null;
-                foreach(var hit in hits)
-                {
-                    float sqrDst = (hit.hitPos - damageRefPos).sqrMagnitude;
-                    if (sqrDst <= lowest)
-                    {
-                        closestData = hit;
-                        lowest = sqrDst;
-                    }
-                }
-                sortedHits.Add(closestData);
-                hits.Remove(closestData);
-            }
-            __instance.m_weapon.HitsForDamage = sortedHits;
-
+    /// <summary>
+    /// Sort hits to prioritize them based on proximity to hammer center (only first enemy hit counts)
+    /// Heavy attacks
+    /// </summary>
+    [HarmonyPatch(typeof(MWS_AttackHeavy), nameof(MWS_AttackHeavy.OnAttackHit))]
+    static class InjectPrioritizeProximityTargetsOnHeavyHit
+    {
+        static void Postfix(MWS_AttackSwingBase __instance)
+        {
+            __instance.m_weapon.HitsForDamage = VRMeleeWeapon.sortHits(__instance.m_weapon.HitsForDamage, __instance.m_data.m_damageRef.position);
         }
     }
 

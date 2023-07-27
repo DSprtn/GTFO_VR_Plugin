@@ -3,6 +3,7 @@ using GTFO_VR.Core.PlayerBehaviours.Melee;
 using GTFO_VR.Core.UI.Terminal.Pointer;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
+using Il2CppSystem.Collections.Generic;
 using System;
 using UnityEngine;
 
@@ -175,6 +176,30 @@ namespace GTFO_VR.Core.PlayerBehaviours
                     m_animatorRoot.transform.localRotation = Quaternion.identity;
                 }
             }
+        }
+
+        public static List<MeleeWeaponDamageData> sortHits(List<MeleeWeaponDamageData> hits, Vector3 damageRefPos)
+        {
+            List<MeleeWeaponDamageData> sortedHits = new List<MeleeWeaponDamageData>();
+
+            while (hits.Count > 0)
+            {
+                float lowest = 999999f;
+                MeleeWeaponDamageData closestData = null;
+                foreach (var hit in hits)
+                {
+                    float sqrDst = (hit.hitPos - damageRefPos).sqrMagnitude;
+                    if (sqrDst <= lowest)
+                    {
+                        closestData = hit;
+                        lowest = sqrDst;
+                    }
+                }
+                sortedHits.Add(closestData);
+                hits.Remove(closestData);
+            }
+
+            return sortedHits;
         }
 
         private void OnDestroy()
