@@ -28,7 +28,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private Transform m_animatorRoot;
         private Light m_chargeupIndicatorLight;
 
-        public Vector3 m_offset = new Vector3(0, .68f, .45f);
+        public Quaternion m_rotationOffset = Quaternion.EulerAngles(new Vector3(0.78f, 0, 0)); // Weapon up is about 45 degrees off
+        public Vector3 m_offset = new Vector3(0, 0, .6f);
 
         public void Setup(MeleeWeaponFirstPerson weapon)
         {
@@ -48,27 +49,26 @@ namespace GTFO_VR.Core.PlayerBehaviours
             VRMeleeWeaponEvents.OnHammerFullyCharged += WeaponFullyCharged;
             VRMeleeWeaponEvents.OnHammerHalfCharged += WeaponHalfCharged;
 
-            Vector3 baseOffset = new Vector3(0, .68f, .45f);
             switch (weapon.ArchetypeName)
             {
                 case "Spear":
-                    m_offset = baseOffset * 1.5f;
+                    m_offset = m_rotationOffset * new Vector3(0, 1.25f, 0f );
                     WeaponHitDetectionSphereCollisionSize = 0.2f;
                     WeaponHitboxSize = .25f;
                     break;
                 case "Knife":
-                    m_offset = baseOffset * .35f;
+                    m_offset = m_rotationOffset * new Vector3(0, 0.35f, 0.01f);
                     WeaponHitDetectionSphereCollisionSize = 0.22f;
                     WeaponHitboxSize = .22f;
                     break;
                 case "Bat":
                     WeaponHitDetectionSphereCollisionSize = 0.35f;
                     WeaponHitboxSize = .45f;
-                    m_offset = baseOffset * .7f;
+                    m_offset = m_rotationOffset * new Vector3(0, 0.49f, 0f);
                     break;
                 case "Sledgehammer":
                     WeaponHitDetectionSphereCollisionSize = .61f;
-                    m_offset = baseOffset;
+                    m_offset = m_rotationOffset * new Vector3(0, 0.74f, 0.13f);
                     break;
                 default:
                     Log.Error($"Unknown melee weapon detected {weapon.name}");
@@ -138,7 +138,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 if (m_weapon.ModelData != null)
                 {
-                    m_weapon.ModelData.m_damageRefAttack.transform.position = Controllers.MainController.transform.TransformPoint(new Vector3(0, m_offset.y, m_offset.z));
+                    m_weapon.ModelData.m_damageRefAttack.transform.position = Controllers.MainController.transform.TransformPoint( m_offset);
                 }
             }
         }
