@@ -152,17 +152,17 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_GAIN_TOOL_AMMO_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_EXPLOSION_KEY);
 
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_BIOSCAN_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_CAGE_DROP_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_DAMAGED_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_HAMMER_FULL_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_HAMMER_HALF_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_HEALTH_PACK_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_DISINFECTION_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_KNOCKED_DOWN_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_LICKED_TINTACLE_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_MINE_EXPLOSION_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_REVIVED_KEY);
+            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_BIOSCAN_KEY);
+            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_CAGE_DROP_KEY);
+            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_DAMAGED_KEY);
+            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_HAMMER_FULL_KEY);
+            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_HAMMER_HALF_KEY);
+            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_HEALTH_PACK_KEY);
+            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_DISINFECTION_KEY);
+            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_KNOCKED_DOWN_KEY);
+            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_LICKED_TINTACLE_KEY);
+            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_MINE_EXPLOSION_KEY);
+            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_REVIVED_KEY);
 
             PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
             PlayerReceivedDamageEvents.OnMineExplosion += MineExplosionHaptics;
