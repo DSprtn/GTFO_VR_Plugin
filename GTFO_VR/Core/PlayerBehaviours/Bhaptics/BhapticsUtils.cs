@@ -18,6 +18,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
             RegisterArmsTactKey(hapticPlayer, PATTERNS_FOLDER + "arms\\", key);
         }
 
+        public static void RegisterVisorTactKey(HapticPlayer hapticPlayer, string key)
+        {
+            RegisterArmsTactKey(hapticPlayer, PATTERNS_FOLDER + "visor\\", key);
+        }
+
         private static void RegisterArmsTactKey(HapticPlayer hapticPlayer, string folder, string key)
         {
             string fileName = key.Substring(key.IndexOf("_") + 1);

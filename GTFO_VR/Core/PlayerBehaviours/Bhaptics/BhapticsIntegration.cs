@@ -59,6 +59,19 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string ARMS_GAIN_TOOL_AMMO_KEY = "arms_gain_tool_ammo";
         private static readonly string ARMS_EXPLOSION_KEY = "arms_explosion";
 
+
+        private static readonly string VISOR_CAGE_DROP_KEY = "visor_rumble_headfalling";
+        private static readonly string VISOR_KNOCKED_DOWN_KEY = "visor_boom1_head";
+        private static readonly string VISOR_LICKED_TINTACLE_KEY = "visor_boom6_head";
+        private static readonly string VISOR_HEALTH_PACK_KEY = "visor_rumble3_head";
+        private static readonly string VISOR_BIOSCAN_KEY = "visor_scan8_head";
+        private static readonly string VISOR_REVIVED_KEY = "visor_rumble4_head";
+        private static readonly string VISOR_HAMMER_HALF_KEY = "visor_point7_head";
+        private static readonly string VISOR_HAMMER_FULL_KEY = "visor_point8_head";
+        private static readonly string VISOR_DAMAGED_KEY = "visor_boom4_head";
+        private static readonly string VISOR_MINE_EXPLOSION_KEY = "visor_rumble1_head";
+        private static readonly string VISOR_DISINFECTION_KEY = "visor_point9_head";
+
         private LocalPlayerAgent m_player;
         private HapticPlayer m_hapticPlayer;
 
@@ -139,6 +152,18 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_GAIN_TOOL_AMMO_KEY);
             BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_EXPLOSION_KEY);
 
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_BIOSCAN_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_CAGE_DROP_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_DAMAGED_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_HAMMER_FULL_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_HAMMER_HALF_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_HEALTH_PACK_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_DISINFECTION_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_KNOCKED_DOWN_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_LICKED_TINTACLE_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_MINE_EXPLOSION_KEY);
+            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, VISOR_REVIVED_KEY);
+
             PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
             PlayerReceivedDamageEvents.OnMineExplosion += MineExplosionHaptics;
             TentacleAttackEvents.OnTentacleAttack += TentacleAttackHaptics;
@@ -199,6 +224,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             if (m_nextBodyscanPatternTime > 0f && currentTime >= m_nextBodyscanPatternTime)
             {
                 m_hapticPlayer.SubmitRegistered(VEST_BODY_SCAN_KEY);
+                m_hapticPlayer.SubmitRegistered(VISOR_BIOSCAN_KEY);
                 m_nextBodyscanPatternTime += BODY_SCAN_REPEAT_DELAY;
             }
 
@@ -264,6 +290,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
 				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_FULLY_CHARGED_R_KEY);
 				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_FULLY_CHARGED_R_KEY);
 			}
+
+            m_hapticPlayer.SubmitRegistered(VISOR_HAMMER_FULL_KEY);
         }
 
         private void HammerChargingHaptics(float pressure)
@@ -285,6 +313,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
 				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_R_KEY, scaleOption);
 				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_R_KEY, scaleOption);
 			}
+
+            m_hapticPlayer.SubmitRegistered(VISOR_HAMMER_HALF_KEY);
         }
 
         private void StopWeaponReloadHaptics()
@@ -367,7 +397,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
 			float duration = 1f;
 			var scaleOption = new ScaleOption(intensity, duration);
 
-			m_hapticPlayer.SubmitRegisteredVestRotation(VEST_DAMAGE_KEY, "", rotationOption, scaleOption);
+            m_hapticPlayer.SubmitRegisteredVestRotation(VEST_DAMAGE_KEY, "", rotationOption, scaleOption);
+            m_hapticPlayer.SubmitRegistered(VISOR_DAMAGED_KEY, scaleOption);
 
 			m_lastDamageRotationOption = rotationOption;
         }
@@ -393,6 +424,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
                 m_hapticPlayer.SubmitRegisteredVestRotation(VEST_EXPLOSION_KEY, "", rotationOption, scaleOption);
                 m_hapticPlayer.SubmitRegistered(ARMS_EXPLOSION_KEY, scaleOption);
+                m_hapticPlayer.SubmitRegistered(VISOR_MINE_EXPLOSION_KEY, scaleOption);
             }
         }
 
@@ -408,6 +440,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 				var rotationOption = m_lastDamageRotationOption;
 				//var rotationOption = GetRotationOptionFromDirection(position - sourceAgent.TentacleTarget.position); // could maybe calculate direction with this, but offsetY is not right
 				m_hapticPlayer.SubmitRegisteredVestRotation(VEST_TENTACLE_ATTACK_KEY, rotationOption);
+                m_hapticPlayer.SubmitRegistered(VISOR_LICKED_TINTACLE_KEY);
 			}
 			else
 			{
@@ -536,6 +569,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             if (m_lastInfection - infection > MIN_DISINFECTION_GAIN_FOR_HAPTIC) // Gained some disinfection
             {
                 m_hapticPlayer.SubmitRegistered(VEST_GAIN_DISINFECTION_KEY);
+                m_hapticPlayer.SubmitRegistered(VISOR_DISINFECTION_KEY);
             }
 
             m_lastInfection = infection;
@@ -557,6 +591,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 if (health - m_lastHealth > MIN_HEALTH_GAIN_FOR_HAPTIC) // Gained some health
                 {
                     m_hapticPlayer.SubmitRegistered(VEST_GAIN_HEALTH_KEY);
+                    m_hapticPlayer.SubmitRegistered(VISOR_HEALTH_PACK_KEY);
                 }
 
                 if (health <= 0 && m_lastHealth > 0)
@@ -566,6 +601,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                     m_hapticPlayer.TurnOff(VEST_BODY_SCAN_KEY);
 
                     m_hapticPlayer.SubmitRegistered(VEST_DEATH_KEY);
+                    m_hapticPlayer.SubmitRegistered(VISOR_KNOCKED_DOWN_KEY);
                 }
             }
 
