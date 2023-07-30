@@ -58,6 +58,7 @@ namespace GTFO_VR.Injections
                 if (shouldReleaseCharge)
                 {
                     __instance.OnChargeupRelease();
+                    __instance.m_weapon.CurrentState.Update(); // Manually call update so it doesn't delay by a frame
                 }
             }
         }
@@ -73,7 +74,7 @@ namespace GTFO_VR.Injections
 
         static void Prefix(MWS_AttackSwingBase __instance)
         {
-            __instance.m_data.m_damageStartTime = 0f;
+            __instance.m_data.m_damageStartTime = -1; // elapsed time on first frame ( 0 ) must be greater than this 
 
             // Do not check for hits from camera
             __instance.m_weapon.MeleeArchetypeData.CameraDamageRayLength = 0f;
