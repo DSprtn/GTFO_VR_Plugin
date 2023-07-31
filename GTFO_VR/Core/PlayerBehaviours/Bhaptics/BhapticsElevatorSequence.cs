@@ -17,6 +17,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string ARMS_ELEVATOR_RIDE_WAVE_KEY = "arms_elevator_ride_wave";
         private static readonly string ARMS_ELEVATOR_DEPLOYING_KEY = "arms_elevator_deploying";
 
+        private static readonly string VISOR_ELEVATOR_KEY = "visor_rumble_headfalling";
+
         private LocalPlayerAgent m_player;
         private HapticPlayer m_hapticPlayer;
 
@@ -74,6 +76,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             BhapticsUtils.RegisterArmsTactKey(hapticPlayer, ARMS_ELEVATOR_RIDE_WAVE_KEY);
             BhapticsUtils.RegisterArmsTactKey(hapticPlayer, ARMS_ELEVATOR_DEPLOYING_KEY);
+
+            BhapticsUtils.RegisterArmsTactKey(hapticPlayer, VISOR_ELEVATOR_KEY);
 
             ElevatorEvents.OnElevatorPositionChanged += OnElevatorPositionChanged;
             ElevatorEvents.OnPreReleaseSequenceStarted += OnPreReleaseSequenceStarted;
@@ -259,6 +263,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                         result.Add(new FeedbackDetails(VEST_ELEVATOR_RIDE_NOISE_KEY, duration, durationScale));
                         result.Add(new FeedbackDetails(VEST_ELEVATOR_RIDE_WAVE_KEY, duration, durationScale));
                         result.Add(new FeedbackDetails(ARMS_ELEVATOR_RIDE_WAVE_KEY, duration, durationScale));
+                        result.Add(new FeedbackDetails(VISOR_ELEVATOR_KEY, duration, durationScale));
                     }
                     break;
                 
