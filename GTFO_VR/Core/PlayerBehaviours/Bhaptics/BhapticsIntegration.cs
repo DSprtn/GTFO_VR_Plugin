@@ -173,6 +173,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             HeldItemEvents.OnItemCharging += HammerChargingHaptics;
             VRMeleeWeaponEvents.OnHammerSmack += HammerSmackHaptics;
             VRMeleeWeaponEvents.OnHammerFullyCharged += HammerFullyChargedHaptics;
+            VRMeleeWeaponEvents.OnHammerHalfCharged += HammerHalfChargedHaptics;
             FocusStateEvents.OnFocusStateChange += FocusStateChangedHaptics;
             PlayerInteractionEvents.OnPlayerInteracted += PlayerInteractedHaptics;
             PlayerInteractionEvents.OnBioscanSetState += PlayerBioscanSetStateHaptics;
@@ -290,8 +291,17 @@ namespace GTFO_VR.Core.PlayerBehaviours
 				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_FULLY_CHARGED_R_KEY);
 				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_FULLY_CHARGED_R_KEY);
 			}
-
+            // tactvisor doesn't need left and right differenciation
             m_hapticPlayer.SubmitRegistered(VISOR_HAMMER_FULL_KEY);
+        }
+
+        private void HammerHalfChargedHaptics()
+        {
+            if (!VRConfig.configUseBhaptics.Value)
+            {
+                return;
+            }
+            m_hapticPlayer.SubmitRegistered(VISOR_HAMMER_HALF_KEY);
         }
 
         private void HammerChargingHaptics(float pressure)
@@ -313,8 +323,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 				m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_R_KEY, scaleOption);
 				m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_R_KEY, scaleOption);
 			}
-
-            m_hapticPlayer.SubmitRegistered(VISOR_HAMMER_HALF_KEY);
         }
 
         private void StopWeaponReloadHaptics()
@@ -693,6 +701,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             HeldItemEvents.OnItemCharging -= HammerChargingHaptics;
             VRMeleeWeaponEvents.OnHammerSmack -= HammerSmackHaptics;
             VRMeleeWeaponEvents.OnHammerFullyCharged -= HammerFullyChargedHaptics;
+            VRMeleeWeaponEvents.OnHammerHalfCharged -= HammerHalfChargedHaptics;
             FocusStateEvents.OnFocusStateChange -= FocusStateChangedHaptics;
             PlayerInteractionEvents.OnPlayerInteracted -= PlayerInteractedHaptics;
             PlayerInteractionEvents.OnBioscanSetState -= PlayerBioscanSetStateHaptics;

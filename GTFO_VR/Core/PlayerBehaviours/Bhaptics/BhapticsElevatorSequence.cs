@@ -77,7 +77,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterArmsTactKey(hapticPlayer, ARMS_ELEVATOR_RIDE_WAVE_KEY);
             BhapticsUtils.RegisterArmsTactKey(hapticPlayer, ARMS_ELEVATOR_DEPLOYING_KEY);
 
-            BhapticsUtils.RegisterArmsTactKey(hapticPlayer, VISOR_ELEVATOR_KEY);
+            BhapticsUtils.RegisterVisorTactKey(hapticPlayer, VISOR_ELEVATOR_KEY);
 
             ElevatorEvents.OnElevatorPositionChanged += OnElevatorPositionChanged;
             ElevatorEvents.OnPreReleaseSequenceStarted += OnPreReleaseSequenceStarted;
