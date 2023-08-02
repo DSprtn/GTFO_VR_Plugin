@@ -1,8 +1,8 @@
 ﻿using Gear;
 using GTFO_VR.Core.PlayerBehaviours.Melee;
-using GTFO_VR.Core.UI.Terminal.Pointer;
 using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
+using GTFO_VR.Util;
 using Il2CppSystem.Collections.Generic;
 using System;
 using UnityEngine;
@@ -22,8 +22,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public static float WeaponHitboxSize = .61f;
         public static float WeaponHitDetectionSphereCollisionSize = .61f;
-        public MeleeTracker VelocityTracker = new MeleeTracker();
+        public MeleeWeaponDamageData m_cachedHit = null;
 
+        public VelocityTracker m_positionTracker = new VelocityTracker();
         private MeleeWeaponFirstPerson m_weapon;
         private Transform m_animatorRoot;
         private Light m_chargeupIndicatorLight;
@@ -157,7 +158,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 Vector3 localPosition = Controllers.MainControllerPose.transform.localPosition;     
                 localPosition = localPosition + (Controllers.MainControllerPose.transform.rotation * m_offset); 
 
-                VelocityTracker.AddPosition(damageRefPosition, localPosition, Time.deltaTime);
+                m_positionTracker.AddPosition(damageRefPosition, localPosition, Time.deltaTime);
             }
         }
 
@@ -202,11 +203,60 @@ namespace GTFO_VR.Core.PlayerBehaviours
             return sortedHits;
         }
 
-        private void OnDestroy()
+        public MeleeWeaponDamageData CheckForAttackTarget()
         {
+            m_cachedHit = null;
+
+            Vector3 weaponPosCurrent = m_positionTracker.getLatestPosition();
+            Vector3 weaponPosPrev = m_positionTracker.getPreviousPosition();
+
+            DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.03f, ColorExt.Blue(0.5f), 0.5f);
+
+            Vector3 velocity = (weaponPosCurrent - weaponPosPrev);
+
+            RaycastHit rayHit;
+            // cast a sphere from where the the hitbox was, to where it is, and get the first thing it collides with along the way
+            if (Physics.SphereCast(weaponPosPrev, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.1f, velocity.normalized, out rayHit, velocity.magnitude, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC, QueryTriggerInteraction.Ignore))
+            {
+                m_cachedHit = new MeleeWeaponDamageData
+                {
+                    damageGO = rayHit.collider.gameObject,
+                    hitPos = rayHit.point, // vector from sourcePos to hitPos, and source to enemy spine used to determine backstab
+                    hitNormal = rayHit.normal, // Only used for gore
+                    sourcePos = m_weapon.Owner.FPSCamera.Position,
+                    damageTargetFound = true // Not actually used for anything
+                };
+
+                // non-statics things we can hit should have an IDamageable
+                IDamageable damageable = rayHit.collider.GetComponent<IDamageable>();
+                if (damageable != null)
+                {
+                    m_cachedHit.damageComp = damageable;
+
+                    // SearchID is incremented at the beginning of the original CheckForAttackTarget().
+                    // Predict what the next value will be and assign it instead, so it will ignore this collider.
+                    // This assumes CheckForAttackTarget() will be called soon after this function returns
+                    uint searchID = DamageUtil.SearchID;
+                    if (searchID < uint.MaxValue)
+                    { searchID++; }
+                    else
+                    { searchID = 1u; }
+
+                    damageable.GetBaseDamagable().TempSearchID = searchID;
+                }
+
 #if DEBUG_GTFO_VR
             VRConfig.configDebugShowHammerHitbox.SettingChanged -= ToggleDebug;
 #endif
+                }
+            }
+
+            return m_cachedHit;
+        }
+
+
+        private void OnDestroy()
+        {
             VRMeleeWeaponEvents.OnHammerHalfCharged -= WeaponHalfCharged;
             VRMeleeWeaponEvents.OnHammerFullyCharged -= WeaponFullyCharged;
         }

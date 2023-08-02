@@ -9,9 +9,9 @@ namespace GTFO_VR.Core.PlayerBehaviours.Melee
 {
 
     /// <summary>
-    /// Keeps track of a pointer position for a few frames in order to smoothen its position
+    /// Keeps track of a position for a few frames in order to smoothen position and calculate velocity/vector
     /// </summary>
-    public class MeleeTracker
+    public class VelocityTracker
     {
         class MeleeHistory
         {
@@ -49,15 +49,17 @@ namespace GTFO_VR.Core.PlayerBehaviours.Melee
             }
         }
 
-        //private int m_velocitySmoothingCount = 3;
-        private float m_targetHistoryDuration = 0.050f; // idk 
+        private float m_targetHistoryDuration = 0.050f; // smoothed velocity is average across x seconds
         private float m_cumulativeDuration = 0;
         private float m_cumulativeVelocity = 0;
         private Queue<MeleeHistory> m_PositionHistory = new Queue<MeleeHistory>();
         MeleeHistory m_newestHistory = null;
+        MeleeHistory m_prevHistory = null;
 
         public void AddPosition(Vector3 position, Vector3 localPosition, float delta)
         {
+            m_prevHistory = m_newestHistory;
+
             // Create a new melee history, feeding it the previous history
             m_newestHistory = new MeleeHistory(position, localPosition, delta, m_newestHistory);
             m_PositionHistory.Enqueue(m_newestHistory);
@@ -66,7 +68,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.Melee
             m_cumulativeDuration += m_newestHistory.deltaTime;
             m_cumulativeVelocity += m_newestHistory.velocity;
 
-            // Remove oldest entry until quque duration is within target range, but always leave one
+            // Remove oldest entry until quque duration is within target range, but always leave 2
             while (m_cumulativeDuration > m_targetHistoryDuration && m_PositionHistory.Count > 2)
             {
                 var removed = m_PositionHistory.Dequeue();
@@ -85,13 +87,28 @@ namespace GTFO_VR.Core.PlayerBehaviours.Melee
             return m_cumulativeVelocity / m_PositionHistory.Count;
         }
 
+        // Returns only the latest vector
         public Vector3 getVelocityVector()
         {
             return m_newestHistory != null ? m_newestHistory.velocityVector : Vector3.zero;
         }
 
-        public void ClearPointerHistory()
+        public Vector3 getLatestPosition()
         {
+            return m_newestHistory != null ? m_newestHistory.position : Vector3.zero;
+        }
+
+        public Vector3 getPreviousPosition()
+        {
+            return m_prevHistory != null ? m_prevHistory.position : Vector3.zero;
+        }
+
+        public void clearTrackerHistory()
+        {
+            m_newestHistory = null;
+            m_prevHistory = null;
+            m_cumulativeDuration = 0;
+            m_cumulativeVelocity = 0;
             m_PositionHistory.Clear();
         }
     }

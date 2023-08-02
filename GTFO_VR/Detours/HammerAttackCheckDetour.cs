@@ -42,12 +42,35 @@ namespace GTFO_VR.Detours
         private unsafe static bool OurAttackCheck(IntPtr thisPtr, IntPtr attackData, float sphereRad, float elapsedTime, out IntPtr hits)
         {
             bool result = OriginalHammerMethod(thisPtr, attackData, sphereRad * VRMeleeWeapon.WeaponHitboxSize, elapsedTime, out hits);
+            VRMeleeWeapon meleeWeapon = VRMeleeWeapon.Current;
+            if (meleeWeapon != null && meleeWeapon.m_cachedHit != null)
+            {
+                result = true;
+                MeleeWeaponFirstPerson weapon = new MeleeWeaponFirstPerson(thisPtr);
+                Il2CppSystem.Collections.Generic.List<MeleeWeaponDamageData> hitsList = new Il2CppSystem.Collections.Generic.List<MeleeWeaponDamageData>(hits);
+                if ( !weapon.MeleeArchetypeData.CanHitMultipleEnemies )
+                {
+                    // Some weapons ( spear ) can technically hit multiple targets 
+                    // There is a short timespan where this is possible.
+                    // The colliders must be hit by different search methods ( sphere collider, camera ray, camera-damageref ray ),
+                    // or on different frames.
+                    // Discard other hits for this frame unless the weapon can do this.
+                    hitsList.Clear();
+                }
 
-            float velocity = VRMeleeWeapon.Current.VelocityTracker.GetSmoothVelocity();
+                // Insert our hit at top of list
+                hitsList.Insert(0, meleeWeapon.m_cachedHit);
+
+                // Clear hit once dealt with
+                meleeWeapon.m_cachedHit = null;
+            }
+
+            float velocity = VRMeleeWeapon.Current.m_positionTracker.GetSmoothVelocity();
             if (!VRConfig.configUseOldHammer.Value && velocity < 1.8f)
             {
                 return false;
             }
+
             return result;
         }
 

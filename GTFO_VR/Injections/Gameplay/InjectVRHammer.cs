@@ -35,9 +35,7 @@ namespace GTFO_VR.Injections
     {
         static void Postfix(MWS_ChargeUp __instance)
         {
-            float velocity = VRMeleeWeapon.Current ? VRMeleeWeapon.Current.VelocityTracker.GetSmoothVelocity() : -1;
-
-            if (velocity > 2f)
+            if (VRMeleeWeapon.Current != null)
             {
 #if DEBUG_GTFO_VR
                 if (VRConfig.configDebugShowHammerHitbox.Value)
@@ -46,19 +44,13 @@ namespace GTFO_VR.Injections
                     DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .1f, ColorExt.Red(0.2f));
                 }
 #endif
-
-                Collider[] enemyColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .75f, LayerManager.MASK_ENEMY_DAMAGABLE);
-                bool shouldReleaseCharge = enemyColliders.Length > 0;
-
-                if(velocity > 5f) {
-                    Collider[] staticColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .25f, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC);
-                    shouldReleaseCharge = shouldReleaseCharge || staticColliders.Length > 0;
-                }
-
-                if (shouldReleaseCharge)
+                if (VRMeleeWeapon.Current.m_positionTracker.GetSmoothVelocity() > 2f)
                 {
-                    __instance.OnChargeupRelease();
-                    __instance.m_weapon.CurrentState.Update(); // Manually call update so it doesn't delay by a frame
+                    if (VRMeleeWeapon.Current.CheckForAttackTarget() != null) // It stores the hit for later
+                    {
+                        __instance.OnChargeupRelease();
+                        __instance.m_weapon.CurrentState.Update(); // Manually call update so it doesn't delay by a frame
+                    }
                 }
             }
         }
@@ -120,7 +112,7 @@ namespace GTFO_VR.Injections
             {
                 return;
             }
-            Vector3 velocity = VRMeleeWeapon.Current ? VRMeleeWeapon.Current.VelocityTracker.getVelocityVector() : Vector3.zero;
+            Vector3 velocity = VRMeleeWeapon.Current ? VRMeleeWeapon.Current.m_positionTracker.getVelocityVector() : Vector3.zero;
             data.sourcePos = data.hitPos - data.hitNormal * velocity.magnitude;
             if(isPush)
             {
