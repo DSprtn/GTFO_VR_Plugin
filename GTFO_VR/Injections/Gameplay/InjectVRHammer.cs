@@ -37,13 +37,6 @@ namespace GTFO_VR.Injections
         {
             if (VRMeleeWeapon.Current != null)
             {
-#if DEBUG_GTFO_VR
-                if (VRConfig.configDebugShowHammerHitbox.Value)
-                {
-                    DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .75f, ColorExt.Blue(0.2f));
-                    DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .1f, ColorExt.Red(0.2f));
-                }
-#endif
                 if (VRMeleeWeapon.Current.m_positionTracker.GetSmoothVelocity() > 2f)
                 {
                     if (VRMeleeWeapon.Current.CheckForAttackTarget() != null) // It stores the hit for later

@@ -38,6 +38,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             MeleeWeaponFirstPerson.DEBUG_ENABLED = VRConfig.configDebugShowHammerHitbox.Value;
             VRConfig.configDebugShowHammerHitbox.SettingChanged += ToggleDebug;
 #endif
+
             Current = this;
 
             m_weapon = weapon;
@@ -131,6 +132,13 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 m_chargeupIndicatorLight.transform.position = m_weapon.ModelData.m_damageRefAttack.transform.position;
                 TrackPositionAndVelocity();
             }
+
+#if DEBUG_GTFO_VR
+            if (VRConfig.configDebugShowHammerHitbox.Value)
+            {
+                DebugDraw3D.DrawSphere(m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .1f, ColorExt.Red(0.2f));
+            }
+#endif
         }
 
         private void ForceDamageRefPosition()
@@ -210,7 +218,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
             Vector3 weaponPosCurrent = m_positionTracker.getLatestPosition();
             Vector3 weaponPosPrev = m_positionTracker.getPreviousPosition();
 
+#if DEBUG_GTFO_VR
             DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.03f, ColorExt.Blue(0.5f), 0.5f);
+#endif
 
             Vector3 velocity = (weaponPosCurrent - weaponPosPrev);
 
@@ -246,9 +256,19 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 }
 
 #if DEBUG_GTFO_VR
-            VRConfig.configDebugShowHammerHitbox.SettingChanged -= ToggleDebug;
-#endif
+                if (VRConfig.configDebugShowHammerHitbox.Value)
+                {
+                    float drawDuration = 30;
+
+                    // Draw hit, line between prev/curr melee position, and name of collider hit
+                    DebugDraw3D.DrawSphere(rayHit.point, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.1f, ColorExt.Green(0.3f), drawDuration);
+                    DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.03f, ColorExt.Blue(0.5f), drawDuration);
+                    DebugDraw3D.DrawText(rayHit.point, rayHit.collider.name, 1f, ColorExt.Green(0.3f), drawDuration);
+
+                    // Draw collider hit
+                    GTFODebugDraw3D.drawCollider(rayHit.collider, ColorExt.Red(0.2f), drawDuration);
                 }
+#endif
             }
 
             return m_cachedHit;
@@ -257,6 +277,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
+#if DEBUG_GTFO_VR
+            VRConfig.configDebugShowHammerHitbox.SettingChanged -= ToggleDebug;
+#endif
             VRMeleeWeaponEvents.OnHammerHalfCharged -= WeaponHalfCharged;
             VRMeleeWeaponEvents.OnHammerFullyCharged -= WeaponFullyCharged;
         }
