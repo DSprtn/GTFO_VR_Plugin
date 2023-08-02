@@ -215,7 +215,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
             m_cachedHit = null;
 
-            Vector3 weaponPosCurrent = m_positionTracker.getLatestPosition();
+            Vector3 weaponPosCurrent = m_positionTracker.GetLatestPosition();
             Vector3 weaponPosPrev = m_positionTracker.getPreviousPosition();
 
 #if DEBUG_GTFO_VR

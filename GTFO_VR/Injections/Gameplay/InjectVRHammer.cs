@@ -105,7 +105,7 @@ namespace GTFO_VR.Injections
             {
                 return;
             }
-            Vector3 velocity = VRMeleeWeapon.Current ? VRMeleeWeapon.Current.m_positionTracker.getVelocityVector() : Vector3.zero;
+            Vector3 velocity = VRMeleeWeapon.Current ? VRMeleeWeapon.Current.m_positionTracker.GetVelocityVector() : Vector3.zero;
             data.sourcePos = data.hitPos - data.hitNormal * velocity.magnitude;
             if(isPush)
             {

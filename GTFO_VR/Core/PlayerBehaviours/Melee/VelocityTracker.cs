@@ -35,10 +35,10 @@ namespace GTFO_VR.Core.PlayerBehaviours.Melee
                 this.position = position;
                 this.localPosition = localPosition;
                 deltaTime = delta;
-                calculateVelocity(previous);
+                CalculateVelocity(previous);
             }
 
-            public void calculateVelocity(MeleeHistory prev)
+            public void CalculateVelocity(MeleeHistory prev)
             {
                 if (prev != null)
                 {
@@ -88,12 +88,12 @@ namespace GTFO_VR.Core.PlayerBehaviours.Melee
         }
 
         // Returns only the latest vector
-        public Vector3 getVelocityVector()
+        public Vector3 GetVelocityVector()
         {
             return m_newestHistory != null ? m_newestHistory.velocityVector : Vector3.zero;
         }
 
-        public Vector3 getLatestPosition()
+        public Vector3 GetLatestPosition()
         {
             return m_newestHistory != null ? m_newestHistory.position : Vector3.zero;
         }
@@ -103,7 +103,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.Melee
             return m_prevHistory != null ? m_prevHistory.position : Vector3.zero;
         }
 
-        public void clearTrackerHistory()
+        public void ClearTrackerHistory()
         {
             m_newestHistory = null;
             m_prevHistory = null;
