@@ -246,6 +246,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 m_nextBodyscanPatternTime = 0f;
                 m_hapticPlayer.TurnOff(VEST_BODY_SCAN_KEY);
+                m_hapticPlayer.TurnOff(VISOR_BIOSCAN_KEY);
                 m_bioscanStopFramesCount = 0;
             }
         }
@@ -607,6 +608,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                     StopWeaponReloadHaptics();
                     m_nextBodyscanPatternTime = 0;
                     m_hapticPlayer.TurnOff(VEST_BODY_SCAN_KEY);
+                    m_hapticPlayer.TurnOff(VISOR_BIOSCAN_KEY);
 
                     m_hapticPlayer.SubmitRegistered(VEST_DEATH_KEY);
                     m_hapticPlayer.SubmitRegistered(VISOR_KNOCKED_DOWN_KEY);
