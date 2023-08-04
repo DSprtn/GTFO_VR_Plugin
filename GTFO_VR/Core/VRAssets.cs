@@ -13,7 +13,7 @@ namespace GTFO_VR.Core
         }
 
         static AssetBundle assetBundle;
-        static AssetBundle secondaryAssetBundle;
+        static AssetBundle GtfoVrShadersBundle;
 
         public static GameObject WatchPrefab;
 
@@ -26,6 +26,8 @@ namespace GTFO_VR.Core
         public static Shader SpriteSphereClip;
 
         public static Shader ThermalGlowShader;
+
+        public static Shader GtfoHiddenAreaMaskShader;
 
         public static Sprite RadialBG;
         public static Sprite Objective;
@@ -74,15 +76,30 @@ namespace GTFO_VR.Core
         {
             if (ThermalGlowShader == null)
             {
-                if (secondaryAssetBundle == null)
+                if (GtfoVrShadersBundle == null)
                 {
-                    secondaryAssetBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/gtfovr_thermal_glow");
+                    GtfoVrShadersBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/gtfovr_shaders");
                 }
 
-                ThermalGlowShader = secondaryAssetBundle.LoadAsset("assets/GTFOVR_Thermal_Glow.shader").Cast<Shader>();
+                ThermalGlowShader = GtfoVrShadersBundle.LoadAsset("Assets/GTFOVR_Thermal_Glow.shader").Cast<Shader>();
             }
 
             return ThermalGlowShader;
+        }
+
+        public static Shader GetGTFOHiddenAreaMaskShader()
+        {
+            if (GtfoHiddenAreaMaskShader == null)
+            {
+                if (GtfoVrShadersBundle == null)
+                {
+                    GtfoVrShadersBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/gtfovr_shaders");
+                }
+
+                GtfoHiddenAreaMaskShader = GtfoVrShadersBundle.LoadAsset("Assets/GTFOVR_HiddenArea.shader").Cast<Shader>();
+            }
+
+            return GtfoHiddenAreaMaskShader;
         }
 
         public Sprite CreateSpriteFromTexture2D(Texture2D tex)
@@ -101,13 +118,13 @@ namespace GTFO_VR.Core
                 Log.Error("No assetbundle present!");
             }
 
-            if (secondaryAssetBundle == null)
+            if (GtfoVrShadersBundle == null)
             {
-                secondaryAssetBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/vrthermal");
+                GtfoVrShadersBundle = AssetBundle.LoadFromFile(Application.streamingAssetsPath + "/gtfovr_shaders");
             }
-            if (secondaryAssetBundle == null)
+            if (GtfoVrShadersBundle == null)
             {
-                Log.Error("No secondaryAssetBundle present!");
+                Log.Error("No GtfoVrShaders present!");
             }
 
             RadialBG = CreateSpriteFromTexture2D(assetBundle.LoadAsset("assets/radialicons/bg.png").Cast<Texture2D>());
@@ -129,11 +146,17 @@ namespace GTFO_VR.Core
             TextSphereClip = assetBundle.LoadAsset("assets/textmesh pro/resources/shaders/tmp_clipsphere.shader").Cast<Shader>();
             SpriteSphereClip = assetBundle.LoadAsset("assets/spritenoztestandclip.shader").Cast<Shader>();
 
-            ThermalGlowShader = secondaryAssetBundle.LoadAsset("assets/GTFOVR_Thermal_Glow.shader").Cast<Shader>();
+            GetThermalGlowShader();
+            GetGTFOHiddenAreaMaskShader();
 
             if (!ThermalGlowShader)
             {
                 Log.Error("Could not find thermal glow shader!");
+            }
+
+            if (!GtfoHiddenAreaMaskShader)
+            {
+                Log.Error("Could not find GTFO hidden area mask shader!");
             }
 
             if (TextAlwaysRender == null)

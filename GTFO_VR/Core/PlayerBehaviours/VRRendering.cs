@@ -2,7 +2,6 @@
 using GTFO_VR.Events;
 using System;
 using UnityEngine;
-using UnityEngine.PostProcessing;
 using UnityEngine.Rendering;
 using Valve.VR;
 
@@ -22,15 +21,21 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private FPS_Render m_fpsRender;
         private UI_Apply m_uiBlitter;
 
+        private Material m_occlusionMaterial;
+
         private void Awake()
         {
             gOverwrite = new CommandBuffer();
             m_fpsCamera = GetComponent<FPSCamera>();
             m_uiBlitter = GetComponent<UI_Apply>();
             m_fpsRender = GetComponent<FPS_Render>();
-           
-            m_fpsCamera.m_camera.AddCommandBuffer(CameraEvent.AfterGBuffer, gOverwrite);
 
+            // Disable SteamVR's mask, render our own
+            SteamVR_Render.SetRenderHiddenAreaMask(false);
+            m_occlusionMaterial = new Material(VRAssets.GetGTFOHiddenAreaMaskShader());
+            m_fpsCamera.m_camera.AddCommandBuffer(CameraEvent.BeforeGBuffer, gOverwrite);  // Fill depth, keep stencil clear
+            m_fpsCamera.m_camera.AddCommandBuffer(CameraEvent.BeforeImageEffects, gOverwrite); // Ensure masked area is black
+            
             SteamVR_Render.preRenderBothEyesCallback += PreRenderUpdate;
             SteamVR_Render.eyePreRenderCallback += PrepareFrameForEye;
         }
@@ -91,8 +96,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_fpsRender.ForceMatrixUpdate();
 
             gOverwrite.Clear();
-            gOverwrite.DrawMesh(mask.meshFilter.mesh, mask.transform.localToWorldMatrix, SteamVR_CameraMask.occlusionMaterial);
-
+            gOverwrite.DrawMesh(mask.meshFilter.mesh, mask.transform.localToWorldMatrix, m_occlusionMaterial);
+           
             PrepareFrame();
         }
         private void SkipDuplicateRenderTasks()
