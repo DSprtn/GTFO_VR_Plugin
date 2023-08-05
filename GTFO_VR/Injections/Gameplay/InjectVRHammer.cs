@@ -148,28 +148,4 @@ namespace GTFO_VR.Injections
             }
         }
     }
-
-    /// <summary>
-    /// Enable door smacking on VR hammer
-    /// </summary>
-    [HarmonyPatch(typeof(MeleeWeaponFirstPerson), nameof(MeleeWeaponFirstPerson.DoAttackDamage))]
-    static class InjectVRHammerSmackDoors
-    {
-        static void Prefix(MeleeWeaponFirstPerson __instance)
-        {
-            if(!__instance.Owner.IsLocallyOwned)
-            {
-                return;
-            }
-            if (__instance.Owner.FPSCamera.CameraRayDist <= 3f && __instance.Owner.FPSCamera.CameraRayObject != null && __instance.Owner.FPSCamera.CameraRayObject.layer == LayerManager.LAYER_DYNAMIC)
-            {
-                iLG_WeakDoor_Destruction componentInParent = __instance.Owner.FPSCamera.CameraRayObject.GetComponentInParent<iLG_WeakDoor_Destruction>();
-                if (componentInParent != null && !componentInParent.SkinnedDoorEnabled)
-                {
-                    componentInParent.EnableSkinnedDoor();
-                }
-            }
-        }
-    }
-
 }

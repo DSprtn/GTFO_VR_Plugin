@@ -4,6 +4,7 @@ using GTFO_VR.Core.VR_Input;
 using GTFO_VR.Events;
 using GTFO_VR.Util;
 using Il2CppSystem.Collections.Generic;
+using LevelGeneration;
 using System;
 using UnityEngine;
 
@@ -234,8 +235,25 @@ namespace GTFO_VR.Core.PlayerBehaviours
             return true;
         }
 
+        private void HandleSkinnedDoor()
+        {
+            // This logic is from the original CheckForAttackTargets, where it is run before the rest of the function.
+            // It used to be run manually as a MeleeWeaponFirstPerson.DoAttackDamage() prefix.
+            // This would work, but the first hit would be ignored and not damage the door. 
+            if (m_weapon.Owner.FPSCamera.CameraRayDist <= 3f && m_weapon.Owner.FPSCamera.CameraRayObject != null && m_weapon.Owner.FPSCamera.CameraRayObject.layer == LayerManager.LAYER_DYNAMIC)
+            {
+                iLG_WeakDoor_Destruction componentInParent = m_weapon.Owner.FPSCamera.CameraRayObject.GetComponentInParent<iLG_WeakDoor_Destruction>();
+                if (componentInParent != null && !componentInParent.SkinnedDoorEnabled)
+                {
+                    componentInParent.EnableSkinnedDoor();
+                }
+            }
+        }
+
         public bool CheckForAttackTarget( out List<MeleeWeaponDamageData> hits)
         {
+            HandleSkinnedDoor();
+
             Vector3 weaponPosCurrent = m_positionTracker.GetLatestPosition();
             Vector3 weaponPosPrev = m_positionTracker.getPreviousPosition();
 
