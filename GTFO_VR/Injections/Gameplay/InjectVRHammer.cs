@@ -39,7 +39,8 @@ namespace GTFO_VR.Injections
             {
                 if (VRMeleeWeapon.Current.m_positionTracker.GetSmoothVelocity() > 2f)
                 {
-                    if (VRMeleeWeapon.Current.CheckForAttackTarget() != null) // It stores the hit for later
+                    // For the sake of simplicity we discard the hits here and call it again when the original CheckForAttackTargets() is called
+                    if (VRMeleeWeapon.Current.CheckForAttackTarget( out _)) 
                     {
                         __instance.OnChargeupRelease();
                         __instance.m_weapon.CurrentState.Update(); // Manually call update so it doesn't delay by a frame
@@ -105,8 +106,7 @@ namespace GTFO_VR.Injections
             {
                 return;
             }
-            Vector3 velocity = VRMeleeWeapon.Current ? VRMeleeWeapon.Current.m_positionTracker.GetVelocityVector() : Vector3.zero;
-            data.sourcePos = data.hitPos - data.hitNormal * velocity.magnitude;
+
             if(isPush)
             {
                 VRMeleeWeaponEvents.HammerSmacked(0f);

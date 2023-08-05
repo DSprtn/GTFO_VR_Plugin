@@ -22,7 +22,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public static float WeaponHitboxSize = .61f;
         public static float WeaponHitDetectionSphereCollisionSize = .61f;
-        public MeleeWeaponDamageData m_cachedHit = null;
 
         public VelocityTracker m_positionTracker = new VelocityTracker();
         private MeleeWeaponFirstPerson m_weapon;
@@ -211,12 +210,36 @@ namespace GTFO_VR.Core.PlayerBehaviours
             return sortedHits;
         }
 
-        public MeleeWeaponDamageData CheckForAttackTarget()
-        {
-            m_cachedHit = null;
 
+        private bool ConsiderDamageable(IDamageable damagable)
+        {
+            // SearchID is increment at the beginning of CheckForAttackTarget.
+            // If we encounter a collider that is already set to DamageUtil.SearchID
+            // then we have already hit it during this search, and shuold skip it.
+            if (damagable != null)
+            {
+                if (damagable.GetBaseDamagable().TempSearchID == DamageUtil.SearchID )
+                {
+                    return false;
+                }
+                else
+                {
+                    damagable.GetBaseDamagable().TempSearchID = DamageUtil.SearchID;
+                    return true;
+                }
+            }
+
+            // No damagable means it's something static.
+            // We only check for them once ( SphereCast ) so this should never happen.
+            return true;
+        }
+
+        public bool CheckForAttackTarget( out List<MeleeWeaponDamageData> hits)
+        {
             Vector3 weaponPosCurrent = m_positionTracker.GetLatestPosition();
             Vector3 weaponPosPrev = m_positionTracker.getPreviousPosition();
+
+            DamageUtil.IncrementSearchID();
 
 #if DEBUG_GTFO_VR
             DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.03f, ColorExt.Blue(0.5f), 0.5f);
@@ -224,54 +247,76 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             Vector3 velocity = (weaponPosCurrent - weaponPosPrev);
 
-            RaycastHit rayHit;
+            hits = new List<MeleeWeaponDamageData>();
+
             // cast a sphere from where the the hitbox was, to where it is, and get the first thing it collides with along the way
-            if (Physics.SphereCast(weaponPosPrev, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.1f, velocity.normalized, out rayHit, velocity.magnitude, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC, QueryTriggerInteraction.Ignore))
+            RaycastHit rayHit;
+            bool castHit = Physics.SphereCast(weaponPosPrev, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.1f, velocity.normalized, out rayHit, velocity.magnitude, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC, QueryTriggerInteraction.Ignore);
+            if (castHit)
             {
-                m_cachedHit = new MeleeWeaponDamageData
-                {
-                    damageGO = rayHit.collider.gameObject,
-                    hitPos = rayHit.point, // vector from sourcePos to hitPos, and source to enemy spine used to determine backstab
-                    hitNormal = rayHit.normal, // Only used for gore
-                    sourcePos = m_weapon.Owner.FPSCamera.Position,
-                    damageTargetFound = true // Not actually used for anything
-                };
+                IDamageable damagable = rayHit.collider.GetComponent<IDamageable>();
 
-                // non-statics things we can hit should have an IDamageable
-                IDamageable damageable = rayHit.collider.GetComponent<IDamageable>();
-                if (damageable != null)
-                {
-                    m_cachedHit.damageComp = damageable;
-
-                    // SearchID is incremented at the beginning of the original CheckForAttackTarget().
-                    // Predict what the next value will be and assign it instead, so it will ignore this collider.
-                    // This assumes CheckForAttackTarget() will be called soon after this function returns
-                    uint searchID = DamageUtil.SearchID;
-                    if (searchID < uint.MaxValue)
-                    { searchID++; }
-                    else
-                    { searchID = 1u; }
-
-                    damageable.GetBaseDamagable().TempSearchID = searchID;
+                // Check if we've already hit this collider ( this is the first check, so no )
+                // and also sets identifier so we can make sure we don't double-tap it below
+                if (ConsiderDamageable(damagable))  
+                {                                  
+                    hits.Add(new MeleeWeaponDamageData
+                    {
+                        damageGO = rayHit.collider.gameObject,
+                        hitPos = rayHit.point, // vector from sourcePos to hitPos, and source to enemy spine used to determine backstab
+                        hitNormal = rayHit.normal, // Used for gore
+                        sourcePos = rayHit.point - (velocity.normalized), // positioned used to calculate backstab
+                        damageTargetFound = true, // Not actually used for anything
+                        damageComp = damagable
+                    });
                 }
-
-#if DEBUG_GTFO_VR
-                if (VRConfig.configDebugShowHammerHitbox.Value)
-                {
-                    float drawDuration = 30;
-
-                    // Draw hit, line between prev/curr melee position, and name of collider hit
-                    DebugDraw3D.DrawSphere(rayHit.point, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.1f, ColorExt.Green(0.3f), drawDuration);
-                    DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.03f, ColorExt.Blue(0.5f), drawDuration);
-                    DebugDraw3D.DrawText(rayHit.point, rayHit.collider.name, 1f, ColorExt.Green(0.3f), drawDuration);
-
-                    // Draw collider hit
-                    GTFODebugDraw3D.drawCollider(rayHit.collider, ColorExt.Red(0.2f), drawDuration);
-                }
-#endif
             }
 
-            return m_cachedHit;
+            // If there are no hits, it is possible that we are already inside of a collider. 
+            // Also do this if we are allowed to hit multiple enemies ( e.g. spear )
+            if (!castHit || m_weapon.MeleeArchetypeData.CanHitMultipleEnemies)
+            {
+                var colliders = Physics.OverlapSphere(weaponPosCurrent, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.1f, LayerManager.MASK_MELEE_ATTACK_TARGETS, QueryTriggerInteraction.Ignore);
+                foreach(var collider in colliders)
+                {
+                    IDamageable damagable = collider.GetComponent<IDamageable>();
+                    if (ConsiderDamageable(damagable))
+                    {
+                        hits.Add(new MeleeWeaponDamageData
+                        {
+                            damageGO = collider.gameObject,
+                            hitPos = weaponPosCurrent, // vector from sourcePos to hitPos, and source to enemy spine used to determine backstab
+                            hitNormal = velocity.normalized * -1f, // / Used for gore. Expected to be surface normal of thing we hit
+                            sourcePos = rayHit.point - (velocity.normalized), // positioned used to calculate backstab
+                            damageTargetFound = true, // Not actually used for anything
+                            damageComp = damagable
+                        });
+                    }
+                }
+            }
+#if DEBUG_GTFO_VR
+
+            if (VRConfig.configDebugShowHammerHitbox.Value)
+            {
+                float drawDuration = 10;
+
+                DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.03f, ColorExt.Blue(0.5f), drawDuration);
+                
+                foreach(var hit in hits)
+                {
+                    Collider collider = hit.damageGO.GetComponent<Collider>();
+
+                    // Draw hit, line between prev/curr melee position, and name of collider hit
+                    DebugDraw3D.DrawSphere(hit.hitPos, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.1f, ColorExt.Green(0.3f), drawDuration);
+                    DebugDraw3D.DrawText(hit.hitPos, collider.name, 1f, ColorExt.Green(0.3f), drawDuration);
+
+                    // Draw collider hit
+                    GTFODebugDraw3D.drawCollider(collider, ColorExt.Red(0.2f), drawDuration);
+                }
+            }
+#endif
+
+            return hits.Count > 0;
         }
 
 

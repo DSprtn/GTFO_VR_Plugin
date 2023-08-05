@@ -41,34 +41,31 @@ namespace GTFO_VR.Detours
 
         private unsafe static bool OurAttackCheck(IntPtr thisPtr, IntPtr attackData, float sphereRad, float elapsedTime, out IntPtr hits)
         {
-            bool result = OriginalHammerMethod(thisPtr, attackData, sphereRad * VRMeleeWeapon.WeaponHitboxSize, elapsedTime, out hits);
-            VRMeleeWeapon meleeWeapon = VRMeleeWeapon.Current;
-            if (meleeWeapon != null && meleeWeapon.m_cachedHit != null)
+            bool result = false;
+
+            // The original CheckForAttackTargets() is completely circumvented.
+            // The only side effect of the original function not handled here is handled by InjectVRHammerSmackDoors
+            if (!VRConfig.configUseOldHammer.Value)
             {
-                result = true;
-                MeleeWeaponFirstPerson weapon = new MeleeWeaponFirstPerson(thisPtr);
-                Il2CppSystem.Collections.Generic.List<MeleeWeaponDamageData> hitsList = new Il2CppSystem.Collections.Generic.List<MeleeWeaponDamageData>(hits);
-                if ( !weapon.MeleeArchetypeData.CanHitMultipleEnemies )
+                Il2CppSystem.Collections.Generic.List<MeleeWeaponDamageData> ourHits;
+                float velocity = VRMeleeWeapon.Current.m_positionTracker.GetSmoothVelocity();
+                if (velocity > 2f )
                 {
-                    // Some weapons ( spear ) can technically hit multiple targets 
-                    // There is a short timespan where this is possible.
-                    // The colliders must be hit by different search methods ( sphere collider, camera ray, camera-damageref ray ),
-                    // or on different frames.
-                    // Discard other hits for this frame unless the weapon can do this.
-                    hitsList.Clear();
+                    if (VRMeleeWeapon.Current.CheckForAttackTarget(out ourHits))
+                    {
+                        result = true;
+                    }
+                }
+                else
+                {
+                    ourHits = new Il2CppSystem.Collections.Generic.List<MeleeWeaponDamageData>();
                 }
 
-                // Insert our hit at top of list
-                hitsList.Insert(0, meleeWeapon.m_cachedHit);
-
-                // Clear hit once dealt with
-                meleeWeapon.m_cachedHit = null;
+                hits = ourHits.Pointer;
             }
-
-            float velocity = VRMeleeWeapon.Current.m_positionTracker.GetSmoothVelocity();
-            if (!VRConfig.configUseOldHammer.Value && velocity < 1.8f)
+            else
             {
-                return false;
+               result = OriginalHammerMethod(thisPtr, attackData, sphereRad * VRMeleeWeapon.WeaponHitboxSize, elapsedTime, out hits);
             }
 
             return result;
