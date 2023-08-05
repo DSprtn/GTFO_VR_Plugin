@@ -49,7 +49,10 @@ namespace GTFO_VR.Detours
             {
                 Il2CppSystem.Collections.Generic.List<MeleeWeaponDamageData> ourHits;
                 float velocity = VRMeleeWeapon.Current.m_positionTracker.GetSmoothVelocity();
-                if (velocity > 2f )
+
+                // Ensure weapon is moving fast-ish, and that the player is still holding the fire button.
+                // Releasing fire triggers the normal pancake attack window for about a second.
+                if (velocity > 2f && InputMapper.GetButtonKeyMouseGamepad(InputAction.Fire))
                 {
                     if (VRMeleeWeapon.Current.CheckForAttackTarget(out ourHits))
                     {
