@@ -23,14 +23,21 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public static float WeaponHitboxSize = .061f;
 
-        public VelocityTracker m_damageRefPositionTracker = new VelocityTracker();
+        public VelocityTracker m_damageRefTipPositionTracker = new VelocityTracker();
+        public VelocityTracker m_damageRefBasePositionTracker = new VelocityTracker();
         public VelocityTracker m_handPositionTracker = new VelocityTracker();
         private MeleeWeaponFirstPerson m_weapon;
         private Transform m_animatorRoot;
         private Light m_chargeupIndicatorLight;
 
         private Quaternion m_rotationOffset = Quaternion.EulerAngles(new Vector3(0.78f, 0, 0)); // Weapon up is about 45 degrees off
-        private Vector3 m_offset = new Vector3(0, 0, .6f);
+        private Vector3 m_offsetTip = new Vector3(0, 0, .6f);      
+        private Vector3 m_offsetBase = new Vector3(0, 0, .3f);
+        private bool m_elongatedHitbox = false; // If hitbox is elongated ( knife, bat, hammer ) or a single sphere ( spear )
+
+#if DEBUG_GTFO_VR
+        private static readonly float DEBUG_HIT_DRAW_DURATION = 10;
+#endif
 
         public void Setup(MeleeWeaponFirstPerson weapon)
         {
@@ -49,20 +56,27 @@ namespace GTFO_VR.Core.PlayerBehaviours
             switch (weapon.ArchetypeName)
             {
                 case "Spear":
-                    m_offset = m_rotationOffset * new Vector3(0, 1.25f, 0f );
+                    m_offsetTip = m_rotationOffset * new Vector3(0, 1.3f, 0f );
                     WeaponHitboxSize = 0.02f;
+                    m_elongatedHitbox = false;
                     break;
                 case "Knife":
-                    m_offset = m_rotationOffset * new Vector3(0, 0.35f, 0.01f);
+                    m_offsetTip = m_rotationOffset * new Vector3(0, 0.35f, 0.01f);
+                    m_offsetBase = m_rotationOffset * new Vector3(0, 0.2f, 0.01f);
                     WeaponHitboxSize = 0.022f;
+                    m_elongatedHitbox = true;
                     break;
                 case "Bat":
                     WeaponHitboxSize = 0.035f;
-                    m_offset = m_rotationOffset * new Vector3(0, 0.49f, 0f);
+                    m_offsetTip = m_rotationOffset * new Vector3(0, 0.49f, 0f);
+                    m_offsetBase = m_rotationOffset * new Vector3(0, 0.2f, 0.0f);
+                    m_elongatedHitbox = true;
                     break;
                 case "Sledgehammer":
                     WeaponHitboxSize = .061f;
-                    m_offset = m_rotationOffset * new Vector3(0, 0.74f, 0.13f);
+                    m_offsetTip = m_rotationOffset * new Vector3(0, 0.74f, 0.13f);  // Front-facing hammer head
+                    m_offsetBase = m_rotationOffset * new Vector3(0, 0.74f, -0.13f);
+                    m_elongatedHitbox = true;
                     break;
                 default:
                     Log.Error($"Unknown melee weapon detected {weapon.name}");
@@ -123,7 +137,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
 #if DEBUG_GTFO_VR
             if (VRConfig.configDebugShowHammerHitbox.Value)
             {
-                DebugDraw3D.DrawSphere(m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitboxSize, ColorExt.Red(0.2f));
+                DebugDraw3D.DrawSphere(m_damageRefBasePositionTracker.GetLatestPosition(), VRMeleeWeapon.WeaponHitboxSize, ColorExt.Red(0.2f));
+                DebugDraw3D.DrawSphere(m_damageRefTipPositionTracker.GetLatestPosition(), VRMeleeWeapon.WeaponHitboxSize, ColorExt.Red(0.2f));
             }
 #endif
         }
@@ -134,7 +149,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 if (m_weapon.ModelData != null)
                 {
-                    m_weapon.ModelData.m_damageRefAttack.transform.position = Controllers.MainController.transform.TransformPoint( m_offset);
+                    // We never access this directly anymore, but still set it incase we are missing some paths
+                    m_weapon.ModelData.m_damageRefAttack.transform.position = Controllers.MainController.transform.TransformPoint( m_offsetTip);
                 }
             }
         }
@@ -147,8 +163,17 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 // This must be done in local space as the units are tiny and rounding errors throw off the velocity otherwise.
                 // This is basically a reapeat of ForceDamageRefPosition() but in local space of the controller
 
-                // Global position. Used for accurate hit detection.
-                m_damageRefPositionTracker.AddPosition(m_weapon.ModelData.m_damageRefAttack.position, m_weapon.ModelData.m_damageRefAttack.rotation, Time.deltaTime);
+                // Global position of the tip of the attack ref. Used for accurate hit detection.
+                // Reuse the damageRefAttack position we set earlier.
+                // Rotation is not used
+                m_damageRefTipPositionTracker.AddPosition(m_weapon.ModelData.m_damageRefAttack.position, m_weapon.ModelData.m_damageRefAttack.rotation, Time.deltaTime);
+
+                // Global position of the base, used when we need multiple spheres to cover attack surface
+                if (m_elongatedHitbox)
+                {
+                    // Rotation is not used
+                    m_damageRefBasePositionTracker.AddPosition(Controllers.MainController.transform.TransformPoint(m_offsetBase), m_weapon.ModelData.m_damageRefAttack.rotation, Time.deltaTime);
+                }
 
                 // Use controller transform to calculate velocity needed for triggering bonk.
                 // Actual position doesn't matter, just difference between frames.
@@ -249,43 +274,77 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
+        private record MeleeAttackData(Vector3 weaponPosCurrent, Vector3 weaponPosPrev);
+
+
+        
         public bool CheckForAttackTarget( out List<MeleeWeaponDamageData> hits)
         {
             HandleSkinnedDoor();
 
-            Vector3 weaponPosCurrent = m_damageRefPositionTracker.GetLatestPosition();
-            Vector3 weaponPosPrev = m_damageRefPositionTracker.getPreviousPosition();
-
             DamageUtil.IncrementSearchID();
-
-#if DEBUG_GTFO_VR
-            DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitboxSize * 0.3f, ColorExt.Blue(0.5f), 0.5f);
-#endif
-
-            Vector3 velocity = (weaponPosCurrent - weaponPosPrev);
 
             hits = new List<MeleeWeaponDamageData>();
 
-            // cast a sphere from where the the hitbox was, to where it is, and get the first thing it collides with along the way
-            RaycastHit rayHit;
-            bool castHit = Physics.SphereCast(weaponPosPrev, VRMeleeWeapon.WeaponHitboxSize, velocity.normalized, out rayHit, velocity.magnitude, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC, QueryTriggerInteraction.Ignore);
-            if (castHit)
-            {
-                IDamageable damagable = rayHit.collider.GetComponent<IDamageable>();
+            System.Collections.Generic.List<MeleeAttackData> hitboxes = new System.Collections.Generic.List<MeleeAttackData>();
 
-                // Check if we've already hit this collider ( this is the first check, so no )
-                // and also sets identifier so we can make sure we don't double-tap it below
-                if (ConsiderDamageable(damagable))  
-                {                                  
-                    hits.Add(new MeleeWeaponDamageData
+            Vector3 weaponTipPosCurrent = m_damageRefTipPositionTracker.GetLatestPosition();
+            Vector3 weaponTipPosPrev = m_damageRefTipPositionTracker.getPreviousPosition();
+
+            hitboxes.Add(new MeleeAttackData(weaponTipPosCurrent, weaponTipPosPrev));
+
+            if (m_elongatedHitbox)
+            {
+                // Knife and Bat need multiple hitboxes, because we can't really cast a capsule properly.
+                // An extra 2 spheres is enough for these
+                Vector3 baseCurrent = m_damageRefBasePositionTracker.GetLatestPosition();
+                Vector3 basePrev = m_damageRefBasePositionTracker.getPreviousPosition();
+
+                // Add base position
+                hitboxes.Add(new MeleeAttackData(baseCurrent, basePrev));
+
+                // And one inbetween tip and base
+                hitboxes.Add(new MeleeAttackData((baseCurrent + weaponTipPosCurrent) * 0.5f, (weaponTipPosPrev + basePrev) * 0.5f ));
+            }
+
+            bool castHit = false;
+            foreach (var hitbox in hitboxes)
+            {
+                var ( weaponPosCurrent, weaponPosPrev )= (hitbox.weaponPosCurrent, hitbox.weaponPosPrev);
+                Vector3 velocity = (weaponPosCurrent - weaponPosPrev);
+
+#if DEBUG_GTFO_VR
+                DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitboxSize * 0.3f, ColorExt.Blue(0.5f), 0.5f);
+#endif
+
+                // cast a sphere from where the the hitbox was, to where it is, and get the first thing it collides with along the way
+                RaycastHit rayHit;
+                castHit = Physics.SphereCast(weaponPosPrev, VRMeleeWeapon.WeaponHitboxSize, velocity.normalized, out rayHit, velocity.magnitude, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC, QueryTriggerInteraction.Ignore);
+                if (castHit)
+                {
+                    IDamageable damagable = rayHit.collider.GetComponent<IDamageable>();
+
+                    // Check if we've already hit this collider ( this is the first check, so no )
+                    // and also sets identifier so we can make sure we don't double-tap it below
+                    if (ConsiderDamageable(damagable))
                     {
-                        damageGO = rayHit.collider.gameObject,
-                        hitPos = rayHit.point, // vector from sourcePos to hitPos, and source to enemy spine used to determine backstab
-                        hitNormal = rayHit.normal, // Used for gore
-                        sourcePos = rayHit.point - (velocity.normalized), // positioned used to calculate backstab
-                        damageTargetFound = true, // Not actually used for anything
-                        damageComp = damagable
-                    });
+#if DEBUG_GTFO_VR
+                        DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitboxSize * 0.3f, ColorExt.Blue(0.5f), DEBUG_HIT_DRAW_DURATION);
+#endif
+                        hits.Add(new MeleeWeaponDamageData
+                        {
+                            damageGO = rayHit.collider.gameObject,
+                            hitPos = rayHit.point, // vector from sourcePos to hitPos, and source to enemy spine used to determine backstab
+                            hitNormal = rayHit.normal, // Used for gore
+                            sourcePos = rayHit.point - (velocity.normalized), // positioned used to calculate backstab
+                            damageTargetFound = true, // Not actually used for anything
+                            damageComp = damagable
+                        });
+                    }
+
+                    // Unless we are looking for multiple hits, break on the first hit
+                    if (!m_weapon.MeleeArchetypeData.CanHitMultipleEnemies)
+                        break;
                 }
             }
 
@@ -293,42 +352,46 @@ namespace GTFO_VR.Core.PlayerBehaviours
             // Also do this if we are allowed to hit multiple enemies ( e.g. spear )
             if (!castHit || m_weapon.MeleeArchetypeData.CanHitMultipleEnemies)
             {
-                var colliders = Physics.OverlapSphere(weaponPosCurrent, VRMeleeWeapon.WeaponHitboxSize, LayerManager.MASK_MELEE_ATTACK_TARGETS, QueryTriggerInteraction.Ignore);
-                foreach(var collider in colliders)
+                foreach (var hitbox in hitboxes)
                 {
-                    IDamageable damagable = collider.GetComponent<IDamageable>();
-                    if (ConsiderDamageable(damagable))
+                    var (weaponPosCurrent, weaponPosPrev) = (hitbox.weaponPosCurrent, hitbox.weaponPosPrev);
+                    Vector3 velocity = (weaponPosCurrent - weaponPosPrev);
+
+                    var colliders = Physics.OverlapSphere(weaponPosCurrent, VRMeleeWeapon.WeaponHitboxSize, LayerManager.MASK_MELEE_ATTACK_TARGETS, QueryTriggerInteraction.Ignore);
+                    foreach (var collider in colliders)
                     {
-                        hits.Add(new MeleeWeaponDamageData
+                        IDamageable damagable = collider.GetComponent<IDamageable>();
+                        if (ConsiderDamageable(damagable))
                         {
-                            damageGO = collider.gameObject,
-                            hitPos = weaponPosCurrent, // vector from sourcePos to hitPos, and source to enemy spine used to determine backstab
-                            hitNormal = velocity.normalized * -1f, // / Used for gore. Expected to be surface normal of thing we hit
-                            sourcePos = rayHit.point - (velocity.normalized), // positioned used to calculate backstab
-                            damageTargetFound = true, // Not actually used for anything
-                            damageComp = damagable
-                        });
+                            hits.Add(new MeleeWeaponDamageData
+                            {
+                                damageGO = collider.gameObject,
+                                hitPos = weaponPosCurrent, // vector from sourcePos to hitPos, and source to enemy spine used to determine backstab
+                                hitNormal = velocity.normalized * -1f, // / Used for gore. Expected to be surface normal of thing we hit
+                                sourcePos = weaponPosCurrent - (velocity.normalized), // positioned used to calculate backstab
+                                damageTargetFound = true, // Not actually used for anything
+                                damageComp = damagable
+                            });
+                        }
                     }
                 }
             }
+
+
 #if DEBUG_GTFO_VR
 
             if (VRConfig.configDebugShowHammerHitbox.Value)
             {
-                float drawDuration = 10;
-
-                DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitboxSize * 0.3f, ColorExt.Blue(0.5f), drawDuration);
-                
                 foreach(var hit in hits)
                 {
                     Collider collider = hit.damageGO.GetComponent<Collider>();
 
                     // Draw hit, line between prev/curr melee position, and name of collider hit
-                    DebugDraw3D.DrawSphere(hit.hitPos, VRMeleeWeapon.WeaponHitboxSize, ColorExt.Green(0.3f), drawDuration);
-                    DebugDraw3D.DrawText(hit.hitPos, collider.name, 1f, ColorExt.Green(0.3f), drawDuration);
+                    DebugDraw3D.DrawSphere(hit.hitPos, VRMeleeWeapon.WeaponHitboxSize, ColorExt.Green(0.3f), DEBUG_HIT_DRAW_DURATION);
+                    DebugDraw3D.DrawText(hit.hitPos, collider.name, 1f, ColorExt.Green(0.3f), DEBUG_HIT_DRAW_DURATION);
 
                     // Draw collider hit
-                    GTFODebugDraw3D.drawCollider(collider, ColorExt.Red(0.2f), drawDuration);
+                    GTFODebugDraw3D.drawCollider(collider, ColorExt.Red(0.2f), DEBUG_HIT_DRAW_DURATION);
                 }
             }
 #endif
