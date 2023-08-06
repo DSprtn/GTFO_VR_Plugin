@@ -21,8 +21,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public static VRMeleeWeapon Current;
 
-        public static float WeaponHitboxSize = .61f;
-        public static float WeaponHitDetectionSphereCollisionSize = .61f;
+        public static float WeaponHitboxSize = .061f;
 
         public VelocityTracker m_damageRefPositionTracker = new VelocityTracker();
         public VelocityTracker m_handPositionTracker = new VelocityTracker();
@@ -51,21 +50,18 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 case "Spear":
                     m_offset = m_rotationOffset * new Vector3(0, 1.25f, 0f );
-                    WeaponHitDetectionSphereCollisionSize = 0.2f;
-                    WeaponHitboxSize = .25f;
+                    WeaponHitboxSize = 0.02f;
                     break;
                 case "Knife":
                     m_offset = m_rotationOffset * new Vector3(0, 0.35f, 0.01f);
-                    WeaponHitDetectionSphereCollisionSize = 0.22f;
-                    WeaponHitboxSize = .22f;
+                    WeaponHitboxSize = 0.022f;
                     break;
                 case "Bat":
-                    WeaponHitDetectionSphereCollisionSize = 0.35f;
-                    WeaponHitboxSize = .45f;
+                    WeaponHitboxSize = 0.035f;
                     m_offset = m_rotationOffset * new Vector3(0, 0.49f, 0f);
                     break;
                 case "Sledgehammer":
-                    WeaponHitDetectionSphereCollisionSize = .61f;
+                    WeaponHitboxSize = .061f;
                     m_offset = m_rotationOffset * new Vector3(0, 0.74f, 0.13f);
                     break;
                 default:
@@ -127,7 +123,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 #if DEBUG_GTFO_VR
             if (VRConfig.configDebugShowHammerHitbox.Value)
             {
-                DebugDraw3D.DrawSphere(m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .1f, ColorExt.Red(0.2f));
+                DebugDraw3D.DrawSphere(m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitboxSize, ColorExt.Red(0.2f));
             }
 #endif
         }
@@ -263,7 +259,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             DamageUtil.IncrementSearchID();
 
 #if DEBUG_GTFO_VR
-            DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.03f, ColorExt.Blue(0.5f), 0.5f);
+            DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitboxSize * 0.3f, ColorExt.Blue(0.5f), 0.5f);
 #endif
 
             Vector3 velocity = (weaponPosCurrent - weaponPosPrev);
@@ -272,7 +268,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
             // cast a sphere from where the the hitbox was, to where it is, and get the first thing it collides with along the way
             RaycastHit rayHit;
-            bool castHit = Physics.SphereCast(weaponPosPrev, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.1f, velocity.normalized, out rayHit, velocity.magnitude, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC, QueryTriggerInteraction.Ignore);
+            bool castHit = Physics.SphereCast(weaponPosPrev, VRMeleeWeapon.WeaponHitboxSize, velocity.normalized, out rayHit, velocity.magnitude, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC, QueryTriggerInteraction.Ignore);
             if (castHit)
             {
                 IDamageable damagable = rayHit.collider.GetComponent<IDamageable>();
@@ -297,7 +293,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             // Also do this if we are allowed to hit multiple enemies ( e.g. spear )
             if (!castHit || m_weapon.MeleeArchetypeData.CanHitMultipleEnemies)
             {
-                var colliders = Physics.OverlapSphere(weaponPosCurrent, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.1f, LayerManager.MASK_MELEE_ATTACK_TARGETS, QueryTriggerInteraction.Ignore);
+                var colliders = Physics.OverlapSphere(weaponPosCurrent, VRMeleeWeapon.WeaponHitboxSize, LayerManager.MASK_MELEE_ATTACK_TARGETS, QueryTriggerInteraction.Ignore);
                 foreach(var collider in colliders)
                 {
                     IDamageable damagable = collider.GetComponent<IDamageable>();
@@ -321,14 +317,14 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 float drawDuration = 10;
 
-                DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.03f, ColorExt.Blue(0.5f), drawDuration);
+                DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitboxSize * 0.3f, ColorExt.Blue(0.5f), drawDuration);
                 
                 foreach(var hit in hits)
                 {
                     Collider collider = hit.damageGO.GetComponent<Collider>();
 
                     // Draw hit, line between prev/curr melee position, and name of collider hit
-                    DebugDraw3D.DrawSphere(hit.hitPos, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * 0.1f, ColorExt.Green(0.3f), drawDuration);
+                    DebugDraw3D.DrawSphere(hit.hitPos, VRMeleeWeapon.WeaponHitboxSize, ColorExt.Green(0.3f), drawDuration);
                     DebugDraw3D.DrawText(hit.hitPos, collider.name, 1f, ColorExt.Green(0.3f), drawDuration);
 
                     // Draw collider hit
