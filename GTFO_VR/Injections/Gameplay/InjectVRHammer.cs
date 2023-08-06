@@ -37,7 +37,7 @@ namespace GTFO_VR.Injections
         {
             if (VRMeleeWeapon.Current != null)
             {
-                if (VRMeleeWeapon.Current.m_positionTracker.GetSmoothVelocity() > 2f)
+                if (VRMeleeWeapon.Current.VelocityAboveThreshold())
                 {
                     // For the sake of simplicity we discard the hits here and call it again when the original CheckForAttackTargets() is called
                     if (VRMeleeWeapon.Current.CheckForAttackTarget( out _)) 

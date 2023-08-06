@@ -24,13 +24,14 @@ namespace GTFO_VR.Core.PlayerBehaviours
         public static float WeaponHitboxSize = .61f;
         public static float WeaponHitDetectionSphereCollisionSize = .61f;
 
-        public VelocityTracker m_positionTracker = new VelocityTracker();
+        public VelocityTracker m_damageRefPositionTracker = new VelocityTracker();
+        public VelocityTracker m_handPositionTracker = new VelocityTracker();
         private MeleeWeaponFirstPerson m_weapon;
         private Transform m_animatorRoot;
         private Light m_chargeupIndicatorLight;
 
-        public Quaternion m_rotationOffset = Quaternion.EulerAngles(new Vector3(0.78f, 0, 0)); // Weapon up is about 45 degrees off
-        public Vector3 m_offset = new Vector3(0, 0, .6f);
+        private Quaternion m_rotationOffset = Quaternion.EulerAngles(new Vector3(0.78f, 0, 0)); // Weapon up is about 45 degrees off
+        private Vector3 m_offset = new Vector3(0, 0, .6f);
 
         public void Setup(MeleeWeaponFirstPerson weapon)
         {
@@ -161,13 +162,25 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 // This is basically a reapeat of ForceDamageRefPosition() but in local space of the controller
 
                 // Global position. Used for accurate hit detection.
-                Vector3 damageRefPosition = m_weapon.ModelData.m_damageRefAttack.position;
-                // Local position. Used for accurate velocity calculation
-                Vector3 localPosition = Controllers.MainControllerPose.transform.localPosition;     
-                localPosition = localPosition + (Controllers.MainControllerPose.transform.rotation * m_offset); 
+                m_damageRefPositionTracker.AddPosition(m_weapon.ModelData.m_damageRefAttack.position, m_weapon.ModelData.m_damageRefAttack.rotation, Time.deltaTime);
 
-                m_positionTracker.AddPosition(damageRefPosition, localPosition, Time.deltaTime);
+                // Use controller transform to calculate velocity needed for triggering bonk.
+                // Actual position doesn't matter, just difference between frames.
+                // Note that we are using the local position, so thumbstick movement is ignored.
+                // However, add the vertical component of player position so the player can do silly things like drop onto scouts
+                Vector3 velocityPosition = Controllers.MainControllerPose.transform.localPosition + new Vector3( 0, m_weapon.Owner.Position.y, 0);
+                m_handPositionTracker.AddPosition(velocityPosition, Controllers.MainControllerPose.transform.localRotation, Time.deltaTime);
             }
+        }
+
+        private bool VelocityAboveThreshold( float positionalThreshold, float angularThreshold )
+        {
+            return m_handPositionTracker.GetSmoothVelocity() > positionalThreshold || m_handPositionTracker.GetSmoothAngularVelocity() > angularThreshold;
+        }
+
+        public bool VelocityAboveThreshold()
+        {
+            return VelocityAboveThreshold(0.8f, 200f);
         }
 
         private void LateUpdate()
@@ -254,8 +267,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
         {
             HandleSkinnedDoor();
 
-            Vector3 weaponPosCurrent = m_positionTracker.GetLatestPosition();
-            Vector3 weaponPosPrev = m_positionTracker.getPreviousPosition();
+            Vector3 weaponPosCurrent = m_damageRefPositionTracker.GetLatestPosition();
+            Vector3 weaponPosPrev = m_damageRefPositionTracker.getPreviousPosition();
 
             DamageUtil.IncrementSearchID();
 
