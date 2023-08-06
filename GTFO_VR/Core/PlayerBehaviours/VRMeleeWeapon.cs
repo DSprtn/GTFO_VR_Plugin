@@ -35,11 +35,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public void Setup(MeleeWeaponFirstPerson weapon)
         {
-#if DEBUG_GTFO_VR
-            MeleeWeaponFirstPerson.DEBUG_ENABLED = VRConfig.configDebugShowHammerHitbox.Value;
-            VRConfig.configDebugShowHammerHitbox.SettingChanged += ToggleDebug;
-#endif
-
             Current = this;
 
             m_weapon = weapon;
@@ -77,11 +72,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
                     Log.Error($"Unknown melee weapon detected {weapon.name}");
                     return;
             }
-        }
-
-        private void ToggleDebug(object sender, EventArgs e)
-        {
-            MeleeWeaponFirstPerson.DEBUG_ENABLED = VRConfig.configDebugShowHammerHitbox.Value;
         }
 
         private void WeaponHalfCharged()
@@ -353,9 +343,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void OnDestroy()
         {
-#if DEBUG_GTFO_VR
-            VRConfig.configDebugShowHammerHitbox.SettingChanged -= ToggleDebug;
-#endif
             VRMeleeWeaponEvents.OnHammerHalfCharged -= WeaponHalfCharged;
             VRMeleeWeaponEvents.OnHammerFullyCharged -= WeaponFullyCharged;
         }
