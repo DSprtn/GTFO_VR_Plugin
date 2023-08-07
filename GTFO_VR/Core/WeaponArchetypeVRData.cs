@@ -138,10 +138,14 @@ namespace GTFO_VR.Core
             }
         }
 
-        public static Vector3 CalculateGripOffset()
+        public static Vector3 CalculateGripOffset(Transform heldItem)
         {
-            Transform itemEquip = ItemEquippableEvents.currentItem.transform;
-            return itemEquip.position - itemEquip.TransformPoint(m_current.positonOffset);
+            // Rotation of thing we're holding + item rotation offset
+            Quaternion ControllerUpPlusOffset = heldItem.transform.rotation * m_current.rotationOffset;
+
+            // Rotate offset position by rotation to get offset in space of heldItem
+            return ControllerUpPlusOffset * (-m_current.positonOffset);
+
         }
 
     }
