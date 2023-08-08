@@ -21,7 +21,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         public static VRMeleeWeapon Current;
 
-        public static float WeaponHitboxSize = .061f;
+        private float m_hitboxSize = .061f;
 
         public VelocityTracker m_damageRefTipPositionTracker = new VelocityTracker();
         public VelocityTracker m_damageRefBasePositionTracker = new VelocityTracker();
@@ -56,28 +56,28 @@ namespace GTFO_VR.Core.PlayerBehaviours
             switch (weapon.ArchetypeName)
             {
                 case "Spear":
-                    WeaponHitboxSize = 0.02f;
+                    m_hitboxSize = 0.035f;
                     m_offsetTip = new Vector3(0, 1f, 0f);
                     m_offsetBase = new Vector3(0, 0.8f, 0f);
                     m_elongatedHitbox = true;
                     m_centerHitbox = false;
                     break;
                 case "Knife":
-                    WeaponHitboxSize = 0.025f;
+                    m_hitboxSize = 0.025f;
                     m_offsetTip = new Vector3(0, 0.28f, 0.01f);
                     m_offsetBase = new Vector3(0, 0.12f, 0.01f);
                     m_elongatedHitbox = true;
                     m_centerHitbox = true;
                     break;
                 case "Bat":
-                    WeaponHitboxSize = 0.04f;
+                    m_hitboxSize = 0.04f;
                     m_offsetTip = new Vector3(0, 0.4f, 0f);
                     m_offsetBase = new Vector3(0, 0.15f, 0.0f);
                     m_elongatedHitbox = true;
                     m_centerHitbox = true;
                     break;
                 case "Sledgehammer":
-                    WeaponHitboxSize = .07f;
+                    m_hitboxSize = .07f;
                     m_offsetTip = new Vector3(0, 0.42f, 0.1f);  // Front-facing hammer head
                     m_offsetBase = new Vector3(0, 0.42f, -0.1f);
                     m_elongatedHitbox = true;
@@ -142,8 +142,16 @@ namespace GTFO_VR.Core.PlayerBehaviours
 #if DEBUG_GTFO_VR
             if (VRConfig.configDebugShowHammerHitbox.Value)
             {
-                DebugDraw3D.DrawSphere(m_damageRefBasePositionTracker.GetLatestPosition(), VRMeleeWeapon.WeaponHitboxSize, ColorExt.Red(0.2f));
-                DebugDraw3D.DrawSphere(m_damageRefTipPositionTracker.GetLatestPosition(), VRMeleeWeapon.WeaponHitboxSize, ColorExt.Red(0.2f));
+                DebugDraw3D.DrawSphere(m_damageRefTipPositionTracker.GetLatestPosition(), m_hitboxSize, ColorExt.Red(0.2f));
+                if (m_elongatedHitbox)
+                {
+                    DebugDraw3D.DrawSphere(m_damageRefBasePositionTracker.GetLatestPosition(), m_hitboxSize, ColorExt.Red(0.2f));
+                    if (m_centerHitbox)
+                    {
+                        Vector3 centerHitbox = (m_damageRefTipPositionTracker.GetLatestPosition() + m_damageRefBasePositionTracker.GetLatestPosition()) * 0.5f;
+                        DebugDraw3D.DrawSphere(centerHitbox, m_hitboxSize, ColorExt.Red(0.2f));
+                    }
+                }
             }
 #endif
         }
@@ -289,12 +297,12 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 Vector3 velocity = (weaponPosCurrent - weaponPosPrev);
 
 #if DEBUG_GTFO_VR
-                DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitboxSize * 0.3f, ColorExt.Blue(0.5f), 0.5f);
+                DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, m_hitboxSize * 0.3f, ColorExt.Blue(0.5f), 0.5f);
 #endif
 
                 // cast a sphere from where the the hitbox was, to where it is, and get the first thing it collides with along the way
                 RaycastHit rayHit;
-                castHit = Physics.SphereCast(weaponPosPrev, VRMeleeWeapon.WeaponHitboxSize, velocity.normalized, out rayHit, velocity.magnitude, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC, QueryTriggerInteraction.Ignore);
+                castHit = Physics.SphereCast(weaponPosPrev, m_hitboxSize, velocity.normalized, out rayHit, velocity.magnitude, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC, QueryTriggerInteraction.Ignore);
                 if (castHit)
                 {
                     IDamageable damagable = rayHit.collider.GetComponent<IDamageable>();
@@ -304,7 +312,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                     if (ConsiderDamageable(damagable))
                     {
 #if DEBUG_GTFO_VR
-                        DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, VRMeleeWeapon.WeaponHitboxSize * 0.3f, ColorExt.Blue(0.5f), DEBUG_HIT_DRAW_DURATION);
+                        DebugDraw3D.DrawCone(weaponPosCurrent, weaponPosPrev, m_hitboxSize * 0.3f, ColorExt.Blue(0.5f), DEBUG_HIT_DRAW_DURATION);
 #endif
                         hits.Add(new MeleeWeaponDamageData
                         {
@@ -332,7 +340,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                     var (weaponPosCurrent, weaponPosPrev) = (hitbox.weaponPosCurrent, hitbox.weaponPosPrev);
                     Vector3 velocity = (weaponPosCurrent - weaponPosPrev);
 
-                    var colliders = Physics.OverlapSphere(weaponPosCurrent, VRMeleeWeapon.WeaponHitboxSize, LayerManager.MASK_MELEE_ATTACK_TARGETS, QueryTriggerInteraction.Ignore);
+                    var colliders = Physics.OverlapSphere(weaponPosCurrent, m_hitboxSize, LayerManager.MASK_MELEE_ATTACK_TARGETS, QueryTriggerInteraction.Ignore);
                     foreach (var collider in colliders)
                     {
                         IDamageable damagable = collider.GetComponent<IDamageable>();
@@ -362,7 +370,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                     Collider collider = hit.damageGO.GetComponent<Collider>();
 
                     // Draw hit, line between prev/curr melee position, and name of collider hit
-                    DebugDraw3D.DrawSphere(hit.hitPos, VRMeleeWeapon.WeaponHitboxSize, ColorExt.Green(0.3f), DEBUG_HIT_DRAW_DURATION);
+                    DebugDraw3D.DrawSphere(hit.hitPos, m_hitboxSize, ColorExt.Green(0.3f), DEBUG_HIT_DRAW_DURATION);
                     DebugDraw3D.DrawText(hit.hitPos, collider.name, 1f, ColorExt.Green(0.3f), DEBUG_HIT_DRAW_DURATION);
 
                     // Draw collider hit

@@ -67,7 +67,7 @@ namespace GTFO_VR.Detours
             }
             else
             {
-               result = OriginalHammerMethod(thisPtr, attackData, VRMeleeWeapon.WeaponHitboxSize, elapsedTime, out hits);
+               result = OriginalHammerMethod(thisPtr, attackData, sphereRad, elapsedTime, out hits);
             }
 
             return result;
