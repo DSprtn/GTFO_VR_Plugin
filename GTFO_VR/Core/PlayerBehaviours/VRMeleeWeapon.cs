@@ -208,31 +208,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
         }
 
-        public static List<MeleeWeaponDamageData> sortHits(List<MeleeWeaponDamageData> hits, Vector3 damageRefPos)
-        {
-            List<MeleeWeaponDamageData> sortedHits = new List<MeleeWeaponDamageData>();
-
-            while (hits.Count > 0)
-            {
-                float lowest = 999999f;
-                MeleeWeaponDamageData closestData = null;
-                foreach (var hit in hits)
-                {
-                    float sqrDst = (hit.hitPos - damageRefPos).sqrMagnitude;
-                    if (sqrDst <= lowest)
-                    {
-                        closestData = hit;
-                        lowest = sqrDst;
-                    }
-                }
-                sortedHits.Add(closestData);
-                hits.Remove(closestData);
-            }
-
-            return sortedHits;
-        }
-
-
         private bool ConsiderDamageable(IDamageable damagable)
         {
             // SearchID is increment at the beginning of CheckForAttackTarget.

@@ -67,33 +67,6 @@ namespace GTFO_VR.Injections
         }
     }
 
-
-    /// <summary>
-    /// Sort hits to prioritize them based on proximity to hammer center (only first enemy hit counts)
-    /// Light attacks
-    /// </summary>
-    [HarmonyPatch(typeof(MWS_AttackSwingBase), nameof(MWS_AttackSwingBase.OnAttackHit))]
-    static class InjectPrioritizeProximityTargetsOnLightHit
-    {
-        static void Postfix(MWS_AttackSwingBase __instance)
-        {
-            __instance.m_weapon.HitsForDamage = VRMeleeWeapon.sortHits(__instance.m_weapon.HitsForDamage, __instance.m_data.m_damageRef.position);
-        }
-    }
-
-    /// <summary>
-    /// Sort hits to prioritize them based on proximity to hammer center (only first enemy hit counts)
-    /// Heavy attacks
-    /// </summary>
-    [HarmonyPatch(typeof(MWS_AttackHeavy), nameof(MWS_AttackHeavy.OnAttackHit))]
-    static class InjectPrioritizeProximityTargetsOnHeavyHit
-    {
-        static void Postfix(MWS_AttackSwingBase __instance)
-        {
-            __instance.m_weapon.HitsForDamage = VRMeleeWeapon.sortHits(__instance.m_weapon.HitsForDamage, __instance.m_data.m_damageRef.position);
-        }
-    }
-
     /// <summary>
     /// Get controller velocity for smack
     /// </summary>
