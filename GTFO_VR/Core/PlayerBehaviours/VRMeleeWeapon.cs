@@ -30,10 +30,10 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private Transform m_animatorRoot;
         private Light m_chargeupIndicatorLight;
 
-        private Quaternion m_rotationOffset = Quaternion.EulerAngles(new Vector3(0.78f, 0, 0)); // Weapon up is about 45 degrees off
-        private Vector3 m_offsetTip = new Vector3(0, 0, .6f);      
+        private Vector3 m_offsetTip = new Vector3(0, 0, .6f);
         private Vector3 m_offsetBase = new Vector3(0, 0, .3f);
         private bool m_elongatedHitbox = false; // If hitbox is elongated ( knife, bat, hammer ) or a single sphere ( spear )
+        private bool m_centerHitbox = false;    // If a center hitbox should be generated when using an elongated hitbox
 
 #if DEBUG_GTFO_VR
         private static readonly float DEBUG_HIT_DRAW_DURATION = 10;
@@ -56,27 +56,32 @@ namespace GTFO_VR.Core.PlayerBehaviours
             switch (weapon.ArchetypeName)
             {
                 case "Spear":
-                    m_offsetTip = m_rotationOffset * new Vector3(0, 1.3f, 0f );
                     WeaponHitboxSize = 0.02f;
-                    m_elongatedHitbox = false;
+                    m_offsetTip = new Vector3(0, 1f, 0f);
+                    m_offsetBase = new Vector3(0, 0.8f, 0f);
+                    m_elongatedHitbox = true;
+                    m_centerHitbox = false;
                     break;
                 case "Knife":
-                    m_offsetTip = m_rotationOffset * new Vector3(0, 0.35f, 0.01f);
-                    m_offsetBase = m_rotationOffset * new Vector3(0, 0.2f, 0.01f);
-                    WeaponHitboxSize = 0.022f;
+                    WeaponHitboxSize = 0.025f;
+                    m_offsetTip = new Vector3(0, 0.28f, 0.01f);
+                    m_offsetBase = new Vector3(0, 0.12f, 0.01f);
                     m_elongatedHitbox = true;
+                    m_centerHitbox = true;
                     break;
                 case "Bat":
-                    WeaponHitboxSize = 0.035f;
-                    m_offsetTip = m_rotationOffset * new Vector3(0, 0.49f, 0f);
-                    m_offsetBase = m_rotationOffset * new Vector3(0, 0.2f, 0.0f);
+                    WeaponHitboxSize = 0.04f;
+                    m_offsetTip = new Vector3(0, 0.4f, 0f);
+                    m_offsetBase = new Vector3(0, 0.15f, 0.0f);
                     m_elongatedHitbox = true;
+                    m_centerHitbox = true;
                     break;
                 case "Sledgehammer":
-                    WeaponHitboxSize = .061f;
-                    m_offsetTip = m_rotationOffset * new Vector3(0, 0.74f, 0.13f);  // Front-facing hammer head
-                    m_offsetBase = m_rotationOffset * new Vector3(0, 0.74f, -0.13f);
+                    WeaponHitboxSize = .07f;
+                    m_offsetTip = new Vector3(0, 0.42f, 0.1f);  // Front-facing hammer head
+                    m_offsetBase = new Vector3(0, 0.42f, -0.1f);
                     m_elongatedHitbox = true;
+                    m_centerHitbox = false;
                     break;
                 default:
                     Log.Error($"Unknown melee weapon detected {weapon.name}");
@@ -129,9 +134,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
             if (m_weapon.Owner && m_weapon.Owner.IsLocallyOwned)
             {
+                UpdateDamagePositionAndVelocity();
                 ForceDamageRefPosition();
-                m_chargeupIndicatorLight.transform.position = m_weapon.ModelData.m_damageRefAttack.transform.position;
-                TrackPositionAndVelocity();
+                m_chargeupIndicatorLight.transform.position = m_damageRefTipPositionTracker.GetLatestPosition();
             }
 
 #if DEBUG_GTFO_VR
@@ -149,35 +154,27 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 if (m_weapon.ModelData != null)
                 {
-                    // We never access this directly anymore, but still set it incase we are missing some paths
-                    m_weapon.ModelData.m_damageRefAttack.transform.position = Controllers.MainController.transform.TransformPoint( m_offsetTip);
+                    // We are patching anywhere this would be used, so probably redunant
+                    m_weapon.ModelData.m_damageRefAttack.transform.position = m_damageRefTipPositionTracker.GetLatestPosition();
                 }
             }
         }
 
-        public void TrackPositionAndVelocity()
+        public void UpdateDamagePositionAndVelocity()
         {
             if (m_weapon.ModelData != null)
             {
-                // Position of melee damage ref is used to calculate velocity.
-                // This must be done in local space as the units are tiny and rounding errors throw off the velocity otherwise.
-                // This is basically a reapeat of ForceDamageRefPosition() but in local space of the controller
 
-                // Global position of the tip of the attack ref. Used for accurate hit detection.
-                // Reuse the damageRefAttack position we set earlier.
-                // Rotation is not used
-                m_damageRefTipPositionTracker.AddPosition(m_weapon.ModelData.m_damageRefAttack.position, m_weapon.ModelData.m_damageRefAttack.rotation, Time.deltaTime);
+                // Attack position ( tip ) is offset from the transform of the wielded item ( the melee weapon )
+                m_damageRefTipPositionTracker.AddPosition( VRPlayer.PlayerAgent.FPItemHolder.WieldedItem.transform.TransformPoint(m_offsetTip), Time.deltaTime);
 
-                // Global position of the base, used when we need multiple spheres to cover attack surface
+                // If we are using an elongated hitbox we want to do this for the base ( bottom ) of the hitbox area too.
                 if (m_elongatedHitbox)
                 {
-                    // Rotation is not used
-                    m_damageRefBasePositionTracker.AddPosition(Controllers.MainController.transform.TransformPoint(m_offsetBase), m_weapon.ModelData.m_damageRefAttack.rotation, Time.deltaTime);
+                    m_damageRefBasePositionTracker.AddPosition(VRPlayer.PlayerAgent.FPItemHolder.WieldedItem.transform.TransformPoint(m_offsetBase), Time.deltaTime);
                 }
 
-                // Use controller transform to calculate velocity needed for triggering bonk.
-                // Actual position doesn't matter, just difference between frames.
-                // Note that we are using the local position, so thumbstick movement is ignored.
+                // Use local position ( ignoring thumbstick movement ) to determine velocity required for bonk.
                 // However, add the vertical component of player position so the player can do silly things like drop onto scouts
                 Vector3 velocityPosition = Controllers.MainControllerPose.transform.localPosition + new Vector3( 0, m_weapon.Owner.Position.y, 0);
                 m_handPositionTracker.AddPosition(velocityPosition, Controllers.MainControllerPose.transform.localRotation, Time.deltaTime);
@@ -303,8 +300,11 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 // Add base position
                 hitboxes.Add(new MeleeAttackData(baseCurrent, basePrev));
 
-                // And one inbetween tip and base
-                hitboxes.Add(new MeleeAttackData((baseCurrent + weaponTipPosCurrent) * 0.5f, (weaponTipPosPrev + basePrev) * 0.5f ));
+                // And one inbetween tip and base, maybe
+                if (m_centerHitbox)
+                {
+                    hitboxes.Add(new MeleeAttackData((baseCurrent + weaponTipPosCurrent) * 0.5f, (weaponTipPosPrev + basePrev) * 0.5f));
+                }
             }
 
             bool castHit = false;

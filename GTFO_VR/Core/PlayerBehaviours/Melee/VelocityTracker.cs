@@ -57,6 +57,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.Melee
         MeleeHistory m_newestHistory = null;
         MeleeHistory m_prevHistory = null;
 
+        public void AddPosition(Vector3 position, float delta)
+        {
+            AddPosition(position, Quaternion.identity, delta);
+        }
+
         public void AddPosition(Vector3 position, Quaternion rotation, float delta)
         {
             m_prevHistory = m_newestHistory;

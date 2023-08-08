@@ -68,10 +68,10 @@ namespace GTFO_VR.Core
             {
                 { "Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
                 // Melee
-                { "SANTONIAN HDH", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f - VRConfig.configWeaponRotationOffset.Value, 0, 0)), false) },
-                { "MASTABA FIXED BLADE", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f - VRConfig.configWeaponRotationOffset.Value, 0, 0)), false) },
-                { "MACO DRILLHEAD", new VRWeaponData(new Vector3(0f, -.3f, 0f), Quaternion.Euler(new Vector3(45f - VRConfig.configWeaponRotationOffset.Value, 0, 0)), false) },
-                { "KOVAC PEACEKEEPER", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f - VRConfig.configWeaponRotationOffset.Value, 0, 0)), false) },
+                { "SANTONIAN HDH", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "MASTABA FIXED BLADE", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "MACO DRILLHEAD", new VRWeaponData(new Vector3(0f, -.3f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "KOVAC PEACEKEEPER", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
 
                 // Tool
                 { "STALWART FLOW G2", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
