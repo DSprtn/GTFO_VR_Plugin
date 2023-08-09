@@ -36,7 +36,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private bool m_centerHitbox = false;    // If a center hitbox should be generated when using an elongated hitbox
 
 #if DEBUG_GTFO_VR
-        private static readonly float DEBUG_HIT_DRAW_DURATION = 10;
+        private static readonly float DEBUG_HIT_DRAW_DURATION = 5;
 #endif
 
         public void Setup(MeleeWeaponFirstPerson weapon)
@@ -142,14 +142,16 @@ namespace GTFO_VR.Core.PlayerBehaviours
 #if DEBUG_GTFO_VR
             if (VRConfig.configDebugShowHammerHitbox.Value)
             {
-                DebugDraw3D.DrawSphere(m_damageRefTipPositionTracker.GetLatestPosition(), m_hitboxSize, ColorExt.Red(0.2f));
+                GTFODebugDraw3D.DrawNearbyColliders(m_damageRefTipPositionTracker.GetLatestPosition(), 0.7f, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC, ColorExt.Green(0.001f), 0, true);
+
+                GTFODebugDraw3D.DrawSphere(m_damageRefTipPositionTracker.GetLatestPosition(), m_hitboxSize, ColorExt.Red(0.2f));
                 if (m_elongatedHitbox)
                 {
-                    DebugDraw3D.DrawSphere(m_damageRefBasePositionTracker.GetLatestPosition(), m_hitboxSize, ColorExt.Red(0.2f));
+                    GTFODebugDraw3D.DrawSphere(m_damageRefBasePositionTracker.GetLatestPosition(), m_hitboxSize, ColorExt.Red(0.2f));
                     if (m_centerHitbox)
                     {
                         Vector3 centerHitbox = (m_damageRefTipPositionTracker.GetLatestPosition() + m_damageRefBasePositionTracker.GetLatestPosition()) * 0.5f;
-                        DebugDraw3D.DrawSphere(centerHitbox, m_hitboxSize, ColorExt.Red(0.2f));
+                        GTFODebugDraw3D.DrawSphere(centerHitbox, m_hitboxSize, ColorExt.Red(0.2f));
                     }
                 }
             }
@@ -310,10 +312,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             System.Collections.Generic.List<MeleeAttackHit> attackHits = new System.Collections.Generic.List<MeleeAttackHit>();
             foreach (var hitbox in hitboxes)
             {
-
-#if DEBUG_GTFO_VR
-                DebugDraw3D.DrawCone(hitbox.weaponPosCurrent, hitbox.weaponPosPrev, m_hitboxSize * 0.3f, ColorExt.Blue(0.5f), 0.5f);
-#endif
                 // cast a sphere from where the the hitbox was, to where it is, and get the first thing it collides with along the way
                 if (m_weapon.MeleeArchetypeData.CanHitMultipleEnemies)
                 {
@@ -356,7 +354,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
                         float hitTime = rayHit.distance / hitbox.Velocity.magnitude;
                         if (hitTime < earliestHitTime)
                         {
-                            // While we check multiple hitboxes, we only ever care for the earliest hit
+                            // While we check multiple hitboxes, we only care for the earliest hit
                             // so we can just replace the existing hit here.
                             attackHits.Clear();
                             attackHits.Add(new MeleeAttackHit(rayHit, hitbox.weaponPosCurrent, hitbox.weaponPosPrev, hitTime));
@@ -425,17 +423,27 @@ namespace GTFO_VR.Core.PlayerBehaviours
 #if DEBUG_GTFO_VR
 
             if (VRConfig.configDebugShowHammerHitbox.Value)
-            {
-                foreach(var hit in hits)
+            { 
+                // Draw traces for hitboxes that persist for half a second
+                foreach (var hitbox in hitboxes)
                 {
-                    Collider collider = hit.damageGO.GetComponent<Collider>();
+                    DebugDraw3D.DrawCone(hitbox.weaponPosCurrent, hitbox.weaponPosPrev, m_hitboxSize * 0.3f, ColorExt.Blue(0.5f), 0.5f);
+                }
 
-                    // Draw hit, line between prev/curr melee position, and name of collider hit
-                    DebugDraw3D.DrawSphere(hit.hitPos, m_hitboxSize, ColorExt.Green(0.3f), DEBUG_HIT_DRAW_DURATION);
-                    DebugDraw3D.DrawText(hit.hitPos, collider.name, 1f, ColorExt.Green(0.3f), DEBUG_HIT_DRAW_DURATION);
+                // Draw any hits
+                foreach (var hit in hits)
+                {
+                    // Draw hit
+                    GTFODebugDraw3D.DrawSphere(hit.hitPos, m_hitboxSize, ColorExt.Green(0.3f), DEBUG_HIT_DRAW_DURATION);
 
-                    // Draw collider hit
-                    GTFODebugDraw3D.drawCollider(collider, ColorExt.Red(0.2f), DEBUG_HIT_DRAW_DURATION);
+                    // Draw all colliders associated with GO that was hit
+                    var colliders = hit.damageGO.GetComponents<Collider>();
+                    foreach(var collider in colliders)
+                    {
+                        // Draw collider
+                        GTFODebugDraw3D.DrawCollider(collider, ColorExt.Red(0.2f), DEBUG_HIT_DRAW_DURATION, true);
+                        DebugDraw3D.DrawText(hit.hitPos, collider.name, 1f, ColorExt.Green(0.3f), DEBUG_HIT_DRAW_DURATION);
+                    }               
                 }
             }
 #endif

@@ -1,9 +1,11 @@
-﻿using GTFO_VR.Core.PlayerBehaviours;
+﻿using GTFO_VR.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 namespace GTFO_VR.Util
 {
@@ -16,181 +18,383 @@ namespace GTFO_VR.Util
         {
         }
 
-        private static Material DebugMaterial;
-        private static Color DebugColor = ColorExt.Red(0.1f);   // Meshes share a single color because I am lazy
+        private static Material IntersectMaterial;
+        private static Material OverlayMaterial;
 
-        private static List<DebugMesh> DebugMeshes = new List<DebugMesh>();
+        private static Queue<DebugShape> SpherePool = new Queue<DebugShape>();
+        private static Queue<DebugShape> MeshPool = new Queue<DebugShape>();
+        private static Queue<DebugShape> CubePool = new Queue<DebugShape>();
+        private static Queue<DebugShape> CylinderPool = new Queue<DebugShape>();
 
-        private class DebugMesh
+        private static List<DebugShape> DrawQueue = new List<DebugShape>();
+
+        private static GameObject DebugDrawContainer;
+
+        private class DebugShape
         {
-            public Mesh colliderMesh;
-            public Matrix4x4 colliderTransform;
+            public GameObject go;
+            public MeshRenderer renderer;
             public float duration;
+            public DebugShapeType shapeType;
+
+            public DebugShape(  GameObject go, MeshRenderer renderer, float duration, DebugShapeType shapeType)
+            {
+                this.go = go;
+                this.renderer = renderer;
+                this.duration = duration;
+                this.shapeType = shapeType;
+            }   
         }
 
-        public void Update()
+        private enum DebugShapeType
         {
-            drawMeshes();
+            Sphere, Cube, Cylinder, Mesh
         }
 
-        private static void setupMaterial()
+        private static Material GetMaterial()
         {
-            if (DebugMaterial == null)
+            if (IntersectMaterial == null)
+            {
+                IntersectMaterial = new Material(Shader.Find("UI/Default"));
+            }
+
+            return IntersectMaterial;
+        }
+
+        private static Material GetOverlayMaterial(Color color)
+        {
+            if (OverlayMaterial == null)
             {
                 //Mesh colliders will often be buried in geometry, so use fancy draw-over-everything material
-                DebugMaterial = new Material(Shader.Find("UI/Default"));
-                DebugMaterial.renderQueue = (int)RenderQueue.Overlay + 1;
-                DebugMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
-                DebugMaterial.color = ColorExt.Red(0.1f);
+                OverlayMaterial = new Material(Shader.Find("UI/Default"));
+                OverlayMaterial.renderQueue = (int)RenderQueue.Overlay + 1;
+                OverlayMaterial.SetInt("unity_GUIZTestMode", (int)UnityEngine.Rendering.CompareFunction.Always); // Magic no zcheck? zwrite?
             }
+
+            return OverlayMaterial;
         }
 
-        public static void drawCollider(Collider collider, Color color, float duration)
+        private static DebugShape GetDebugShape( DebugShapeType type ) 
         {
-            // gets garbage collected so ensure it still exists
-            setupMaterial();
+            DebugShape shape = null;
+            Queue<DebugShape> pool = GetPool(type);
 
-            GameObject go = collider.gameObject;
-
-            if (go.GetComponent<SphereCollider>() != null)
+            if (pool.Count > 1)
             {
-                SphereCollider spherCol = go.GetComponent<SphereCollider>();
+                shape = pool.Dequeue();
+            }
+            else
+            {
+                shape = GenerateNewDebugShape(type);
+            }
 
-                DebugDraw3D.DrawSphere(spherCol.transform.TransformPoint(spherCol.center), spherCol.radius, color, duration);
+            shape.go.SetActive(true);
+            return shape;
+        }
+
+        private static Queue<DebugShape> GetPool(DebugShapeType type)
+        {
+            switch (type)
+            {
+                case DebugShapeType.Sphere:
+                {
+                    return SpherePool;
+                }
+                case DebugShapeType.Cube:
+                {
+                    return CubePool;
+                }
+                case DebugShapeType.Cylinder:
+                {
+                    return CylinderPool;
+                }
+                case DebugShapeType.Mesh:
+                {
+                    return MeshPool;
+                }
+                default:
+                {
+                    return SpherePool;
+                }
+            }
+        }
+
+
+        private static void ReturnDebugShape( DebugShape shape )
+        {
+            shape.go.SetActive(false);
+            GetPool(shape.shapeType).Enqueue(shape);
+        }
+
+        private static DebugShape GenerateNewDebugShape( DebugShapeType type  )
+        {
+            GameObject newShape;
+
+            switch (type)
+            {
+                case DebugShapeType.Sphere:
+                {
+                    newShape = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    break;
+                }
+                case DebugShapeType.Cube:
+                {
+                    newShape = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    break;
+                }
+                case DebugShapeType.Cylinder:
+                {
+                    newShape = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                    break;
+                }
+                case DebugShapeType.Mesh:
+                {
+                    newShape = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    break;
+                }
+                default:
+                {
+                    newShape = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    break;
+                }
+            }
+
+            newShape.transform.SetParent(DebugDrawContainer.transform);
+            GameObject.Destroy(newShape.gameObject.GetComponent<Collider>());
+            return new DebugShape(newShape, newShape.GetComponent<MeshRenderer>(), 0, type);
+        }
+
+
+        public void Awake()
+        {
+            DebugDrawContainer = new GameObject("debugDraw");
+            DebugDrawContainer.transform.SetParent(this.gameObject.transform);
+        }
+
+        public void LateUpdate()
+        {
+            DrawQueuedShapes();
+        }
+
+        private static bool SetupComplete()
+        {
+            if (DebugDrawContainer == null)
+            {
+                Log.Error("Tried to use GTFODebugDraw3D without adding the component to a GO! It should be added to VRSystems in debug builds.");
+                return false;
+            }
+
+            return true;
+        }
+
+        public static void DrawSphere(Vector3 vector, float radius, Color color, float duration = 0, bool renderOntop = false)
+        {
+            if (!SetupComplete())
+                return;
+
+            DebugShape shape = GetDebugShape(DebugShapeType.Sphere);
+
+            shape.duration = duration;
+
+            shape.go.transform.position = vector;
+            shape.go.transform.transform.localScale = new Vector3(radius *2, radius*2, radius*2);
+            shape.go.transform.rotation = Quaternion.identity;
+
+            AddToDrawQueue(shape, color, duration, renderOntop);
+        }
+
+        public static void DrawMesh(Mesh mesh, Vector3 position, Quaternion rotation, Vector3 scale, Color color, float duration = 0, bool renderOntop = false)
+        {
+            if (!SetupComplete())
+                return;
+
+            DebugShape shape = GetDebugShape(DebugShapeType.Mesh);
+
+            shape.duration = duration;
+
+            shape.go.transform.position = position;
+            shape.go.transform.rotation = rotation;
+            shape.go.transform.localScale = scale;
+
+            shape.go.GetComponent<MeshFilter>().mesh = mesh;
+
+            AddToDrawQueue(shape, color, duration, renderOntop);
+        }
+
+        public static void DrawCube(Vector3 position, Quaternion rotation, Vector3 scale, Color color, float duration = 0, bool renderOntop = false)
+        {
+            if (!SetupComplete())
+                return;
+
+            DebugShape shape = GetDebugShape(DebugShapeType.Cube);
+
+            shape.duration = duration;
+
+            shape.go.transform.position = position;
+            shape.go.transform.transform.localScale = scale;
+            shape.go.transform.rotation = rotation;
+
+            AddToDrawQueue(shape, color, duration, renderOntop);
+        }
+
+
+        public static void DrawCylinder(Vector3 position, Quaternion rotation, Vector3 scale, Color color, float duration = 0, bool renderOntop = false)
+        {
+            if (!SetupComplete())
+                return;
+
+            DebugShape shape = GetDebugShape(DebugShapeType.Cylinder);
+
+            shape.duration = duration;
+
+            shape.go.transform.position = position;
+            shape.go.transform.transform.localScale = scale;
+            shape.go.transform.rotation = rotation;
+
+            AddToDrawQueue(shape, color, duration, renderOntop);
+        }
+
+        private static void AddToDrawQueue( DebugShape shape, Color color, float duration, bool renderOntop)
+        {
+            // Common tasks so perform them here
+            shape.renderer.sharedMaterial = renderOntop ? GetOverlayMaterial(color) : GetMaterial();
+            MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
+            propertyBlock.SetColor("_Color", color);
+            shape.renderer.SetPropertyBlock(propertyBlock);
+
+            DrawQueue.Add(shape);
+        }
+
+        public static void DrawCollider(Collider collider, Color color, float duration = 0, bool renderOntop = true)
+        {
+
+            // Colliders are scaled along with their gameobject, 
+            // so they'll be bigger, but their radius values will remain unchanged.
+            // Compensate for this.
+            Vector3 lossyScale = collider.transform.lossyScale;
+            float uniformScale = new[] { lossyScale.x, lossyScale.y, lossyScale.z }.Max();
+
+            // Not just checking type and casting because it... doesn't work. 
+            // Everything is a Collider, unless I do this.
+            if (collider.GetComponent<SphereCollider>() != null)
+            {
+                SphereCollider spherCol = collider.GetComponent<SphereCollider>();
+
+                DrawSphere(spherCol.transform.TransformPoint(spherCol.center), spherCol.radius * uniformScale, color, duration, renderOntop);
                 return;
             }
 
-            if (go.GetComponent<BoxCollider>() != null)
+            if (collider.GetComponent<BoxCollider>() != null)
             {
-                BoxCollider boxCollider = go.GetComponent<BoxCollider>();
+                BoxCollider boxCollider = collider.GetComponent<BoxCollider>();
 
-                DebugMeshes.Add(new DebugMesh
+                Vector3 colliderScale = boxCollider.transform.lossyScale;
+
+                Vector3 drawScale = new Vector3(
+                    boxCollider.size.x * colliderScale.x, 
+                    boxCollider.size.y * colliderScale.y, 
+                    boxCollider.size.z * colliderScale.z);
+
+                DrawCube(boxCollider.transform.TransformPoint(boxCollider.center), boxCollider.transform.rotation, drawScale, color, duration, renderOntop);
+
+                return;
+            }
+
+            if (collider.GetComponent<CapsuleCollider>() != null)
+            {
+
+                CapsuleCollider capsuleCol = collider.GetComponent<CapsuleCollider>();
+
+                // Capsule colliders scale weirdly with their parent.
+                // The vertical axis will determine height, while the highest of the other axes will determine width.
+                // The axis used will depend on the direction of the capsule collider, which in GTFO's case is always X ( 0 )
+                // This also affects the orientation of the capsule, so we have to rotate our visualization by 90 degrees along the Z axis ( For x-oriented colliders )
+
+                // default y orientation
+                Quaternion directionOffset = Quaternion.identity;
+                float radiusScale = new[] { lossyScale.x, lossyScale.z }.Max();
+                float heightScale = lossyScale.y;
+
+                if (capsuleCol.direction == 0)  // X oriented, used for everything
                 {
-                    colliderMesh = GenerateBoxColliderMesh(boxCollider),
-                    colliderTransform = boxCollider.gameObject.transform.localToWorldMatrix,
-                    duration = duration
+                    // y/z determine width, x determines height
+                    radiusScale = new[] { lossyScale.y, lossyScale.z }.Max();
+                    heightScale = lossyScale.x;
 
-                });
-
-                // Update mesh material color if it changes.
-                // All mesh visualizations share the same color
-                if (color.Equals(DebugColor))
+                    // Rotated so our normal cylinder will point in the same direction as the collider
+                    directionOffset = Quaternion.AngleAxis(90, new Vector3(0, 0, 1));
+                }
+                else if (capsuleCol.direction == 2)   // z oriented
                 {
-                    DebugColor = color;
-                    DebugMaterial.color = color;
+                    // y/z determine width, x determines height
+                    radiusScale = new[] { lossyScale.x, lossyScale.y }.Max();
+                    heightScale = lossyScale.z;
+
+                    // Rotated so our normal cylinder will point in the same direction as the collider
+                    directionOffset = Quaternion.AngleAxis(90, new Vector3(1, 0, 0));
                 }
 
+
+                float scaledRadius = capsuleCol.radius * radiusScale;
+                float scaledDiameter = scaledRadius * 2;
+                float scaledHeight = capsuleCol.height * heightScale;
+
+                Vector3 cylinderScale = new Vector3(
+                                          scaledDiameter,
+                        (((scaledHeight - scaledDiameter) * 0.5f)),
+                                          scaledDiameter
+                    );
+
+                Vector3 center = capsuleCol.transform.TransformPoint(capsuleCol.center);
+                Quaternion rotation = capsuleCol.transform.rotation * directionOffset;
+
+                DrawCylinder(center, rotation, cylinderScale, color, duration, renderOntop);
+
+                Vector3 endcapVector = rotation * new Vector3(0, cylinderScale.y, 0);  // A cylinder is 2 high at a scale of 1, so use as-is
+
+                DrawSphere(center + endcapVector, scaledRadius, color, duration, renderOntop);
+                DrawSphere(center - endcapVector, scaledRadius, color, duration, renderOntop);
+
                 return;
             }
 
-            if (go.GetComponent<CapsuleCollider>() != null)
+            if (collider.GetComponent<MeshCollider>() != null)
             {
-                CapsuleCollider capsuleCol = go.GetComponent<CapsuleCollider>();
+                MeshCollider meshCollider = collider.GetComponent<MeshCollider>();
 
-                // For some reason height corresponds to the X axis
-                Vector3 top = capsuleCol.transform.TransformPoint(capsuleCol.center - (new Vector3(capsuleCol.height * 0.5f, 0, 0)));
-                Vector3 bottom = capsuleCol.transform.TransformPoint(capsuleCol.center + (new Vector3(capsuleCol.height * 0.5f, 0, 0 )));
+                Transform transform = meshCollider.transform;
 
-                // We can't draw actual capsules, and we can't draw lines ( easily ), but we still have cones.
-                DebugDraw3D.DrawCone(top, bottom, capsuleCol.radius, color, duration);
-                DebugDraw3D.DrawCone(bottom, top, capsuleCol.radius, color, duration);
-
-                //And spheres for the caps
-                DebugDraw3D.DrawSphere(capsuleCol.transform.TransformPoint(top), capsuleCol.radius, color, duration);
-                DebugDraw3D.DrawSphere(capsuleCol.transform.TransformPoint(bottom), capsuleCol.radius, color, duration);
-
-                return;
-            }
-
-            if (go.GetComponent<MeshCollider>() != null)
-            {
-                MeshCollider meshCollider = go.GetComponent<MeshCollider>();
-
-                DebugMeshes.Add(new DebugMesh
-                {
-                    colliderMesh = meshCollider.sharedMesh,
-                    colliderTransform = meshCollider.gameObject.transform.localToWorldMatrix,
-                    duration = duration
-
-                });
-
-                // Update mesh material color if it changes.
-                // All mesh visualizations share the same color
-                if (color.Equals(DebugColor))
-                {
-                    DebugColor = color;
-                    DebugMaterial.color = color;
-                }
+                DrawMesh(meshCollider.sharedMesh, transform.position, transform.rotation, transform.lossyScale, color, duration, renderOntop);
 
                 return;
             }
         }
 
-        private void drawMeshes()
-        {   
-            foreach(var debugMesh in DebugMeshes.ToList())
+        private void DrawQueuedShapes()
+        {
+            foreach (var debugShape in DrawQueue.ToList())
             {
-                // Draw whatever is in the list
-                Graphics.DrawMesh(debugMesh.colliderMesh, debugMesh.colliderTransform, DebugMaterial, LayerManager.LAYER_DEFAULT);
-
                 // Remove any expired meshes
-                if (debugMesh.duration <= 0)
+                if (debugShape.duration < 0)
                 {
-                    DebugMeshes.Remove(debugMesh);
+                    DrawQueue.Remove(debugShape);
+                    ReturnDebugShape(debugShape);
                 }
-
-                // keep track of remaining time to keep drawing
-                debugMesh.duration -= Time.deltaTime;
+                else
+                {
+                    // keep track of remaining time to keep drawing
+                    debugShape.duration -= Time.deltaTime;
+                }
             }
         }
 
-        public static Mesh GenerateBoxColliderMesh(BoxCollider collider)
+        public static void DrawNearbyColliders( Vector3 position, float radius, int layerMask, Color color, float duration = 0, bool renderOntop = true)
         {
-            Mesh mesh = new Mesh();
-
-            float xSize = collider.size.x * 0.5f;
-            float ySize = collider.size.y * 0.5f;
-            float zSize = collider.size.z * 0.5f;
-            Vector3 center = collider.center;
-
-            // Box representing box collider
-            Vector3[] vertices = new Vector3[] 
+            var colliders = Physics.OverlapSphere(position, radius, layerMask, QueryTriggerInteraction.Ignore);
+            foreach (var collider in colliders)
             {
-                new Vector3(center.x - xSize, center.y - ySize, center.z - zSize),
-                new Vector3(center.x + xSize, center.y - ySize, center.z - zSize),
-                new Vector3(center.x + xSize, center.y + ySize, center.z - zSize),
-                new Vector3(center.x - xSize, center.y + ySize, center.z - zSize),
-                new Vector3(center.x - xSize, center.y - ySize, center.z + zSize),
-                new Vector3(center.x + xSize, center.y - ySize, center.z + zSize),
-                new Vector3(center.x + xSize, center.y + ySize, center.z + zSize),
-                new Vector3(center.x - xSize, center.y + ySize, center.z + zSize),
-            };
-
-            int[] triangles = new int[] {
-                // Front face.
-                0, 1, 2,
-                0, 2, 3,
-                // Back face.
-                4, 5, 6,
-                4, 6, 7,
-                // Left face.
-                0, 4, 5,
-                0, 5, 1,
-                // Right face.
-                3, 2, 6,
-                3, 6, 7,
-                // Top face.
-                1, 5, 6,
-                1, 6, 2,
-                // Bottom face.
-                0, 3, 7,
-                0, 7, 4,
-            };
-
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
-
-            return mesh;
+                DrawCollider(collider, color, duration, renderOntop);
+            }
         }
     }
 }
