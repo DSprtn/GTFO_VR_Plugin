@@ -71,6 +71,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private static readonly string VISOR_DAMAGED_KEY = "visor_boom4_head";
         private static readonly string VISOR_MINE_EXPLOSION_KEY = "visor_rumble1_head";
         private static readonly string VISOR_DISINFECTION_KEY = "visor_point9_head";
+        private static readonly string VISOR_SPLATDROP_KEY = "visor_splatdropping";
 
         private LocalPlayerAgent m_player;
         private HapticPlayer m_hapticPlayer;
@@ -163,6 +164,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_LICKED_TINTACLE_KEY);
             BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_MINE_EXPLOSION_KEY);
             BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_REVIVED_KEY);
+            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_SPLATDROP_KEY);
 
             PlayerReceivedDamageEvents.OnPlayerTakeDamage += PlayReceiveDamageHaptics;
             PlayerReceivedDamageEvents.OnMineExplosion += MineExplosionHaptics;
@@ -183,6 +185,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ResourceUpdatedEvents.OnHealthUpdated += OnHealthUpdated;
             InventoryAmmoEvents.OnInventoryAmmoUpdate += OnAmmoUpdate;
             PlayerLocomotionEvents.OnStateChange += OnPlayerLocomotionStateChanged;
+            PlayerHudEvents.OnLiquidSplat += OnLiquidSplat;
 
             var elevatorSequence = gameObject.AddComponent<BhapticsElevatorSequence>();
             elevatorSequence.Setup(m_player, m_hapticPlayer);
@@ -663,6 +666,16 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_lastLocState = state;
         }
 
+        private void OnLiquidSplat()
+        {
+            if (!VRConfig.configUseBhaptics.Value)
+            {
+                return;
+            }
+            Log.Info("OnLiquidSplat");
+            m_hapticPlayer.SubmitRegistered(VISOR_SPLATDROP_KEY);
+        }
+
         private void CrouchToggleHaptics(bool isCrouched)
         {
             if (!VRConfig.configUseBhaptics.Value || m_lastLocState == PlayerLocomotion.PLOC_State.InElevator)
@@ -713,6 +726,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
             ResourceUpdatedEvents.OnHealthUpdated -= OnHealthUpdated;
             InventoryAmmoEvents.OnInventoryAmmoUpdate -= OnAmmoUpdate;
             PlayerLocomotionEvents.OnStateChange -= OnPlayerLocomotionStateChanged;
+            PlayerHudEvents.OnLiquidSplat -= OnLiquidSplat;
         }
     }
 }
