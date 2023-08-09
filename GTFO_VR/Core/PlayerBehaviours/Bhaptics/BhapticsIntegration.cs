@@ -672,7 +672,6 @@ namespace GTFO_VR.Core.PlayerBehaviours
             {
                 return;
             }
-            Log.Info("OnLiquidSplat");
             m_hapticPlayer.SubmitRegistered(VISOR_SPLATDROP_KEY);
         }
 
