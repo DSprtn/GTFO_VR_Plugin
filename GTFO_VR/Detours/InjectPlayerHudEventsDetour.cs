@@ -9,6 +9,7 @@ using GTFO_VR.Core;
 using GTFO_VR.Events;
 using System.Reflection;
 using Unity.Jobs.LowLevel.Unsafe;
+using System.Linq;
 
 namespace GTFO_VR.Detours
 {
@@ -18,6 +19,15 @@ namespace GTFO_VR.Detours
     /// </summary>
     public static class InjectPlayerHudEventsDetour
     {
+        private static ScreenLiquidSettingName[] splatTypes = { 
+            ScreenLiquidSettingName.enemyBlood_BigBloodBomb,
+            ScreenLiquidSettingName.enemyBlood_SmallRandomStreak,
+            ScreenLiquidSettingName.enemyBlood_Squirt,
+            ScreenLiquidSettingName.spitterJizz,
+            ScreenLiquidSettingName.shooterGoo,
+            ScreenLiquidSettingName.anemoneGoo
+        };
+
         public unsafe static void HookAll()
         {            
             Log.Info("Patching InjectPlayerHudEvents functions...");
@@ -47,8 +57,10 @@ namespace GTFO_VR.Detours
         private unsafe static void OurSplatMethod(IntPtr thisPtr, ref ScreenLiquidJob job, ref ScreenLiquidSetting setting)
         {
             OriginalSplatMethod(thisPtr, ref job, ref setting);
-            Log.Info(job.setting.ToString());
-            PlayerHudEvents.LiquidSplat();
+            if (splatTypes.Contains(job.setting))
+            {
+                PlayerHudEvents.LiquidSplat();
+            }
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
