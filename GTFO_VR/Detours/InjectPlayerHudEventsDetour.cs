@@ -1,6 +1,4 @@
 ﻿using System;
-using UnhollowerBaseLib;
-using BepInEx.IL2CPP.Hook;
 using System.Runtime.InteropServices;
 using Gear;
 using UnityEngine;
@@ -10,6 +8,8 @@ using GTFO_VR.Events;
 using System.Reflection;
 using Unity.Jobs.LowLevel.Unsafe;
 using System.Linq;
+using BepInEx.Unity.IL2CPP.Hook;
+using Il2CppInterop.Common;
 
 namespace GTFO_VR.Detours
 {
@@ -28,6 +28,8 @@ namespace GTFO_VR.Detours
             ScreenLiquidSettingName.anemoneGoo
         };
 
+        private static INativeDetour checkForOurSplatMethod;
+
         public unsafe static void HookAll()
         {            
             Log.Info("Patching InjectPlayerHudEvents functions...");
@@ -44,14 +46,13 @@ namespace GTFO_VR.Detours
                 }
             }
             
-            var tryGetSplatPointer = *(IntPtr*)(IntPtr)UnhollowerUtils
+            var tryGetSplatPointer = *(IntPtr*)(IntPtr)Il2CppInteropUtils
                    .GetIl2CppMethodInfoPointerFieldForGeneratedMethod(method)
                    .GetValue(null);
 
-            FastNativeDetour.CreateAndApply(tryGetSplatPointer,
+            checkForOurSplatMethod = INativeDetour.CreateAndApply(tryGetSplatPointer,
                 OurSplatMethod,
-                out OriginalSplatMethod,
-                CallingConvention.Cdecl);
+                out OriginalSplatMethod);
         }
 
         private unsafe static void OurSplatMethod(IntPtr thisPtr, ref ScreenLiquidJob job, ref ScreenLiquidSetting setting)
