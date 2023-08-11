@@ -9,6 +9,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
         void Update();
         void HammerSmackHaptics(float dmg);
         void HammerFullyChargedHaptics();
+        void HammerHalfChargedHaptics();
         void HammerChargingHaptics(float pressure);
         void PlayWeaponReloadHaptics();
         void StopWeaponReloadHaptics();
@@ -28,5 +29,6 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
         void WeaponAmmoEmpty(bool leftArm);
         void OnPlayerLocomotionStateChanged(PlayerLocomotion.PLOC_State state);
         void CrouchToggleHaptics(bool isCrouched);
+        void OnLiquidSplat();
     }
 }

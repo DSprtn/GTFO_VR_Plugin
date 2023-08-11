@@ -91,6 +91,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             HeldItemEvents.OnItemCharging += HammerChargingHaptics;
             VRMeleeWeaponEvents.OnHammerSmack += HammerSmackHaptics;
             VRMeleeWeaponEvents.OnHammerFullyCharged += HammerFullyChargedHaptics;
+            VRMeleeWeaponEvents.OnHammerHalfCharged += HammerHalfChargedHaptics;
             FocusStateEvents.OnFocusStateChange += FocusStateChangedHaptics;
             PlayerInteractionEvents.OnPlayerInteracted += PlayerInteractedHaptics;
             PlayerInteractionEvents.OnBioscanSetState += PlayerBioscanSetStateHaptics;
@@ -100,6 +101,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             ResourceUpdatedEvents.OnHealthUpdated += OnHealthUpdated;
             InventoryAmmoEvents.OnInventoryAmmoUpdate += OnAmmoUpdate;
             PlayerLocomotionEvents.OnStateChange += OnPlayerLocomotionStateChanged;
+            PlayerHudEvents.OnLiquidSplat += OnLiquidSplat;
         }
 
         private void OnDestroy()
@@ -113,6 +115,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             HeldItemEvents.OnItemCharging -= HammerChargingHaptics;
             VRMeleeWeaponEvents.OnHammerSmack -= HammerSmackHaptics;
             VRMeleeWeaponEvents.OnHammerFullyCharged -= HammerFullyChargedHaptics;
+            VRMeleeWeaponEvents.OnHammerHalfCharged -= HammerHalfChargedHaptics;
             FocusStateEvents.OnFocusStateChange -= FocusStateChangedHaptics;
             PlayerInteractionEvents.OnPlayerInteracted -= PlayerInteractedHaptics;
             PlayerInteractionEvents.OnBioscanSetState -= PlayerBioscanSetStateHaptics;
@@ -122,6 +125,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             ResourceUpdatedEvents.OnHealthUpdated -= OnHealthUpdated;
             InventoryAmmoEvents.OnInventoryAmmoUpdate -= OnAmmoUpdate;
             PlayerLocomotionEvents.OnStateChange -= OnPlayerLocomotionStateChanged;
+            PlayerHudEvents.OnLiquidSplat -= OnLiquidSplat;
         }
 
         private void FixedUpdate()
@@ -179,6 +183,13 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             foreach (BodyHapticAgent agent in GetAgents())
             {
                 agent.HammerFullyChargedHaptics();
+            }
+        }
+        public void HammerHalfChargedHaptics()
+        {
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.HammerHalfChargedHaptics();
             }
         }
 
@@ -375,6 +386,13 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             foreach (BodyHapticAgent agent in GetAgents())
             {
                 agent.CrouchToggleHaptics(isCrouched);
+            }
+        }
+        public void OnLiquidSplat()
+        {
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.OnLiquidSplat();
             }
         }
     }
