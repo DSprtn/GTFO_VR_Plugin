@@ -1,4 +1,4 @@
-﻿using Bhaptics.Tact;
+﻿using Bhaptics;
 using GTFO_VR.Core.VR_Input;
 using Player;
 using UnityEngine;
@@ -56,18 +56,18 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         private static readonly string ARMS_EXPLOSION_KEY = "arms_explosion";
 
 
-        private static readonly string VISOR_CAGE_DROP_KEY = "visor_rumble_headfalling";
-        private static readonly string VISOR_KNOCKED_DOWN_KEY = "visor_boom1_head";
-        private static readonly string VISOR_LICKED_TINTACLE_KEY = "visor_boom6_head";
-        private static readonly string VISOR_HEALTH_PACK_KEY = "visor_rumble3_head";
-        private static readonly string VISOR_BIOSCAN_KEY = "visor_scan8_head";
-        private static readonly string VISOR_REVIVED_KEY = "visor_rumble4_head";
-        private static readonly string VISOR_HAMMER_HALF_KEY = "visor_point7_head";
-        private static readonly string VISOR_HAMMER_FULL_KEY = "visor_point8_head";
-        private static readonly string VISOR_DAMAGED_KEY = "visor_boom4_head";
-        private static readonly string VISOR_MINE_EXPLOSION_KEY = "visor_rumble1_head";
-        private static readonly string VISOR_DISINFECTION_KEY = "visor_point9_head";
-        private static readonly string VISOR_SPLATDROP_KEY = "visor_splatdropping";
+        private static readonly string VISOR_CAGE_DROP_KEY = "visor_Scan7_Left_Arms";
+        private static readonly string VISOR_KNOCKED_DOWN_KEY = "visor_Scan7_Left_Arms";
+        private static readonly string VISOR_LICKED_TINTACLE_KEY = "visor_Scan7_Left_Arms";
+        private static readonly string VISOR_HEALTH_PACK_KEY = "visor_Scan7_Left_Arms";
+        private static readonly string VISOR_BIOSCAN_KEY = "visor_Scan7_Left_Arms";
+        private static readonly string VISOR_REVIVED_KEY = "visor_Scan7_Left_Arms";
+        private static readonly string VISOR_HAMMER_HALF_KEY = "visor_Scan7_Left_Arms";
+        private static readonly string VISOR_HAMMER_FULL_KEY = "visor_Scan7_Left_Arms";
+        private static readonly string VISOR_DAMAGED_KEY = "visor_Scan7_Left_Arms";
+        private static readonly string VISOR_MINE_EXPLOSION_KEY = "visor_Scan7_Left_Arms";
+        private static readonly string VISOR_DISINFECTION_KEY = "visor_Scan7_Left_Arms";
+        private static readonly string VISOR_SPLATDROP_KEY = "visor_Scan7_Left_Arms";
 
         private LocalPlayerAgent m_player;
         private HapticPlayer m_hapticPlayer;
