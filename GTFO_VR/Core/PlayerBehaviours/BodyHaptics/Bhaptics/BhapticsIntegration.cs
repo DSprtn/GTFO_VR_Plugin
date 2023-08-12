@@ -1,4 +1,4 @@
-﻿using Bhaptics;
+﻿using Bhaptics.SDK2;
 using GTFO_VR.Core.VR_Input;
 using Player;
 using UnityEngine;
@@ -70,85 +70,22 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         private static readonly string VISOR_SPLATDROP_KEY = "visor_Scan7_Left_Arms";
 
         private LocalPlayerAgent m_player;
-        private HapticPlayer m_hapticPlayer;
 
         private float m_nextReloadHapticPatternTime;
         private float m_nextHeartbeatPatternTime;
         private float m_nextBodyscanPatternTime;
         private float m_lastHealth = 1f;
-        private RotationOption m_lastDamageRotationOption;
+        private OrientationSettings m_lastDamageRotationOption;
         private PlayerLocomotion.PLOC_State m_lastLocState;
 
         private static readonly float RELOAD_FEEDBACK_DURATION = 1.0f;
         private static readonly float HEARTBEAT_REPEAT_DELAY = 1.0f;
         private static readonly float BODY_SCAN_REPEAT_DELAY = 13.5f;
 
-        public void Setup(LocalPlayerAgent player, HapticPlayer hapticPlayer)
+        public void Setup(LocalPlayerAgent player)
         {
             m_player = player;
             m_lastLocState = player.Locomotion.m_currentStateEnum;
-            m_hapticPlayer = hapticPlayer;
-
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_DAMAGE_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_TENTACLE_ATTACK_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_FIRE_R_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_FIRE_L_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_RELOAD_R_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_RELOAD_L_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_CHARGING_R_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_CHARGING_L_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_FULLY_CHARGED_R_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_FULLY_CHARGED_L_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_SMACK_R_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_HAMMER_SMACK_L_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_LANDING_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_LANDING_SMALL_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_HEALTH_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_AMMO_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_TOOL_AMMO_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_GAIN_DISINFECTION_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_NEED_HEALTH_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_DEATH_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_CROUCH_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_STAND_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_BODY_SCAN_KEY);
-            BhapticsUtils.RegisterVestTactKey(m_hapticPlayer, VEST_EXPLOSION_KEY);
-
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_R_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FIRE_L_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_RELOAD_R_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_RELOAD_L_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_HAMMER_CHARGING_R_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_HAMMER_CHARGING_L_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_HAMMER_FULLY_CHARGED_R_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_HAMMER_FULLY_CHARGED_L_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_HAMMER_SMACK_R_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_HAMMER_SMACK_L_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_INTERACT_ITEM_R_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_INTERACT_ITEM_L_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FLASHLIGHT_TOGGLE_R_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_FLASHLIGHT_TOGGLE_L_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_CHANGE_ITEM_R_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_CHANGE_ITEM_L_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_OUT_OF_AMMO_R_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_OUT_OF_AMMO_L_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_LANDING_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_GAIN_AMMO_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_GAIN_TOOL_AMMO_KEY);
-            BhapticsUtils.RegisterArmsTactKey(m_hapticPlayer, ARMS_EXPLOSION_KEY);
-
-            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_BIOSCAN_KEY);
-            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_CAGE_DROP_KEY);
-            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_DAMAGED_KEY);
-            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_HAMMER_FULL_KEY);
-            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_HAMMER_HALF_KEY);
-            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_HEALTH_PACK_KEY);
-            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_DISINFECTION_KEY);
-            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_KNOCKED_DOWN_KEY);
-            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_LICKED_TINTACLE_KEY);
-            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_MINE_EXPLOSION_KEY);
-            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_REVIVED_KEY);
-            BhapticsUtils.RegisterVisorTactKey(m_hapticPlayer, VISOR_SPLATDROP_KEY);
         }
 
         public void Update()
@@ -168,27 +105,27 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
             {
                 if (Controllers.MainControllerType == HandType.Left)
                 {
-                    m_hapticPlayer.SubmitRegistered(VEST_RELOAD_L_KEY);
-                    m_hapticPlayer.SubmitRegistered(ARMS_RELOAD_L_KEY);
+                    BhapticsSDK2.Play(VEST_RELOAD_L_KEY);
+                    BhapticsSDK2.Play(ARMS_RELOAD_L_KEY);
                 }
                 else
                 {
-                    m_hapticPlayer.SubmitRegistered(VEST_RELOAD_R_KEY);
-                    m_hapticPlayer.SubmitRegistered(ARMS_RELOAD_R_KEY);
+                    BhapticsSDK2.Play(VEST_RELOAD_R_KEY);
+                    BhapticsSDK2.Play(ARMS_RELOAD_R_KEY);
                 }
                 m_nextReloadHapticPatternTime += RELOAD_FEEDBACK_DURATION;
             }
 
             if (m_nextHeartbeatPatternTime > 0f && currentTime >= m_nextHeartbeatPatternTime)
             {
-                m_hapticPlayer.SubmitRegistered(VEST_NEED_HEALTH_KEY);
+                BhapticsSDK2.Play(VEST_NEED_HEALTH_KEY);
                 m_nextHeartbeatPatternTime += HEARTBEAT_REPEAT_DELAY;
             }
 
             if (m_nextBodyscanPatternTime > 0f && currentTime >= m_nextBodyscanPatternTime)
             {
-                m_hapticPlayer.SubmitRegistered(VEST_BODY_SCAN_KEY);
-                m_hapticPlayer.SubmitRegistered(VISOR_BIOSCAN_KEY);
+                BhapticsSDK2.Play(VEST_BODY_SCAN_KEY);
+                BhapticsSDK2.Play(VISOR_BIOSCAN_KEY);
                 m_nextBodyscanPatternTime += BODY_SCAN_REPEAT_DELAY;
             }
         }
@@ -202,13 +139,13 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
             if (Controllers.MainControllerType == HandType.Left)
             {
-                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_SMACK_L_KEY);
-                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_SMACK_L_KEY);
+                BhapticsSDK2.Play(VEST_HAMMER_SMACK_L_KEY);
+                BhapticsSDK2.Play(ARMS_HAMMER_SMACK_L_KEY);
             }
             else
             {
-                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_SMACK_R_KEY);
-                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_SMACK_R_KEY);
+                BhapticsSDK2.Play(VEST_HAMMER_SMACK_R_KEY);
+                BhapticsSDK2.Play(ARMS_HAMMER_SMACK_R_KEY);
             }
         }
 
@@ -221,16 +158,16 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
             if (Controllers.MainControllerType == HandType.Left)
             {
-                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_FULLY_CHARGED_L_KEY);
-                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_FULLY_CHARGED_L_KEY);
+                BhapticsSDK2.Play(VEST_HAMMER_FULLY_CHARGED_L_KEY);
+                BhapticsSDK2.Play(ARMS_HAMMER_FULLY_CHARGED_L_KEY);
             }
             else
             {
-                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_FULLY_CHARGED_R_KEY);
-                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_FULLY_CHARGED_R_KEY);
+                BhapticsSDK2.Play(VEST_HAMMER_FULLY_CHARGED_R_KEY);
+                BhapticsSDK2.Play(ARMS_HAMMER_FULLY_CHARGED_R_KEY);
             }
             // tactvisor doesn't need left and right differenciation
-            m_hapticPlayer.SubmitRegistered(VISOR_HAMMER_FULL_KEY);
+            BhapticsSDK2.Play(VISOR_HAMMER_FULL_KEY);
         }
 
         public void HammerHalfChargedHaptics()
@@ -239,7 +176,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
             {
                 return;
             }
-            m_hapticPlayer.SubmitRegistered(VISOR_HAMMER_HALF_KEY);
+            BhapticsSDK2.Play(VISOR_HAMMER_HALF_KEY);
         }
 
         public void HammerChargingHaptics(float pressure)
@@ -249,17 +186,17 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
                 return;
             }
 
-            var scaleOption = new ScaleOption(pressure, 1f); // pressure goes from 0 to 1
+            // pressure goes from 0 to 1
 
             if (Controllers.MainControllerType == HandType.Left)
             {
-                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_L_KEY, scaleOption);
-                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_L_KEY, scaleOption);
+                BhapticsSDK2.Play(VEST_HAMMER_CHARGING_L_KEY, pressure, 1f, 0f, 0f);
+                BhapticsSDK2.Play(ARMS_HAMMER_CHARGING_L_KEY, pressure, 1f, 0f, 0f);
             }
             else
             {
-                m_hapticPlayer.SubmitRegistered(VEST_HAMMER_CHARGING_R_KEY, scaleOption);
-                m_hapticPlayer.SubmitRegistered(ARMS_HAMMER_CHARGING_R_KEY, scaleOption);
+                BhapticsSDK2.Play(VEST_HAMMER_CHARGING_R_KEY, pressure, 1f, 0f, 0f);
+                BhapticsSDK2.Play(ARMS_HAMMER_CHARGING_R_KEY, pressure, 1f, 0f, 0f);
             }
         }
 
@@ -276,10 +213,10 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         public void StopWeaponReloadHaptics()
         {
             m_nextReloadHapticPatternTime = 0;
-            m_hapticPlayer.TurnOff(VEST_RELOAD_R_KEY);
-            m_hapticPlayer.TurnOff(VEST_RELOAD_L_KEY);
-            m_hapticPlayer.TurnOff(ARMS_RELOAD_R_KEY);
-            m_hapticPlayer.TurnOff(ARMS_RELOAD_L_KEY);
+            BhapticsSDK2.Stop(VEST_RELOAD_R_KEY);
+            BhapticsSDK2.Stop(VEST_RELOAD_L_KEY);
+            BhapticsSDK2.Stop(ARMS_RELOAD_R_KEY);
+            BhapticsSDK2.Stop(ARMS_RELOAD_L_KEY);
         }
 
         public void PlayWeaponFireHaptics(Weapon weapon)
@@ -290,30 +227,24 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
             }
 
             float intensity = Haptics.GetFireHapticStrength(weapon);
-            var scaleOption = new ScaleOption(intensity, 1.0f);
+            //var scaleOption = new ScaleOption(intensity, 1.0f);
 
             if (Controllers.MainControllerType == HandType.Left || Controllers.AimingTwoHanded)
             {
-                m_hapticPlayer.SubmitRegistered(VEST_FIRE_L_KEY, scaleOption);
-                m_hapticPlayer.SubmitRegistered(ARMS_FIRE_L_KEY, scaleOption);
+                BhapticsSDK2.Play(VEST_FIRE_L_KEY, intensity, 1.0f, 0f, 0f);
+                BhapticsSDK2.Play(ARMS_FIRE_L_KEY, intensity, 1.0f, 0f, 0f);
             }
 
             if (Controllers.MainControllerType == HandType.Right || Controllers.AimingTwoHanded)
             {
-                m_hapticPlayer.SubmitRegistered(VEST_FIRE_R_KEY, scaleOption);
-                m_hapticPlayer.SubmitRegistered(ARMS_FIRE_R_KEY, scaleOption);
+                BhapticsSDK2.Play(VEST_FIRE_R_KEY, intensity, 1.0f, 0f, 0f);
+                BhapticsSDK2.Play(ARMS_FIRE_R_KEY, intensity, 1.0f, 0f, 0f);
             }
         }
 
-        RotationOption ToRotationOption(OrientationSettings orientationSettings)
+        private OrientationSettings GetRotationOptionFromDirection(Vector3 direction)
         {
-            return new RotationOption(orientationSettings.OffsetAngleX, orientationSettings.OffsetY);
-        }
-
-        private RotationOption GetRotationOptionFromDirection(Vector3 direction)
-        {
-            var orientationSettings = BodyHapticsUtils.GetOrientationSettingsFromDirection(m_player, direction);
-            return ToRotationOption(orientationSettings);
+            return BodyHapticsUtils.GetOrientationSettingsFromDirection(m_player, direction);
         }
 
         public void PlayReceiveDamageHaptics(float dmg, Vector3 direction)
@@ -327,10 +258,10 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
             float intensity = dmg * 0.3f + 0.3f;
             float duration = 1f;
-            var scaleOption = new ScaleOption(intensity, duration);
+            //var scaleOption = new ScaleOption(intensity, duration);
 
-            m_hapticPlayer.SubmitRegisteredVestRotation(VEST_DAMAGE_KEY, "", rotationOption, scaleOption);
-            m_hapticPlayer.SubmitRegistered(VISOR_DAMAGED_KEY, scaleOption);
+            BhapticsSDK2.Play(VEST_DAMAGE_KEY, intensity, duration, rotationOption.OffsetAngleX, rotationOption.OffsetY);
+            BhapticsSDK2.Play(VISOR_DAMAGED_KEY, intensity, duration, 0f, 0f);
 
             m_lastDamageRotationOption = rotationOption;
         }
@@ -342,12 +273,12 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
                 return;
             }
 
-            RotationOption rotationOption = ToRotationOption(orientationSettings);
-            var scaleOption = new ScaleOption(intensity, 1f);
+            //RotationOption rotationOption = ToRotationOption(orientationSettings);
+            //var scaleOption = new ScaleOption(intensity, 1f);
 
-            m_hapticPlayer.SubmitRegisteredVestRotation(VEST_EXPLOSION_KEY, "", rotationOption, scaleOption);
-            m_hapticPlayer.SubmitRegistered(ARMS_EXPLOSION_KEY, scaleOption);
-            m_hapticPlayer.SubmitRegistered(VISOR_MINE_EXPLOSION_KEY, scaleOption);
+            BhapticsSDK2.Play(VEST_EXPLOSION_KEY, intensity, 1f, orientationSettings.OffsetAngleX, orientationSettings.OffsetY);
+            BhapticsSDK2.Play(ARMS_EXPLOSION_KEY, intensity, 1f, 0f, 0f);
+            BhapticsSDK2.Play(VISOR_MINE_EXPLOSION_KEY, intensity, 1f, 0f, 0f);
         }
 
         public void TentacleAttackHaptics(float dmg, Agents.Agent sourceAgent, Vector3 position)
@@ -359,10 +290,10 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
             if (m_lastDamageRotationOption != null)
             {
-                var rotationOption = m_lastDamageRotationOption;
+                OrientationSettings rotationOption = m_lastDamageRotationOption;
                 //var rotationOption = GetRotationOptionFromDirection(position - sourceAgent.TentacleTarget.position); // could maybe calculate direction with this, but offsetY is not right
-                m_hapticPlayer.SubmitRegisteredVestRotation(VEST_TENTACLE_ATTACK_KEY, rotationOption);
-                m_hapticPlayer.SubmitRegistered(VISOR_LICKED_TINTACLE_KEY);
+                BhapticsSDK2.Play(VEST_TENTACLE_ATTACK_KEY, 1f, 1f, rotationOption.OffsetAngleX, rotationOption.OffsetY);
+                BhapticsSDK2.Play(VISOR_LICKED_TINTACLE_KEY);
             }
             else
             {
@@ -377,8 +308,8 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
                 return;
             }
 
-            m_hapticPlayer.SubmitRegistered(VEST_LANDING_KEY);
-            m_hapticPlayer.SubmitRegistered(ARMS_LANDING_KEY);
+            BhapticsSDK2.Play(VEST_LANDING_KEY);
+            BhapticsSDK2.Play(ARMS_LANDING_KEY);
         }
 
         public void PlayerInteractedHaptics(PlayerAgent source)
@@ -390,11 +321,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
             if (Controllers.MainControllerType == HandType.Left)
             {
-                m_hapticPlayer.SubmitRegistered(ARMS_INTERACT_ITEM_L_KEY);
+                BhapticsSDK2.Play(ARMS_INTERACT_ITEM_L_KEY);
             }
             else
             {
-                m_hapticPlayer.SubmitRegistered(ARMS_INTERACT_ITEM_R_KEY);
+                BhapticsSDK2.Play(ARMS_INTERACT_ITEM_R_KEY);
             }
         }
 
@@ -414,8 +345,8 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         public void StopBioscanHaptics()
         {
             m_nextBodyscanPatternTime = 0f;
-            m_hapticPlayer.TurnOff(VEST_BODY_SCAN_KEY);
-            m_hapticPlayer.TurnOff(VISOR_BIOSCAN_KEY);
+            BhapticsSDK2.Stop(VEST_BODY_SCAN_KEY);
+            BhapticsSDK2.Stop(VISOR_BIOSCAN_KEY);
         }
 
         public void FlashlightToggledHaptics()
@@ -427,11 +358,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
             if (Controllers.MainControllerType == HandType.Left)
             {
-                m_hapticPlayer.SubmitRegistered(ARMS_FLASHLIGHT_TOGGLE_L_KEY);
+                BhapticsSDK2.Play(ARMS_FLASHLIGHT_TOGGLE_L_KEY);
             }
             else
             {
-                m_hapticPlayer.SubmitRegistered(ARMS_FLASHLIGHT_TOGGLE_R_KEY);
+                BhapticsSDK2.Play(ARMS_FLASHLIGHT_TOGGLE_R_KEY);
             }
         }
 
@@ -446,11 +377,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
             if (Controllers.MainControllerType == HandType.Left)
             {
-                m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_L_KEY);
+                BhapticsSDK2.Play(ARMS_CHANGE_ITEM_L_KEY);
             }
             else
             {
-                m_hapticPlayer.SubmitRegistered(ARMS_CHANGE_ITEM_R_KEY);
+                BhapticsSDK2.Play(ARMS_CHANGE_ITEM_R_KEY);
             }
         }
 
@@ -463,13 +394,13 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
             if (ammoStandardRel > 0 || ammoSpecialRel > 0)
             {
-                m_hapticPlayer.SubmitRegistered(VEST_GAIN_AMMO_KEY);
-                m_hapticPlayer.SubmitRegistered(ARMS_GAIN_AMMO_KEY);
+                BhapticsSDK2.Play(VEST_GAIN_AMMO_KEY);
+                BhapticsSDK2.Play(ARMS_GAIN_AMMO_KEY);
             }
             else if (ammoClassRel > 0)
             {
-                m_hapticPlayer.SubmitRegistered(VEST_GAIN_TOOL_AMMO_KEY);
-                m_hapticPlayer.SubmitRegistered(ARMS_GAIN_TOOL_AMMO_KEY);
+                BhapticsSDK2.Play(VEST_GAIN_TOOL_AMMO_KEY);
+                BhapticsSDK2.Play(ARMS_GAIN_TOOL_AMMO_KEY);
             }
         }
 
@@ -480,8 +411,8 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
                 return;
             }
 
-            m_hapticPlayer.SubmitRegistered(VEST_GAIN_DISINFECTION_KEY);
-            m_hapticPlayer.SubmitRegistered(VISOR_DISINFECTION_KEY);
+            BhapticsSDK2.Play(VEST_GAIN_DISINFECTION_KEY);
+            BhapticsSDK2.Play(VISOR_DISINFECTION_KEY);
         }
 
         public void OnHealthUpdated(float health)
@@ -499,19 +430,19 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
                 if (health - m_lastHealth > BodyHapticsUtils.MIN_HEALTH_GAIN_FOR_HAPTIC) // Gained some health
                 {
-                    m_hapticPlayer.SubmitRegistered(VEST_GAIN_HEALTH_KEY);
-                    m_hapticPlayer.SubmitRegistered(VISOR_HEALTH_PACK_KEY);
+                    BhapticsSDK2.Play(VEST_GAIN_HEALTH_KEY);
+                    BhapticsSDK2.Play(VISOR_HEALTH_PACK_KEY);
                 }
 
                 if (health <= 0 && m_lastHealth > 0)
                 {
                     StopWeaponReloadHaptics();
                     m_nextBodyscanPatternTime = 0;
-                    m_hapticPlayer.TurnOff(VEST_BODY_SCAN_KEY);
-                    m_hapticPlayer.TurnOff(VISOR_BIOSCAN_KEY);
+                    BhapticsSDK2.Stop(VEST_BODY_SCAN_KEY);
+                    BhapticsSDK2.Stop(VISOR_BIOSCAN_KEY);
 
-                    m_hapticPlayer.SubmitRegistered(VEST_DEATH_KEY);
-                    m_hapticPlayer.SubmitRegistered(VISOR_KNOCKED_DOWN_KEY);
+                    BhapticsSDK2.Play(VEST_DEATH_KEY);
+                    BhapticsSDK2.Play(VISOR_KNOCKED_DOWN_KEY);
                 }
             }
 
@@ -522,12 +453,12 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         {
             if (leftArm || Controllers.AimingTwoHanded)
             {
-                m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_L_KEY);
+                BhapticsSDK2.Play(ARMS_OUT_OF_AMMO_L_KEY);
             }
 
             if (!leftArm || Controllers.AimingTwoHanded)
             {
-                m_hapticPlayer.SubmitRegistered(ARMS_OUT_OF_AMMO_R_KEY);
+                BhapticsSDK2.Play(ARMS_OUT_OF_AMMO_R_KEY);
             }
         }
 
@@ -541,7 +472,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
             if ((m_lastLocState == PlayerLocomotion.PLOC_State.Fall || m_lastLocState == PlayerLocomotion.PLOC_State.Jump)
                 && (state == PlayerLocomotion.PLOC_State.Stand || state == PlayerLocomotion.PLOC_State.Crouch))
             {
-                m_hapticPlayer.SubmitRegistered(VEST_LANDING_SMALL_KEY);
+                BhapticsSDK2.Play(VEST_LANDING_SMALL_KEY);
             }
 
             m_lastLocState = state;
@@ -552,7 +483,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
             {
                 return;
             }
-            m_hapticPlayer.SubmitRegistered(VISOR_SPLATDROP_KEY);
+            BhapticsSDK2.Play(VISOR_SPLATDROP_KEY);
         }
 
         public void CrouchToggleHaptics(bool isCrouched)
@@ -564,11 +495,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
             if (isCrouched)
             {
-                m_hapticPlayer.SubmitRegistered(VEST_CROUCH_KEY);
+                BhapticsSDK2.Play(VEST_CROUCH_KEY);
             }
             else
             {
-                m_hapticPlayer.SubmitRegistered(VEST_STAND_KEY);
+                BhapticsSDK2.Play(VEST_STAND_KEY);
             }
         }
         public bool AgentActive()
