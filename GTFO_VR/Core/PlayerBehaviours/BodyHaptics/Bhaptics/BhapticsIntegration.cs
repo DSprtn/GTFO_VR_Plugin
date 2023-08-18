@@ -54,25 +54,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         private static readonly string ARMS_GAIN_AMMO_KEY = "arms_gain_ammo";
         private static readonly string ARMS_GAIN_TOOL_AMMO_KEY = "arms_gain_tool_ammo";
         private static readonly string ARMS_EXPLOSION_KEY = "arms_explosion";
-
-        //keys to test tactvisor on the arms instead
-        //Can only check if event triggers, not the actual pattern of the effect.
-        /*
-        private static readonly string VISOR_CAGE_DROP_KEY = "visor_Scan7_Left_Arms";
-        private static readonly string VISOR_KNOCKED_DOWN_KEY = "visor_Scan7_Left_Arms";
-        private static readonly string VISOR_LICKED_TINTACLE_KEY = "visor_Scan7_Left_Arms";
-        private static readonly string VISOR_HEALTH_PACK_KEY = "visor_Scan7_Left_Arms";
-        private static readonly string VISOR_BIOSCAN_KEY = "visor_Scan7_Left_Arms";
-        private static readonly string VISOR_REVIVED_KEY = "visor_Scan7_Left_Arms";
-        private static readonly string VISOR_HAMMER_HALF_KEY = "visor_Scan7_Left_Arms";
-        private static readonly string VISOR_HAMMER_FULL_KEY = "visor_Scan7_Left_Arms";
-        private static readonly string VISOR_DAMAGED_KEY = "visor_Scan7_Left_Arms";
-        private static readonly string VISOR_MINE_EXPLOSION_KEY = "visor_Scan7_Left_Arms";
-        private static readonly string VISOR_DISINFECTION_KEY = "visor_Scan7_Left_Arms";
-        private static readonly string VISOR_SPLATDROP_KEY = "visor_Scan7_Left_Arms";
-        */
-
-        private static readonly string VISOR_CAGE_DROP_KEY = "visor_rumble_headfalling";
+                
         private static readonly string VISOR_KNOCKED_DOWN_KEY = "visor_boom1_head";
         private static readonly string VISOR_LICKED_TINTACLE_KEY = "visor_boom6_head";
         private static readonly string VISOR_HEALTH_PACK_KEY = "visor_rumble3_head";
@@ -84,7 +66,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         private static readonly string VISOR_MINE_EXPLOSION_KEY = "visor_rumble1_head";
         private static readonly string VISOR_DISINFECTION_KEY = "visor_point9_head";
         private static readonly string VISOR_SPLATDROP_KEY = "visor_splatdropping";
-
+        
         private LocalPlayerAgent m_player;
 
         private float m_nextReloadHapticPatternTime;

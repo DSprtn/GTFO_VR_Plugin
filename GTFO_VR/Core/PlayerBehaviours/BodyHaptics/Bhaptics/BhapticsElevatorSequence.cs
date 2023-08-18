@@ -14,7 +14,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         private static readonly string ARMS_ELEVATOR_RIDE_WAVE_KEY = "arms_elevator_ride_wave";
         private static readonly string ARMS_ELEVATOR_DEPLOYING_KEY = "arms_elevator_deploying";
 
-        private static readonly string VISOR_ELEVATOR_KEY = "visor_rumble_headfalling";
+        private static readonly string VISOR_ELEVATOR_KEY = "visor_rumble_headfalling"; 
 
         private ElevatorState m_elevatorState = ElevatorState.None;
         private Dictionary<string, float> m_nextHapticPatternTimes = new Dictionary<string, float>();
