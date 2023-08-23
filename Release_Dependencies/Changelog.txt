@@ -1,3 +1,7 @@
+Total changelog (1.3.2b2):
+
+- Fixed drop-in sequence auto-skipping
+
 Total changelog (1.3.2):
 
 - Total melee hit detection overhaul by Roughy! Melee weapons should feel much better now.
