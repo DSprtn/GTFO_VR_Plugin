@@ -33,31 +33,18 @@ namespace GTFO_VR.Injections
     [HarmonyPatch(typeof(MWS_ChargeUp), nameof(MWS_ChargeUp.Update))]
     static class InjectAutoReleaseHammerSmack
     {
-
         static void Postfix(MWS_ChargeUp __instance)
         {
-
-            if (Controllers.MainControllerPose.GetVelocity().magnitude > 0.5f)
+            if (VRMeleeWeapon.Current != null)
             {
-#if DEBUG_GTFO_VR
-                if (VRConfig.configDebugShowHammerHitbox.Value)
+                if (VRMeleeWeapon.Current.VelocityAboveThreshold())
                 {
-                    DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .75f, ColorExt.Blue(0.2f));
-                    DebugDraw3D.DrawSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .1f, ColorExt.Red(0.2f));
-                }
-#endif
-
-                Collider[] enemyColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .75f, LayerManager.MASK_ENEMY_DAMAGABLE);
-                bool shouldReleaseCharge = enemyColliders.Length > 0;
-
-                if(Controllers.MainControllerPose.GetVelocity().magnitude > 1.2f) {
-                    Collider[] staticColliders = Physics.OverlapSphere(__instance.m_weapon.ModelData.m_damageRefAttack.position, VRMeleeWeapon.WeaponHitDetectionSphereCollisionSize * .25f, LayerManager.MASK_MELEE_ATTACK_TARGETS_WITH_STATIC);
-                    shouldReleaseCharge = shouldReleaseCharge || staticColliders.Length > 0;
-                }
-
-                if (shouldReleaseCharge)
-                {
-                    __instance.OnChargeupRelease();
+                    // For the sake of simplicity we discard the hits here and call it again when the original CheckForAttackTargets() is called
+                    if (VRMeleeWeapon.Current.CheckForAttackTarget( out _)) 
+                    {
+                        __instance.OnChargeupRelease();
+                        __instance.m_weapon.CurrentState.Update(); // Manually call update so it doesn't delay by a frame
+                    }
                 }
             }
         }
@@ -73,48 +60,10 @@ namespace GTFO_VR.Injections
 
         static void Prefix(MWS_AttackSwingBase __instance)
         {
-            __instance.m_data.m_damageStartTime = 0f;
+            __instance.m_data.m_damageStartTime = -1; // elapsed time on first frame ( 0 ) must be greater than this 
 
             // Do not check for hits from camera
             __instance.m_weapon.MeleeArchetypeData.CameraDamageRayLength = 0f;
-        }
-    }
-
-
-    /// <summary>
-    /// Sort hits to prioritize them based on proximity to hammer center (only first enemy hit counts)
-    /// </summary>
-    [HarmonyPatch(typeof(MWS_AttackSwingBase), nameof(MWS_AttackSwingBase.OnAttackHit))]
-    static class InjectPrioritizeProximityTargetsOnHit
-    {
-
-        static void Postfix(MWS_AttackSwingBase __instance)
-        {
-            var hits = __instance.m_weapon.HitsForDamage;
-
-            List<MeleeWeaponDamageData> sortedHits = new List<MeleeWeaponDamageData>();
-            
-            Vector3 damageRefPos = __instance.m_data.m_damageRef.position;
-
-            
-            while(hits.Count > 0)
-            {
-                float lowest = 999999f;
-                MeleeWeaponDamageData closestData = null;
-                foreach(var hit in hits)
-                {
-                    float sqrDst = (hit.hitPos - damageRefPos).sqrMagnitude;
-                    if (sqrDst <= lowest)
-                    {
-                        closestData = hit;
-                        lowest = sqrDst;
-                    }
-                }
-                sortedHits.Add(closestData);
-                hits.Remove(closestData);
-            }
-            __instance.m_weapon.HitsForDamage = sortedHits;
-
         }
     }
 
@@ -130,8 +79,7 @@ namespace GTFO_VR.Injections
             {
                 return;
             }
-            Vector3 velocity = Controllers.MainControllerPose.GetVelocity() * 3f;
-            data.sourcePos = data.hitPos - data.hitNormal * velocity.magnitude;
+
             if(isPush)
             {
                 VRMeleeWeaponEvents.HammerSmacked(0f);
@@ -173,28 +121,4 @@ namespace GTFO_VR.Injections
             }
         }
     }
-
-    /// <summary>
-    /// Enable door smacking on VR hammer
-    /// </summary>
-    [HarmonyPatch(typeof(MeleeWeaponFirstPerson), nameof(MeleeWeaponFirstPerson.DoAttackDamage))]
-    static class InjectVRHammerSmackDoors
-    {
-        static void Prefix(MeleeWeaponFirstPerson __instance)
-        {
-            if(!__instance.Owner.IsLocallyOwned)
-            {
-                return;
-            }
-            if (__instance.Owner.FPSCamera.CameraRayDist <= 3f && __instance.Owner.FPSCamera.CameraRayObject != null && __instance.Owner.FPSCamera.CameraRayObject.layer == LayerManager.LAYER_DYNAMIC)
-            {
-                iLG_WeakDoor_Destruction componentInParent = __instance.Owner.FPSCamera.CameraRayObject.GetComponentInParent<iLG_WeakDoor_Destruction>();
-                if (componentInParent != null && !componentInParent.SkinnedDoorEnabled)
-                {
-                    componentInParent.EnableSkinnedDoor();
-                }
-            }
-        }
-    }
-
 }

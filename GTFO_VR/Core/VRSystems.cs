@@ -8,6 +8,7 @@ using Player;
 using System;
 using UnityEngine;
 using Valve.VR;
+using GTFO_VR.Util;
 
 namespace GTFO_VR.Core
 {
@@ -109,6 +110,11 @@ namespace GTFO_VR.Core
             gameObject.AddComponent<VRAssets>();
             // Delay the overlay setup so we don't 'hitch' the player's camera while everything else loads.
             Invoke(nameof(VRSystems.SetupOverlay), .5f);
+
+#if DEBUG_GTFO_VR
+            gameObject.AddComponent<GTFODebugDraw3D>();
+#endif
+
         }
 
         public static void OnPlayerSpawned(FPSCamera fpsCamera, LocalPlayerAgent playerAgent)

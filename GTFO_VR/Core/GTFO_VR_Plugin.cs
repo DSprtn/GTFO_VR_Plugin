@@ -15,6 +15,7 @@ using GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics;
 using GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave;
 using BepInEx.Unity.IL2CPP;
 using Il2CppInterop.Runtime.Injection;
+using GTFO_VR.Util;
 
 namespace GTFO_VR.Core
 {
@@ -28,7 +29,7 @@ namespace GTFO_VR.Core
             MODNAME = "GTFO_VR_Plugin",
             AUTHOR = "Spartan",
             GUID = "com." + AUTHOR + "." + MODNAME,
-            VERSION = "1.3.1";
+            VERSION = "1.3.2.1";
 
         public override void Load()
         {
@@ -93,6 +94,8 @@ namespace GTFO_VR.Core
             ClassInjector.RegisterTypeInIl2Cpp<TerminalPointer>();
             ClassInjector.RegisterTypeInIl2Cpp<TerminalKeyboardInterface>();
             ClassInjector.RegisterTypeInIl2Cpp<TerminalReader>();
+
+            ClassInjector.RegisterTypeInIl2Cpp<GTFODebugDraw3D>();
         }
 
         private bool SteamVRRunningCheck()
