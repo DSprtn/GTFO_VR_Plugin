@@ -10,6 +10,7 @@ using Il2CppInterop.Common;
 
 namespace GTFO_VR.Detours
 {
+    
     /// <summary>
     /// Patches the hammer so it can only hit things if the player is swinging his controller
     /// </summary>
@@ -40,12 +41,35 @@ namespace GTFO_VR.Detours
 
         private unsafe static bool OurAttackCheck(IntPtr thisPtr, IntPtr attackData, float sphereRad, float elapsedTime, out IntPtr hits)
         {
-            bool result = OriginalHammerMethod(thisPtr, attackData, sphereRad * VRMeleeWeapon.WeaponHitboxSize, elapsedTime, out hits);
+            bool result = false;
 
-            if (!VRConfig.configUseOldHammer.Value && Controllers.MainControllerPose.GetVelocity().magnitude < 0.4f)
+            // The original CheckForAttackTargets() is completely circumvented.
+            // The only side effect of the original function not handled here is handled by InjectVRHammerSmackDoors
+            if (!VRConfig.configUseOldHammer.Value)
             {
-                return false;
+                Il2CppSystem.Collections.Generic.List<MeleeWeaponDamageData> ourHits;
+
+                // Ensure weapon is moving fast-ish, and that the player is still holding the fire button.
+                // Releasing fire triggers the normal pancake attack window for about a second.
+                if (VRMeleeWeapon.Current.VelocityAboveThreshold() && InputMapper.GetButtonKeyMouseGamepad(InputAction.Fire))
+                {
+                    if (VRMeleeWeapon.Current.CheckForAttackTarget(out ourHits))
+                    {
+                        result = true;
+                    }
+                }
+                else
+                {
+                    ourHits = new Il2CppSystem.Collections.Generic.List<MeleeWeaponDamageData>();
+                }
+
+                hits = ourHits.Pointer;
             }
+            else
+            {
+               result = OriginalHammerMethod(thisPtr, attackData, sphereRad, elapsedTime, out hits);
+            }
+
             return result;
         }
 
@@ -55,4 +79,5 @@ namespace GTFO_VR.Detours
         private static AttackCheckDelegate OriginalHammerMethod;
 
     }
+    
 }
