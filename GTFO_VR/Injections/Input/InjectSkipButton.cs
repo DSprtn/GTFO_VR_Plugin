@@ -1,6 +1,9 @@
-﻿using GTFO_VR.Core.VR_Input;
+﻿using BepInEx;
+using GTFO_VR.Core.VR_Input;
 using HarmonyLib;
 using Il2CppSystem;
+using Il2CppSystem.Diagnostics;
+using System.Diagnostics;
 
 namespace GTFO_VR.Injections.Input
 {
@@ -11,12 +14,14 @@ namespace GTFO_VR.Injections.Input
     [HarmonyPatch(typeof(PUI_SkipText), nameof(PUI_SkipText.UpdateSkipTimer))]
     internal class InjectMenuSkipInput
     {
-        private static void Prefix(PUI_SkipText __instance, Action onSkip)
+        private static bool Prefix(PUI_SkipText __instance, Action onSkip)
         {
-            if (SteamVR_InputHandler.GetActionDown(InputAction.Fire))
+            if (SteamVR_InputHandler.GetActionDown(InputAction.Fire) || !UnityEngine.Input.inputString.IsNullOrWhiteSpace())
             {
                 onSkip?.Invoke();
             }
+
+            return false;
         }
     }
 }
