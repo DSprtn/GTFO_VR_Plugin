@@ -28,387 +28,387 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="0Harmony">
-      <HintPath>D:\GAMES\GTFO\BepInEx\core\0Harmony.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\core\0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
         <Reference Include="MonoMod.RuntimeDetour">
-      <HintPath>D:\GAMES\GTFO\BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\core\MonoMod.RuntimeDetour.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Addons-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Addons-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Addons-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="AssetPrefabs-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\AssetPrefabs-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\AssetPrefabs-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Assets-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Assets-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Assets-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx.Core">
-      <HintPath>D:\GAMES\GTFO\BepInEx\core\BepInEx.Core.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\core\BepInEx.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="BepInEx.Unity.IL2CPP">
-      <HintPath>D:\GAMES\GTFO\BepInEx\core\BepInEx.Unity.IL2CPP.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\core\BepInEx.Unity.IL2CPP.dll</HintPath>
       <Private>False</Private>
     </Reference>
 	<Reference Include="Bhaptics.Tact">
-		<HintPath>D:\GAMES\GTFO\BepInEx\plugins\Bhaptics.Tact.dll</HintPath>
+		<HintPath>$(GTFO_PATH)\BepInEx\plugins\Bhaptics.Tact.dll</HintPath>
 		<Private>False</Private>
 	</Reference>
     <Reference Include="bhaptics_library">
-      <HintPath>D:\GAMES\GTFO\BepInEx\plugins\bhaptics_library.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\plugins\bhaptics_library.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="CellSound-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\CellSound-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\CellSound-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="CommandSystem">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\CommandSystem.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\CommandSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Cpp2IL.Core">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\GAMES\GTFO\BepInEx\core\Cpp2IL.Core.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\core\Cpp2IL.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DevConsoleCommands-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\DevConsoleCommands-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\DevConsoleCommands-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DevConsoloe-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\DevConsoloe-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\DevConsoloe-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Dissonance-integrations-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Dissonance-integrations-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Dissonance-integrations-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DissonanceVoip">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\DissonanceVoip.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\DissonanceVoip.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="DropServerSDK-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\DropServerSDK-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\DropServerSDK-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ExcludeInBuild-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\ExcludeInBuild-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\ExcludeInBuild-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="FluffyUnderware.DevTools">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\FluffyUnderware.DevTools.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\FluffyUnderware.DevTools.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GameData-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\GameData-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\GameData-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GlobalFramework-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\GlobalFramework-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\GlobalFramework-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GUIX-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\GUIX-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\GUIX-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppInterop.Common">
-      <HintPath>D:\GAMES\GTFO\BepInEx\core\Il2CppInterop.Common.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\core\Il2CppInterop.Common.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppInterop.Generator">
-      <HintPath>D:\GAMES\GTFO\BepInEx\core\Il2CppInterop.Generator.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\core\Il2CppInterop.Generator.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppInterop.Runtime">
-      <HintPath>D:\GAMES\GTFO\BepInEx\core\Il2CppInterop.Runtime.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\core\Il2CppInterop.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppMono.Security">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Il2CppMono.Security.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppMono.Security.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2Cppmscorlib">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2Cppmscorlib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Il2CppSystem.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppSystem.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Configuration">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Il2CppSystem.Configuration.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppSystem.Configuration.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Core">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Il2CppSystem.Core.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppSystem.Core.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Net.Http">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Il2CppSystem.Net.Http.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppSystem.Net.Http.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Runtime.Serialization">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Il2CppSystem.Runtime.Serialization.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppSystem.Runtime.Serialization.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Xml">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Il2CppSystem.Xml.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppSystem.Xml.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Il2CppSystem.Xml.Linq">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Il2CppSystem.Xml.Linq.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Il2CppSystem.Xml.Linq.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="LibTessDotNet">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\LibTessDotNet.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\LibTessDotNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Modules-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Modules-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Modules-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\GAMES\GTFO\BepInEx\plugins\Newtonsoft.Json.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\plugins\Newtonsoft.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PlayFab-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\PlayFab-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\PlayFab-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Plugins-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Plugins-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Plugins-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Prototype">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Prototype.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Prototype.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Prototypes_ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Prototypes_ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Prototypes_ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Resources-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Resources-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Resources-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RootMotion-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\RootMotion-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\RootMotion-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Scenes-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Scenes-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Scenes-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Shards-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Shards-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Shards-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ShockwaveManager, Version=1.0.0.1, Culture=neutral, PublicKeyToken=null">
-      <HintPath>D:\GAMES\GTFO\BepInEx\plugins\ShockwaveManager.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\plugins\ShockwaveManager.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SNet_ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\SNet_ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\SNet_ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="StandardAssets-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\StandardAssets-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\StandardAssets-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SteamVR_Standalone_IL2CPP">
-      <HintPath>D:\GAMES\GTFO\BepInEx\plugins\SteamVR_Standalone_IL2CPP.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\plugins\SteamVR_Standalone_IL2CPP.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="SteamWorks_ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\SteamWorks_ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\SteamWorks_ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ToolBuddy.Curvy">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\ToolBuddy.Curvy.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\ToolBuddy.Curvy.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ToolBuddy.Curvy.Examples">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\ToolBuddy.Curvy.Examples.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\ToolBuddy.Curvy.Examples.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Postprocessing.Runtime">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Unity.Postprocessing.Runtime.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Unity.Postprocessing.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Unity.TextMeshPro.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Unity.TextMeshPro.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.AIModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.AIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AndroidJNIModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.AndroidJNIModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.AndroidJNIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.AnimationModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.AnimationModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.AssetBundleModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.AssetBundleModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.AudioModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.AudioModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.AudioModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ClothModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.ClothModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.ClothModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CoreModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.CrashReportingModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.CrashReportingModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.CrashReportingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.DirectorModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.DirectorModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.DirectorModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.GridModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.GridModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.GridModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ImageConversionModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.ImageConversionModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.ImageConversionModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.IMGUIModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.IMGUIModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.InputLegacyModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.InputLegacyModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.InputModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.InputModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.InputModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ParticleSystemModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.ParticleSystemModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.PerformanceReportingModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.PerformanceReportingModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.PerformanceReportingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.Physics2DModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.Physics2DModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.Physics2DModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.PhysicsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.ScreenCaptureModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.ScreenCaptureModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.SharedInternalsModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.SharedInternalsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.SharedInternalsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.SpriteMaskModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.SpriteMaskModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.SpriteMaskModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.SubsystemsModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.SubsystemsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.SubsystemsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TerrainModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.TerrainModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.TerrainModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TextCoreModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.TextCoreModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.TextCoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.TextRenderingModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.TextRenderingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.TilemapModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.TilemapModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.TilemapModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.UI.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UIElementsModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.UIElementsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.UIElementsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UIModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.UIModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.UIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityAnalyticsModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.UnityAnalyticsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.UnityWebRequestModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestWWWModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.VFXModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.VFXModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.VFXModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.VideoModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.VideoModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.VideoModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.VRModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.VRModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.VRModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.XRModule">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityEngine.XRModule.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityEngine.XRModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityFileDebug-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\UnityFileDebug-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\UnityFileDebug-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Utils-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Utils-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Utils-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Wwise-ASM">
-      <HintPath>D:\GAMES\GTFO\BepInEx\interop\Wwise-ASM.dll</HintPath>
+      <HintPath>$(GTFO_PATH)\BepInEx\interop\Wwise-ASM.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   
   <Target Name="PostBuild" BeforeTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(TargetPath)&quot; &quot;D:\GAMES\GTFO\BepInEx\plugins&quot; /E /Y" />
+    <Exec Command="xcopy &quot;$(TargetPath)&quot; &quot;$(GTFO_PATH)\BepInEx\plugins&quot; /E /Y" />
   </Target>
 
   <ItemGroup>
