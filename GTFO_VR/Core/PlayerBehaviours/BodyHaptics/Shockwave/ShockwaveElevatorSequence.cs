@@ -189,7 +189,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
 
         public bool AgentActive()
         {
-            return VRConfig.configUseShockwave.Value && ShockwaveManager.Instance.Ready && ShockwaveManager.Instance.suitConnected();
+            return ShockwaveEngine.IsActive();
         }
     }
 }
