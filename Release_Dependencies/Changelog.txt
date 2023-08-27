@@ -1,8 +1,15 @@
-Total changelog (1.3.2b2):
+Total changelog (1.3.2b6):
+
+Many thanks to Astienth! He made the following changes:
+
+- Added TactVisor bhaptics support
+- Ported bhaptics to the new bhaptics SDK, which should resolve any leftover crashing
+
+Total changelog (1.3.2b5):
 
 - Fixed drop-in sequence auto-skipping
 
-Total changelog (1.3.2):
+Total changelog (1.3.2b4):
 
 - Total melee hit detection overhaul by Roughy! Melee weapons should feel much better now.
 
