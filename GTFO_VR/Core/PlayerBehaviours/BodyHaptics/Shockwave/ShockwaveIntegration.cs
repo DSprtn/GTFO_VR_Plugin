@@ -715,5 +715,14 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave
         {
             return VRConfig.configUseShockwave.Value && ShockwaveManager.Instance.Ready && ShockwaveManager.Instance.suitConnected();
         }
+
+        public void OnLiquidSplat()
+        {
+
+        }
+        public void HammerHalfChargedHaptics()
+        {
+
+        }
     }
 }

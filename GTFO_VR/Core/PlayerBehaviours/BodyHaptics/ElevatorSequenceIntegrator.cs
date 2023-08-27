@@ -1,5 +1,4 @@
 ﻿using System;
-using Bhaptics.Tact;
 using GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics;
 using GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave;
 using GTFO_VR.Events;
@@ -30,7 +29,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
         {
         }
 
-        public void Setup(LocalPlayerAgent player, HapticPlayer hapticPlayer)
+        public void Setup(LocalPlayerAgent player)
         {
             m_player = player;
             m_lastPlayerPosition = m_player.transform.position;
@@ -38,7 +37,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             m_elevatorPosition = Vector3.zero;
 
             m_bhapticsSequence = new BhapticsElevatorSequence();
-            m_bhapticsSequence.Setup(hapticPlayer);
+            m_bhapticsSequence.Setup();
 
             m_shockwaveSequence = new ShockwaveElevatorSequence();
             m_shockwaveSequence.Setup();

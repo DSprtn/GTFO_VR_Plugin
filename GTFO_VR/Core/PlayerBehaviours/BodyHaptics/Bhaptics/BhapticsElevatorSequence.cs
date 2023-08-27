@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using Bhaptics.Tact;
 using System.Collections.Generic;
+using Bhaptics.SDK2;
 
 namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 {
@@ -14,7 +14,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         private static readonly string ARMS_ELEVATOR_RIDE_WAVE_KEY = "arms_elevator_ride_wave";
         private static readonly string ARMS_ELEVATOR_DEPLOYING_KEY = "arms_elevator_deploying";
 
-        private HapticPlayer m_hapticPlayer;
+        private static readonly string VISOR_ELEVATOR_KEY = "visor_rumble_headfalling"; 
 
         private ElevatorState m_elevatorState = ElevatorState.None;
         private Dictionary<string, float> m_nextHapticPatternTimes = new Dictionary<string, float>();
@@ -22,20 +22,10 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
         private static readonly float ELEVATOR_DEPLOYING_FEEDBACK_DURATION = 1.0f;
 
-        public void Setup(HapticPlayer hapticPlayer)
+        public void Setup()
         {
-            m_hapticPlayer = hapticPlayer;
-
             m_elevatorState = ElevatorState.None;
             m_nextHapticPatternTimes.Clear();
-
-            BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_RIDE_NOISE_KEY);
-            BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_RIDE_WAVE_KEY);
-            BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_DEPLOYING_KEY);
-            BhapticsUtils.RegisterVestTactKey(hapticPlayer, VEST_ELEVATOR_DOOR_OPENING_KEY);
-
-            BhapticsUtils.RegisterArmsTactKey(hapticPlayer, ARMS_ELEVATOR_RIDE_WAVE_KEY);
-            BhapticsUtils.RegisterArmsTactKey(hapticPlayer, ARMS_ELEVATOR_DEPLOYING_KEY);
         }
 
         public void Update()
@@ -70,7 +60,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
             }
             else if (elevatorState == ElevatorState.PendingTopDeploying)
             {
-                m_hapticPlayer.SubmitRegistered(VEST_ELEVATOR_DOOR_OPENING_KEY);
+                BhapticsSDK2.Play(VEST_ELEVATOR_DOOR_OPENING_KEY);
             }
         }
 
@@ -100,8 +90,10 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
 
                     if (feedback != null)
                     {
-                        var scaleOption = new ScaleOption(feedback.FeedbackIntensity, feedback.FeedbackDurationScale);
-                        m_hapticPlayer.SubmitRegistered(feedback.PatternKey, feedback.PatternKey, scaleOption);
+                        BhapticsSDK2.Play(feedback.PatternKey,
+                            feedback.FeedbackIntensity, 
+                            feedback.FeedbackDurationScale,
+                            0f, 0f);
                         m_nextHapticPatternTimes[patternKey] += feedback.FeedbackDuration * feedback.FeedbackDurationScale;
                     }
                     else
@@ -124,11 +116,11 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
         {
             foreach (string patternKey in m_nextHapticPatternTimes.Keys)
             {
-                m_hapticPlayer.TurnOff(patternKey);
+                BhapticsSDK2.Stop(patternKey);
             }
 
             m_nextHapticPatternTimes.Clear();
-            m_hapticPlayer.TurnOff(VEST_ELEVATOR_DOOR_OPENING_KEY);
+            BhapticsSDK2.Stop(VEST_ELEVATOR_DOOR_OPENING_KEY);
         }
 
         private List<FeedbackDetails> GetElevatorStateFeedbacks(ElevatorState elevatorState)
@@ -156,6 +148,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics
                         result.Add(new FeedbackDetails(VEST_ELEVATOR_RIDE_NOISE_KEY, duration, durationScale));
                         result.Add(new FeedbackDetails(VEST_ELEVATOR_RIDE_WAVE_KEY, duration, durationScale));
                         result.Add(new FeedbackDetails(ARMS_ELEVATOR_RIDE_WAVE_KEY, duration, durationScale));
+                        result.Add(new FeedbackDetails(VISOR_ELEVATOR_KEY, duration, durationScale));
                     }
                     break;
                 

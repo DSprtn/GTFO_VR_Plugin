@@ -55,8 +55,12 @@
       <HintPath>$(GTFO_PATH)\BepInEx\core\BepInEx.Unity.IL2CPP.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Bhaptics.Tact">
-      <HintPath>$(GTFO_PATH)\BepInEx\plugins\Bhaptics.Tact.dll</HintPath>
+	<Reference Include="Bhaptics.Tact">
+		<HintPath>$(GTFO_PATH)\BepInEx\plugins\Bhaptics.Tact.dll</HintPath>
+		<Private>False</Private>
+	</Reference>
+    <Reference Include="bhaptics_library">
+      <HintPath>$(GTFO_PATH)\BepInEx\plugins\bhaptics_library.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="CellSound-ASM">
@@ -411,5 +415,20 @@
     <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.421302">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

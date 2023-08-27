@@ -54,6 +54,7 @@ namespace GTFO_VR.Core
             TerminalInputDetours.HookAll();
             BioscannerDetours.HookAll();
             HammerAttackCheckDetour.HookAll();
+            InjectPlayerHudEventsDetour.HookAll();
 
             Harmony harmony = new Harmony("com.github.dsprtn.gtfovr");
             harmony.PatchAll();

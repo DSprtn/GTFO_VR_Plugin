@@ -1,6 +1,6 @@
 ﻿using System;
 using Agents;
-using Bhaptics.Tact;
+using Bhaptics.SDK2;
 using ChainedPuzzles;
 using GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Bhaptics;
 using GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave;
@@ -35,15 +35,14 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             m_player = player;
             m_lastFlashlightEnabledState = player.Inventory.FlashlightEnabled;
 
-            HapticPlayer hapticPlayer = new HapticPlayer();
             m_bhapticsIntegration = new BhapticsIntegration();
-            m_bhapticsIntegration.Setup(player, hapticPlayer);
+            m_bhapticsIntegration.Setup(player);
 
             m_shockwaveIntegration = new ShockwaveIntegration();
             m_shockwaveIntegration.Setup(player);
 
             var elevatorSequenceIntegrator = gameObject.AddComponent<ElevatorSequenceIntegrator>();
-            elevatorSequenceIntegrator.Setup(player, hapticPlayer);
+            elevatorSequenceIntegrator.Setup(player);
         }
 
         public static void Initialize()
@@ -53,6 +52,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             VRConfig.configUseShockwave.SettingChanged += shockwaveConfigChanged;
 
             InitializeShockwave();
+            InitializeBhaptics();
         }
 
         private static void InitializeShockwave()
@@ -62,6 +62,18 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             {
                 Log.Info("Initializing Shockwave suit");
                 ShockwaveManager.Instance.InitializeSuit();
+            }
+        }
+        private static void InitializeBhaptics()
+        {
+            // Initialize if enabled and not already initialized
+            if (VRConfig.configUseBhaptics.Value)
+            {
+                Log.Info("Initializing bHaptics suit");
+                // Default configuration exported in the portal, in case the PC is not online
+                var config = System.Text.Encoding.UTF8.GetString(GTFO_VR.Properties.Resources.config);
+                // Initialize with appID, apiKey, and default value in case it is unreachable
+                var res = BhapticsSDK2.Initialize("78vav6fmPmGpDKiJIINK", "b4gE0HlO28aiYbq1dXoc", config);
             }
         }
 
@@ -91,6 +103,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             HeldItemEvents.OnItemCharging += HammerChargingHaptics;
             VRMeleeWeaponEvents.OnHammerSmack += HammerSmackHaptics;
             VRMeleeWeaponEvents.OnHammerFullyCharged += HammerFullyChargedHaptics;
+            VRMeleeWeaponEvents.OnHammerHalfCharged += HammerHalfChargedHaptics;
             FocusStateEvents.OnFocusStateChange += FocusStateChangedHaptics;
             PlayerInteractionEvents.OnPlayerInteracted += PlayerInteractedHaptics;
             PlayerInteractionEvents.OnBioscanSetState += PlayerBioscanSetStateHaptics;
@@ -100,6 +113,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             ResourceUpdatedEvents.OnHealthUpdated += OnHealthUpdated;
             InventoryAmmoEvents.OnInventoryAmmoUpdate += OnAmmoUpdate;
             PlayerLocomotionEvents.OnStateChange += OnPlayerLocomotionStateChanged;
+            PlayerHudEvents.OnLiquidSplat += OnLiquidSplat;
         }
 
         private void OnDestroy()
@@ -113,6 +127,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             HeldItemEvents.OnItemCharging -= HammerChargingHaptics;
             VRMeleeWeaponEvents.OnHammerSmack -= HammerSmackHaptics;
             VRMeleeWeaponEvents.OnHammerFullyCharged -= HammerFullyChargedHaptics;
+            VRMeleeWeaponEvents.OnHammerHalfCharged -= HammerHalfChargedHaptics;
             FocusStateEvents.OnFocusStateChange -= FocusStateChangedHaptics;
             PlayerInteractionEvents.OnPlayerInteracted -= PlayerInteractedHaptics;
             PlayerInteractionEvents.OnBioscanSetState -= PlayerBioscanSetStateHaptics;
@@ -122,6 +137,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             ResourceUpdatedEvents.OnHealthUpdated -= OnHealthUpdated;
             InventoryAmmoEvents.OnInventoryAmmoUpdate -= OnAmmoUpdate;
             PlayerLocomotionEvents.OnStateChange -= OnPlayerLocomotionStateChanged;
+            PlayerHudEvents.OnLiquidSplat -= OnLiquidSplat;
         }
 
         private void FixedUpdate()
@@ -179,6 +195,13 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             foreach (BodyHapticAgent agent in GetAgents())
             {
                 agent.HammerFullyChargedHaptics();
+            }
+        }
+        public void HammerHalfChargedHaptics()
+        {
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.HammerHalfChargedHaptics();
             }
         }
 
@@ -375,6 +398,13 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics
             foreach (BodyHapticAgent agent in GetAgents())
             {
                 agent.CrouchToggleHaptics(isCrouched);
+            }
+        }
+        public void OnLiquidSplat()
+        {
+            foreach (BodyHapticAgent agent in GetAgents())
+            {
+                agent.OnLiquidSplat();
             }
         }
     }
