@@ -76,7 +76,7 @@ namespace GTFO_VR.Core
             configUseLeftHand = BindBool(file, "Input", "Use left hand as main hand?", false, "If true, all items will appear in the left hand", "Left handed mode");
             configProtube = BindBool(file, "Input", "Enable ProTubeVR support?", true, "If true, will enable ProTubeVR events", "ProtubeVR Support");
             configUseBhaptics = BindBool(file, "Bhaptics", "Enable bhaptics", true, "If true, bhaptics integration will be enabled", "Bhaptics Support");
-            configUseShockwave = BindBool(file, "Shockwave", "Enable Shockwave", false, "If true, Shockwave integration will be enabled", "Shockwave Support");
+            configUseShockwave = BindBool(file, "Shockwave", "Enable Shockwave (beta)", false, "If true, Shockwave suit integration will be enabled", "Shockwave Support");
 
             configIRLCrouch = BindBool(file, "Input", "Crouch in-game when you crouch IRL?", true, "If true, when crouching down below a certain threshold IRL, the in-game character will also crouch", "Crouch on IRL crouch");
             configCrouchHeight = BindInt(file, "Input", "Crouch height in centimeters", 115, 90, 145, "In-game character will be crouching if your head is lower than this height above the playspace", "Crouch height (cm)");
