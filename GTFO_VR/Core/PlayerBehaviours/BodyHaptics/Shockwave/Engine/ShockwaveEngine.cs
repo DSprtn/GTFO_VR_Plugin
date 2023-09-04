@@ -157,15 +157,7 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave.Engine
 
         public static bool IsActive()
         {
-            try
-            {
-                return VRConfig.configUseShockwave.Value && ShockwaveManager.Instance.Ready && ShockwaveManager.Instance.suitConnected();
-            }
-            catch
-            {
-                // The suitConnected() call sometimes throws exceptions every time it's called, ending up in a crash
-                return false;
-            }
+            return VRConfig.configUseShockwave.Value && ShockwaveManager.Instance.Ready;
         }
     }
 }
