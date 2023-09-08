@@ -31,6 +31,7 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<bool> configPostVignette;
         internal static ConfigEntry<bool> configOculusCrashWorkaround;
         internal static ConfigEntry<float> configRenderResolutionMultiplier;
+        internal static ConfigEntry<bool> configHiddenAreaMask;
         internal static ConfigEntry<int> configFloorOffset;
         internal static ConfigEntry<bool> configUseOldHammer;
         internal static ConfigEntry<bool> configCameraBlood;
@@ -126,6 +127,10 @@ namespace GTFO_VR.Core
             BindHeader("Rendering");
 
             configRenderResolutionMultiplier = BindFloat(file, "Rendering", "Render resolution multiplier", 1f, 0.2f, 2.5f, "Global rendering resolution multiplier", "Rendering resolution multiplier");
+
+            configHiddenAreaMask = BindBool(file, "Rendering", "Use hidden area mask?", true,
+                "If true, will not render parts of the frame that will not be visible in the HMD after the image has been distorted.",
+                "Use hidden area mask");
 
             configPostVignette = BindBool(file, "Rendering - PostProcessing", "Use vignette effect? (Darkened edges of screen)", false, "If false, will disable the vignette effect in-game.", "Vignette");
 

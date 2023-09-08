@@ -96,7 +96,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_fpsRender.ForceMatrixUpdate();
 
             gOverwrite.Clear();
-            gOverwrite.DrawMesh(mask.meshFilter.mesh, mask.transform.localToWorldMatrix, m_occlusionMaterial);
+            if (VRConfig.configHiddenAreaMask.Value)
+                gOverwrite.DrawMesh(mask.meshFilter.mesh, mask.transform.localToWorldMatrix, m_occlusionMaterial);
            
             PrepareFrame();
         }
