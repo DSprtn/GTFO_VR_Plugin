@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3332087345
+CRC: 3984332181
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 764554a3bc82df9389740483f2efa1bb
+    Hash: 3c1eede69ac269e880bc3a236b3ab023
   TypeTreeHash:
     serializedVersion: 2
     Hash: 7e9ee104d6bb707fb2602b751e6f78b1
@@ -12,5 +12,6 @@ ClassTypes:
 - Class: 48
   Script: {instanceID: 0}
 Assets:
+- Assets/GTFOVR_HiddenArea.shader
 - Assets/GTFOVR_Thermal_Glow.shader
 Dependencies: []

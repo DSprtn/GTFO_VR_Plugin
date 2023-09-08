@@ -2,7 +2,6 @@
 using GTFO_VR.Events;
 using System;
 using UnityEngine;
-using UnityEngine.PostProcessing;
 using UnityEngine.Rendering;
 using Valve.VR;
 
@@ -22,15 +21,21 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private FPS_Render m_fpsRender;
         private UI_Apply m_uiBlitter;
 
+        private Material m_occlusionMaterial;
+
         private void Awake()
         {
             gOverwrite = new CommandBuffer();
             m_fpsCamera = GetComponent<FPSCamera>();
             m_uiBlitter = GetComponent<UI_Apply>();
             m_fpsRender = GetComponent<FPS_Render>();
-           
-            m_fpsCamera.m_camera.AddCommandBuffer(CameraEvent.AfterGBuffer, gOverwrite);
 
+            // Disable SteamVR's mask, render our own
+            SteamVR_Render.SetRenderHiddenAreaMask(false);
+            m_occlusionMaterial = new Material(VRAssets.GetGTFOHiddenAreaMaskShader());
+            m_fpsCamera.m_camera.AddCommandBuffer(CameraEvent.BeforeGBuffer, gOverwrite);  // Fill depth, keep stencil clear
+            m_fpsCamera.m_camera.AddCommandBuffer(CameraEvent.BeforeImageEffects, gOverwrite); // Ensure masked area is black
+            
             SteamVR_Render.preRenderBothEyesCallback += PreRenderUpdate;
             SteamVR_Render.eyePreRenderCallback += PrepareFrameForEye;
         }
@@ -69,13 +74,21 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_fpsCamera.m_owner.Interaction.AfterCameraUpdate();
         }
 
+        public static bool renderingFirstEye()
+        {
+            return SteamVR_Render.eye == SteamVR_Render.FirstEye;
+        }
+
         private void PrepareFrameForEye(EVREye eye, SteamVR_CameraMask mask)
         {
+            SkipDuplicateRenderTasks();
+
             DoUglyCameraHack();
 
             FixHeadAttachedFlashlightPos(eye);
 
             m_fpsCamera.m_cullingCamera.RunVisibilityOnPreCull();
+
             m_fpsCamera.m_preRenderCmds.Clear();
             m_fpsCamera.m_beforeForwardAlpahCmds.Clear();
             m_fpsCamera.m_preLightingCmds.Clear();
@@ -83,9 +96,41 @@ namespace GTFO_VR.Core.PlayerBehaviours
             m_fpsRender.ForceMatrixUpdate();
 
             gOverwrite.Clear();
-            gOverwrite.DrawMesh(mask.meshFilter.mesh, mask.transform.localToWorldMatrix, SteamVR_CameraMask.occlusionMaterial);
-
+            if (VRConfig.configHiddenAreaMask.Value)
+                gOverwrite.DrawMesh(mask.meshFilter.mesh, mask.transform.localToWorldMatrix, m_occlusionMaterial);
+           
             PrepareFrame();
+        }
+        private void SkipDuplicateRenderTasks()
+        {
+            // Shadows are rendered from the viewpoint of the light, and will be the same for both eyes.
+            // UpdateCluster does something with the lights, but outputs a computer buffer that is the same for both eyes. Skip.
+            ClusteredRendering.Current.UpdateShadows = renderingFirstEye();
+            ClusteredRendering.Current.UpdateCluster = renderingFirstEye();
+
+            // Mars is mostly compute shader stuff manually dispatched by EnvironmentStateManager.Update()
+            // once per frame, or part of ClusteredRendering so it's already skipped.
+            // Exterior skylight logic still runs, however.
+            if ( ExteriorLight2.Current != null && ExteriorLight2.Current.enabled )
+            {
+                // Commandbuffer outputs a CascadedShadowmap that can be reused.
+                // Always remove, then re-add for first first, leave out for second eye.
+                ExteriorLight2.Current.m_light.RemoveCommandBuffer(LightEvent.AfterShadowMap, ExteriorLight2.Current.m_cmd);
+
+                if (renderingFirstEye())
+                {
+                    // Restore shadows and CommandBuffer
+                    ExteriorLight2.Current.m_light.shadows = LightShadows.Soft;
+                    ExteriorLight2.Current.m_light.AddCommandBuffer(LightEvent.AfterShadowMap, ExteriorLight2.Current.m_cmd);
+                }
+                else
+                {
+                    // We are reusing the CascadedShadowmap the CommandBuffer would generate,
+                    // so we don't need to it to render shadows for this eye.
+                    ExteriorLight2.Current.m_light.shadows = LightShadows.None;
+                }
+            }
+
         }
 
         private void FixHeadAttachedFlashlightPos(EVREye eye)
@@ -129,12 +174,20 @@ namespace GTFO_VR.Core.PlayerBehaviours
                 ClusteredRendering.Current.CollectCommands(m_fpsCamera.m_preRenderCmds, m_fpsCamera.m_preLightingCmds);
             }
  
-            if (ScreenLiquidManager.LiquidSystem != null)
-                ScreenLiquidManager.LiquidSystem.CollectCommands(m_fpsCamera.m_preRenderCmds);
-
-            if (m_fpsCamera.CollectCommandsGUIX && GUIX_Manager.isSetup)
+            // Generate textures that can be reused for the second eye
+            if ( VRRendering.renderingFirstEye() )
             {
-                GUIX_Manager.Current.CollectCommands(m_fpsCamera.m_preRenderCmds);
+                // Splat/blood is rendered even if not displayed, so need to skip here too.
+                if (VRConfig.configCameraBlood.Value && ScreenLiquidManager.LiquidSystem != null && m_fpsCamera.CollectCommandsScreenLiquid)
+                {
+                    ScreenLiquidManager.LiquidSystem.CollectCommands(m_fpsCamera.m_preRenderCmds);
+                }
+
+                // Terminal graphics
+                if (m_fpsCamera.CollectCommandsGUIX && GUIX_Manager.isSetup)
+                {
+                    GUIX_Manager.Current.CollectCommands(m_fpsCamera.m_preRenderCmds);
+                }
             }
 
             if (MapDetails.s_isSetup && MapDetails.s_isSetup)
