@@ -154,5 +154,10 @@ namespace GTFO_VR.Core.PlayerBehaviours.BodyHaptics.Shockwave.Engine
 
             return pattern;
         }
+
+        public static bool IsActive()
+        {
+            return VRConfig.configUseShockwave.Value && ShockwaveManager.Instance.Ready;
+        }
     }
 }
