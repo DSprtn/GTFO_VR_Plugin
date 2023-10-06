@@ -1,71 +1,36 @@
-Total changelog (1.3.2b8):
+!!! IMPORTANT !!! 
 
+The mod has been upgraded to BepInEx 670 (now compatible with other GTFO mods!)
+... This does mean you will need to upgrade. A new BepInEx version has been linked in the readme. The mod will NOT work without upgrading! 
+... Other mods might overwrite your BepInEx version. This will break things!
+The BepInEx version shipped with other mods will NOT work at this time! 
+
+- Fix laser disappearing in thermal sights when starting multiple missions without restarting
 - Fixed shotguns firing at look direction
-
-Total changelog (1.3.2b7):
-
-Many thanks to @Alchemist and @Roughy!
-
 - Made shockwave integration disabled by default, as it has been known to cause issues. If you run into any, let us know!
 - Improved efficiency of rendering by improving the hidden area mesh and skipping some work that is the same for both eyes.
 - Made hidden area mesh toggleable, as it might cause artifacting on some setups (edges of screen not rendering)
 - Removed an outdated config option (skip damage feedback)
-
-Total changelog (1.3.2b6):
-
-Many thanks to Astienth! He made the following changes:
-
 - Added TactVisor bhaptics support
 - Ported bhaptics to the new bhaptics SDK, which should resolve any leftover crashing
-
-Total changelog (1.3.2b5):
-
 - Fixed drop-in sequence auto-skipping
-
-Total changelog (1.3.2b4):
-
 - Total melee hit detection overhaul by Roughy! Melee weapons should feel much better now.
-
-Total changelog (1.3.1b3):
-
 - Added FPS limit in menu. This is a possible fix for the menu stutter issue. Let us know if it still happens! 
 - Made Bhaptics and shockwave integrations optional. You can now disable/enable these whenever. 
 - Fixed and improved Accrat ND6 heavy SMG sight
 - Fixed menu issues where high HMD resolutions would prevent UI at the edges of the screen from being accessible.
-- (Hopefully) fixed BHaptics related issues.
-
-Total changelog (1.3.0b2):
-
-- Fixed unupdated library causing issues
-
-Total changelog (1.3.0):
-
-!!! IMPORTANT !!! 
-
-- Upgraded mod to BepInEx 670 (now compatible with other GTFO mods!) 
-... This does mean you will need to upgrade. A new BepInEx version has been linked in the readme. The mod will NOT work without upgrading! 
-... Other mods might overwrite your BepInEx version. This will break things!
-
-- Fix laser disappearing in thermal sights when starting multiple missions without restarting
-
-The BepInEx version shipped with other mods will NOT work at this time! 
-
-
-Total changelog: (1.2.2):
+- Fixed BHaptics related issues.
 - Added Shockwave suit integration
+- Added ProtubeVR Haptics support
+- Tweaked every weapon in the game to have its own haptics 'identity'
 - Fixed the following weapon sights:
 * Drekker Pres MOD 556 Rifle
 * Techman Arbalist machine gun
 * Techman Klust 6 Burst Cannon
 
-Total changelog: (1.2.1):
-- Added ProtubeVR Haptics support
-- Tweaked every weapon in the game to have its own haptics 'identity'
 
 Known issues:
 - GTFO is very VRAM hungry! If your texture or render resolution settings are too high and you're using too much VRAM your game will be very unstable!
   Changing resolution in-game or even playing some maps might cause crashes depending on your resolution and/or texture resolution settings!
-  
-- For Quest headsets: Link/airlink are very crash-prone. Playing using VD is recommended.
 
-- VR Performance kit causes darkened image output. The fixed version provided in the main release only seems to work on the Valve Index.
+- For Quest headsets: Link/airlink are very crash-prone. Playing using VD is recommended.
