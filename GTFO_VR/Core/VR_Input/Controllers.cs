@@ -50,6 +50,8 @@ namespace GTFO_VR.Core.VR_Input
             ItemEquippableEvents.OnPlayerWieldItem += CheckShouldDoubleHand;
             VRConfig.configUseLeftHand.SettingChanged += HandednessSwitch;
             VRConfig.configWeaponRotationOffset.SettingChanged += TiltChanged;
+            VRConfig.configPosePredictionTranslation.SettingChanged += PosePredictionChanged;
+            VRConfig.configPosePredictionRotation.SettingChanged += PosePredictionChanged;
         }
 
 
@@ -136,6 +138,7 @@ namespace GTFO_VR.Core.VR_Input
             steamVR_Behaviour_Pose.inputSource = source;
             steamVR_Behaviour_Pose.broadcastDeviceChanges = true;
             steamVR_Behaviour_Pose.rotationOffset = Quaternion.Euler(VRConfig.configWeaponRotationOffset.Value, 0, 0);
+            steamVR_Behaviour_Pose.setPosePrediction(VRConfig.configPosePredictionTranslation.Value, VRConfig.configPosePredictionRotation.Value);
             return controller;
         }
 
@@ -392,6 +395,24 @@ namespace GTFO_VR.Core.VR_Input
             }
         }
 
+        private void PosePredictionChanged(object sender, EventArgs e)
+        {
+            PosePredictionChanged(m_leftController);
+            PosePredictionChanged(m_rightController);
+        }
+
+        private static void PosePredictionChanged(GameObject controller)
+        {
+            if (controller)
+            {
+                SteamVR_Behaviour_Pose pose = controller.GetComponent<SteamVR_Behaviour_Pose>();
+                if (pose)
+                {
+                    pose.setPosePrediction(VRConfig.configPosePredictionTranslation.Value, VRConfig.configPosePredictionRotation.Value);
+                } 
+            }
+        }
+
         private void HandednessSwitch(object sender, EventArgs e)
         {
             SetMainController();
@@ -403,6 +424,8 @@ namespace GTFO_VR.Core.VR_Input
             VRConfig.configUseLeftHand.SettingChanged -= HandednessSwitch;
             VRConfig.configWeaponRotationOffset.SettingChanged -= TiltChanged;
             ItemEquippableEvents.OnPlayerWieldItem -= CheckShouldDoubleHand;
+            VRConfig.configPosePredictionTranslation.SettingChanged -= PosePredictionChanged;
+            VRConfig.configPosePredictionRotation.SettingChanged -= PosePredictionChanged;
         }
     }
 }
