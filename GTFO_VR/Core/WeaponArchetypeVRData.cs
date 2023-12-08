@@ -69,9 +69,19 @@ namespace GTFO_VR.Core
                 { "Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
                 // Melee
                 { "SANTONIAN HDH", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "OMNECO MAUL", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "KOVAC SLEDGEHAMMER", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "SANTONIAN MALLET", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "MACO GAVEL", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+
                 { "MASTABA FIXED BLADE", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "WOX COMPACT", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+
                 { "MACO DRILLHEAD", new VRWeaponData(new Vector3(0f, -.3f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "ISOCO STINGER", new VRWeaponData(new Vector3(0f, -.3f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+
                 { "KOVAC PEACEKEEPER", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "ATTROC TITANIUM", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
 
                 // Tool
                 { "STALWART FLOW G2", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
