@@ -83,7 +83,16 @@ namespace GTFO_VR.Injections.Rendering
 
         private static void fixCenteredCrosshairTexture( Material mat, string textureName, float verticalShift )
         {
-            var texture = mat.GetTexture(textureName).Cast<Texture2D>();
+            var rawTexture = mat.GetTexture(textureName);
+
+            // This apparently gets called multiple times, and sometimes the texture is empty
+            if (rawTexture == null)
+            {
+                return;
+            }
+
+            var texture = rawTexture.Cast<Texture2D>();
+
             string cacheKey = mat.name + textureName;
 
             // Cache textures so we don't generate a million copies
