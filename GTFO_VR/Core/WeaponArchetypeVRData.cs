@@ -69,9 +69,19 @@ namespace GTFO_VR.Core
                 { "Default", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
                 // Melee
                 { "SANTONIAN HDH", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "OMNECO MAUL", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "KOVAC SLEDGEHAMMER", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "SANTONIAN MALLET", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "MACO GAVEL", new VRWeaponData(new Vector3(0f, -.25f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+
                 { "MASTABA FIXED BLADE", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "WOX COMPACT", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+
                 { "MACO DRILLHEAD", new VRWeaponData(new Vector3(0f, -.3f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "ISOCO STINGER", new VRWeaponData(new Vector3(0f, -.3f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+
                 { "KOVAC PEACEKEEPER", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
+                { "ATTROC TITANIUM", new VRWeaponData(new Vector3(0f, -.05f, 0f), Quaternion.Euler(new Vector3(45f, 0, 0)), false) },
 
                 // Tool
                 { "STALWART FLOW G2", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
@@ -80,26 +90,38 @@ namespace GTFO_VR.Core
 
                 // Primary
                 { "SHELLING S49", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
+                { "SHELLING NANO", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
                 { "BATALDO 3RB", new VRWeaponData(new Vector3(.0f, 0f, 0f), false) },
+                { "RAPTUS TREFFEN 2", new VRWeaponData(new Vector3(.0f, 0f, 0f), false) },
+                { "RAPTUS STEIGRO", new VRWeaponData(new Vector3(.0f, 0f, 0f), false) },
                 { "ACCRAT GOLOK DA", new VRWeaponData(new Vector3(.0f, 0f, -.08f), true) },
                 { "VAN AUKEN LTC5", new VRWeaponData(new Vector3(0f, 0f, -.15f), true) },
                 { "ACCRAT STB", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
                 { "VAN AUKEN CAB F4", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
                 { "TR22 HANAWAY", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
+                { "HANAWAY PSB", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
                 { "MALATACK LX", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
+                { "MALATACK CH 4", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
+                { "DREKKER PRES MOD 556", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
+                { "BUCKLAND SBS III", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
                 { "BATALDO J 300", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
 
                 // Special
                 { "MALATACK HXC", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
+                { "DREKKER CLR", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
                 { "BUCKLAND S870", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
-                { "BUCKLAND XDIST2", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
                 { "BUCKLAND AF6", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
-                { "MASTABA R66", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
+                { "DREKKER INEX DREI", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
+                { "BUCKLAND XDIST2", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
+                { "MASTABA R66", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
                 { "TECHMAN ARBALIST V", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
                 { "TECHMAN VERUTA XII", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
-                { "SHELLING ARID 5", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
+                { "TECHMAN KLAUST 6", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
+                { "OMNECO EXP1", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
+                { "SHELLING ARID 5", new VRWeaponData(new Vector3(0f, 0f, 0f), false) },
                 { "DREKKER DEL P1", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
-                { "KÖNING PR 11", new VRWeaponData(new Vector3(0f, 0f, 0f), true) }
+                { "OMNECO LRG", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
+                { "BATALDO CUSTOM K330", new VRWeaponData(new Vector3(0f, 0f, 0f), true) },
             };
 
             m_current = weaponDataByPublicName["Default"];
