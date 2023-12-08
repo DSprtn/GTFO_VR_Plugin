@@ -111,6 +111,17 @@ namespace GTFO_VR.Injections.Rendering
                     continue;
                 }
 
+                GameObject sightGO = m.gameObject;
+
+                // Bataldo Custom K33
+                if (sightGO.name.Equals("Sight_24_picture"))
+                {
+                    // This sight is culled from the wrong direction in VR
+                    // Crosshairs do suggest it is actually being flipped for some reason.
+                    // Aligns correctly when rotated 180
+                    sightGO.transform.localRotation = Quaternion.Euler(0, 180, 0);
+                }
+
                 bool isThermalShaderObject = false;
 
                 foreach (Material mat in m.sharedMaterials)
