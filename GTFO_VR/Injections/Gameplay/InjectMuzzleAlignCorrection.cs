@@ -14,7 +14,7 @@ namespace GTFO_VR.Injections.Gameplay
         private static void Postfix(BulletWeapon __instance)
         {
             // Accrat ND6 Heavy SMG
-            if ("ACCRAT ND6".Equals(__instance.PublicName.ToUpper()))
+            if ("ACCRAT ND6".Equals(__instance.PublicName.ToUpper()) || "DREKKER CLR".Equals(__instance.PublicName.ToUpper()))
             {
                 Transform muzzleAlign = __instance.MuzzleAlign;
                 Transform animationRef = muzzleAlign.parent; // This is keyframed with an incorrect rotation, 

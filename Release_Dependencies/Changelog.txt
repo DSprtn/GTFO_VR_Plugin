@@ -1,3 +1,14 @@
+Total changelog (1.3.4b2):
+
+- (Roughy) Fixed various issues with melee weapons, melee weapon position offsets, pistols, misaligned sights and sight textures.
+
+Total changelog (1.3.4b1):
+
+- (Roughy) Added pose prediction. Should improve head/weapon movement, especially on wireless HMDs.
+
+
+Total changelog (1.3.3):
+
 !!! IMPORTANT !!! 
 
 The mod has been upgraded to BepInEx 670 (now compatible with other GTFO mods!)

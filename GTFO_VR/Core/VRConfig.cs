@@ -42,6 +42,9 @@ namespace GTFO_VR.Core
         internal static ConfigEntry<int> configSmoothTurnSpeed;
         internal static ConfigEntry<bool> configSmoothSnapTurn;
 
+        internal static ConfigEntry<bool> configPosePredictionTranslation;
+        internal static ConfigEntry<bool> configPosePredictionRotation;
+
         internal static ConfigEntry<bool> configUseQuickSwitch;
         internal static ConfigEntry<bool> configWatchInfoText;
         internal static ConfigEntry<bool> configWeaponInfoText;
@@ -78,6 +81,9 @@ namespace GTFO_VR.Core
             configProtube = BindBool(file, "Input", "Enable ProTubeVR support?", true, "If true, will enable ProTubeVR events", "ProtubeVR Support");
             configUseBhaptics = BindBool(file, "Bhaptics", "Enable bhaptics", true, "If true, bhaptics integration will be enabled", "Bhaptics Support");
             configUseShockwave = BindBool(file, "Shockwave", "Enable Shockwave (beta)", false, "If true, Shockwave suit integration will be enabled", "Shockwave Support");
+
+            configPosePredictionTranslation = BindBool(file, "Input", "Pose Prediction Translation", true, "If true, motion prediction will be used to make controller position more responsive", "Pose Prediction Translation");
+            configPosePredictionRotation = BindBool(file, "Input", "Pose Prediction Rotation", false, "If true, motion prediction will be used to make controller rotation more responsive", "Pose Prediction Rotation");
 
             configIRLCrouch = BindBool(file, "Input", "Crouch in-game when you crouch IRL?", true, "If true, when crouching down below a certain threshold IRL, the in-game character will also crouch", "Crouch on IRL crouch");
             configCrouchHeight = BindInt(file, "Input", "Crouch height in centimeters", 115, 90, 145, "In-game character will be crouching if your head is lower than this height above the playspace", "Crouch height (cm)");
