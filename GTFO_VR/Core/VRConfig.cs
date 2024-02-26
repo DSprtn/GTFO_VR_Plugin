@@ -62,6 +62,7 @@ namespace GTFO_VR.Core
 
         private static Dictionary<eCellSettingID, ConfigEntryBase> configBindings = new Dictionary<eCellSettingID, ConfigEntryBase>();
 
+        internal static ConfigEntry<bool> configDebugOrigin;
         internal static ConfigEntry<bool> configDebugShowTwoHHitboxes;
         internal static ConfigEntry<bool> configDebugShowHammerHitbox;
 
@@ -72,6 +73,7 @@ namespace GTFO_VR.Core
         {
 #if DEBUG_GTFO_VR
             BindHeader("DEBUG");
+            configDebugOrigin = BindBool(file, "Debug - If you see this, I screwed up!", "Show Origin debug", false, "Shows origin/roomscale debug visuals", "Show Origin debug");
             configDebugShowTwoHHitboxes = BindBool(file, "Debug - If you see this, I screwed up!", "Show 2H hitboxes", false, "Shows two handed weapon hitboxes", "Show 2H hitboxes");
             configDebugShowHammerHitbox = BindBool(file, "Debug - If you see this, I screwed up!", "Show hammer hitbox", false, "Shows hammer hitbox", "Hammer hitbox debug");
 #endif
