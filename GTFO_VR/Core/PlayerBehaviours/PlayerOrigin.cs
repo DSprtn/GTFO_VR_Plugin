@@ -25,6 +25,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         Quaternion PlayerRotationOffset = Quaternion.identity;
 
+        private bool m_shouldRecenter = true;
+
         private void Awake()
         {
             Log.Info("Origin created");
@@ -55,6 +57,16 @@ namespace GTFO_VR.Core.PlayerBehaviours
         private void Update()
         {
             UpdateOrigin();
+
+            if (m_shouldRecenter)
+            {
+                // When the player respawns from a checkpoint, the player is recreated.
+                // The player should be centerd as part of this process, but performing it
+                // too early ( e.g. in Start() ) will not work, resulting in the player 
+                // being stuck in a wall if they're very far away from their center.
+                m_shouldRecenter = false;
+                CenterPlayerToOrigin();
+            }
         }
 
         private void LateUpdate()
