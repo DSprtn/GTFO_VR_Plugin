@@ -89,6 +89,7 @@ namespace GTFO_VR.Core.PlayerBehaviours
 
         private void HandleOriginShift()
         {
+            m_roomscaleOffset = Vector3.zero;
             UpdateOrigin();
             CenterPlayerToOrigin();
             OnOriginShift?.Invoke();
@@ -123,6 +124,17 @@ namespace GTFO_VR.Core.PlayerBehaviours
             // so the camera ends up in the same position. 
             transform.position += m_roomscaleOffset;
         }
+
+        private Vector3 getTorsoPosition()
+        {
+            Vector3 hmdPos = HMD.Hmd.transform.position;
+            // Player's center will be a bit behind the HMD position, especially if they're leaning forwards.
+            Vector3 hmdForwardFlat = Vector3.Cross(HMD.Hmd.transform.right, new Vector3(0, 1, 0)); // HMD direction on horizontal plane
+            hmdPos += hmdForwardFlat * -0.2f;
+
+            return hmdPos;
+        }
+
 
         public void updateRoomscale()
         {
@@ -171,9 +183,8 @@ namespace GTFO_VR.Core.PlayerBehaviours
             }
             #endif
 
-            // Player's center will be a bit behind the HMD position, especially if they're leaning forwards.
-            Vector3 hmdForwardFlat = Vector3.Cross(HMD.Hmd.transform.right, new Vector3(0,1,0)); // HMD direction on horizontal plane
-            hmdPos += hmdForwardFlat * -0.2f;
+            // Offset to roughly where the player torso would actually be
+            hmdPos = getTorsoPosition();
 
             // Vector from player to HMD
             Vector3 playerHmdOffset = hmdPos - playerPos;
@@ -310,6 +321,9 @@ namespace GTFO_VR.Core.PlayerBehaviours
             pos.y = 0f;
             pos = PlayerRotationOffset * pos;
             m_offsetFromPlayerToHMD = pos;
+            // Apply offset so we center the torso rather than the head.
+            // We use torso position when roomscale moving player, so this need to match.
+            m_roomscaleOffset = HMD.Hmd.transform.position - getTorsoPosition();
         }
 
         private void OnDestroy()
