@@ -122,7 +122,16 @@ namespace GTFO_VR.Core.UI.Terminal
             // Do terminals outside have these values? ( Yes: Zero_0 it turns out )
             if (m_terminal?.m_terminalItem?.FloorItemLocation != null)
             {
-                return m_terminal.m_terminalItem.FloorItemLocation;
+                string zone = m_terminal.m_terminalItem.FloorItemLocation;
+                // As of R8, the zone provided here will often include a description.
+                // There is always a comma followed by a space before the regular ZONEXXX
+                int lastSpace = zone.LastIndexOf(" ");
+                if (lastSpace > 0 && lastSpace + 1 < zone.Length )  // found and not final string char
+                {
+                    return zone.Substring(lastSpace + 1);
+                }
+
+                return zone;
             }
             else
             {

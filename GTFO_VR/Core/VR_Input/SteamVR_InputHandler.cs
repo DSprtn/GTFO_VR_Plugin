@@ -264,15 +264,24 @@ namespace GTFO_VR.Core.VR_Input
             }
             else if (InputAction.MenuScroll.Equals(action))
             {
-                if (m_weaponSwitchLeftAction.GetStateDown(SteamVR_Input_Sources.Any))
+                if (FocusStateEvents.currentState == eFocusState.MainMenu)
                 {
-                    return 1f;
+                    Vector2 axis = m_movementAxisAction.GetAxis(SteamVR_Input_Sources.Any);
+                    return axis.y * 0.01f;
                 }
-                if (m_weaponSwitchRightAction.GetStateDown(SteamVR_Input_Sources.Any) 
-                    || (FocusStateEvents.currentState == eFocusState.FPS_CommunicationDialog && m_openAndSelectComms.GetStateDown(SteamVR_Input_Sources.Any) ) )  // Comms menu navigation
+                else
                 {
-                    return -1f;
+                    if (m_weaponSwitchLeftAction.GetStateDown(SteamVR_Input_Sources.Any))
+                    {
+                        return 1f;
+                    }
+                    if (m_weaponSwitchRightAction.GetStateDown(SteamVR_Input_Sources.Any)
+                        || (FocusStateEvents.currentState == eFocusState.FPS_CommunicationDialog && m_openAndSelectComms.GetStateDown(SteamVR_Input_Sources.Any)))  // Comms menu navigation
+                    {
+                        return -1f;
+                    }
                 }
+
             }
             else if (InputAction.MapZoom.Equals(action))
             {
